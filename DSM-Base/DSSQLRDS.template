@@ -85,9 +85,8 @@
         "DSDatabase" : {
             "Type" : "AWS::RDS::DBInstance",
             "Properties" : {
-                "DBName" : {
-                    "Ref" : "DBPName"
-                },
+			"LicenseModel" : "license-included",
+			"PubliclyAccessible" : false,
                 "AllocatedStorage" : {
                     "Ref" : "DBIAllocatedStorage"
                 },
