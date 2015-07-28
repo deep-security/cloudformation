@@ -18,7 +18,7 @@
     <Compile Include="DSAWSAccessKey.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DSDatabaseAbstract.template">
+    <Compile Include="DSDBAbstract.template">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DSMOracleMonolithic.template">
@@ -33,13 +33,13 @@
     <Compile Include="DSMELB.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="dsmSecurityGroups.template">
+    <Compile Include="DSISecurityGroups.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DSOracleRDS.template">
+    <Compile Include="DSDBOracleRDS.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DSSQLRDS.template">
+    <Compile Include="DSDBSQLRDS.template">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MasterBaseDS.template">
