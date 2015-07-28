@@ -207,11 +207,12 @@
 		}
     },
     "Resources"                : {
-        "DSM95SP1RHNestedStack" : {
+        "DSM95NestedStack" : {
             "Type" : "AWS::CloudFormation::Stack",
             "DependsOn" : "DSDatabaseAbstract",
             "Properties" : {
                 "Parameters" : {
+				    "TemplateURL" : "https://s3.amazon.com/bmwtmbucket/DSM955623RH.template",
                     "VPCID" : "blah",
                     "DSLicenseKey" : {
                         "Ref" : "DSIPLicense"
@@ -265,7 +266,6 @@
                     },
                     "AdditionalNode"   : "no"
                 },
-                "TemplateURL" : "https://s3.amazon.com/bmwtmbucket/DSM955623RH.template",
                 "TimeoutInMinutes" : "900"
             }
         },
@@ -356,7 +356,7 @@
                         "Ref" : "DBICAdminPassword"
                     },
                     "RDSSG"  : {
-                        "Value" : {"Fn::GetAtt" : [ "DSSecurityGroup", "Outputs.RDSSG"]}
+                        "Value" : {"Fn::GetAtt" : [ "DSISecurityGroup", "Outputs.RDSSG"]}
                     },
                     "MultiAZ"            : false,
                     "StorageType"        : "gp2",
@@ -369,13 +369,15 @@
                 }
             }
         },
-		"DSSecurityGroup" : {
+		"DSISecurityGroup" : {
 			"Type" : "AWS::CloudFormation::Stack",
 			"Properties" : {
+				"TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSISecurityGroups.template",
 				"Parameters" : {
 					"AWSIVPC" : { "Ref" : "AWSIVPC" },
 					"DSIPGUIPort" : { "Ref" : "DSIPGUIPort" },
-					"DSIPHeartbeatPort" : { "Ref" : "DSIPHeartbeatPort" }
+					"DSIPHeartbeatPort" : { "Ref" : "DSIPHeartbeatPort" },
+					"DBPEngine" : { "Ref" : "DBPEngine" }
 				}
 			}
 		}
