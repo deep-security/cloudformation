@@ -37,7 +37,9 @@
                 "SecurityGroupIngress" : [
                     {
                         "IpProtocol" : "tcp",
-                        "FromPort"   : "-1",
+                        "FromPort"   : {
+                            "Ref" : "DSIPHeartbeatPort"
+                        },
                         "ToPort"     : {
                             "Ref" : "DSIPHeartbeatPort"
                         },
@@ -45,7 +47,9 @@
                     },
                     {
                         "IpProtocol" : "tcp",
-                        "FromPort"   : "-1",
+                        "FromPort"   : {
+                            "Ref" : "DSIPGUIPort"
+                        },
                         "ToPort"     : {
                             "Ref" : "DSIPGUIPort"
                         },
@@ -70,7 +74,7 @@
                 "SecurityGroupIngress" : [
                     {
                         "IpProtocol" : "tcp",
-                        "FromPort"   : "-1",
+                        "FromPort"   : "1521",
                         "ToPort"     : "1521",
                         "SourceSecurityGroupId" : {
                             "Ref" : "DSMSG"
