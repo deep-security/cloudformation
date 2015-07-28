@@ -24,6 +24,15 @@
             "MaxValue"    : 65535,
             "Default"     : "4120",
             "ConstraintDescription" : "Must be a valid TCP port."
+        },
+        "DBPEngine"         : {
+            "Description" : "Choose SQL or Oracle for DSM database Engine",
+            "Type"        : "String",
+            "Default"     : "SQL",
+            "AllowedValues" : [
+                "SQL",
+                "Oracle"
+            ]
         }
     },
     "Resources"                : {
@@ -74,8 +83,20 @@
                 "SecurityGroupIngress" : [
                     {
                         "IpProtocol" : "tcp",
-                        "FromPort"   : "1521",
-                        "ToPort"     : "1521",
+                        "FromPort"   : {
+                            "Fn::If" : [
+                                "DBTypeIsOracle",
+                                "1521",
+                                "1433"
+                            ]
+                        },
+                        "ToPort"     : {
+                            "Fn::If" : [
+                                "DBTypeIsOracle",
+                                "1521",
+                                "1433"
+                            ]
+                        },
                         "SourceSecurityGroupId" : {
                             "Ref" : "DSMSG"
                         }
@@ -88,6 +109,24 @@
                     }
                 ]
             }
+        }
+    },
+    "Conditions"               : {
+        "DBTypeIsOracle" : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DBPEngine"
+                },
+                "Oracle"
+            ]
+        },
+        "DBTypeIsSQL"    : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DBPEngine"
+                },
+                "SQL"
+            ]
         }
     },
     "Outputs"                  : {
