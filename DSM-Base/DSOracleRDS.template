@@ -25,7 +25,7 @@
             ],
             "ConstraintDescription" : "must select a valid database instance type."
         },
-        "DBIAllocatedStorage" : {
+        "DBIStorageAllocation" : {
             "Default" : 10,
             "Description" : "The size of the Deep Security database (Gb)",
             "Type"        : "Number",
@@ -91,7 +91,7 @@
                     "Ref" : "DBPName"
                 },
                 "AllocatedStorage" : {
-                    "Ref" : "DBIAllocatedStorage"
+                    "Ref" : "DBIStorageAllocation"
                 },
                 "DBInstanceClass"  : {
                     "Ref" : "DBIRDSInstanceSize"

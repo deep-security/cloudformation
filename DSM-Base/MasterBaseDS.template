@@ -56,7 +56,7 @@
             ],
             "ConstraintDescription" : "must select a valid database instance type."
         },
-        "DBIAllocatedStorage" : {
+        "DBIStorageAllocation" : {
             "Default" : 10,
             "Description" : "The size of the Deep Security database (Gb)",
             "Type"        : "Number",
@@ -337,12 +337,13 @@
         "DSDatabaseAbstract" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
+				"TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSDatabaseAbstract.template",
                 "Parameters" : {
                     "DBName" : {
                         "Ref" : "DBPName"
                     },
                     "AllocatedStorage" : {
-                        "Ref" : "DBIAllocatedStorage"
+                        "Ref" : "DBIStorageAllocation"
                     },
                     "DBInstanceClass"  : {
                         "Ref" : "DBIRDSInstanceSize"
