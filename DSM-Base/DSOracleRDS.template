@@ -1,0 +1,135 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description"              : "",
+    "Parameters"               : {
+        "DBIRDSInstanceSize" : {
+            "Default" : "db.m3.large",
+            "Description" : "Trend Micro Deep Security Database instance class",
+            "Type"        : "String",
+            "AllowedValues" : [
+                "db.m3.medium",
+                "db.m3.large",
+                "db.m3.xlarge",
+                "db.m3.2xlarge",
+                "db.m2.xlarge",
+                "db.r3.large",
+                "db.r3.xlarge",
+                "db.r3.2xlarge",
+                "db.r3.4xlarge",
+                "db.r3.8xlarge",
+                "db.m2.2xlarge",
+                "db.m2.4xlarge",
+                "db.m1.medium",
+                "db.m1.large",
+                "db.m1.xlarge"
+            ],
+            "ConstraintDescription" : "must select a valid database instance type."
+        },
+        "DBIAllocatedStorage" : {
+            "Default" : 10,
+            "Description" : "The size of the Deep Security database (Gb)",
+            "Type"        : "Number",
+            "MinValue"    : 10,
+            "MaxValue"    : 3072,
+            "ConstraintDescription" : "must be between 10 and 3072Gb."
+        },
+        "DBPBackupDays"       : {
+            "Default" : 1,
+            "Description" : "Days to keep automatic RDS backups (0-35)",
+            "Type"        : "Number",
+            "MinValue"    : 0,
+            "MaxValue"    : 35,
+            "ConstraintDescription" : "must be between 0 and 35 days."
+        },
+        "DBICAdminName"       : {
+            "Default" : "dsadmin",
+            "NoEcho"  : false,
+            "Description" : "Admin account username to be used for the database instance",
+            "Type"        : "String",
+            "MinLength"   : 1,
+            "MaxLength"   : 16,
+            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
+            "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
+        },
+        "DBICAdminPassword"   : {
+            "NoEcho" : true,
+            "Description" : "Password to be used for the Oracle database admin account",
+            "Type"        : "String",
+            "MinLength"   : 8,
+            "MaxLength"   : 41,
+            "AllowedPattern" : "[a-zA-Z0-9]*",
+            "ConstraintDescription" : "must contain only alphanumeric characters."
+        },
+        "DBPName"             : {
+            "Default" : "dsm",
+            "Description" : "Name to be assigned to the database",
+            "Type"        : "String",
+            "MinLength"   : 1,
+            "MaxLength"   : 64,
+            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
+            "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
+        },
+        "StorageType"         : {
+            "Default" : "gp2",
+            "Type"    : "String"
+        },
+        "RDSSG"               : {
+            "Type" : "AWS::EC2::SecurityGroup::Id"
+        },
+		"DBISubnet" : {
+			"Description" : "Choose a private subnet for the RDS instance",
+			"Type" : "AWS::EC2::Subnet::Id"
+		}
+    },
+    "Resources"                : {
+        "DSDatabase" : {
+            "Type" : "AWS::RDS::DBInstance",
+            "Properties" : {
+                "DBName" : {
+                    "Ref" : "DBPName"
+                },
+                "AllocatedStorage" : {
+                    "Ref" : "DBIAllocatedStorage"
+                },
+                "DBInstanceClass"  : {
+                    "Ref" : "DBIRDSInstanceSize"
+                },
+                "Engine"           : "oracle-se1",
+                "MasterUsername"   : {
+                    "Ref" : "DBICAdminName"
+                },
+                "MasterUserPassword" : {
+                    "Ref" : "DBICAdminPassword"
+                },
+                "VPCSecurityGroups"  : [{
+                    "Ref" : "RDSSG"
+                }],
+                "MultiAZ"            : false,
+                "BackupRetentionPeriod" : {
+                    "Ref" : "DBPBackupDays"
+                },
+                "DBInstanceIdentifier"  : "DSMDBSVR"
+            }
+        }
+    },
+    "Outputs"                  : {
+        "DSDBEndpoint" : {
+            "Description" : "Endpoint to be passed to DSM installation properties file",
+            "Value"       : {
+                "Fn::GetAtt" : [
+                    "DSDatabase",
+                    "Endpoint.Address"
+                ]
+            }
+        },
+        "DSDBPort"     : {
+            "Description" : "Port to be passed to DSM installation properties file",
+            "Value"       : {
+                "Fn::GetAtt" : [
+                    "DSDatabase",
+                    "Endpoint.Port"
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,228 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description"              : "",
+    "Parameters"               : {
+    },
+    "Resources"                : {
+        "DSM2" : {
+            "Type" : "AWS::EC2::Instance",
+            "DependsOn" : "DSM1WaitCondition",
+            "Metadata"  : {
+                "AWS::CloudFormation::Init" : {
+                    "configSets" : {
+                        "default" : [
+                            "setup",
+                            "installAwsCli",
+                            "installDSM"
+                        ]
+                    },
+                    "setup"      : {
+                        "files" : {
+                            "/etc/cfn/cfn-hup.conf" : {
+                                "content" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "[main]\n",
+                                            "stack=",
+                                            {
+                                                "Ref" : "AWS::StackId"
+                                            },
+                                            "\n",
+                                            "region=",
+                                            {
+                                                "Ref" : "AWS::Region"
+                                            },
+                                            "\n"
+                                        ]
+                                    ]
+                                },
+                                "mode"    : "000400",
+                                "owner"   : "root",
+                                "group"   : "root"
+                            },
+                            "/etc/cfn/hooks.d/cfn-auto-reloader.conf" : {
+                                "content" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "[cfn-auto-reloader-hook]\n",
+                                            "triggers=post.update\n",
+                                            "path=Resources.DSM2.Metadata.AWS::CloudFormation::Init\n",
+                                            "action=/opt/aws/bin/cfn-init -v --stack ",
+                                            {
+                                                "Ref" : "AWS::StackId"
+                                            },
+                                            " --resource DSM2",
+                                            " --region ",
+                                            {
+                                                "Ref" : "AWS::Region"
+                                            },
+                                            " runas=root\n"
+                                        ]
+                                    ]
+                                }
+                            },
+                            "/tmp/Manager-Linux-9.5.5602.x64.sh"      : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.5_SP1/Manager-Linux-9.5.5602.x64.sh",
+                                "owner"  : "root",
+                                "mode"   : "000700"
+                            },
+                            "/tmp/Agent-RedHat_EL6-9.5.3-2754.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.5_SP1/Agent-RedHat_EL6-9.5.3-2754.x86_64.zip",
+                                "owner"  : "root",
+                                "mode"   : "000600"
+                            },
+                            "/etc/cfn/DSM2Properties.txt"                 : {
+                                "content" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "Dinstall4j.language=en\n",
+                                            "DatabaseScreen.DatabaseType=Oracle\n",
+                                            "DatabaseScreen.Hostname=",
+                                            {
+                                                "Ref" : "DBEndpoint"
+                                            },
+                                            "\n",
+                                            "DatabaseScreen.DatabaseName=",
+                                            {
+                                                "Ref" : "DBName"
+                                            },
+                                            "\n",
+                                            "DatabaseScreen.Transport=TCP\n",
+                                            "DatabaseScreen.Username=",
+                                            {
+                                                "Ref" : "DBUsername"
+                                            },
+                                            "\n",
+                                            "DatabaseScreen.Password=",
+                                            {
+                                                "Ref" : "DBPassword"
+                                            },
+                                            "\n",
+                                            "AddressAndPortsScreen.ManagerAddress=",
+                                            {
+                                                "Ref" : "DSM2PrivateIp"
+                                            },
+                                            "\n",
+                                            "AddressAndPortsScreen.ManagerPort=",
+                                            {
+                                                "Ref" : "DSGUIPort"
+                                            },
+                                            "\n",
+                                            "AddressAndPortsScreen.HeartbeatPort=",
+                                            {
+                                                "Ref" : "DSHeartbeatPort"
+                                            },
+                                            "\n",
+                                            "AddressAndPortsScreen.NewNode=true\n"
+                                        ]
+                                    ]
+                                },
+                                "owner"   : "root",
+                                "mode"    : "000600"
+                            }
+                        },
+                        "services" : {
+                            "sysvinit" : {
+                                "cfn-hup" : {
+                                    "enabled" : "true",
+                                    "ensureRunning" : "true",
+                                    "files"         : [
+                                        "/etc/cfn/cfn-hup.conf",
+                                        "/etc/cfn/hooks.d/cfn-auto-reloader.conf"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "installAwsCli" : {
+                        "commands" : {
+                            "0-install-awscli" : {
+                                "command" : "pip install awscli",
+                                "ignoreErrors" : "false"
+                            }
+                        }
+                    },
+                    "installDSM"    : {
+                        "commands" : {
+                            "1-install-DSM" : {
+                                "command" : "sh /tmp/Manager-Linux-9.5.5602.x64.sh -q -console -Dinstall4j.language=en -varfile /etc/cfn/DSM2Properties.txt",
+                                "ignoreErrors" : "false"
+                            }
+                        }
+                    }
+					}},
+        "Properties" : {
+            "IamInstanceProfile" : {
+                "Ref" : "DSMProfile"
+            },
+            "ImageId"            : {
+                "Fn::FindInMap" : [
+                    "AWSRegionArch2AMI",
+                    {
+                        "Ref" : "AWS::Region"
+                    },
+                    "64"
+                ]
+            },
+            "InstanceType"       : {
+                "Ref" : "DSMInstanceType"
+            },
+            "SubnetId"           : {
+                "Ref" : "SubnetMgmt1"
+            },
+            "PrivateIpAddress"   : {
+                "Ref" : "DSM2PrivateIp"
+            },
+            "Tags"               : [
+                {
+                    "Key" : "Name",
+                    "Value" : {
+                        "Ref" : "DSM2ServerName"
+                    }
+                }
+            ],
+            "SecurityGroupIds"   : [
+                {
+                    "Ref" : "DSMSG"
+                }
+            ],
+            "KeyName"            : {
+                "Ref" : "KeyPairName"
+            },
+            "UserData"           : {
+                "Fn::Base64" : {
+                    "Fn::Join" : [
+                        "",
+                        [
+                            "#!/bin/bash -xe\n",
+                            "# cloud-init\n",
+                            "wget http://s3.amazonaws.com/trenddemo/cfn_rhel66.sh\n",
+                            "sh cfn_rhel66.sh\n",
+                            "/opt/aws/bin/cfn-init -v ",
+                            " --stack ",
+                            {
+                                "Ref" : "AWS::StackName"
+                            },
+                            " --resource DSM2 ",
+                            " --region ",
+                            {
+                                "Ref" : "AWS::Region"
+                            },
+                            "\n",
+                            "/opt/aws/bin/cfn-signal -e $? ",
+                            " -r \"Complete\"",
+                            " '",
+                            {
+                                "Ref" : "DSM2WaitHandle"
+                            },
+                            "'\n"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

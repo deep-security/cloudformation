@@ -1,0 +1,101 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description"              : "",
+    "Parameters"               : {
+        "AWSIVPC" : {
+            "Description" : "Existing VPC to deploy Deep Security Manager",
+            "Type"        : "AWS::EC2::VPC::Id",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*"
+        },
+        "DSIPGUIPort" : {
+            "Description" : "The Deep Security Manager application and GUI port.",
+            "Type"        : "Number",
+            "MinValue"    : 0,
+            "MaxValue"    : 65535,
+            "Default"     : "4119",
+            "ConstraintDescription" : "Must be a valid TCP port."
+        },
+        "DSIPHeartbeatPort" : {
+            "Description" : "The heartbeat port used by Deep Security Agents and appliances to communicate with the Deep Security Manager.",
+            "Type"        : "Number",
+            "MinValue"    : 0,
+            "MaxValue"    : 65535,
+            "Default"     : "4120",
+            "ConstraintDescription" : "Must be a valid TCP port."
+        }
+    },
+    "Resources"                : {
+        "DSMSG" : {
+            "Type" : "AWS::EC2::SecurityGroup",
+            "Properties" : {
+                "GroupDescription" : "AllowGUIandHeartbeat",
+                "VpcId"            : {
+                    "Ref" : "AWSIVPC"
+                },
+                "SecurityGroupIngress" : [
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "-1",
+                        "ToPort"     : {
+                            "Ref" : "DSIPHeartbeatPort"
+                        },
+                        "CidrIp"     : "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "-1",
+                        "ToPort"     : {
+                            "Ref" : "DSIPGUIPort"
+                        },
+                        "CidrIp"     : "0.0.0.0/0"
+                    }
+                ],
+                "SecurityGroupEgress"  : [
+                    {
+                        "IpProtocol" : "-1",
+                        "CidrIp"     : "0.0.0.0/0"
+                    }
+                ]
+            }
+        },
+        "RDSSG" : {
+            "Type" : "AWS::EC2::SecurityGroup",
+            "Properties" : {
+                "GroupDescription" : "Allow DSM to Database communication",
+                "VpcId"            : {
+                    "Ref" : "AWSIVPC"
+                },
+                "SecurityGroupIngress" : [
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "-1",
+                        "ToPort"     : "1521",
+                        "SourceSecurityGroupId" : {
+                            "Ref" : "DSMSG"
+                        }
+                    }
+                ],
+                "SecurityGroupEgress"  : [
+                    {
+                        "IpProtocol" : "-1",
+                        "CidrIp"     : "0.0.0.0/0"
+                    }
+                ]
+            }
+        }
+    },
+    "Outputs"                  : {
+        "RDSSG" : {
+            "Value" : {
+                "Ref" : "RDSSG"
+            }
+        },
+        "DSMSG" : {
+            "Value" : {
+                "Ref" : "DSMSG"
+            }
+        }
+    }
+}

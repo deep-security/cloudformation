@@ -1,0 +1,74 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description"              : "v2015-07-06: Creates role, user, and keys required for Deep Security AWS Cloud Connector. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Resources"                : {
+        "DSIAMUser" : {
+            "Type" : "AWS::IAM::User",
+            "Properties" : {
+            }
+        },
+        "DSIAMGroup" : {
+            "Type" : "AWS::IAM::Group"
+        },
+        "Users"      : {
+            "Type" : "AWS::IAM::UserToGroupAddition",
+            "Properties" : {
+                "GroupName" : {
+                    "Ref" : "DSIAMGroup"
+                },
+                "Users"     : [
+                    {
+                        "Ref" : "DSIAMUser"
+                    }
+                ]
+            }
+        },
+        "DSMUserPolicies" : {
+            "Type" : "AWS::IAM::Policy",
+            "Properties" : {
+                "PolicyName" : "DSMUsers",
+                "PolicyDocument" : {
+                    "Statement" : [
+                        {
+                            "Effect" : "Allow",
+                            "Action" : [
+                                "ec2:DescribeInstances",
+                                "ec2:DescribeImages",
+                                "ec2:DescribeTags"
+                            ],
+                            "Resource" : "*"
+                        }
+                    ]
+                },
+                "Groups"         : [
+                    {
+                        "Ref" : "DSIAMGroup"
+                    }
+                ]
+            }
+        },
+        "AccessKeys"      : {
+            "Type" : "AWS::IAM::AccessKey",
+            "Properties" : {
+                "UserName" : {
+                    "Ref" : "DSIAMUser"
+                }
+            }
+        }
+    },
+    "Outputs"                  : {
+        "AccessKey" : {
+            "Value" : {
+                "Ref" : "AccessKeys"
+            }
+        },
+        "SecretKey" : {
+            "Value" : {
+                "Fn::GetAtt" : [
+                    "AccessKeys",
+                    "SecretAccessKey"
+                ]
+            }
+        }
+    }
+}

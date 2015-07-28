@@ -1,0 +1,213 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description"              : "v2015-07-06: Deploys Deep Security Manager and required Database on RDS to an existing VPC. **WARNING** This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Parameters"               : {
+        "AWSIKeyPairName" : {
+            "Description" : "Existing key pair to use for connecting to your Deep Security Manager Instance",
+            "Type"        : "AWS::EC2::KeyPair::KeyName",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*",
+            "ConstraintDescription" : "Select an existing EC2 Key Pair."
+        },
+        "AWSIVPC"         : {
+            "Description" : "Existing VPC to deploy Deep Security Manager",
+            "Type"        : "AWS::EC2::VPC::Id",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*"
+        },
+        "AWSIVPCDSSubnetID" : {
+            "Description" : "Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
+            "Type"        : "AWS::EC2::Subnet::Id",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*",
+            "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
+        },
+        "AWSIVPCDBSubnetID" : {
+            "Description" : "Existing Subnet for RDS instance. Must be a private subnet contained the in VPC chosen above.",
+            "Type"        : "AWS::EC2::Subnet::Id",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*",
+            "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
+        },
+        "DBIRDSInstanceSize" : {
+            "Default" : "db.m3.large",
+            "Description" : "Trend Micro Deep Security Database instance class",
+            "Type"        : "String",
+            "AllowedValues" : [
+                "db.m3.medium",
+                "db.m3.large",
+                "db.m3.xlarge",
+                "db.m3.2xlarge",
+                "db.m2.xlarge",
+                "db.r3.large",
+                "db.r3.xlarge",
+                "db.r3.2xlarge",
+                "db.r3.4xlarge",
+                "db.r3.8xlarge",
+                "db.m2.2xlarge",
+                "db.m2.4xlarge",
+                "db.m1.medium",
+                "db.m1.large",
+                "db.m1.xlarge"
+            ],
+            "ConstraintDescription" : "must select a valid database instance type."
+        },
+        "DBIAllocatedStorage" : {
+            "Default" : 10,
+            "Description" : "The size of the Deep Security database (Gb)",
+            "Type"        : "Number",
+            "MinValue"    : 10,
+            "MaxValue"    : 3072,
+            "ConstraintDescription" : "must be between 10 and 3072Gb."
+        },
+        "DBPBackupDays"       : {
+            "Default" : 1,
+            "Description" : "Days to keep automatic RDS backups (0-35)",
+            "Type"        : "Number",
+            "MinValue"    : 0,
+            "MaxValue"    : 35,
+            "ConstraintDescription" : "must be between 0 and 35 days."
+        },
+        "DBICAdminName"       : {
+            "Default" : "dsadmin",
+            "NoEcho"  : false,
+            "Description" : "Admin account username to be used for the database instance",
+            "Type"        : "String",
+            "MinLength"   : 1,
+            "MaxLength"   : 16,
+            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
+            "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
+        },
+        "DBICAdminPassword"   : {
+            "NoEcho" : true,
+            "Description" : "Password to be used for the Oracle database admin account",
+            "Type"        : "String",
+            "MinLength"   : 8,
+            "MaxLength"   : 41,
+            "AllowedPattern" : "[a-zA-Z0-9]*",
+            "ConstraintDescription" : "must contain only alphanumeric characters."
+        },
+        "DBPName"             : {
+            "Default" : "dsm",
+            "Description" : "Name to be assigned to the Oracle database",
+            "Type"        : "String",
+            "MinLength"   : 1,
+            "MaxLength"   : 64,
+            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
+            "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
+        },
+        "DSCAdminName"        : {
+            "Default" : "MasterAdmin",
+            "NoEcho"  : false,
+            "Description" : "The Deep Security Manager administrator account username for Web Console Access",
+            "Type"        : "String",
+            "MinLength"   : 1,
+            "MaxLength"   : 16,
+            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
+            "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
+        },
+        "DSCAdminPassword"    : {
+            "NoEcho" : true,
+            "Description" : "The Deep Security Manager administrator account password",
+            "Type"        : "String",
+            "MinLength"   : 8,
+            "MaxLength"   : 41,
+            "AllowedPattern" : "[a-zA-Z0-9]*",
+            "ConstraintDescription" : "must contain only alphanumeric characters."
+        },
+        "DSIPLicense"         : {
+            "Description" : "Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
+            "Type"        : "String",
+            "MinLength"   : 37,
+            "MaxLength"   : 37,
+            "AllowedPattern" : "[\\x20-\\x7E]*",
+            "ConstraintDescription" : "Key can only contain ASCII characters."
+        },
+        "DSIPHeartbeatPort"   : {
+            "Description" : "The heartbeat port used by Deep Security Agents and appliances to communicate with the Deep Security Manager.",
+            "Type"        : "Number",
+            "MinValue"    : 0,
+            "MaxValue"    : 65535,
+            "Default"     : "4120",
+            "ConstraintDescription" : "Must be a valid TCP port."
+        },
+        "DSIPGUIPort"         : {
+            "Description" : "The Deep Security Manager application and GUI port.",
+            "Type"        : "Number",
+            "MinValue"    : 0,
+            "MaxValue"    : 65535,
+            "Default"     : "4119",
+            "ConstraintDescription" : "Must be a valid TCP port."
+        },
+        "DSIPInstanceType"    : {
+            "Description" : "Amazon EC2 instance type for the Deep Security Manager Node Instances",
+            "Type"        : "String",
+            "Default"     : "m3.xlarge",
+            "AllowedValues" : [
+                "m3.medium",
+                "m3.large",
+                "m3.xlarge",
+                "m3.2xlarge",
+                "c4.large",
+                "c4.xlarge",
+                "c4.2xlarge",
+                "c4.4xlarge",
+                "c4.8xlarge",
+                "c3.large",
+                "c3.xlarge",
+                "c3.2xlarge",
+                "c3.4xlarge",
+                "c3.8xlarge",
+                "r3.large",
+                "r3.xlarge",
+                "r3.2xlarge",
+                "r3.4xlarge",
+                "r3.8xlarge",
+                "i2.xlarge",
+                "i2.2xlarge",
+                "i2.4xlarge",
+                "i2.8xlarge",
+                "hs1.8xlarge",
+                "g2.2xlarge"
+            ]
+        }
+    },
+    "Mappings"                 : {
+        "TrendRegionMap" : {
+            "us-east-1" : {
+                "regionkey" : "amazon.cloud.region.key.1"
+            },
+            "us-west-2" : {
+                "regionkey" : "amazon.cloud.region.key.2"
+            },
+            "us-west-1" : {
+                "regionkey" : "amazon.cloud.region.key.3"
+            },
+            "eu-west-1" : {
+                "regionkey" : "amazon.cloud.region.key.4"
+            },
+            "ap-southeast-1" : {
+                "regionkey" : "amazon.cloud.region.key.5"
+            },
+            "ap-northeast-1" : {
+                "regionkey" : "amazon.cloud.region.key.6"
+            },
+            "sa-east-1"      : {
+                "regionkey" : "amazon.cloud.region.key.7"
+            }
+        }
+    },
+    "Resources"                : {
+        
+
+    },
+    "Outputs"                  : {
+        "DSMURL" : {
+            "Value" : "placeholder"
+        }
+    }
+}
