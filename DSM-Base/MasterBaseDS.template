@@ -363,7 +363,8 @@
                         "Ref" : "DBPBackupDays"
                     },
                     "DBInstanceIdentifier"  : "DSMSQLSVR",
-					"DBISubnet" : { "Ref" : "DBISubnet" }
+					"DBISubnet" : { "Ref" : "DBISubnet" },
+					"TimeoutInMinutes" : "30"
                 }
             }
         },
