@@ -25,9 +25,9 @@
             ],
             "ConstraintDescription" : "must select a valid database instance type."
         },
-        "DBIAllocatedStorage" : {
+        "DBIStorageAllocation" : {
             "Default" : 10,
-            "Description" : "The size of the Deep Security database (Gb)",
+            "Description" : "The Storage Allocated to Database Instance (in GB). Minimum 200 for SQL Server, 10 for Oracle.",
             "Type"        : "Number",
             "MinValue"    : 10,
             "MaxValue"    : 3072,
@@ -53,12 +53,12 @@
         },
         "DBICAdminPassword"   : {
             "NoEcho" : true,
-            "Description" : "Password to be used for the Oracle database admin account",
+            "Description" : "Password to be used for the database admin account. 8-41 alphanumeric characters",
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
             "AllowedPattern" : "[a-zA-Z0-9]*",
-            "ConstraintDescription" : "must contain only alphanumeric characters."
+            "ConstraintDescription" : "Must contain only alphanumeric characters. Min length 8, max length 41"
         },
         "DBPName"             : {
             "Default" : "dsm",
@@ -102,7 +102,7 @@
                         "Ref" : "DBIRDSInstanceSize"
                     },
                     "DBIAllocatedStorage" : {
-                        "Ref" : "DBIAllocatedStorage"
+                        "Ref" : "DBIStorageAllocation"
                     },
                     "DBPBackupDays"       : {
                         "Ref" : "DBPBackupDays"
@@ -134,7 +134,7 @@
                         "Ref" : "DBIRDSInstanceSize"
                     },
                     "DBIAllocatedStorage" : {
-                        "Ref" : "DBIAllocatedStorage"
+                        "Ref" : "DBIStorageAllocation"
                     },
                     "DBPBackupDays"       : {
                         "Ref" : "DBPBackupDays"
