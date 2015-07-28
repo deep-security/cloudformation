@@ -337,7 +337,7 @@
         "DSDatabaseAbstract" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-				"TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSDatabaseAbstract.template",
+				"TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSDBAbstract.template",
                 "Parameters" : {
                     "DBName" : {
                         "Ref" : "DBPName"
