@@ -17,14 +17,6 @@
             "MaxLength"   : "255",
             "AllowedPattern" : "[-_a-zA-Z0-9]*"
         },
-        "AWSIVPCDSSubnetID" : {
-            "Description" : "Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
-            "Type"        : "AWS::EC2::Subnet::Id",
-            "MinLength"   : "1",
-            "MaxLength"   : "255",
-            "AllowedPattern" : "[-_a-zA-Z0-9]*",
-            "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
-        },
         "DSCAdminName"      : {
             "Default" : "MasterAdmin",
             "NoEcho"  : false,
@@ -147,14 +139,25 @@
             "MinLength"   : "1",
             "MaxLength"   : "64"
         },
-        "DBPType"           : {
+        "DSMSG"             : {
+            "Type" : "AWS::EC2::SecurityGroup::Id"
+        },
+        "DBPEngine"         : {
             "Default" : "Embedded",
             "Type"    : "String",
             "AllowedValues" : [
                 "Embedded",
                 "Oracle",
-                "Microsoft SQL Server"
+                "SQL"
             ]
+        },
+		        "DSISubnetID" : {
+            "Description" : "Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
+            "Type"        : "AWS::EC2::Subnet::Id",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*",
+            "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
         }
     },
     "Mappings"                 : {
@@ -208,6 +211,17 @@
             },
             "sa-east-1"      : {
                 "regionkey" : "amazon.cloud.region.key.7"
+            }
+        },
+        "DSMDBMap"          : {
+            "SQL" : {
+                "DbTypeString" : "Microsoft SQL Server"
+            },
+            "Oracle" : {
+                "DbTypeString" : "Oracle"
+            },
+            "Embedded" : {
+                "DbTypeString" : "Embedded"
             }
         }
     },
@@ -313,24 +327,7 @@
                 ]
             }
         },
-        "SecurityGroup" : {
-            "Type" : "AWS::CloudFormation::Stack",
-            "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/dsmSecurityGroups.template",
-                "Parameters"  : {
-                    "AWSIVPC" : {
-                        "Ref" : "AWSIVPC"
-                    },
-                    "DSIPHeartbeatPort" : {
-                        "Ref" : "DSIPHeartbeatPort"
-                    },
-                    "DSIPGUIPort"       : {
-                        "Ref" : "DSIPGUIPort"
-                    }
-                }
-            }
-        },
-        "DSM"                 : {
+        "DSM"             : {
             "Type" : "AWS::EC2::Instance",
             "Metadata" : {
                 "AWS::CloudFormation::Init" : {
@@ -419,8 +416,19 @@
                                                 "Ref" : "DSCAdminPassword"
                                             },
                                             "\n",
+											"CredentialsScreen.UseStrongPasswords=False\n",
                                             "Dinstall4j.language=en\n",
-                                            "DatabaseScreen.DatabaseType=Embedded\n",
+                                            "DatabaseScreen.DatabaseType=",
+                                            {
+                                                "Fn::FindInMap" : [
+                                                    "DSMDBMap",
+                                                    {
+                                                        "Ref" : "DBPEngine"
+                                                    },
+                                                    "DbTypeString"
+                                                ]
+                                            },
+                                            "\n",
                                             "DatabaseScreen.Hostname=",
                                             {
                                                 "Ref" : "DBPRDSEndpoint"
@@ -458,12 +466,16 @@
                                             },
                                             "\n",
                                             "AddressAndPortsScreen.NewNode=false\n",
-                                            "CredentialsScreen.UseStrongPasswords=false\n",
                                             "SecurityUpdateScreen.UpdateComponents=true\n",
                                             "SecurityUpdateScreen.UpdateSoftware=true\n",
                                             "SmartProtectionNetworkScreen.EnableFeedback=false\n",
                                             "SmartProtectionNetworkScreen.IndustryType=blank\n",
-                                            "settings.configuration.statusMonitoringAPIEnabled=true\n"
+											"RelayScreen.Install=True\n",
+											"RelayScreen.ProxyType=None\n",
+											"RelayScreen.ProxyPort=None\n",
+											"RelayScreen.Proxy=False\n",
+											"RelayScreen.AntiMalware=True\n",
+											"RelayScreen.ProxyAuthentication=False\n"
                                         ]
                                     ]
                                 },
@@ -502,16 +514,19 @@
                     },
                     "addCloudAccount" : {
                         "commands" : {
-                            "0-enableApi" : {
+                            "0-enableRestApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
                             },
-                            "1-enableAgentSelfRegistration" : {
+							"1-enableSoapApi" : {
+								"command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled –value true"
+							},
+                            "2-enableAgentIitiatedActivation" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivation -value 1"
                             },
-                            "2-enableAgentReRegistration"   : {
+                            "3-enableAgentInitiatedReactivateHost"   : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivationActiveHost -value 2"
                             },
-                            "3-addCloudAccount"             : {
+                            "4-addCloudAccount"             : {
                                 "command" : {
                                     "Fn::Join" : [
                                         "",
@@ -585,9 +600,7 @@
                 "InstanceType"       : {
                     "Ref" : "DSIPInstanceType"
                 },
-                "SubnetId"           : {
-                    "Ref" : "AWSIVPCDSSubnetID"
-                },
+                "SubnetId"           : { "Ref" : "DSISubnetID" },
                 "PrivateIpAddress"   : {
                     "Ref" : "DSIPPrivateIP"
                 },
@@ -599,14 +612,7 @@
                 ],
                 "SecurityGroups"     : [
                     {
-                        "Fn::GetAtt" : [
-                            "SecurityGroupNested",
-                            "Outputs.RDSSG"
-                        ]
-                    }
-                ],
-                "SecurityGroupIds"   : [
-                    {
+                        "Ref" : "DSMSG"
                     }
                 ],
                 "KeyName"            : {
@@ -641,6 +647,32 @@
                     }
                 }
             }
+        }
+    },
+    "Conditions"               : {
+        "DBTypeIsOracle" : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DBPEngine"
+                },
+                "Oracle"
+            ]
+        },
+        "DBTypeIsSQL"    : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DBPEngine"
+                },
+                "SQL"
+            ]
+        },
+        "DBTypeIsEmbedded" : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DBPEngine"
+                },
+                "Embedded"
+            ]
         }
     },
     "Outputs"                  : {
