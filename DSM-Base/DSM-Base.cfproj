@@ -27,7 +27,7 @@
     <Compile Include="DSM95SP1addnode.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DSM955623RH.template">
+    <Compile Include="DSM95RH.template">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DSMELB.template">

@@ -17,16 +17,8 @@
             "MaxLength"   : "255",
             "AllowedPattern" : "[-_a-zA-Z0-9]*"
         },
-        "AWSIVPCDSSubnetID" : {
+        "DSISubnetID" : {
             "Description" : "Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
-            "Type"        : "AWS::EC2::Subnet::Id",
-            "MinLength"   : "1",
-            "MaxLength"   : "255",
-            "AllowedPattern" : "[-_a-zA-Z0-9]*",
-            "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
-        },
-        "AWSIVPCDBSubnetID" : {
-            "Description" : "Existing Subnet for RDS instance. Must be a private subnet contained the in VPC chosen above.",
             "Type"        : "AWS::EC2::Subnet::Id",
             "MinLength"   : "1",
             "MaxLength"   : "255",
@@ -207,13 +199,13 @@
 		}
     },
     "Resources"                : {
-        "DSM95NestedStack" : {
+        "DSM95Node1" : {
             "Type" : "AWS::CloudFormation::Stack",
-            "DependsOn" : "DSDatabaseAbstract",
+            "DependsOn" : ["DSDatabaseAbstract", "DSISecurityGroups"],
             "Properties" : {
                 "Parameters" : {
-				    "TemplateURL" : "https://s3.amazon.com/bmwtmbucket/DSM955623RH.template",
-                    "VPCID" : "blah",
+				    "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSM95RH.template",
+                    "VPCID" : { "Ref" : "AWSIVPC" },
                     "DSLicenseKey" : {
                         "Ref" : "DSIPLicense"
                     },
@@ -264,7 +256,9 @@
                     "DSHeartbeatPort"  : {
                         "Ref" : "DSIPHeartbeatPort"
                     },
-                    "AdditionalNode"   : "no"
+                    "AdditionalNode"   : "no",
+					"DSISubnetID" : { "Ref" : "DSISubnetID" },
+					"DSMSG" : {"Fn::GetAtt" : [ "DSISecurityGroups", "Outputs.DSMSG"]}
                 },
                 "TimeoutInMinutes" : "900"
             }
@@ -356,7 +350,7 @@
                         "Ref" : "DBICAdminPassword"
                     },
                     "RDSSG"  : {
-                        "Value" : {"Fn::GetAtt" : [ "DSISecurityGroup", "Outputs.RDSSG"]}
+                        "Value" : {"Fn::GetAtt" : [ "DSISecurityGroups", "Outputs.RDSSG"]}
                     },
                     "MultiAZ"            : false,
                     "StorageType"        : "gp2",
@@ -369,7 +363,7 @@
                 }
             }
         },
-		"DSISecurityGroup" : {
+		"DSISecurityGroups" : {
 			"Type" : "AWS::CloudFormation::Stack",
 			"Properties" : {
 				"TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSISecurityGroups.template",
