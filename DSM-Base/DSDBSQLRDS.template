@@ -79,7 +79,11 @@
 		"DBISubnet" : {
 			"Description" : "Choose a private subnet for the RDS instance",
 			"Type" : "AWS::EC2::Subnet::Id"
-		}
+		},
+		"DBIInstanceIdentifier" : {
+			"Description" : "Choose RDS Instance ID",
+			"Type" : "String"
+			}
     },
     "Resources"                : {
         "DSDatabase" : {
@@ -106,7 +110,7 @@
                 "BackupRetentionPeriod" : {
                     "Ref" : "DBPBackupDays"
                 },
-                "DBInstanceIdentifier"  : "DSMDBSVR"
+                "DBInstanceIdentifier"  : { "Ref" : "DBIInstanceIdentifier" }
             }
         }
     },

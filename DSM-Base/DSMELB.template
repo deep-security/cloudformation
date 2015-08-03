@@ -4,6 +4,14 @@
 	"Description" : "",
 
 	"Parameters" : {
+		"ManagerNodes" : {
+			"Description" : "List of Instances to add",
+			"Type" : "CommaDelimitedList"
+			},
+		"ELBSG" : {
+			"Description" : "SecurityGroup ID for ELB",
+			"Type" : "AWS::EC2::SecurityGroup::Id"
+			}
 	},
 
 	"Resources" : {

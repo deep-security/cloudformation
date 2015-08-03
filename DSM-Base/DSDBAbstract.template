@@ -88,7 +88,19 @@
 		"DBISubnet" : {
 			"Description" : "Choose a private subnet for the RDS instance",
 			"Type" : "AWS::EC2::Subnet::Id"
-		}
+		},
+		"MultiAZ": {
+			"Description": "Use Multi-AZ or SQL Mirroring Option Group for RDS Instance",
+			"Type" : "String",
+			"AllowedValues" : [
+				"true",
+				"false"
+				]
+			},
+		"DBIInstanceIdentifier" : {
+			"Description" : "Choose RDS Instance ID",
+			"Type" : "String"
+			}
     },
     "Resources"                : {
         "DSOracleRDS" : {
@@ -119,7 +131,8 @@
                     "RDSSG"               : {
                         "Ref" : "RDSSG"
                     },
-					"DBISubnet" : { "Ref" : "DBISubnet" }
+					"DBISubnet" : { "Ref" : "DBISubnet" },
+					"DBIInstanceIdentifier" : { "Ref" : "DBIInstanceIdentifier" }
                 }
             }
         },
@@ -151,7 +164,8 @@
                     "RDSSG"               : {
                         "Ref" : "RDSSG"
                     },
-					"DBISubnet" : { "Ref" : "DBISubnet" }
+					"DBISubnet" : { "Ref" : "DBISubnet" },
+					"DBIInstanceIdentifier" : { "Ref" : "DBIInstanceIdentifier" }
                 }
             }
         }

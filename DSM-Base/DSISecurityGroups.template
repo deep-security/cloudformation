@@ -36,7 +36,7 @@
         }
     },
     "Resources"                : {
-        "DSMSG" : {
+        "ELBSG" : {
             "Type" : "AWS::EC2::SecurityGroup",
             "Properties" : {
                 "GroupDescription" : "AllowGUIandHeartbeat",
@@ -62,6 +62,53 @@
                         "ToPort"     : {
                             "Ref" : "DSIPGUIPort"
                         },
+                        "CidrIp"     : "0.0.0.0/0"
+                    }
+                ],
+                "SecurityGroupEgress"  : [
+                    {
+                        "IpProtocol" : "-1",
+                        "CidrIp"     : "0.0.0.0/0"
+                    }
+                ]
+            }
+        },
+		"DSMSG" : {
+            "Type" : "AWS::EC2::SecurityGroup",
+            "Properties" : {
+                "GroupDescription" : "Allow DSM to Database communication",
+                "VpcId"            : {
+                    "Ref" : "AWSIVPC"
+                },
+                "SecurityGroupIngress" : [
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : {
+                            "Ref" : "DSIPHeartbeatPort"
+                        },
+                        "ToPort"     : {
+                            "Ref" : "DSIPHeartbeatPort"
+                        },
+                        "SourceSecurityGroupId" : {
+                            "Ref" : "ELBSG"
+                        }
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : {
+                            "Ref" : "DSIPGUIPort"
+                        },
+                        "ToPort"     : {
+                            "Ref" : "DSIPGUIPort"
+                        },
+                        "SourceSecurityGroupId" : {
+                            "Ref" : "ELBSG"
+                        }
+                    },
+					{
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "4122",
+                        "ToPort"     : "4122",
                         "CidrIp"     : "0.0.0.0/0"
                     }
                 ],
@@ -132,13 +179,21 @@
     "Outputs"                  : {
         "RDSSG" : {
             "Value" : {
-                "Ref" : "RDSSG"
+                "Fn::GetAtt" : [
+					"RDSSG",
+					"GroupId"
+				]
             }
         },
         "DSMSG" : {
             "Value" : {
                 "Ref" : "DSMSG"
             }
-        }
+        },
+		"ELBSG" : {
+			"Value" : {
+				"Ref" : "ELBSG"
+				}
+			}
     }
 }
