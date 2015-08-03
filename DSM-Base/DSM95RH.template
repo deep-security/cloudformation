@@ -354,7 +354,10 @@
                             "setup",
                             "installDSM",
                             "addCloudAccount"
-                        ]
+                        ],
+						"doSqlSetup" :[
+							"sqlSetup"
+						]
                     },
                     "setup"      : {
                         "files" : {
@@ -403,12 +406,12 @@
                                     ]
                                 }
                             },
-                            "/tmp/Manager-Linux-9.5.5602.x64.sh"      : {
+                            "/tmp/Manager-Linux-9.5.6008.x64.sh"      : {
                                 "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.5/Manager-Linux-9.5.6008.x64.sh",
                                 "owner"  : "root",
                                 "mode"   : "000700"
                             },
-                            "/tmp/Agent-RedHat_EL6-9.5.3-2754.x86_64.zip" : {
+                            "/tmp/Agent-RedHat_EL6-9.5.3-3016.x86_64.zip" : {
                                 "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.5_SP1/Agent-RedHat_EL6-9.5.3-3016.x86_64.zip",
                                 "owner"  : "root",
                                 "mode"   : "000600"
@@ -596,7 +599,30 @@
                                 "ignoreErrors" : "False"
                             }
                         }
-                    }
+                    },
+					"sqlSetup": {
+						"commands" : {
+							"1-get-sql-helper" : {
+								"command" : "cd /etc/cfn/rhel-scripts; wget https://cf-deepsecurity.s3.amazonaws.com/master/cfn-rh-sql",
+								"ignoreErrors" : "false"
+							},
+							"2-run-helper" : {
+								"command" : "sh cfn-rh-sql",
+								"ignoreErrors" : "false"
+							},
+							"3-create-db" : {
+								"coommand" : {
+									"Fn::Join" : [
+										"",
+										[
+											"python create-DSM-SqlDB.py --user ", { "Ref" : "DBICAdminName" }, " --pass ", { "Ref" : "DBICAdminPassword" }, " --endpoint ", { "Ref" : "DBPRDSEndpoint" }, " --dbname ", { "Ref" : "DBPName" }
+										]
+									]
+								},
+								"ignoreErrors" : "false"
+							}
+						}
+					}
                 }
             },
             "Properties" : {
@@ -644,20 +670,7 @@
                                 "# cloud-init\n",
                                 "wget https://cf-deepsecurity.s3.amazonaws.com/master/cfn-rh-helper\n",
                                 "sh cfn-rh-helper\n",
-                                {
-                                    "Fn::If" : [
-                                        "DoSQLSetup",
-                                        {
-                                            "Fn::Join" : [
-                                                "",
-                                                "wget https://cf-deepsecurity.s3.amazonaws.com/master/cfn-rh-sql\n",
-                                                "sh cfn-rh-sql\n"
-                                            ]
-                                        },
-                                        ""
-                                    ]
-                                },
-                                "cfn-init -v ",
+								"cfn-init -v ",
                                 " --stack ",
                                 {
                                     "Ref" : "AWS::StackName"
@@ -667,6 +680,13 @@
                                 {
                                     "Ref" : "AWS::Region"
                                 },
+								{
+									"Fn::If" : [
+										"DoSQLSetup",
+										"-c doSqlSetup, default",
+										""
+										]
+									},
                                 "\n",
                                 "cfn-signal -e $? ",
                                 " -r \"Complete\"",
