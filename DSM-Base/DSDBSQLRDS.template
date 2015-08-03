@@ -31,7 +31,7 @@
             "Type"        : "Number",
             "MinValue"    : 10,
             "MaxValue"    : 3072,
-            "ConstraintDescription" : "must be between 10 and 3072Gb."
+            "ConstraintDescription" : "must be between 100 and 3072Gb."
         },
         "DBPBackupDays"       : {
             "Default" : 1,

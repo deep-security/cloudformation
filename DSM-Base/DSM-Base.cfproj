@@ -46,6 +46,17 @@
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="cfn-rh-helper">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="cfn-rh-sql">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="create-DSM-SqlDB.py">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

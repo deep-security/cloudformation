@@ -101,7 +101,7 @@
                     "DBIRDSInstanceSize" : {
                         "Ref" : "DBIRDSInstanceSize"
                     },
-                    "DBIAllocatedStorage" : {
+                    "DBIStorageAllocation" : {
                         "Ref" : "DBIStorageAllocation"
                     },
                     "DBPBackupDays"       : {
@@ -133,7 +133,7 @@
                     "DBIRDSInstanceSize" : {
                         "Ref" : "DBIRDSInstanceSize"
                     },
-                    "DBIAllocatedStorage" : {
+                    "DBIStorageAllocation" : {
                         "Ref" : "DBIStorageAllocation"
                     },
                     "DBPBackupDays"       : {

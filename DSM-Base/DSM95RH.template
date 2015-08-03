@@ -17,7 +17,7 @@
             "MaxLength"   : "255",
             "AllowedPattern" : "[-_a-zA-Z0-9]*"
         },
-        "DSCAdminName"      : {
+        "DSCAdminName"    : {
             "Default" : "MasterAdmin",
             "NoEcho"  : false,
             "Description" : "The Deep Security Manager administrator account username for Web Console Access",
@@ -27,7 +27,7 @@
             "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
             "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
         },
-        "DSCAdminPassword"  : {
+        "DSCAdminPassword" : {
             "NoEcho" : true,
             "Description" : "The Deep Security Manager administrator account password",
             "Type"        : "String",
@@ -36,7 +36,7 @@
             "AllowedPattern" : "[a-zA-Z0-9]*",
             "ConstraintDescription" : "must contain only alphanumeric characters."
         },
-        "DSIPLicense"       : {
+        "DSIPLicense"      : {
             "Description" : "Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
             "Type"        : "String",
             "MinLength"   : 37,
@@ -125,7 +125,7 @@
         },
         "DBPName"           : {
             "Default" : "dsm",
-            "Description" : "Name to be assigned to the Oracle database",
+            "Description" : "Name to be assigned to the database",
             "Type"        : "String",
             "MinLength"   : 1,
             "MaxLength"   : 64,
@@ -151,13 +151,31 @@
                 "SQL"
             ]
         },
-		        "DSISubnetID" : {
+        "DSISubnetID"       : {
             "Description" : "Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
             "Type"        : "AWS::EC2::Subnet::Id",
             "MinLength"   : "1",
             "MaxLength"   : "255",
             "AllowedPattern" : "[-_a-zA-Z0-9]*",
             "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
+        },
+        "DSMPMNode"         : {
+            "Description" : "Select whether this is an additional node to be added to an existing Deep Security Manager Infrastructure",
+            "Type"        : "String",
+            "AllowedValues" : [
+                "Yes",
+                "No"
+            ],
+            "Default"       : "No"
+        },
+        "DSMNodeNumber"     : {
+            "Description" : "Index of this node being deployed",
+            "Type"        : "Number",
+            "AllowedValues" : [
+                1,
+                2,
+                3
+            ]
         }
     },
     "Mappings"                 : {
@@ -335,7 +353,6 @@
                         "default" : [
                             "setup",
                             "installDSM",
-                            "installAwsCli",
                             "addCloudAccount"
                         ]
                     },
@@ -387,7 +404,7 @@
                                 }
                             },
                             "/tmp/Manager-Linux-9.5.5602.x64.sh"      : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.5_SP1/Manager-Linux-9.5.5623.x64.sh",
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.5/Manager-Linux-9.5.6008.x64.sh",
                                 "owner"  : "root",
                                 "mode"   : "000700"
                             },
@@ -416,7 +433,7 @@
                                                 "Ref" : "DSCAdminPassword"
                                             },
                                             "\n",
-											"CredentialsScreen.UseStrongPasswords=False\n",
+                                            "CredentialsScreen.UseStrongPasswords=False\n",
                                             "Dinstall4j.language=en\n",
                                             "DatabaseScreen.DatabaseType=",
                                             {
@@ -465,17 +482,23 @@
                                                 "Ref" : "DSIPHeartbeatPort"
                                             },
                                             "\n",
-                                            "AddressAndPortsScreen.NewNode=false\n",
+											{
+												"Fn::If" : [
+													"IsFirstNode",
+													"AddressAndPortsScreen.NewNode=false\n",
+													"AddressAndPortsScreen.NewNode=true\n"
+													]
+												},
                                             "SecurityUpdateScreen.UpdateComponents=true\n",
                                             "SecurityUpdateScreen.UpdateSoftware=true\n",
                                             "SmartProtectionNetworkScreen.EnableFeedback=false\n",
                                             "SmartProtectionNetworkScreen.IndustryType=blank\n",
-											"RelayScreen.Install=True\n",
-											"RelayScreen.ProxyType=None\n",
-											"RelayScreen.ProxyPort=None\n",
-											"RelayScreen.Proxy=False\n",
-											"RelayScreen.AntiMalware=True\n",
-											"RelayScreen.ProxyAuthentication=False\n"
+                                            "RelayScreen.Install=True\n",
+                                            "RelayScreen.ProxyType=None\n",
+                                            "RelayScreen.ProxyPort=None\n",
+                                            "RelayScreen.Proxy=False\n",
+                                            "RelayScreen.AntiMalware=True\n",
+                                            "RelayScreen.ProxyAuthentication=False\n"
                                         ]
                                     ]
                                 },
@@ -496,18 +519,10 @@
                             }
                         }
                     },
-                    "installAwsCli" : {
-                        "commands" : {
-                            "0-install-awscli" : {
-                                "command" : "pip install awscli",
-                                "ignoreErrors" : "false"
-                            }
-                        }
-                    },
-                    "installDSM"    : {
+                    "installDSM" : {
                         "commands" : {
                             "1-install-DSM" : {
-                                "command" : "cd /tmp; sh Manager-Linux-9.5.5602.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties",
+                                "command" : "cd /tmp; sh Manager-Linux-9.5.6008.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
                                 "ignoreErrors" : "false"
                             }
                         }
@@ -517,16 +532,16 @@
                             "0-enableRestApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
                             },
-							"1-enableSoapApi" : {
-								"command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled –value true"
-							},
+                            "1-enableSoapApi" : {
+                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled –value true"
+                            },
                             "2-enableAgentIitiatedActivation" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivation -value 1"
                             },
-                            "3-enableAgentInitiatedReactivateHost"   : {
+                            "3-enableAgentInitiatedReactivateHost" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivationActiveHost -value 2"
                             },
-                            "4-addCloudAccount"             : {
+                            "4-addCloudAccount"                    : {
                                 "command" : {
                                     "Fn::Join" : [
                                         "",
@@ -600,7 +615,9 @@
                 "InstanceType"       : {
                     "Ref" : "DSIPInstanceType"
                 },
-                "SubnetId"           : { "Ref" : "DSISubnetID" },
+                "SubnetId"           : {
+                    "Ref" : "DSISubnetID"
+                },
                 "PrivateIpAddress"   : {
                     "Ref" : "DSIPPrivateIP"
                 },
@@ -610,7 +627,7 @@
                         "Value" : "DSM"
                     }
                 ],
-                "SecurityGroups"     : [
+                "SecurityGroupIds"   : [
                     {
                         "Ref" : "DSMSG"
                     }
@@ -625,20 +642,33 @@
                             [
                                 "#!/bin/bash -xe\n",
                                 "# cloud-init\n",
-                                "wget http://s3.amazonaws.com/trenddemo/cfn_rhel66.sh\n",
-                                "sh cfn_rhel66.sh\n",
-                                "/opt/aws/bin/cfn-init -v ",
+                                "wget https://cf-deepsecurity.s3.amazonaws.com/master/cfn-rh-helper\n",
+                                "sh cfn-rh-helper\n",
+                                {
+                                    "Fn::If" : [
+                                        "DoSQLSetup",
+                                        {
+                                            "Fn::Join" : [
+                                                "",
+                                                "wget https://cf-deepsecurity.s3.amazonaws.com/master/cfn-rh-sql\n",
+                                                "sh cfn-rh-sql\n"
+                                            ]
+                                        },
+                                        ""
+                                    ]
+                                },
+                                "cfn-init -v ",
                                 " --stack ",
                                 {
                                     "Ref" : "AWS::StackName"
                                 },
-                                " --resource DSM1 ",
+                                " --resource DSM",
                                 " --region ",
                                 {
                                     "Ref" : "AWS::Region"
                                 },
                                 "\n",
-                                "/opt/aws/bin/cfn-signal -e $? ",
+                                "cfn-signal -e $? ",
                                 " -r \"Complete\"",
                                 " '",
                                 "'\n"
@@ -673,8 +703,54 @@
                 },
                 "Embedded"
             ]
+        },
+        "IsFirstNode"      : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DSMNodeNumber"
+                },
+                "1"
+            ]
+        },
+        "DoSQLSetup"       : {
+            "Fn::And" : [
+                {
+                    "Condition" : "DBTypeIsSQL"
+                },
+                {
+                    "Condition" : "IsFirstNode"
+                }
+            ]
         }
     },
     "Outputs"                  : {
+        "DSMFQDN" : {
+            "Value" : {
+                "Fn::GetAtt" : [
+                    "DSM",
+                    "PublicDnsName"
+                ]
+            }
+        },
+        "DSMURL"  : {
+            "Value" : {
+                "Fn::Join" : [
+                    "",
+                    [
+                        "https://",
+                        {
+                            "Fn::GetAtt" : [
+                                "DSM",
+                                "PublicDnsName"
+                            ]
+                        },
+                        ":",
+                        {
+                            "Ref" : "DSIPGUIPort"
+                        }
+                    ]
+                ]
+            }
+        }
     }
 }
