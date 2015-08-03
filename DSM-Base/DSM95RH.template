@@ -167,15 +167,6 @@
                 "No"
             ],
             "Default"       : "No"
-        },
-        "DSMNodeNumber"     : {
-            "Description" : "Index of this node being deployed",
-            "Type"        : "Number",
-            "AllowedValues" : [
-                1,
-                2,
-                3
-            ]
         }
     },
     "Mappings"                 : {
@@ -352,12 +343,17 @@
                     "configSets" : {
                         "default" : [
                             "setup",
+							"prepDSMInstall",
                             "installDSM",
                             "addCloudAccount"
                         ],
 						"doSqlSetup" :[
 							"sqlSetup"
-						]
+						],
+						"addDsmNode" :[
+							"prepDSMInstall",
+							"installDSM"
+							]
                     },
                     "setup"      : {
                         "files" : {
@@ -405,8 +401,24 @@
                                         ]
                                     ]
                                 }
-                            },
-                            "/tmp/Manager-Linux-9.5.6008.x64.sh"      : {
+                            }
+                        },
+                        "services" : {
+                            "sysvinit" : {
+                                "cfn-hup" : {
+                                    "enabled" : "true",
+                                    "ensureRunning" : "true",
+                                    "files"         : [
+                                        "/etc/cfn/cfn-hup.conf",
+                                        "/etc/cfn/hooks.d/cfn-auto-reloader.conf"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+					"prepDSMInstall" : {
+						"files" : {
+							"/tmp/Manager-Linux-9.5.6008.x64.sh"      : {
                                 "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.5/Manager-Linux-9.5.6008.x64.sh",
                                 "owner"  : "root",
                                 "mode"   : "000700"
@@ -489,7 +501,7 @@
 												"Fn::If" : [
 													"IsFirstNode",
 													"AddressAndPortsScreen.NewNode=false\n",
-													"AddressAndPortsScreen.NewNode=true\n"
+													"AddressAndPortsScreen.NewNode=true\nUpgradeVerificationScreen.Overwrite=False\n"
 													]
 												},
                                             "SecurityUpdateScreen.UpdateComponents=true\n",
@@ -508,20 +520,8 @@
                                 "owner"   : "root",
                                 "mode"    : "000600"
                             }
-                        },
-                        "services" : {
-                            "sysvinit" : {
-                                "cfn-hup" : {
-                                    "enabled" : "true",
-                                    "ensureRunning" : "true",
-                                    "files"         : [
-                                        "/etc/cfn/cfn-hup.conf",
-                                        "/etc/cfn/hooks.d/cfn-auto-reloader.conf"
-                                    ]
-                                }
-                            }
-                        }
-                    },
+						}
+					},
                     "installDSM" : {
                         "commands" : {
                             "1-install-DSM" : {
@@ -536,7 +536,7 @@
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
                             },
                             "1-enableSoapApi" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled –value true"
+                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
                             },
                             "2-enableAgentIitiatedActivation" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivation -value 1"
@@ -607,15 +607,15 @@
 								"ignoreErrors" : "false"
 							},
 							"2-run-helper" : {
-								"command" : "sh cfn-rh-sql",
+								"command" : "cd /etc/cfn/rhel-scripts; sh cfn-rh-sql",
 								"ignoreErrors" : "false"
 							},
 							"3-create-db" : {
-								"coommand" : {
+								"command" : {
 									"Fn::Join" : [
 										"",
 										[
-											"python create-DSM-SqlDB.py --user ", { "Ref" : "DBICAdminName" }, " --pass ", { "Ref" : "DBICAdminPassword" }, " --endpoint ", { "Ref" : "DBPRDSEndpoint" }, " --dbname ", { "Ref" : "DBPName" }
+											"cd /etc/cfn/rhel-scripts; python create-DSM-SqlDB.py --user ", { "Ref" : "DBICAdminName" }, " --pass ", { "Ref" : "DBICAdminPassword" }, " --endpoint ", { "Ref" : "DBPRDSEndpoint" }, " --dbname ", { "Ref" : "DBPName" }
 										]
 									]
 								},
@@ -683,10 +683,17 @@
 								{
 									"Fn::If" : [
 										"DoSQLSetup",
-										"-c doSqlSetup, default",
+										" -c doSqlSetup,default",
 										""
 										]
-									},
+								},
+								{
+									"Fn::If" : [
+										"IsFirstNode",
+										"",
+										" -c addDsmNode"
+										]
+								},
                                 "\n",
                                 "cfn-signal -e $? ",
                                 " -r \"Complete\"",
@@ -727,9 +734,9 @@
         "IsFirstNode"      : {
             "Fn::Equals" : [
                 {
-                    "Ref" : "DSMNodeNumber"
+                    "Ref" : "DSMPMNode"
                 },
-                "1"
+                "No"
             ]
         },
         "DoSQLSetup"       : {
