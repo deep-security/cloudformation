@@ -24,9 +24,6 @@
     <Compile Include="DSMOracleMonolithic.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DSM95SP1addnode.template">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DSM95RH.template">
       <SubType>Code</SubType>
     </Compile>
@@ -43,6 +40,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MasterBaseDS.template">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="nestSgTest.template">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

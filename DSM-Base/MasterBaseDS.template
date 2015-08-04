@@ -64,14 +64,14 @@
             "MaxValue"    : 35,
             "ConstraintDescription" : "must be between 0 and 35 days."
         },
-		"DBPCreateDbInstance" : {
-			"Description" : "Choose whether or not to create an RDS instance for the Deep Security Manager Deployment",
-			"Type" : "String",
-			"AllowedValues" : [
-				"Yes",
-				"No"
-				]
-			},
+        "DBPCreateDbInstance"  : {
+            "Description" : "Choose whether or not to create an RDS instance for the Deep Security Manager Deployment",
+            "Type"        : "String",
+            "AllowedValues" : [
+                "Yes",
+                "No"
+            ]
+        },
         "DBICAdminName"        : {
             "Default" : "dsadmin",
             "NoEcho"  : false,
@@ -136,17 +136,17 @@
                 "2"
             ]
         },
-		"DSIPPrivateIP1"      : {
+        "DSIPPrivateIP1"       : {
             "Description" : "Fixed private IP for the Deep Seccurity Manager",
             "Type"        : "String",
             "Default"     : "10.0.9.100",
-			"AllowedPattern" : "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}?(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
+            "AllowedPattern" : "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}?(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
         },
-        "DSIPPrivateIP2"      : {
+        "DSIPPrivateIP2"       : {
             "Description" : "Fixed private IP for the second Deep Security manager node [optional]",
             "Type"        : "String",
             "Default"     : "10.0.9.100",
-			"AllowedPattern" : "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}?(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
+            "AllowedPattern" : "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}?(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
         },
         "DSIPLicense"          : {
             "Description" : "Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
@@ -216,16 +216,17 @@
             "Type"        : "String",
             "MinLength"   : "0",
             "MaxLength"   : "16",
-            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*"
+            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
+			"Default" : "none"
         },
         "DBISubnet"            : {
             "Description" : "Choose a private subnet for the RDS instance",
             "Type"        : "AWS::EC2::Subnet::Id"
         },
-		"DBIInstanceIdentifier" : {
-			"Description" : "Choose RDS Instance ID",
-			"Type" : "String"
-			}
+        "DBIInstanceIdentifier" : {
+            "Description" : "Choose RDS Instance ID",
+            "Type"        : "String"
+        }
     },
     "Resources"                : {
         "DSM95Node1" : {
@@ -235,59 +236,58 @@
                 "DSISecurityGroups"
             ],
             "Properties" : {
+			"TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSM95RH.template",
                 "Parameters" : {
-                    "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSM95RH.template",
-					"AWSIKeyPairName" : {
-						"Ref" : "AWSIKeyPairName"
-						},
-                    "AWSIVPC"       : {
+                    "AWSIKeyPairName" : {
+                        "Ref" : "AWSIKeyPairName"
+                    },
+                    "AWSIVPC"         : {
                         "Ref" : "AWSIVPC"
                     },
-                    "DSIPLicense" : {
+                    "DSIPLicense"     : {
                         "Ref" : "DSIPLicense"
                     },
-                    "DSCAdminName" : {
+                    "DSCAdminName"    : {
                         "Ref" : "DSCAdminName"
                     },
                     "DSCAdminPassword" : {
                         "Ref" : "DSCAdminPassword"
                     },
-                    "DBPRDSEndpoint"       : {
-                            "Fn::GetAtt" : [
-                                "DSDatabaseAbstract",
-                                "Outputs.DSDBEndpoint"
-                            ]
+                    "DBPRDSEndpoint"   : {
+                        "Fn::GetAtt" : [
+                            "DSDatabaseAbstract",
+                            "Outputs.DSDBEndpoint"
+                        ]
                     },
-                    "DBPName"           : {
+                    "DBPName"          : {
                         "Ref" : "DBPName"
                     },
-                    "DBICAdminName"       : {
+                    "DBICAdminName"    : {
                         "Ref" : "DBICAdminName"
                     },
-                    "DBICAdminPassword"       : {
+                    "DBICAdminPassword" : {
                         "Ref" : "DBICAdminPassword"
                     },
-                    "DSIPPrivateIp"   : {
+                    "DSIPPrivateIP"     : {
                         "Ref" : "DSIPPrivateIP1"
                     },
-                    "DSIPGUIPort"        : {
+                    "DSIPGUIPort"       : {
                         "Ref" : "DSIPGUIPort"
                     },
-                    "DSIPHeartbeatPort"  : {
+                    "DSIPHeartbeatPort" : {
                         "Ref" : "DSIPHeartbeatPort"
                     },
-                    "AdditionalNode"   : "no",
-                    "DSISubnetID"      : {
+                    "DSMPMNode"    : "No",
+                    "DSISubnetID"       : {
                         "Ref" : "DSISubnetID"
                     },
-                    "DSMSG"            : [
-						{
-							"Fn::GetAtt" : [ 
-								"DSISecurityGroups", 
-								"Outputs.DSMSG"
-							]
-						} 
-					]
+					"DSIPHostName" : { "Ref" : "DSIPHostName1" },
+                    "DSMSG"             : {
+                        "Fn::GetAtt" : [
+                            "DSISecurityGroups",
+                            "Outputs.DSMSG"
+                        ]
+                    }
                 }
             }
         },
@@ -300,59 +300,58 @@
             ],
             "Condition" : "DSIsMultiNode",
             "Properties" : {
+			"TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSM95RH.template",
                 "Parameters" : {
-                    "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSM95RH.template",
-					"AWSIKeyPairName" : {
-						"Ref" : "AWSIKeyPairName"
-						},
-                    "AWSIVPC"       : {
+                    "AWSIKeyPairName" : {
+                        "Ref" : "AWSIKeyPairName"
+                    },
+                    "AWSIVPC"         : {
                         "Ref" : "AWSIVPC"
                     },
-                    "DSIPLicense" : {
+                    "DSIPLicense"     : {
                         "Ref" : "DSIPLicense"
                     },
-                    "DSCAdminName" : {
+                    "DSCAdminName"    : {
                         "Ref" : "DSCAdminName"
                     },
                     "DSCAdminPassword" : {
                         "Ref" : "DSCAdminPassword"
                     },
-                    "DBPRDSEndpoint"       : {
-                            "Fn::GetAtt" : [
-                                "DSDatabaseAbstract",
-                                "Outputs.DSDBEndpoint"
-                            ]
+                    "DBPRDSEndpoint"   : {
+                        "Fn::GetAtt" : [
+                            "DSDatabaseAbstract",
+                            "Outputs.DSDBEndpoint"
+                        ]
                     },
-                    "DBPName"           : {
+                    "DBPName"          : {
                         "Ref" : "DBPName"
                     },
-                    "DBICAdminName"       : {
+                    "DBICAdminName"    : {
                         "Ref" : "DBICAdminName"
                     },
-                    "DBICAdminPassword"       : {
+                    "DBICAdminPassword" : {
                         "Ref" : "DBICAdminPassword"
                     },
-                    "DSIPPrivateIp"   : {
+                    "DSIPPrivateIP"     : {
                         "Ref" : "DSIPPrivateIP2"
                     },
-                    "DSGUIPort"        : {
+                    "DSIPGUIPort"         : {
                         "Ref" : "DSIPGUIPort"
                     },
-                    "DSHeartbeatPort"  : {
+                    "DSIPHeartbeatPort"   : {
                         "Ref" : "DSIPHeartbeatPort"
                     },
-                    "DSMPMNode"   : "Yes",
-                    "DSISubnetID"      : {
+                    "DSMPMNode"         : "Yes",
+                    "DSISubnetID"       : {
                         "Ref" : "DSISubnetID"
                     },
-                    "DSMSG"            : [
-						{
-							"Fn::GetAtt" : [ 
-								"DSISecurityGroups", 
-								"Outputs.DSMSG"
-							]
-						} 
-					]
+					"DSIPHostName" : { "Ref" : "DSIPHostName2" },
+                    "DSMSG"             : {
+                        "Fn::GetAtt" : [
+                            "DSISecurityGroups",
+                            "Outputs.DSMSG"
+                        ]
+                    }
                 }
             }
         },
@@ -367,35 +366,35 @@
                     "DBIStorageAllocation" : {
                         "Ref" : "DBIStorageAllocation"
                     },
-                    "DBIRDSInstanceSize"  : {
+                    "DBIRDSInstanceSize"   : {
                         "Ref" : "DBIRDSInstanceSize"
                     },
-                    "DBPEngine"           : {
+                    "DBPEngine"            : {
                         "Ref" : "DBPEngine"
                     },
-                    "DBICAdminName"   : {
+                    "DBICAdminName"        : {
                         "Ref" : "DBICAdminName"
                     },
-                    "DBICAdminPassword" : {
+                    "DBICAdminPassword"    : {
                         "Ref" : "DBICAdminPassword"
                     },
-                    "RDSSG"            : [
-						{
-							"Fn::GetAtt" : [ 
-								"DSISecurityGroups", 
-								"Outputs.RDSSG"
-							]
-						} 
-					],
-                    "MultiAZ"            : false,
-                    "StorageType"        : "gp2",
-                    "DBPBackupDays" : {
+                    "RDSSG"                : {
+                        "Fn::GetAtt" : [
+                            "DSISecurityGroups",
+                            "Outputs.RDSSG"
+                        ]
+                    },
+                    "MultiAZ"              : false,
+                    "StorageType"          : "gp2",
+                    "DBPBackupDays"        : {
                         "Ref" : "DBPBackupDays"
                     },
-                    "DBISubnet"             : {
+                    "DBISubnet"            : {
                         "Ref" : "DBISubnet"
                     },
-					"DBIInstanceIdentifier" : { "Ref" : "DBIInstanceIdentifier" }
+                    "DBIInstanceIdentifier" : {
+                        "Ref" : "DBIInstanceIdentifier"
+                    }
                 }
             }
         },
@@ -431,25 +430,37 @@
         }
     },
     "Outputs"                  : {
-		"DSM1FQDN" : {
-			"Value" :{
-				"Fn::GetAtt" : [ "DSM95Node1", "Outputs.DSMFQDN" ]
-				}
-			},
-		"DSM1ConsoleURL" : {
-			"Value" :{
-				"Fn::GetAtt" : [ "DSM95Node1", "Outputs.DSMURL" ]
-				}
-			},
-		"DSM2FQDN" : {
-			"Value" : {
-				"Fn::GetAtt" : [ "DSM95Node1", "Outputs.DSMFQDN" ]
-				}
-			},
-		"DSM2ConsoleURL" : {
-			"Value" : {
-				"Fn::GetAtt" : [ "DSM95Node1", "Outputs.DSMURL" ]
-				}
-			}
+        "DSM1FQDN" : {
+            "Value" : {
+                "Fn::GetAtt" : [
+                    "DSM95Node1",
+                    "Outputs.DSMFQDN"
+                ]
+            }
+        },
+        "DSM1ConsoleURL" : {
+            "Value" : {
+                "Fn::GetAtt" : [
+                    "DSM95Node1",
+                    "Outputs.DSMURL"
+                ]
+            }
+        },
+        "DSM2FQDN"       : {
+            "Value" : {
+                "Fn::GetAtt" : [
+                    "DSM95Node1",
+                    "Outputs.DSMFQDN"
+                ]
+            }
+        },
+        "DSM2ConsoleURL" : {
+            "Value" : {
+                "Fn::GetAtt" : [
+                    "DSM95Node1",
+                    "Outputs.DSMURL"
+                ]
+            }
+        }
     }
 }
