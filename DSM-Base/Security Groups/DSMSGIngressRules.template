@@ -1,0 +1,94 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description"              : "",
+    "Parameters"               : {
+        "DSMSG" : {
+            "Description" : "Deep Security Manager Security Group",
+            "Type"        : "AWS::EC2::SecurityGroup::Id"
+        },
+        "ELBSourceSG" : {
+            "Description" : "Source Security Group for inbound from ELB",
+            "Type"        : "String"
+        },
+        "DSIPHeartbeatPort" : {
+            "Description" : "The heartbeat port used by Deep Security Agents and appliances to communicate with the Deep Security Manager.",
+            "Type"        : "Number",
+            "MinValue"    : 0,
+            "MaxValue"    : 65535,
+            "Default"     : "4120",
+            "ConstraintDescription" : "Must be a valid TCP port."
+        },
+        "DSIPGUIPort"       : {
+            "Description" : "The Deep Security Manager application and GUI port.",
+            "Type"        : "Number",
+            "MinValue"    : 0,
+            "MaxValue"    : 65535,
+            "Default"     : "4119",
+            "ConstraintDescription" : "Must be a valid TCP port."
+        }
+    },
+    "Resources"                : {
+        "DSMConsoleIngress" : {
+            "Type" : "AWS::EC2::SecurityGroupIngress",
+            "Properties" : {
+                "GroupId" : {
+                    "Ref" : "DSMSG"
+                },
+                "IpProtocol" : "tcp",
+                "FromPort"   : {
+                    "Ref" : "DSIPGUIPort"
+                },
+                "ToPort"     : {
+                    "Ref" : "DSIPGUIPort"
+                },
+                "SourceSecurityGroupId" : {
+                    "Ref" : "ELBSourceSG"
+                }
+            }
+        },
+        "DSMHeartbeatIngress" : {
+            "Type" : "AWS::EC2::SecurityGroupIngress",
+            "Properties" : {
+                "GroupId" : {
+                    "Ref" : "DSMSG"
+                },
+                "IpProtocol" : "tcp",
+                "FromPort"   : {
+                    "Ref" : "DSIPHeartbeatPort"
+                },
+                "ToPort"     : {
+                    "Ref" : "DSIPHeartbeatPort"
+                },
+                "SourceSecurityGroupId" : {
+                    "Ref" : "ELBSourceSG"
+                }
+            }
+        },
+        "DSMRelayIngress"     : {
+            "Type" : "AWS::EC2::SecurityGroupIngress",
+            "Properties" : {
+                "GroupId" : {
+                    "Ref" : "DSMSG"
+                },
+                "IpProtocol" : "tcp",
+                "FromPort"   : "4122",
+                "ToPort"     : "4122",
+                "SourceSecurityGroupId" : {
+                    "Ref" : "ELBSourceSG"
+                }
+            }
+        },
+		"DSMAgentIngress" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "tcp",
+				"FromPort" : "4118",
+				"ToPort" : "4118",
+				"SourceSecurityGroupId" : { "Ref" : "DSMSG" }
+				}
+			}
+    },
+    "Outputs"                  : {
+    }
+}

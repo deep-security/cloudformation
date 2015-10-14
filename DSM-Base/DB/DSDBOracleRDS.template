@@ -31,7 +31,7 @@
             "Type"        : "Number",
             "MinValue"    : 10,
             "MaxValue"    : 3072,
-            "ConstraintDescription" : "must be between 100 and 3072Gb."
+            "ConstraintDescription" : "must be between 10 and 3072Gb."
         },
         "DBPBackupDays"       : {
             "Default" : 1,
@@ -76,12 +76,11 @@
         "RDSSG"               : {
             "Type" : "AWS::EC2::SecurityGroup::Id"
         },
-		"DBISubnet" : {
-			"Description" : "Choose a private subnet for the RDS instance",
-			"Type" : "AWS::EC2::Subnet::Id"
-		},
 		"DBIInstanceIdentifier" : {
 			"Description" : "Choose RDS Instance ID",
+			"Type" : "String"
+			},
+		"DBISubnetGroupName" : {
 			"Type" : "String"
 			}
     },
@@ -89,15 +88,18 @@
         "DSDatabase" : {
             "Type" : "AWS::RDS::DBInstance",
             "Properties" : {
-			"LicenseModel" : "license-included",
-			"PubliclyAccessible" : false,
+				"LicenseModel" : "license-included",
+				"PubliclyAccessible" : false,
+                "DBName" : {
+                    "Ref" : "DBPName"
+                },
                 "AllocatedStorage" : {
                     "Ref" : "DBIStorageAllocation"
                 },
                 "DBInstanceClass"  : {
                     "Ref" : "DBIRDSInstanceSize"
                 },
-                "Engine"           : "sqlserver-se",
+                "Engine"           : "oracle-se1",
                 "MasterUsername"   : {
                     "Ref" : "DBICAdminName"
                 },
@@ -107,10 +109,12 @@
                 "VPCSecurityGroups"  : [{
                     "Ref" : "RDSSG"
                 }],
+                "MultiAZ"            : false,
                 "BackupRetentionPeriod" : {
                     "Ref" : "DBPBackupDays"
                 },
-                "DBInstanceIdentifier"  : { "Ref" : "DBIInstanceIdentifier" }
+                "DBInstanceIdentifier"  : { "Ref" : "DBIInstanceIdentifier" },
+				"DBSubnetGroupName" : { "Ref" : "DBISubnetGroupName" }
             }
         }
     },

@@ -1,0 +1,102 @@
+{
+	"AWSTemplateFormatVersion" : "2010-09-09",
+
+	"Description" : "",
+
+	"Parameters" : {
+		"AWSIVPC" : {
+            "Description" : "Existing VPC to deploy Deep Security Manager",
+            "Type"        : "AWS::EC2::VPC::Id",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*"
+        },
+		"DBPEngine"         : {
+            "Description" : "Choose SQL or Oracle for DSM database Engine",
+            "Type"        : "String",
+            "Default"     : "SQL",
+            "AllowedValues" : [
+                "SQL",
+                "Oracle"
+            ]
+        },
+		"DSMSG" : {
+			"Type" : "AWS::EC2::SecurityGroup::Id"
+			}
+	},
+
+	"Resources" : {
+		     "RDSSG" : {
+            "Type" : "AWS::EC2::SecurityGroup",
+            "Properties" : {
+                "GroupDescription" : "Allow DSM to Database communication",
+                "VpcId"            : {
+                    "Ref" : "AWSIVPC"
+                },
+                "SecurityGroupIngress" : [
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : {
+                            "Fn::If" : [
+                                "DBTypeIsOracle",
+                                "1521",
+                                "1433"
+                            ]
+                        },
+                        "ToPort"     : {
+                            "Fn::If" : [
+                                "DBTypeIsOracle",
+                                "1521",
+                                "1433"
+                            ]
+                        },
+                        "SourceSecurityGroupId" : {
+                            "Ref" : "DSMSG"
+                        }
+                    }
+                ],
+                "SecurityGroupEgress"  : [
+                    {
+                        "IpProtocol" : "-1",
+                        "CidrIp"     : "0.0.0.0/0"
+                    }
+                ],
+				"Tags" : [
+					{
+						"Key" : "Name",
+						"Value" : "DSMRDSSG"
+					}
+				]
+            }
+        }
+	},
+    "Conditions"               : {
+        "DBTypeIsOracle" : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DBPEngine"
+                },
+                "Oracle"
+            ]
+        },
+        "DBTypeIsSQL"    : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DBPEngine"
+                },
+                "SQL"
+            ]
+        }
+    },
+
+	"Outputs" : {
+		"RDSSG" : {
+            "Value" : {
+                "Fn::GetAtt" : [
+					"RDSSG",
+					"GroupId"
+				]
+            }
+        }
+	}
+}

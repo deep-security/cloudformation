@@ -1,0 +1,894 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description"              : "v2015-07-06: Deploys Deep Security Manager to AWS. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Parameters"               : {
+        "AWSIKeyPairName" : {
+            "Description" : "Existing key pair to use for connecting to your Deep Security Manager Instance",
+            "Type"        : "AWS::EC2::KeyPair::KeyName",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*",
+            "ConstraintDescription" : "Select an existing EC2 Key Pair."
+        },
+        "AWSIVPC"         : {
+            "Description" : "Existing VPC to deploy Deep Security Manager",
+            "Type"        : "AWS::EC2::VPC::Id",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*"
+        },
+        "DSCAdminName"    : {
+            "Default" : "MasterAdmin",
+            "NoEcho"  : false,
+            "Description" : "The Deep Security Manager administrator account username for Web Console Access",
+            "Type"        : "String",
+            "MinLength"   : 1,
+            "MaxLength"   : 16,
+            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
+            "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
+        },
+        "DSCAdminPassword" : {
+            "NoEcho" : true,
+            "Description" : "The Deep Security Manager administrator account password",
+            "Type"        : "String",
+            "MinLength"   : 8,
+            "MaxLength"   : 41,
+            "AllowedPattern" : "[a-zA-Z0-9]*",
+            "ConstraintDescription" : "must contain only alphanumeric characters."
+        },
+        "DSIPLicenseKey"   : {
+            "Description" : "Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
+            "Type"        : "String",
+            "MinLength"   : 37,
+            "MaxLength"   : 37,
+            "AllowedPattern" : "[A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}",
+            "ConstraintDescription" : "Key can only contain ASCII characters.",
+            "Default"               : "XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
+        },
+        "DSIPHeartbeatPort" : {
+            "Description" : "The heartbeat port used by Deep Security Agents and appliances to communicate with the Deep Security Manager.",
+            "Type"        : "Number",
+            "MinValue"    : 0,
+            "MaxValue"    : 65535,
+            "Default"     : "4120",
+            "ConstraintDescription" : "Must be a valid TCP port."
+        },
+        "DSIPGUIPort"       : {
+            "Description" : "The Deep Security Manager application and GUI port.",
+            "Type"        : "Number",
+            "MinValue"    : 0,
+            "MaxValue"    : 65535,
+            "Default"     : "4119",
+            "ConstraintDescription" : "Must be a valid TCP port."
+        },
+        "DSIPInstanceType"  : {
+            "Description" : "Amazon EC2 instance type for the Deep Security Manager Node Instances",
+            "Type"        : "String",
+            "Default"     : "m3.medium",
+            "AllowedValues" : [
+                "m3.medium",
+                "m3.large",
+                "m3.xlarge",
+                "m3.2xlarge",
+                "c4.large",
+                "c4.xlarge",
+                "c4.2xlarge",
+                "c4.4xlarge",
+                "c4.8xlarge",
+                "c3.large",
+                "c3.xlarge",
+                "c3.2xlarge",
+                "c3.4xlarge",
+                "c3.8xlarge",
+                "r3.large",
+                "r3.xlarge",
+                "r3.2xlarge",
+                "r3.4xlarge",
+                "r3.8xlarge",
+                "i2.xlarge",
+                "i2.2xlarge",
+                "i2.4xlarge",
+                "i2.8xlarge",
+                "hs1.8xlarge",
+                "g2.2xlarge"
+            ]
+        },
+        "DBICAdminName"     : {
+            "Default" : "dsadmin",
+            "NoEcho"  : false,
+            "Description" : "Admin account username to be used for the database instance",
+            "Type"        : "String",
+            "MinLength"   : 1,
+            "MaxLength"   : 16,
+            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
+            "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
+        },
+        "DBICAdminPassword" : {
+            "NoEcho" : true,
+            "Description" : "Password to be used for the database admin account",
+            "Type"        : "String",
+            "MinLength"   : 8,
+            "MaxLength"   : 41,
+            "AllowedPattern" : "[a-zA-Z0-9]*",
+            "ConstraintDescription" : "must contain only alphanumeric characters."
+        },
+        "DBPName"           : {
+            "Default" : "dsm",
+            "Description" : "Name to be assigned to the database",
+            "Type"        : "String",
+            "MinLength"   : 1,
+            "MaxLength"   : 64,
+            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
+            "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
+        },
+        "DBPRDSEndpoint"    : {
+            "Default" : "RDS.FQDN.domain",
+            "Description" : "FQDN or IP of RDS Endpoint",
+            "Type"        : "String",
+            "MinLength"   : "1",
+            "MaxLength"   : "64"
+        },
+        "DSMSG"             : {
+            "Type" : "AWS::EC2::SecurityGroup::Id"
+        },
+        "DBPEngine"         : {
+            "Default" : "Embedded",
+            "Type"    : "String",
+            "AllowedValues" : [
+                "Embedded",
+                "Oracle",
+                "SQL"
+            ]
+        },
+        "DSISubnetID"       : {
+            "Description" : "Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
+            "Type"        : "AWS::EC2::Subnet::Id",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*",
+            "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
+        },
+        "DSMPMNode"         : {
+            "Description" : "Select whether this is an additional node to be added to an existing Deep Security Manager Infrastructure",
+            "Type"        : "String",
+            "AllowedValues" : [
+                "Yes",
+                "No"
+            ],
+            "Default"       : "No"
+        },
+        "CreateEIP"         : {
+            "Description" : "Allocate an EIP and associate it with this Deep Security Manager Instance. Recommend set to true unless deploying behind an ELB",
+            "Type"        : "String",
+            "AllowedValues" : [
+                "True",
+                "False"
+            ],
+            "Default"       : "False"
+        },
+		"DSMELB" : {
+			"Type" : "String",
+			"Default" : "test"
+		}
+    },
+    "Mappings"                 : {
+        "AWSRegionArch2AMI" : {
+            "eu-central-1" : {
+                "64" : "ami-fa0538e7"
+            },
+            "sa-east-1"    : {
+                "64" : "ami-81fb409c"
+            },
+            "ap-northeast-1" : {
+                "64" : "ami-67e01667"
+            },
+            "eu-west-1"      : {
+                "64" : "ami-837de3f4"
+            },
+            "us-east-1"      : {
+                "64" : "ami-b0fed2d8"
+            },
+            "us-west-1"      : {
+                "64" : "ami-f3a243b7"
+            },
+            "us-west-2"      : {
+                "64" : "ami-2faa861f"
+            },
+            "ap-southeast-2" : {
+                "64" : "ami-e5ec9cdf"
+            },
+            "ap-southeast-1" : {
+                "64" : "ami-fc98a9ae"
+            }
+        },
+        "TrendRegionMap"    : {
+            "us-east-1" : {
+                "regionkey" : "amazon.cloud.region.key.1"
+            },
+            "us-west-2" : {
+                "regionkey" : "amazon.cloud.region.key.2"
+            },
+            "us-west-1" : {
+                "regionkey" : "amazon.cloud.region.key.3"
+            },
+            "eu-west-1" : {
+                "regionkey" : "amazon.cloud.region.key.4"
+            },
+            "ap-southeast-1" : {
+                "regionkey" : "amazon.cloud.region.key.5"
+            },
+            "ap-northeast-1" : {
+                "regionkey" : "amazon.cloud.region.key.6"
+            },
+            "sa-east-1"      : {
+                "regionkey" : "amazon.cloud.region.key.7"
+            }
+        },
+        "DSMDBMap"          : {
+            "SQL" : {
+                "DbTypeString" : "Microsoft SQL Server"
+            },
+            "Oracle" : {
+                "DbTypeString" : "Oracle"
+            },
+            "Embedded" : {
+                "DbTypeString" : "Embedded"
+            }
+        }
+    },
+    "Resources"                : {
+        "DSIAMUser" : {
+            "Type" : "AWS::IAM::User",
+            "Properties" : {
+            }
+        },
+        "DSIAMGroup" : {
+            "Type" : "AWS::IAM::Group"
+        },
+        "Users"      : {
+            "Type" : "AWS::IAM::UserToGroupAddition",
+            "Properties" : {
+                "GroupName" : {
+                    "Ref" : "DSIAMGroup"
+                },
+                "Users"     : [
+                    {
+                        "Ref" : "DSIAMUser"
+                    }
+                ]
+            }
+        },
+        "DSMUserPolicies" : {
+            "Type" : "AWS::IAM::Policy",
+            "Properties" : {
+                "PolicyName" : "DSMUsers",
+                "PolicyDocument" : {
+                    "Statement" : [
+                        {
+                            "Effect" : "Allow",
+                            "Action" : [
+                                "ec2:DescribeInstances",
+                                "ec2:DescribeImages",
+                                "ec2:DescribeTags"
+                            ],
+                            "Resource" : "*"
+                        }
+                    ]
+                },
+                "Groups"         : [
+                    {
+                        "Ref" : "DSIAMGroup"
+                    }
+                ]
+            }
+        },
+        "AccessKeys"      : {
+            "Type" : "AWS::IAM::AccessKey",
+            "Properties" : {
+                "UserName" : {
+                    "Ref" : "DSIAMUser"
+                }
+            }
+        },
+        "DSMRole"         : {
+            "Type" : "AWS::IAM::Role",
+            "Properties" : {
+                "AssumeRolePolicyDocument" : {
+                    "Statement" : [
+                        {
+                            "Effect" : "Allow",
+                            "Principal" : {
+                                "Service" : [
+                                    "ec2.amazonaws.com"
+                                ]
+                            },
+                            "Action"    : [
+                                "sts:AssumeRole"
+                            ]
+                        }			
+                    ]
+                },
+                "Path"                     : "/",
+                "Policies"                 : [
+                    {
+                        "PolicyName" : "PlaceholderPolicy",
+                        "PolicyDocument" : {
+                            "Statement" : [
+                                {
+                                    "Effect" : "Allow",
+                                    "Action" : [
+                                        "ec2:DescribeLicenses"
+                                    ],
+                                    "Resource" : "*"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+		"DSMELBRole" : {
+			"Type" : "AWS::IAM::Role",
+            "Properties" : {
+                "AssumeRolePolicyDocument" : {
+                    "Statement" : [
+                        {
+                            "Effect" : "Allow",
+                            "Principal" : {
+                                "Service" : [
+                                    "ec2.amazonaws.com"
+                                ]
+                            },
+                            "Action"    : [
+                                "sts:AssumeRole"
+                            ]
+                        }			
+                    ]
+                },
+                "Path"                     : "/",
+                "Policies"                 : [
+                    {
+                        "PolicyName" : "PlaceholderPolicy",
+                        "PolicyDocument" : {
+                            "Statement" : [
+                                {
+                                    "Effect" : "Allow",
+                                    "Action" : [
+                                        "ec2elasticloadbalancing:RegisterInstancesWithLoadBalancer"
+                                    ],
+                                    "Resource" : "*"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+		},
+        "DSMProfile"      : {
+            "Type" : "AWS::IAM::InstanceProfile",
+            "Properties" : {
+                "Path" : "/",
+                "Roles" : [
+                    {
+                        "Ref" : "DSMRole"
+                    },
+					{
+						"Fn::If" : [
+							"AddToELB",
+							{
+								"Ref" : "DSMELBRole"
+							},
+							"AWS::NoValue"
+						]
+					}
+                ]
+            }
+        },
+        "DSM"             : {
+            "Type" : "AWS::EC2::Instance",
+            "Metadata" : {
+                "AWS::CloudFormation::Init" : {
+                    "configSets" : {
+                        "default" : [
+                            "setup",
+                            "prepDSMInstall",
+                            "installDSM",
+                            "addCloudAccount"
+                        ],
+                        "doSqlSetup" : [
+                            "sqlSetup"
+                        ],
+                        "addDsmNode" : [
+                            "prepDSMInstall",
+                            "installDSM"
+                        ]
+                    },
+                    "setup"      : {
+                        "files" : {
+                            "/etc/cfn/cfn-hup.conf" : {
+                                "content" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "[main]\n",
+                                            "stack=",
+                                            {
+                                                "Ref" : "AWS::StackId"
+                                            },
+                                            "\n",
+                                            "region=",
+                                            {
+                                                "Ref" : "AWS::Region"
+                                            },
+                                            "\n"
+                                        ]
+                                    ]
+                                },
+                                "mode"    : "000400",
+                                "owner"   : "root",
+                                "group"   : "root"
+                            },
+                            "/etc/cfn/hooks.d/cfn-auto-reloader.conf" : {
+                                "content" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "[cfn-auto-reloader-hook]\n",
+                                            "triggers=post.update\n",
+                                            "path=Resources.DSM.Metadata.AWS::CloudFormation::Init\n",
+                                            "action=/opt/aws/bin/cfn-init -v --stack ",
+                                            {
+                                                "Ref" : "AWS::StackId"
+                                            },
+                                            " --resource DSM1",
+                                            " --region ",
+                                            {
+                                                "Ref" : "AWS::Region"
+                                            },
+                                            " runas=root\n"
+                                        ]
+                                    ]
+                                }
+                            }
+                        },
+                        "services" : {
+                            "sysvinit" : {
+                                "cfn-hup" : {
+                                    "enabled" : "true",
+                                    "ensureRunning" : "true",
+                                    "files"         : [
+                                        "/etc/cfn/cfn-hup.conf",
+                                        "/etc/cfn/hooks.d/cfn-auto-reloader.conf"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "prepDSMInstall" : {
+                        "files" : {
+                            "/tmp/Manager-Linux-9.6.1589.x64.sh" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Manager-Linux-9.6.1589.x64.sh",
+                                "owner"  : "root",
+                                "mode"   : "000700"
+                            },
+                            "/tmp/Agent-RedHat_EL6-9.6.1-1308.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.1-1308.x86_64.zip",
+                                "owner"  : "root",
+                                "mode"   : "000600"
+                            },
+                            "/tmp/KernelSupport-RedHat_EL6-9.6.1-1628.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.1-1628.x86_64.zip",
+                                "owner"  : "root",
+                                "mode"   : "000600"
+                            },
+                            "/etc/cfn/dsmConfiguration.properties"                : {
+                                "content" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            {
+                                                "Fn::If" : [
+                                                    "KeyProvided",
+                                                    {
+                                                        "Fn::Join" : [
+                                                            "",
+                                                            [
+                                                                "LicenseScreen.License.-1=",
+                                                                {
+                                                                    "Ref" : "DSIPLicenseKey"
+                                                                }
+                                                            ]
+                                                        ]
+                                                    },
+                                                    "\n"
+                                                ]
+                                            },
+                                            "\n",
+                                            "CredentialsScreen.Administrator.Username=",
+                                            {
+                                                "Ref" : "DSCAdminName"
+                                            },
+                                            "\n",
+                                            "CredentialsScreen.Administrator.Password=",
+                                            {
+                                                "Ref" : "DSCAdminPassword"
+                                            },
+                                            "\n",
+                                            "CredentialsScreen.UseStrongPasswords=False\n",
+                                            "Dinstall4j.language=en\n",
+                                            "DatabaseScreen.DatabaseType=",
+                                            {
+                                                "Fn::FindInMap" : [
+                                                    "DSMDBMap",
+                                                    {
+                                                        "Ref" : "DBPEngine"
+                                                    },
+                                                    "DbTypeString"
+                                                ]
+                                            },
+                                            "\n",
+                                            "DatabaseScreen.Hostname=",
+                                            {
+                                                "Ref" : "DBPRDSEndpoint"
+                                            },
+                                            "\n",
+                                            "DatabaseScreen.DatabaseName=",
+                                            {
+                                                "Ref" : "DBPName"
+                                            },
+                                            "\n",
+                                            "DatabaseScreen.Transport=TCP\n",
+                                            "DatabaseScreen.Username=",
+                                            {
+                                                "Ref" : "DBICAdminName"
+                                            },
+                                            "\n",
+                                            "DatabaseScreen.Password=",
+                                            {
+                                                "Ref" : "DBICAdminPassword"
+                                            },
+                                            "\n",
+                                            "AddressAndPortsScreen.ManagerPort=",
+                                            {
+                                                "Ref" : "DSIPGUIPort"
+                                            },
+                                            "\n",
+                                            "AddressAndPortsScreen.HeartbeatPort=",
+                                            {
+                                                "Ref" : "DSIPHeartbeatPort"
+                                            },
+                                            "\n",
+                                            {
+                                                "Fn::If" : [
+                                                    "IsFirstNode",
+                                                    "AddressAndPortsScreen.NewNode=false\n",
+                                                    "AddressAndPortsScreen.NewNode=true\nUpgradeVerificationScreen.Overwrite=False\n"
+                                                ]
+                                            },
+                                            "SecurityUpdateScreen.UpdateComponents=true\n",
+                                            "SecurityUpdateScreen.UpdateSoftware=true\n",
+                                            "SmartProtectionNetworkScreen.EnableFeedback=false\n",
+                                            "SmartProtectionNetworkScreen.IndustryType=blank\n",
+                                            "RelayScreen.Install=True\n",
+                                            "RelayScreen.ProxyType=None\n",
+                                            "RelayScreen.ProxyPort=None\n",
+                                            "RelayScreen.Proxy=False\n",
+                                            "RelayScreen.AntiMalware=True\n",
+                                            "RelayScreen.ProxyAuthentication=False\n"
+                                        ]
+                                    ]
+                                },
+                                "owner"   : "root",
+                                "mode"    : "000600"
+                            }
+                        }
+                    },
+                    "installDSM"     : {
+                        "commands" : {
+                            "1-install-DSM" : {
+                                "command" : "cd /tmp; sh Manager-Linux-9.6.1589.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
+                                "ignoreErrors" : "false"
+                            }
+                        }
+                    },
+                    "addCloudAccount" : {
+                        "commands" : {
+                            "0-sleep" : {
+                                "command" : "/bin/sleep 90"
+                            },
+                            "1-enableRestApi" : {
+                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
+                            },
+                            "2-enableSoapApi" : {
+                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
+                            },
+                            "3-enableAgentIitiatedActivation" : {
+                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivation -value 2"
+                            },
+                            "4-enableAgentInitiatedReactivateHost" : {
+                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivationActiveHost -value 2"
+                            },
+                            "5-addCloudAccount"                    : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "export sID=`curl -k -X POST -H \"Content-Type:application/json\" -d '{ \"dsCredentials\": {\"userName\": ",
+                                            {
+                                                "Ref" : "DSCAdminName"
+                                            },
+                                            ", \"password\": ",
+                                            {
+                                                "Ref" : "DBICAdminPassword"
+                                            },
+                                            "}}' https://localhost:",
+                                            {
+                                                "Ref" : "DSIPGUIPort"
+                                            },
+                                            "/rest/authentication/login`; ",
+                                            "curl -k -X POST -H \"Content-Type:application/json\" -d '{\"createCloudAccountRequest\":{\"sessionId\":\"'\"${sID}\"'\",\"cloudAccountElement\":{\"accessKey\":\"",
+                                            {
+                                                "Ref" : "AccessKeys"
+                                            },
+                                            "\",\"cloudRegion\":\"",
+                                            {
+                                                "Fn::FindInMap" : [
+                                                    "TrendRegionMap",
+                                                    {
+                                                        "Ref" : "AWS::Region"
+                                                    },
+                                                    "regionkey"
+                                                ]
+                                            },
+                                            "\",\"cloudType\":\"AMAZON\",\"name\":\"Amazon\",\"azureCertificate\":\"\",\"secretKey\":\"",
+                                            {
+                                                "Fn::GetAtt" : [
+                                                    "AccessKeys",
+                                                    "SecretAccessKey"
+                                                ]
+                                            },
+                                            "\"}}}' https://localhost:",
+                                            {
+                                                "Ref" : "DSIPGUIPort"
+                                            },
+                                            "/rest/cloudaccounts; ",
+                                            "curl -k -X DELETE https://localhost:",
+                                            {
+                                                "Ref" : "DSIPGUIPort"
+                                            },
+                                            "/rest/authentication/logout?sID=\"${sID}\""
+                                        ]
+                                    ]
+                                },
+                                "ignoreErrors" : "False"
+                            }
+                        }
+                    },
+                    "sqlSetup"        : {
+                        "commands" : {
+                            "1-get-sql-helper" : {
+                                "command" : "cd /etc/cfn/rhel-scripts; wget https://cf-deepsecurity.s3.amazonaws.com/master/cfn-rh-sql",
+                                "ignoreErrors" : "false"
+                            },
+                            "2-run-helper"     : {
+                                "command" : "cd /etc/cfn/rhel-scripts; sh cfn-rh-sql",
+                                "ignoreErrors" : "false"
+                            },
+                            "3-create-db"      : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "cd /etc/cfn/rhel-scripts; python create-DSM-SqlDB.py --user ",
+                                            {
+                                                "Ref" : "DBICAdminName"
+                                            },
+                                            " --pass ",
+                                            {
+                                                "Ref" : "DBICAdminPassword"
+                                            },
+                                            " --endpoint ",
+                                            {
+                                                "Ref" : "DBPRDSEndpoint"
+                                            },
+                                            " --dbname ",
+                                            {
+                                                "Ref" : "DBPName"
+                                            }
+                                        ]
+                                    ]
+                                },
+                                "ignoreErrors" : "false"
+                            }
+                        }
+                    }
+                }
+            },
+            "Properties" : {
+                "IamInstanceProfile" : {
+                    "Ref" : "DSMProfile"
+                },
+                "ImageId"            : {
+                    "Fn::FindInMap" : [
+                        "AWSRegionArch2AMI",
+                        {
+                            "Ref" : "AWS::Region"
+                        },
+                        "64"
+                    ]
+                },
+                "InstanceType"       : {
+                    "Ref" : "DSIPInstanceType"
+                },
+                "NetworkInterfaces"  : [
+                    {
+                        "DeviceIndex" : "0",
+                        "SubnetId"    : {
+                            "Ref" : "DSISubnetID"
+                        },
+                        "AssociatePublicIpAddress" : "true",
+                        "GroupSet"                 : [
+                            {
+                                "Ref" : "DSMSG"
+                            }
+                        ]
+                    }
+                ],
+                "Tags"               : [
+                    {
+                        "Key" : "Name",
+                        "Value" : "DSM"
+                    }
+                ],
+                "KeyName"            : {
+                    "Ref" : "AWSIKeyPairName"
+                },
+                "UserData"           : {
+                    "Fn::Base64" : {
+                        "Fn::Join" : [
+                            "",
+                            [
+                                "#!/bin/bash -xe\n",
+                                "# cloud-init\n",
+                                "wget https://cf-deepsecurity.s3.amazonaws.com/master/cfn-rh-helper\n",
+                                "sh cfn-rh-helper >> cfn-rh-helper.log\n",
+                                "cfn-init -v ",
+                                " --stack ",
+                                {
+                                    "Ref" : "AWS::StackName"
+                                },
+                                " --resource DSM",
+                                " --region ",
+                                {
+                                    "Ref" : "AWS::Region"
+                                },
+                                {
+                                    "Fn::If" : [
+                                        "DoSQLSetup",
+                                        " -c doSqlSetup,default",
+                                        ""
+                                    ]
+                                },
+                                {
+                                    "Fn::If" : [
+                                        "IsFirstNode",
+                                        "",
+                                        " -c addDsmNode"
+                                    ]
+                                },
+                                "\n",
+                                "cfn-signal -e $? ",
+                                " -r \"Complete\"",
+                                " '",
+                                "'\n"
+                            ]
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "Conditions"               : {
+        "DBTypeIsOracle" : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DBPEngine"
+                },
+                "Oracle"
+            ]
+        },
+        "DBTypeIsSQL"    : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DBPEngine"
+                },
+                "SQL"
+            ]
+        },
+        "DBTypeIsEmbedded" : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DBPEngine"
+                },
+                "Embedded"
+            ]
+        },
+        "IsFirstNode"      : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DSMPMNode"
+                },
+                "No"
+            ]
+        },
+        "DoSQLSetup"       : {
+            "Fn::And" : [
+                {
+                    "Condition" : "DBTypeIsSQL"
+                },
+                {
+                    "Condition" : "IsFirstNode"
+                }
+            ]
+        },
+        "KeyProvided"      : {
+            "Fn::Not" : [
+                {
+                    "Fn::Equals" : [
+                        {
+                            "Ref" : "DSIPLicenseKey"
+                        },
+                        "XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
+                    ]
+                }
+            ]
+        },
+		"AddToELB" : {
+			"Fn::Not" : [
+				{
+					"Fn::Equals" : [
+						{
+							"Ref" : "DSMELB"
+						},
+						""
+					]
+				}
+			]
+		}
+    },
+    "Outputs"                  : {
+        "DSMFQDN" : {
+            "Value" : {
+                "Fn::GetAtt" : [
+                    "DSM",
+                    "PublicDnsName"
+                ]
+            }
+        },
+        "DSMURL"  : {
+            "Value" : {
+                "Fn::Join" : [
+                    "",
+                    [
+                        "https://",
+                        {
+                            "Fn::GetAtt" : [
+                                "DSM",
+                                "PublicDnsName"
+                            ]
+                        },
+                        ":",
+                        {
+                            "Ref" : "DSIPGUIPort"
+                        }
+                    ]
+                ]
+            }
+        },
+        "DSMInstanceId" : {
+            "Value" : {
+                "Ref" : "DSM"
+            }
+        }
+    }
+}

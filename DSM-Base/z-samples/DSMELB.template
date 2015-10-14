@@ -38,7 +38,11 @@
                 "True",
                 "False"
             ]
-        }
+        },
+		"DSPNodes"		: {
+			"Description"	: "Instances to add to ELB",
+			"Type"			: "List<AWS::EC2::Instance::Id>"
+		}
     },
     "Resources"                : {
         "DSMELBMulti" : {

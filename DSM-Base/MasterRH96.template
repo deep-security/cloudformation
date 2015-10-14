@@ -97,8 +97,14 @@
             "Default"     : "SQL",
             "AllowedValues" : [
                 "SQL",
-                "Oracle"
+                "Oracle",
+                "Embedded"
             ]
+        },
+        "DBPEndpoint"          : {
+            "Type" : "String",
+            "Description" : "If you have an existing oracle instace, enter the endpoint address here, else this field will be ignored",
+            "Default"     : "Enter Oracle Address here if needed"
         },
         "DBPName"              : {
             "Default" : "dsm",
@@ -136,25 +142,14 @@
                 "2"
             ]
         },
-        "DSIPPrivateIP1"       : {
-            "Description" : "Fixed private IP for the Deep Seccurity Manager",
-            "Type"        : "String",
-            "Default"     : "10.0.9.100",
-            "AllowedPattern" : "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}?(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
-        },
-        "DSIPPrivateIP2"       : {
-            "Description" : "Fixed private IP for the second Deep Security manager node [optional]",
-            "Type"        : "String",
-            "Default"     : "10.0.9.100",
-            "AllowedPattern" : "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}?(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
-        },
-        "DSIPLicense"          : {
+        "DSIPLicenseKey"       : {
             "Description" : "Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
             "Type"        : "String",
             "MinLength"   : 37,
             "MaxLength"   : 37,
-            "AllowedPattern" : "[\\x20-\\x7E]*",
-            "ConstraintDescription" : "Key can only contain ASCII characters."
+            "AllowedPattern" : "[A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}",
+            "ConstraintDescription" : "Key can only contain ASCII characters.",
+            "Default"               : "XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
         },
         "DSIPHeartbeatPort"    : {
             "Description" : "The heartbeat port used by Deep Security Agents and appliances to communicate with the Deep Security Manager.",
@@ -204,24 +199,15 @@
                 "g2.2xlarge"
             ]
         },
-        "DSIPHostName1"        : {
-            "Description" : "Name to be assigned to the Deep Security Manager",
-            "Type"        : "String",
-            "MinLength"   : "1",
-            "MaxLength"   : "16",
-            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*"
+        "DBISubnet1"           : {
+            "Description" : "Choose a private subnets in the same VPC for the RDS instance",
+            "Type"        : "AWS::EC2::Subnet::Id",
+            "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template"
         },
-        "DSIPHostName2"        : {
-            "Description" : "Name to be assigned to the second Deep Security Manager node [optional]",
-            "Type"        : "String",
-            "MinLength"   : "0",
-            "MaxLength"   : "16",
-            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
-			"Default" : "none"
-        },
-        "DBISubnet"            : {
-            "Description" : "Choose a private subnet for the RDS instance",
-            "Type"        : "AWS::EC2::Subnet::Id"
+        "DBISubnet2"           : {
+            "Description" : "Choose private subnets in the same VPC for this RDS instance",
+            "Type"        : "AWS::EC2::Subnet::Id",
+            "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template"
         },
         "DBIInstanceIdentifier" : {
             "Description" : "Choose RDS Instance ID",
@@ -229,23 +215,24 @@
         }
     },
     "Resources"                : {
-        "DSM95Node1" : {
+        "DSM96Node1" : {
             "Type" : "AWS::CloudFormation::Stack",
             "DependsOn" : [
                 "DSDatabaseAbstract",
-                "DSISecurityGroups"
+                "DSIDSMSecurityGroup"
             ],
+            "Condition" : "LaunchRDSInstance",
             "Properties" : {
-			"TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSM95RH.template",
-                "Parameters" : {
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/RH/DSM96RH.template",
+                "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
                     },
                     "AWSIVPC"         : {
                         "Ref" : "AWSIVPC"
                     },
-                    "DSIPLicense"     : {
-                        "Ref" : "DSIPLicense"
+                    "DSIPLicenseKey"  : {
+                        "Ref" : "DSIPLicenseKey"
                     },
                     "DSCAdminName"    : {
                         "Ref" : "DSCAdminName"
@@ -267,9 +254,6 @@
                     },
                     "DBICAdminPassword" : {
                         "Ref" : "DBICAdminPassword"
-                    },
-                    "DSIPPrivateIP"     : {
-                        "Ref" : "DSIPPrivateIP1"
                     },
                     "DSIPGUIPort"       : {
                         "Ref" : "DSIPGUIPort"
@@ -277,39 +261,44 @@
                     "DSIPHeartbeatPort" : {
                         "Ref" : "DSIPHeartbeatPort"
                     },
-                    "DSMPMNode"    : "No",
+                    "DSMPMNode"         : "No",
                     "DSISubnetID"       : {
                         "Ref" : "DSISubnetID"
                     },
-					"DSIPHostName" : { "Ref" : "DSIPHostName1" },
                     "DSMSG"             : {
                         "Fn::GetAtt" : [
-                            "DSISecurityGroups",
+                            "DSIDSMSecurityGroup",
                             "Outputs.DSMSG"
                         ]
-                    }
+                    },
+                    "DBPEngine"         : {
+                        "Ref" : "DBPEngine"
+                    },
+                    "DSIPInstanceType"  : {
+                        "Ref" : "DSIPInstanceType"
+                    },
+                    "CreateEIP"         : "False"
                 }
             }
         },
-        "DSM95Node2" : {
+        "DSM96Node2" : {
             "Type" : "AWS::CloudFormation::Stack",
             "DependsOn" : [
-                "DSDatabaseAbstract",
-                "DSISecurityGroups",
-                "DSM95Node1"
+                "DSIDSMSecurityGroup",
+                "DSM96Node1"
             ],
-            "Condition" : "DSIsMultiNode",
+            "Condition" : "DSM96Node2DB",
             "Properties" : {
-			"TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSM95RH.template",
-                "Parameters" : {
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/RH/DSM96RH.template",
+                "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
                     },
                     "AWSIVPC"         : {
                         "Ref" : "AWSIVPC"
                     },
-                    "DSIPLicense"     : {
-                        "Ref" : "DSIPLicense"
+                    "DSIPLicenseKey"  : {
+                        "Ref" : "DSIPLicenseKey"
                     },
                     "DSCAdminName"    : {
                         "Ref" : "DSCAdminName"
@@ -332,33 +321,160 @@
                     "DBICAdminPassword" : {
                         "Ref" : "DBICAdminPassword"
                     },
-                    "DSIPPrivateIP"     : {
-                        "Ref" : "DSIPPrivateIP2"
-                    },
-                    "DSIPGUIPort"         : {
+                    "DSIPGUIPort"       : {
                         "Ref" : "DSIPGUIPort"
                     },
-                    "DSIPHeartbeatPort"   : {
+                    "DSIPHeartbeatPort" : {
                         "Ref" : "DSIPHeartbeatPort"
                     },
                     "DSMPMNode"         : "Yes",
                     "DSISubnetID"       : {
                         "Ref" : "DSISubnetID"
                     },
-					"DSIPHostName" : { "Ref" : "DSIPHostName2" },
                     "DSMSG"             : {
                         "Fn::GetAtt" : [
-                            "DSISecurityGroups",
+                            "DSIDSMSecurityGroup",
                             "Outputs.DSMSG"
                         ]
-                    }
+                    },
+                    "DBPEngine"         : {
+                        "Ref" : "DBPEngine"
+                    },
+                    "DSIPInstanceType"  : {
+                        "Ref" : "DSIPInstanceType"
+                    },
+                    "CreateEIP"         : "False"
+                }
+            }
+        },
+        "DSM96Node1NoDB" : {
+            "Type" : "AWS::CloudFormation::Stack",
+            "DependsOn" : [
+                "DSIDSMSecurityGroup"
+            ],
+            "Condition" : "DoNotLaunchRDSInstance",
+            "Properties" : {
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/RH/DSM96RH.template",
+                "Parameters"  : {
+                    "AWSIKeyPairName" : {
+                        "Ref" : "AWSIKeyPairName"
+                    },
+                    "AWSIVPC"         : {
+                        "Ref" : "AWSIVPC"
+                    },
+                    "DSIPLicenseKey"  : {
+                        "Ref" : "DSIPLicenseKey"
+                    },
+                    "DSCAdminName"    : {
+                        "Ref" : "DSCAdminName"
+                    },
+                    "DSCAdminPassword" : {
+                        "Ref" : "DSCAdminPassword"
+                    },
+                    "DBPRDSEndpoint"   : {
+                        "Ref" : "DBPEndpoint"
+                    },
+                    "DBPName"          : {
+                        "Ref" : "DBPName"
+                    },
+                    "DBICAdminName"    : {
+                        "Ref" : "DBICAdminName"
+                    },
+                    "DBICAdminPassword" : {
+                        "Ref" : "DBICAdminPassword"
+                    },
+                    "DSIPGUIPort"       : {
+                        "Ref" : "DSIPGUIPort"
+                    },
+                    "DSIPHeartbeatPort" : {
+                        "Ref" : "DSIPHeartbeatPort"
+                    },
+                    "DSMPMNode"         : "No",
+                    "DSISubnetID"       : {
+                        "Ref" : "DSISubnetID"
+                    },
+                    "DSMSG"             : {
+                        "Fn::GetAtt" : [
+                            "DSIDSMSecurityGroup",
+                            "Outputs.DSMSG"
+                        ]
+                    },
+                    "DBPEngine"         : {
+                        "Ref" : "DBPEngine"
+                    },
+                    "DSIPInstanceType"  : {
+                        "Ref" : "DSIPInstanceType"
+                    },
+                    "CreateEIP"         : "False"
+                }
+            }
+        },
+        "DSM96Node2NoDB" : {
+            "Type" : "AWS::CloudFormation::Stack",
+            "DependsOn" : "DSM96Node1NoDB",
+            "Condition" : "DSM96Node2NoDB",
+            "Properties" : {
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/RH/DSM96RH.template",
+                "Parameters"  : {
+                    "AWSIKeyPairName" : {
+                        "Ref" : "AWSIKeyPairName"
+                    },
+                    "AWSIVPC"         : {
+                        "Ref" : "AWSIVPC"
+                    },
+                    "DSIPLicenseKey"  : {
+                        "Ref" : "DSIPLicenseKey"
+                    },
+                    "DSCAdminName"    : {
+                        "Ref" : "DSCAdminName"
+                    },
+                    "DSCAdminPassword" : {
+                        "Ref" : "DSCAdminPassword"
+                    },
+                    "DBPRDSEndpoint"   : {
+                        "Ref" : "DBPEndpoint"
+                    },
+                    "DBPName"          : {
+                        "Ref" : "DBPName"
+                    },
+                    "DBICAdminName"    : {
+                        "Ref" : "DBICAdminName"
+                    },
+                    "DBICAdminPassword" : {
+                        "Ref" : "DBICAdminPassword"
+                    },
+                    "DSIPGUIPort"       : {
+                        "Ref" : "DSIPGUIPort"
+                    },
+                    "DSIPHeartbeatPort" : {
+                        "Ref" : "DSIPHeartbeatPort"
+                    },
+                    "DSMPMNode"         : "Yes",
+                    "DSISubnetID"       : {
+                        "Ref" : "DSISubnetID"
+                    },
+                    "DSMSG"             : {
+                        "Fn::GetAtt" : [
+                            "DSIDSMSecurityGroup",
+                            "Outputs.DSMSG"
+                        ]
+                    },
+                    "DBPEngine"         : {
+                        "Ref" : "DBPEngine"
+                    },
+                    "DSIPInstanceType"  : {
+                        "Ref" : "DSIPInstanceType"
+                    },
+                    "CreateEIP"         : "False"
                 }
             }
         },
         "DSDatabaseAbstract" : {
             "Type" : "AWS::CloudFormation::Stack",
+            "Condition" : "LaunchRDSInstance",
+            "DependsOn" : "DSIRDSSecurityGroup",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSDBAbstract.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/DSDBAbstract.template",
                 "Parameters"  : {
                     "DBPName" : {
                         "Ref" : "DBPName"
@@ -380,7 +496,7 @@
                     },
                     "RDSSG"                : {
                         "Fn::GetAtt" : [
-                            "DSISecurityGroups",
+                            "DSIRDSSecurityGroup",
                             "Outputs.RDSSG"
                         ]
                     },
@@ -389,19 +505,43 @@
                     "DBPBackupDays"        : {
                         "Ref" : "DBPBackupDays"
                     },
-                    "DBISubnet"            : {
-                        "Ref" : "DBISubnet"
-                    },
                     "DBIInstanceIdentifier" : {
                         "Ref" : "DBIInstanceIdentifier"
+                    },
+                    "DBISubnet1"            : {
+                        "Ref" : "DBISubnet1"
+                    },
+                    "DBISubnet2"            : {
+                        "Ref" : "DBISubnet2"
                     }
                 }
             }
         },
-        "DSISecurityGroups"  : {
+        "DSIRDSSecurityGroup" : {
+            "Type" : "AWS::CloudFormation::Stack",
+            "Condition" : "LaunchRDSInstance",
+            "Properties" : {
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/SecurityGroups/RDSSecurityGroup.template",
+                "Parameters"  : {
+                    "AWSIVPC" : {
+                        "Ref" : "AWSIVPC"
+                    },
+                    "DBPEngine" : {
+                        "Ref" : "DBPEngine"
+                    },
+                    "DSMSG"     : {
+                        "Fn::GetAtt" : [
+                            "DSIDSMSecurityGroup",
+                            "Outputs.DSMSG"
+                        ]
+                    }
+                }
+            }
+        },
+        "DSIDSMSecurityGroup" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSISecurityGroups.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/SecurityGroups/DSMSecurityGroup.template",
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -411,13 +551,43 @@
                     },
                     "DSIPHeartbeatPort" : {
                         "Ref" : "DSIPHeartbeatPort"
-                    },
-                    "DBPEngine"         : {
-                        "Ref" : "DBPEngine"
                     }
                 }
             }
-        }
+        },
+        "DSIELB"              : {
+            "Type" : "AWS::CloudFormation::Stack",
+            "Properties" : {
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/DSM96ELB.template",
+                "Parameters"  : {
+                    "AWSIVPC" : {
+                        "Ref" : "AWSIVPC"
+                    },
+                    "DSIPHeartbeatPort" : {
+                        "Ref" : "DSIPHeartbeatPort"
+                    },
+                    "DSIPGUIPort"       : {
+                        "Ref" : "DSIPGUIPort"
+                    },
+                    "DSELBPosture"      : "External",
+                    "DSISubnetID"       : {
+                        "Ref" : "DSISubnetID"
+                    }
+                }
+            }
+        },
+		"DSIDSMSecurityGroupIngressRules" : {
+			"Type" : "AWS::CloudFormation::Stack",
+			"Properties" : {
+				"TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/SecurityGroups/DSMSGIngressRules.template",
+				"Parameters" : {
+					"DSMSG" : { "Fn::GetAtt" : [ "DSIDSMSecurityGroup", "Outputs.DSMSG" ] },
+					"ELBSourceSG" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.ELBSourceSecurityGroup" ] },
+					"DSIPHeartbeatPort" : { "Ref" : "DSIPHeartbeatPort" },
+					"DSIPGUIPort" : { "Ref" : "DSIPGUIPort" }
+					}
+				}
+			}
     },
     "Conditions"               : {
         "DSIsMultiNode" : {
@@ -427,38 +597,62 @@
                 },
                 "2"
             ]
+        },
+        "LaunchRDSInstance" : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DBPCreateDbInstance"
+                },
+                "Yes"
+            ]
+        },
+        "DoNotLaunchRDSInstance" : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DBPCreateDbInstance"
+                },
+                "No"
+            ]
+        },
+        "DSM96Node2DB"           : {
+            "Fn::And" : [
+                {
+                    "Condition" : "DSIsMultiNode"
+                },
+                {
+                    "Condition" : "LaunchRDSInstance"
+                }
+            ]
+        },
+        "DSM96Node2NoDB"         : {
+            "Fn::And" : [
+                {
+                    "Condition" : "DSIsMultiNode"
+                },
+                {
+                    "Condition" : "DoNotLaunchRDSInstance"
+                }
+            ]
         }
     },
     "Outputs"                  : {
-        "DSM1FQDN" : {
+        "DeepSecurityConsole" : {
             "Value" : {
-                "Fn::GetAtt" : [
-                    "DSM95Node1",
-                    "Outputs.DSMFQDN"
-                ]
-            }
-        },
-        "DSM1ConsoleURL" : {
-            "Value" : {
-                "Fn::GetAtt" : [
-                    "DSM95Node1",
-                    "Outputs.DSMURL"
-                ]
-            }
-        },
-        "DSM2FQDN"       : {
-            "Value" : {
-                "Fn::GetAtt" : [
-                    "DSM95Node1",
-                    "Outputs.DSMFQDN"
-                ]
-            }
-        },
-        "DSM2ConsoleURL" : {
-            "Value" : {
-                "Fn::GetAtt" : [
-                    "DSM95Node1",
-                    "Outputs.DSMURL"
+                "Fn::Join" : [
+                    "",
+                    [
+                        "https://",
+                        {
+                            "Fn::GetAtt" : [
+                                "DSIELB",
+                                "Outputs.ELBFQDN"
+                            ]
+                        },
+                        ":",
+                        {
+                            "Ref" : "DSIPGUIPort"
+                        }
+                    ]
                 ]
             }
         }

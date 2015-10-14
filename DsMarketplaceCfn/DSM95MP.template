@@ -36,13 +36,14 @@
             "AllowedPattern" : "[a-zA-Z0-9]*",
             "ConstraintDescription" : "must contain only alphanumeric characters."
         },
-        "DSIPLicense"      : {
+        "DSIPLicenseKey"   : {
             "Description" : "Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
             "Type"        : "String",
             "MinLength"   : 37,
             "MaxLength"   : 37,
-            "AllowedPattern" : "[\\x20-\\x7E]*",
-            "ConstraintDescription" : "Key can only contain ASCII characters."
+            "AllowedPattern" : "[A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}",
+            "ConstraintDescription" : "Key can only contain ASCII characters.",
+            "Default"               : "XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXX"
         },
         "DSIPHeartbeatPort" : {
             "Description" : "The heartbeat port used by Deep Security Agents and appliances to communicate with the Deep Security Manager.",
@@ -70,18 +71,11 @@
         "DSIPInstanceType"  : {
             "Description" : "Amazon EC2 instance type for the Deep Security Manager Node Instances",
             "Type"        : "String",
-            "Default"     : "m3.medium",
+            "Default"     : "m3.large",
             "AllowedValues" : [
-                "m3.medium",
                 "m3.large",
                 "m3.xlarge",
                 "m3.2xlarge",
-                "c4.large",
-                "c4.xlarge",
-                "c4.2xlarge",
-                "c4.4xlarge",
-                "c4.8xlarge",
-                "c3.large",
                 "c3.xlarge",
                 "c3.2xlarge",
                 "c3.4xlarge",
@@ -95,7 +89,6 @@
                 "i2.2xlarge",
                 "i2.4xlarge",
                 "i2.8xlarge",
-                "hs1.8xlarge",
                 "g2.2xlarge"
             ]
         },
@@ -116,7 +109,7 @@
         },
         "DBICAdminPassword" : {
             "NoEcho" : true,
-            "Description" : "Password to be used for the Oracle database admin account",
+            "Description" : "Password to be used for the database admin account",
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
@@ -167,39 +160,103 @@
                 "No"
             ],
             "Default"       : "No"
+        },
+        "DSIPLicense"       : {
+            "Description" : "Choose License Model. If choosing BYOL you may enter the license below",
+            "Type"        : "String",
+            "AllowedValues" : [
+                "BYOL",
+                "25",
+                "50",
+                "100",
+                "200"
+            ]
         }
     },
     "Mappings"                 : {
-        "AWSRegionArch2AMI" : {
+        "DSMAMI" : {
+            "us-east-1" : {
+                "BYOL" : "ami-0268556a",
+                "25"   : "ami-00685568",
+                "50"   : "ami-00685568",
+                "100"  : "ami-00685568",
+                "200"  : "ami-00685568"
+            },
+            "us-west-1" : {
+                "BYOL" : "ami-332ccf77",
+                "25"   : "ami-312ccf75",
+                "50"   : "ami-312ccf75",
+                "100"  : "ami-312ccf75",
+                "200"  : "ami-312ccf75"
+            },
+            "us-west-2" : {
+                "BYOL" : "ami-89a68eb9",
+                "25"   : "ami-8da68ebd",
+                "50"   : "ami-8da68ebd",
+                "100"  : "ami-8da68ebd",
+                "200"  : "ami-8da68ebd"
+            },
+            "eu-west-1" : {
+                "BYOL" : "ami-392f484e",
+                "25"   : "ami-3b2f484c",
+                "50"   : "ami-3b2f484c",
+                "100"  : "ami-3b2f484c",
+                "200"  : "ami-3b2f484c"
+            },
             "eu-central-1" : {
-                "64" : "ami-fa0538e7"
-            },
-            "sa-east-1"    : {
-                "64" : "ami-81fb409c"
-            },
-            "ap-northeast-1" : {
-                "64" : "ami-67e01667"
-            },
-            "eu-west-1"      : {
-                "64" : "ami-837de3f4"
-            },
-            "us-east-1"      : {
-                "64" : "ami-b0fed2d8"
-            },
-            "us-west-1"      : {
-                "64" : "ami-f3a243b7"
-            },
-            "us-west-2"      : {
-                "64" : "ami-2faa861f"
-            },
-            "ap-southeast-2" : {
-                "64" : "ami-e5ec9cdf"
+                "BYOL" : "",
+                "25"   : "ami-3c457921",
+                "50"   : "ami-3c457921",
+                "100"  : "ami-3c457921",
+                "200"  : "ami-3c457921"
             },
             "ap-southeast-1" : {
-                "64" : "ami-fc98a9ae"
+                "BYOL" : "ami-de72408c",
+                "25"   : "ami-c872409a",
+                "50"   : "ami-c872409a",
+                "100"  : "ami-c872409a",
+                "200"  : "ami-c872409a"
+            },
+            "ap-northeast-1" : {
+                "BYOL" : "ami-bcae57bc",
+                "25"   : "ami-149c6514",
+                "50"   : "ami-149c6514",
+                "100"  : "ami-149c6514",
+                "200"  : "ami-149c6514"
+            },
+            "ap-southeast-2" : {
+                "BYOL" : "ami-dd4634e7",
+                "25"   : "ami-d94634e3",
+                "50"   : "ami-d94634e3",
+                "100"  : "ami-d94634e3",
+                "200"  : "ami-d94634e3"
+            },
+            "sa-east-1"      : {
+                "BYOL" : "ami-d76bd1ca",
+                "25"   : "ami-d36bd1ce",
+                "50"   : "ami-d36bd1ce",
+                "100"  : "ami-d36bd1ce",
+                "200"  : "ami-d36bd1ce"
             }
         },
-        "TrendRegionMap"    : {
+        "DSMSIZE" : {
+            "BYOL" : {
+                "TYPE" : "c3.2xlarge"
+            },
+            "25"   : {
+                "TYPE" : "m3.large"
+            },
+            "50"   : {
+                "TYPE" : "m3.xlarge"
+            },
+            "100"  : {
+                "TYPE" : "m3.2xlarge"
+            },
+            "200"  : {
+                "TYPE" : "c3.4xlarge"
+            }
+        },
+        "TrendRegionMap" : {
             "us-east-1" : {
                 "regionkey" : "amazon.cloud.region.key.1"
             },
@@ -222,7 +279,7 @@
                 "regionkey" : "amazon.cloud.region.key.7"
             }
         },
-        "DSMDBMap"          : {
+        "DSMDBMap"       : {
             "SQL" : {
                 "DbTypeString" : "Microsoft SQL Server"
             },
@@ -343,19 +400,42 @@
                     "configSets" : {
                         "default" : [
                             "setup",
-							"prepDSMInstall",
+                            "prepDSMInstall",
                             "installDSM",
-                            "addCloudAccount"
+                            "addCloudAccount",
+                            "signalMgrStartup"
                         ],
-						"doSqlSetup" :[
-							"sqlSetup"
-						],
-						"addDsmNode" :[
-							"prepDSMInstall",
-							"installDSM"
-							]
+                        "doSqlSetup" : [
+                            "sqlSetup"
+                        ],
+                        "addDsmNode" : [
+                            "prepDSMInstall",
+                            "installDSM",
+                            "signalComplete"
+                        ],
+                        "UpdateDSM"  : [
+                            "updateDSM",
+                            "signalMgrStartup"
+                        ]
                     },
-                    "setup"      : {
+                    "signalMgrStartup" : {
+                        "commands" : {
+                            "1-signalMgrStartup" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "cfn-signal -e $? ",
+                                            " -r \"MgrStartup\"",
+                                            " '",
+                                            "'\n"
+                                        ]
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "setup"            : {
                         "files" : {
                             "/etc/cfn/cfn-hup.conf" : {
                                 "content" : {
@@ -388,7 +468,7 @@
                                             "[cfn-auto-reloader-hook]\n",
                                             "triggers=post.update\n",
                                             "path=Resources.DSM.Metadata.AWS::CloudFormation::Init\n",
-                                            "action=/opt/aws/bin/cfn-init -v --stack ",
+                                            "action=/opt/aws/bin/cfn-init -v -c updateDSM --stack ",
                                             {
                                                 "Ref" : "AWS::StackId"
                                             },
@@ -416,13 +496,8 @@
                             }
                         }
                     },
-					"prepDSMInstall" : {
-						"files" : {
-							"/tmp/Manager-Linux-9.5.6008.x64.sh"      : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.5/Manager-Linux-9.5.6008.x64.sh",
-                                "owner"  : "root",
-                                "mode"   : "000700"
-                            },
+                    "prepDSMInstall"   : {
+                        "files" : {
                             "/tmp/Agent-RedHat_EL6-9.5.3-3016.x86_64.zip" : {
                                 "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.5_SP1/Agent-RedHat_EL6-9.5.3-3016.x86_64.zip",
                                 "owner"  : "root",
@@ -433,9 +508,15 @@
                                     "Fn::Join" : [
                                         "",
                                         [
-                                            "LicenseScreen.License.-1=",
                                             {
-                                                "Ref" : "DSIPLicense"
+                                                "Fn::If" : [
+                                                    "UseBYOL",
+                                                    "LicenseScreen.License.-1=",
+                                                    {
+                                                        "Ref" : "DSIPLicenseKey"
+                                                    },
+                                                    ""
+                                                ]
                                             },
                                             "\n",
                                             "CredentialsScreen.Administrator.Username=",
@@ -497,13 +578,13 @@
                                                 "Ref" : "DSIPHeartbeatPort"
                                             },
                                             "\n",
-											{
-												"Fn::If" : [
-													"IsFirstNode",
-													"AddressAndPortsScreen.NewNode=false\n",
-													"AddressAndPortsScreen.NewNode=true\nUpgradeVerificationScreen.Overwrite=False\n"
-													]
-												},
+                                            {
+                                                "Fn::If" : [
+                                                    "IsFirstNode",
+                                                    "AddressAndPortsScreen.NewNode=false\n",
+                                                    "AddressAndPortsScreen.NewNode=true\nUpgradeVerificationScreen.Overwrite=False\n"
+                                                ]
+                                            },
                                             "SecurityUpdateScreen.UpdateComponents=true\n",
                                             "SecurityUpdateScreen.UpdateSoftware=true\n",
                                             "SmartProtectionNetworkScreen.EnableFeedback=false\n",
@@ -520,17 +601,20 @@
                                 "owner"   : "root",
                                 "mode"    : "000600"
                             }
-						}
-					},
-                    "installDSM" : {
+                        }
+                    },
+                    "installDSM"       : {
                         "commands" : {
-                            "1-install-DSM" : {
-                                "command" : "cd /tmp; sh Manager-Linux-9.5.6008.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
+                            "1-download-agent" : {
+                                "command" : "wget http://files.trendmicro.com/products/deepsecurity/en/9.5_SP1/Agent-amzn1-9.5.3-3016.x86_64.zip -O /opt/trend/packages/dsm/default/Agent-amzn1-9.5.3-3016.x86_64.zip"
+                            },
+                            "2-install-DSM"    : {
+                                "command" : "sh /opt/trend/packages/dsm/default/Manager-AWS-9.5.6300.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
                                 "ignoreErrors" : "false"
                             }
                         }
                     },
-                    "addCloudAccount" : {
+                    "addCloudAccount"  : {
                         "commands" : {
                             "0-enableRestApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
@@ -539,7 +623,7 @@
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
                             },
                             "2-enableAgentIitiatedActivation" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivation -value 1"
+                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivation -value 2"
                             },
                             "3-enableAgentInitiatedReactivateHost" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivationActiveHost -value 2"
@@ -600,29 +684,54 @@
                             }
                         }
                     },
-					"sqlSetup": {
-						"commands" : {
-							"1-get-sql-helper" : {
-								"command" : "cd /etc/cfn/rhel-scripts; wget https://cf-deepsecurity.s3.amazonaws.com/master/cfn-rh-sql",
-								"ignoreErrors" : "false"
-							},
-							"2-run-helper" : {
-								"command" : "cd /etc/cfn/rhel-scripts; sh cfn-rh-sql",
-								"ignoreErrors" : "false"
-							},
-							"3-create-db" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"cd /etc/cfn/rhel-scripts; python create-DSM-SqlDB.py --user ", { "Ref" : "DBICAdminName" }, " --pass ", { "Ref" : "DBICAdminPassword" }, " --endpoint ", { "Ref" : "DBPRDSEndpoint" }, " --dbname ", { "Ref" : "DBPName" }
-										]
-									]
-								},
-								"ignoreErrors" : "false"
-							}
-						}
-					}
+                    "sqlSetup"         : {
+                        "commands" : {
+                            "1-get-create-script" : {
+                                "command" : "cd /etc/cfn/rhel-scripts; wget https://s3.amazonaws.com/cf-deepsecurity/master/create-DSM-SqlDB.py; chmod 755 create-DSM-SqlDB.py",
+                                "ignoreErrors" : "false"
+                            },
+                            "2-create-db"         : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "cd /etc/cfn/rhel-scripts; python create-DSM-SqlDB.py --user ",
+                                            {
+                                                "Ref" : "DBICAdminName"
+                                            },
+                                            " --pass ",
+                                            {
+                                                "Ref" : "DBICAdminPassword"
+                                            },
+                                            " --endpoint ",
+                                            {
+                                                "Ref" : "DBPRDSEndpoint"
+                                            },
+                                            " --dbname ",
+                                            {
+                                                "Ref" : "DBPName"
+                                            }
+                                        ]
+                                    ]
+                                },
+                                "ignoreErrors" : "false"
+                            }
+                        },
+                        "installAgent" : {
+                            "commands" : {
+                                "1-download-agent" : {
+                                    "command" : "wget http://files.trendmicro.com/products/deepsecurity/en/9.5_SP1/Agent-amzn1-9.5.3-3016.x86_64.zip -O /opt/trend/packages/dsm/default/Agent-amzn1-9.5.3-3016.x86_64.zip"
+                                },
+                                "2-install-agent"  : {
+                                    "command" : "sh rpm -ivh "
+                                }
+                            }
+                        }
+                    },
+                    "signalComplete"   : {
+                    },
+                    "updateDSM"        : {
+                    }
                 }
             },
             "Properties" : {
@@ -631,15 +740,31 @@
                 },
                 "ImageId"            : {
                     "Fn::FindInMap" : [
-                        "AWSRegionArch2AMI",
+                        "DSMAMI",
                         {
                             "Ref" : "AWS::Region"
                         },
-                        "64"
+                        {
+                            "Ref" : "DSIPLicense"
+                        }
                     ]
                 },
                 "InstanceType"       : {
-                    "Ref" : "DSIPInstanceType"
+                    "Fn::If" : [
+                        "UseBYOL",
+                        {
+                            "Ref" : "DSIPInstanceType"
+                        },
+                        {
+                            "Fn::FindInMap" : [
+                                "DSMSIZE",
+                                {
+                                    "Ref" : "DSIPLicense"
+                                },
+                                "TYPE"
+                            ]
+                        }
+                    ]
                 },
                 "SubnetId"           : {
                     "Ref" : "DSISubnetID"
@@ -650,7 +775,7 @@
                 "Tags"               : [
                     {
                         "Key" : "Name",
-                        "Value" : "DSM"
+                        "Value" : "Deep Security Manager"
                     }
                 ],
                 "SecurityGroupIds"   : [
@@ -668,9 +793,7 @@
                             [
                                 "#!/bin/bash -xe\n",
                                 "# cloud-init\n",
-                                "wget https://cf-deepsecurity.s3.amazonaws.com/master/cfn-rh-helper\n",
-                                "sh cfn-rh-helper\n",
-								"cfn-init -v ",
+                                "/opt/aws/bin/cfn-init -v ",
                                 " --stack ",
                                 {
                                     "Ref" : "AWS::StackName"
@@ -680,20 +803,20 @@
                                 {
                                     "Ref" : "AWS::Region"
                                 },
-								{
-									"Fn::If" : [
-										"DoSQLSetup",
-										" -c doSqlSetup,default",
-										""
-										]
-								},
-								{
-									"Fn::If" : [
-										"IsFirstNode",
-										"",
-										" -c addDsmNode"
-										]
-								},
+                                {
+                                    "Fn::If" : [
+                                        "DoSQLSetup",
+                                        " -c doSqlSetup,default",
+                                        ""
+                                    ]
+                                },
+                                {
+                                    "Fn::If" : [
+                                        "IsFirstNode",
+                                        "",
+                                        " -c addDsmNode"
+                                    ]
+                                },
                                 "\n",
                                 "cfn-signal -e $? ",
                                 " -r \"Complete\"",
@@ -747,6 +870,14 @@
                 {
                     "Condition" : "IsFirstNode"
                 }
+            ]
+        },
+        "UseBYOL"          : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DSIPLicense"
+                },
+                "BYOL"
             ]
         }
     },

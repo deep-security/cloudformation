@@ -1,0 +1,171 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description"              : "",
+    "Parameters"               : {
+        "AWSIVPC" : {
+            "Description" : "Existing VPC to deploy Deep Security Manager",
+            "Type"        : "AWS::EC2::VPC::Id",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*"
+        },
+        "DSIPHeartbeatPort" : {
+            "Description" : "The heartbeat port used by Deep Security Agents and appliances to communicate with the Deep Security Manager.",
+            "Type"        : "Number",
+            "MinValue"    : 0,
+            "MaxValue"    : 65535,
+            "Default"     : "4120",
+            "ConstraintDescription" : "Must be a valid TCP port."
+        },
+        "DSIPGUIPort"       : {
+            "Description" : "The Deep Security Manager application and GUI port.",
+            "Type"        : "Number",
+            "MinValue"    : 0,
+            "MaxValue"    : 65535,
+            "Default"     : "4119",
+            "ConstraintDescription" : "Must be a valid TCP port."
+        },
+        "DSMNodes"          : {
+            "Description" : "Instances to add to ELB",
+            "Type"        : "CommaDelimitedList"
+        },
+        "DSELBPosture"      : {
+            "Description" : "Internal or External ELB",
+            "Type"        : "String",
+            "AllowedValues" : [
+                "External",
+                "Internal"
+            ],
+            "Default"       : "External"
+        },
+        "DSISubnetID"       : {
+            "Description" : "Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
+            "Type"        : "String",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*",
+            "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
+        }
+    },
+    "Resources"                : {
+        "ELBSG" : {
+            "Type" : "AWS::CloudFormation::Stack",
+            "Properties" : {
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/SecurityGroups/DSELBSG.template",
+                "Parameters"  : {
+                    "AWSIVPC" : {
+                        "Ref" : "AWSIVPC"
+                    },
+                    "DSIPGUIPort" : {
+                        "Ref" : "DSIPGUIPort"
+                    },
+                    "DSIPHeartbeatPort" : {
+                        "Ref" : "DSIPHeartbeatPort"
+                    }
+                }
+            }
+        },
+        "DSMELB" : {
+            "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
+            "DependsOn" : "ELBSG",
+            "Properties" : {
+                "Subnets" : [
+                    {
+                        "Ref" : "DSISubnetID"
+                    }
+                ],
+                "Instances" : 
+                    { "Ref" : "DSMNodes" }
+                ,
+                "SecurityGroups" : [
+                    {
+                        "Fn::GetAtt" : [
+                            "ELBSG",
+                            "Outputs.ELBSG"
+                        ]
+                    }
+                ],
+                "Scheme"         : {
+                    "Fn::If" : [
+                        "InternetFacingELB",
+                        "internet-facing",
+                        "internal"
+                    ]
+                },
+                "Listeners"      : [
+                    {
+                        "LoadBalancerPort" : {
+                            "Ref" : "DSIPHeartbeatPort"
+                        },
+                        "InstancePort"     : {
+                            "Ref" : "DSIPHeartbeatPort"
+                        },
+                        "Protocol"         : "TCP"
+                    },
+                    {
+                        "LoadBalancerPort" : {
+                            "Ref" : "DSIPGUIPort"
+                        },
+                        "InstancePort"     : {
+                            "Ref" : "DSIPGUIPort"
+                        },
+                        "Protocol"         : "TCP"
+                    }
+                ],
+                "HealthCheck"    : {
+                    "Target" : {
+                        "Fn::Join" : [
+                            "",
+                            [
+                                "HTTPS:",
+                                {
+                                    "Ref" : "DSIPGUIPort"
+                                },
+                                "/Signin.screen"
+                            ]
+                        ]
+                    },
+                    "HealthyThreshold" : "3",
+                    "UnhealthyThreshold" : "5",
+                    "Interval"           : "30",
+                    "Timeout"            : "5"
+                }
+            }
+        }
+    },
+    "Conditions"               : {
+        "InternetFacingELB" : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DSELBPosture"
+                },
+                "External"
+            ]
+        }
+    },
+    "Outputs"                  : {
+        "ELBFQDN" : {
+            "Value" : {
+                "Fn::GetAtt" : [
+                    "DSMELB",
+                    "DNSName"
+                ]
+            }
+        },
+        "ELBSourceSecurityGroup" : {
+            "Value" : {
+                "Fn::GetAtt" : [
+					"ELBSG", "Outputs.ELBSG"
+					]
+            }
+        },
+        "ELSBSourceSecurityGroupOnwerID" : {
+            "Value" : {
+                "Fn::GetAtt" : [
+                    "DSMELB",
+                    "SourceSecurityGroup.OwnerAlias"
+                ]
+            }
+        }
+    }
+}

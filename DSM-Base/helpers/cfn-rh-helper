@@ -4,6 +4,7 @@ cd /etc/cfn/rhel-scripts
 wget https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
 tar -zxf aws-cfn-bootstrap-latest.tar.gz -C aws-cfn-bootstrap-latest
 easy_install aws-cfn-bootstrap-latest
+easy_install pip
 easy_install awscli
 ln -s /etc/cfn/rhel-scripts/aws-cfn-bootstrap-latest/aws-cfn-bootstrap-1.4/init/redhat/cfn-hup /etc/init.d/cfn-hup
 chmod 775 /etc/cfn/rhel-scripts/aws-cfn-bootstrap-latest/aws-cfn-bootstrap-1.4/init/redhat/cfn-hup

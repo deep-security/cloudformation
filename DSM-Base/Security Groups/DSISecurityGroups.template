@@ -34,51 +34,10 @@
                 "Oracle"
             ]
         }
+
+
     },
     "Resources"                : {
-        "ELBSG" : {
-            "Type" : "AWS::EC2::SecurityGroup",
-            "Properties" : {
-                "GroupDescription" : "AllowGUIandHeartbeat",
-                "VpcId"            : {
-                    "Ref" : "AWSIVPC"
-                },
-                "SecurityGroupIngress" : [
-                    {
-                        "IpProtocol" : "tcp",
-                        "FromPort"   : {
-                            "Ref" : "DSIPHeartbeatPort"
-                        },
-                        "ToPort"     : {
-                            "Ref" : "DSIPHeartbeatPort"
-                        },
-                        "CidrIp"     : "0.0.0.0/0"
-                    },
-                    {
-                        "IpProtocol" : "tcp",
-                        "FromPort"   : {
-                            "Ref" : "DSIPGUIPort"
-                        },
-                        "ToPort"     : {
-                            "Ref" : "DSIPGUIPort"
-                        },
-                        "CidrIp"     : "0.0.0.0/0"
-                    }
-                ],
-                "SecurityGroupEgress"  : [
-                    {
-                        "IpProtocol" : "-1",
-                        "CidrIp"     : "0.0.0.0/0"
-                    }
-                ],
-				"Tags" : [
-					{
-						"Key" : "Name",
-						"Value" : "DSMELBSG"
-					}
-				]
-            }
-        },
 		"ELBSourceSG" : {
 			"Type" : "AWS::EC2::SecurityGroup",
 			"Properties" : {
@@ -219,11 +178,6 @@
                 "Ref" : "DSMSG"
             }
         },
-		"ELBSG" : {
-			"Value" : {
-				"Ref" : "ELBSG"
-				}
-			},
 		"ELBSourceSG" : {
 			"Value" : { "Ref" : "ELBSourceSG" }
 		}

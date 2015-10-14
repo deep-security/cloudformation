@@ -85,29 +85,40 @@
                 "Oracle"
             ]
         },
-		"DBISubnet" : {
-			"Description" : "Choose a private subnet for the RDS instance",
-			"Type" : "AWS::EC2::Subnet::Id"
-		},
 		"MultiAZ": {
 			"Description": "Use Multi-AZ or SQL Mirroring Option Group for RDS Instance",
 			"Type" : "String",
 			"AllowedValues" : [
 				"true",
 				"false"
-				]
+				],
+			"Default" : "false"
 			},
 		"DBIInstanceIdentifier" : {
 			"Description" : "Choose RDS Instance ID",
 			"Type" : "String"
-			}
+			},
+		"DBISubnetGroupName" : {
+			"Type" : "String",
+			"Default" : ""
+			},
+        "DBISubnet1"           : {
+            "Description" : "Choose a private subnets in the same VPC for the RDS instance",
+            "Type"        : "AWS::EC2::Subnet::Id",
+            "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template"
+        },
+        "DBISubnet2"           : {
+            "Description" : "Choose private subnets in the same VPC for this RDS instance",
+            "Type"        : "AWS::EC2::Subnet::Id",
+            "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template"
+        }
     },
     "Resources"                : {
         "DSOracleRDS" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "DBTypeIsOracle",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSDBOracleRDS.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/DSDBOracleRDS.template",
                 "TimeoutInMinutes" : "10",
                 "Parameters"       : {
                     "DBIRDSInstanceSize" : {
@@ -131,8 +142,8 @@
                     "RDSSG"               : {
                         "Ref" : "RDSSG"
                     },
-					"DBISubnet" : { "Ref" : "DBISubnet" },
-					"DBIInstanceIdentifier" : { "Ref" : "DBIInstanceIdentifier" }
+					"DBIInstanceIdentifier" : { "Ref" : "DBIInstanceIdentifier" },
+					"DBISubnetGroupName" : { "Ref" : "DBISubnetGroup" }
                 }
             }
         },
@@ -140,7 +151,7 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "DBTypeIsSQL",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/master/DSDBSQLRDS.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/DSDBSQLRDS.template",
                 "TimeoutInMinutes" : "10",
                 "Parameters"       : {
                     "DBIRDSInstanceSize" : {
@@ -164,11 +175,18 @@
                     "RDSSG"               : {
                         "Ref" : "RDSSG"
                     },
-					"DBISubnet" : { "Ref" : "DBISubnet" },
-					"DBIInstanceIdentifier" : { "Ref" : "DBIInstanceIdentifier" }
+					"DBIInstanceIdentifier" : { "Ref" : "DBIInstanceIdentifier" },
+					"DBISubnetGroupName" : { "Ref" : "DBISubnetGroup" }
                 }
             }
-        }
+        },
+		"DBISubnetGroup"     : {
+            "Type" : "AWS::RDS::DBSubnetGroup",
+			"Properties" : {
+				"DBSubnetGroupDescription" : "DeepSecurityRDSSubnetGroup",
+				"SubnetIds"              : [ { "Ref" : "DBISubnet1" }, { "Ref" : "DBISubnet2" } ]
+			}
+		}
     },
     "Conditions"               : {
         "DBTypeIsOracle" : {
@@ -187,6 +205,7 @@
                 "SQL"
             ]
         }
+
     },
     "Outputs"                  : {
         "DSDBEndpoint" : {
