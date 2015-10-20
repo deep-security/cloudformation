@@ -394,7 +394,8 @@
                             "prepDSMInstall",
                             "installDSM",
                             "addCloudAccount",
-							"addToELB"
+							"addToELB",
+							"fixManagerHostObject"
                         ],
                         "doSqlSetup" : [
                             "sqlSetup"
@@ -412,7 +413,8 @@
 							"setup",
                             "prepDSMInstall",
                             "installDSM",
-							"addToELB"
+							"addToELB",
+							"fixManagerHostObject"
                         ]
                     },
                     "setup"      : {
@@ -772,7 +774,8 @@
 										]
 									]
 								}
-							},"4-set-load-balancer-heartbeat-port" : {
+							},
+							"4-set-load-balancer-heartbeat-port" : {
 								"command" : {
 									"Fn::Join" : [
 										"",
@@ -814,7 +817,29 @@
 					},
 					"fixManagerHostObject" : {
 						"files" : {
-							"source" 
+							"/etc/cfn/reactivate-manager" : {
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/Scripts/reactivate-manager",
+								"owner" : "root",
+								"mode" : "000700"
+								}
+							},
+						"commands" : {
+							"1-reactivate-manager" : {
+								"command" : {
+									"Fn::Join" : [ 
+										"", 
+										[
+											"/etc/cfn/reactivate-manager ",
+											{ "Ref" : "DSCAdminName" },
+											" ",
+											{ "Ref" : "DSCAdminPassword" },
+											" ",
+											{ "Ref" : "DSIPGUIPort" }
+										] 
+									]
+								}
+							}
+						}
 					}
 				}
 			},
