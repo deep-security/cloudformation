@@ -74,6 +74,9 @@
     <Content Include="helpers\create-DSM-SqlDB.py">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="helpers\reactivate-manager">
+      <SubType>Content</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DB" />

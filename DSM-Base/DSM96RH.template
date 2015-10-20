@@ -166,10 +166,18 @@
             ],
             "Default"       : "False"
         },
-		"DSMELB" : {
+        "DSIELB"            : {
+            "Type" : "String",
+            "Default" : ""
+        },
+		"DSIELBFQDN" : {
 			"Type" : "String",
-			"Default" : "test"
-		}
+			"Default" : ""
+		},
+		"DSM1CompleteWaitHandle" : {
+			"Type" : "String",
+			"Default" : ""
+			}
     },
     "Mappings"                 : {
         "AWSRegionArch2AMI" : {
@@ -305,65 +313,66 @@
                             "Action"    : [
                                 "sts:AssumeRole"
                             ]
-                        }			
+                        }
                     ]
                 },
                 "Path"                     : "/",
                 "Policies"                 : [
                     {
-                        "PolicyName" : "PlaceholderPolicy",
-                        "PolicyDocument" : {
-                            "Statement" : [
-                                {
-                                    "Effect" : "Allow",
-                                    "Action" : [
-                                        "ec2:DescribeLicenses"
-                                    ],
-                                    "Resource" : "*"
+                        "Fn::If" : [
+                            "AddToELB",
+                            {
+                                "PolicyName" : "PlaceholderPolicy",
+                                "PolicyDocument" : {
+                                    "Statement" : [
+                                        {
+                                            "Effect" : "Allow",
+                                            "Action" : [
+                                                "ec2:DescribeLicenses"
+                                            ],
+                                            "Resource" : "*"
+                                        },
+                                        {
+                                            "Effect" : "Allow",
+                                            "Action" : [
+                                                "elasticloadbalancing:RegisterInstancesWithLoadBalancer"
+                                            ],
+											"Resource" : {
+												"Fn::Join" : [
+													"",
+													[
+														"arn:aws:elasticloadbalancing:",
+														{ "Ref" : "AWS::Region"},
+														":",
+														{ "Ref" : "AWS::AccountId" },
+														":loadbalancer/",
+														{ "Ref" : "DSIELB" }
+													]
+												]
+											}
+                                        }
+                                    ]
                                 }
-                            ]
-                        }
+                            },
+                            {
+                                "PolicyName" : "PlaceholderPolicy",
+                                "PolicyDocument" : {
+                                    "Statement" : [
+                                        {
+                                            "Effect" : "Allow",
+                                            "Action" : [
+                                                "ec2:DescribeLicenses"
+                                            ],
+                                            "Resource" : "*"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
                     }
                 ]
             }
         },
-		"DSMELBRole" : {
-			"Type" : "AWS::IAM::Role",
-            "Properties" : {
-                "AssumeRolePolicyDocument" : {
-                    "Statement" : [
-                        {
-                            "Effect" : "Allow",
-                            "Principal" : {
-                                "Service" : [
-                                    "ec2.amazonaws.com"
-                                ]
-                            },
-                            "Action"    : [
-                                "sts:AssumeRole"
-                            ]
-                        }			
-                    ]
-                },
-                "Path"                     : "/",
-                "Policies"                 : [
-                    {
-                        "PolicyName" : "PlaceholderPolicy",
-                        "PolicyDocument" : {
-                            "Statement" : [
-                                {
-                                    "Effect" : "Allow",
-                                    "Action" : [
-                                        "ec2elasticloadbalancing:RegisterInstancesWithLoadBalancer"
-                                    ],
-                                    "Resource" : "*"
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-		},
         "DSMProfile"      : {
             "Type" : "AWS::IAM::InstanceProfile",
             "Properties" : {
@@ -371,16 +380,7 @@
                 "Roles" : [
                     {
                         "Ref" : "DSMRole"
-                    },
-					{
-						"Fn::If" : [
-							"AddToELB",
-							{
-								"Ref" : "DSMELBRole"
-							},
-							"AWS::NoValue"
-						]
-					}
+                    }
                 ]
             }
         },
@@ -393,14 +393,26 @@
                             "setup",
                             "prepDSMInstall",
                             "installDSM",
-                            "addCloudAccount"
+                            "addCloudAccount",
+							"addToELB"
                         ],
                         "doSqlSetup" : [
                             "sqlSetup"
                         ],
+						"fixManagerLbSettings" : [
+							"fixManagerLoadBalancerSettings"
+							],
+						"fixManagerLocalLbAddress" : [
+							"fixManagerLocalLoadBalancerHosts"
+							],
+						"fixManagerHostObject" : [
+							"fixManagerHostObject"
+							],
                         "addDsmNode" : [
+							"setup",
                             "prepDSMInstall",
-                            "installDSM"
+                            "installDSM",
+							"addToELB"
                         ]
                     },
                     "setup"      : {
@@ -608,7 +620,7 @@
                             "4-enableAgentInitiatedReactivateHost" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivationActiveHost -value 2"
                             },
-                            "5-addCloudAccount"                    : {
+                            "8-addCloudAccount"                    : {
                                 "command" : {
                                     "Fn::Join" : [
                                         "",
@@ -667,7 +679,7 @@
                     "sqlSetup"        : {
                         "commands" : {
                             "1-get-sql-helper" : {
-                                "command" : "cd /etc/cfn/rhel-scripts; wget https://cf-deepsecurity.s3.amazonaws.com/master/cfn-rh-sql",
+                                "command" : "cd /etc/cfn/rhel-scripts; wget https://cf-deepsecurity.s3.amazonaws.com/master/cfn-rh-sql; chmod 775 cfn-rh-sql",
                                 "ignoreErrors" : "false"
                             },
                             "2-run-helper"     : {
@@ -701,9 +713,111 @@
                                 "ignoreErrors" : "false"
                             }
                         }
-                    }
-                }
-            },
+                    },
+					"addToELB" : {
+						"commands" : {
+							"0-add-instance-to-elb" : {
+								"command" : {
+									"Fn::If" : [
+										"AddToELB",
+										{	
+											"Fn::Join" : [
+												"",
+												[	
+													"aws elb register-instances-with-load-balancer --load-balancer ",
+													{ "Ref" : "DSIELB" },
+													" --instances $(curl http://169.254.169.254/latest/meta-data/instance-id/) --region ",
+													{ "Ref" : "AWS::Region" }
+												]
+											]
+										},
+										""
+									]
+								},
+								"ignoreErrors" : "false"
+							}
+						}
+					},
+					"fixManagerLoadBalancerSettings" : {
+						"commands" : {
+							"1-set-load-balancer-console" : {
+								"command" : {
+									"Fn::Join" : [
+										"",
+											[
+												"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerHostname blah -value ",
+												{ "Ref" : "DSIELBFQDN" }
+											]
+										]
+									}
+								},
+							"2-set-load-balancer-console-port" : {
+								"command" : {
+									"Fn::Join" : [
+										"",
+										[
+											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerPort blah -value ",
+											{ "Ref" : "DSIPGUIPort" }
+									]
+									]
+								}
+							},
+							"3-set-load-balancer-heartbeat" : {
+								"command" : {
+									"Fn::Join" : [
+										"",
+										[
+											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatHostname blah -value ",
+											{ "Ref" : "DSIELBFQDN" }
+										]
+									]
+								}
+							},"4-set-load-balancer-heartbeat-port" : {
+								"command" : {
+									"Fn::Join" : [
+										"",
+										[
+											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatPort blah -value ",
+											{ "Ref" : "DSIPHeartbeatPort" }
+										]
+									]
+								}
+							},
+							"5-set-load-balancer-relay-hostname" : {
+								"command" : {
+									"Fn::Join" : [
+										"",
+										[
+											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerRelayHostname blah -value ",
+											{ "Ref" : "DSIELBFQDN" }
+										]
+									]
+								}
+							}
+						}
+					},
+					"fixManagerLocalLoadBalancerHosts" : {
+						"commands" : {
+							"setHostsFile" : {
+								"Fn::Join" : [
+									"",
+									[
+										"echo \"",
+										"$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
+										" ",
+										{ "Ref" : "DSIELBFQDN" },
+										"\" >> /etc/hosts"
+									]
+								]
+							}
+						}
+					},
+					"fixManagerHostObject" : {
+						"files" : {
+							"source" 
+					}
+				}
+			},
             "Properties" : {
                 "IamInstanceProfile" : {
                     "Ref" : "DSMProfile"
@@ -762,6 +876,13 @@
                                 {
                                     "Ref" : "AWS::Region"
                                 },
+								{
+									"Fn::If" : [
+										"SQLplusELB",
+										" -c doSQLSetup,default,fixManagerLoacalLbAddress,fixManagerLbSettings",
+										""
+									]
+								},
                                 {
                                     "Fn::If" : [
                                         "DoSQLSetup",
@@ -769,6 +890,13 @@
                                         ""
                                     ]
                                 },
+								{
+									"Fn::If" : [
+										"AddNodePlusELB",
+										" -c fixManagerLocalLbAddress,addDsmNode",
+										""
+									]
+								},
                                 {
                                     "Fn::If" : [
                                         "IsFirstNode",
@@ -777,17 +905,32 @@
                                     ]
                                 },
                                 "\n",
-                                "cfn-signal -e $? ",
-                                " -r \"Complete\"",
-                                " '",
-                                "'\n"
+								{
+									"Fn::If" : [
+										"WaitNotProvided",
+										"cfn-signal -e $?  -r \"Complete\" ''",
+										{
+											"Fn::Join" : [
+												"",
+												[
+													"cfn-signal -e $? -r \"DSM Node 1 configuration complete\" ",
+													{
+														"Fn::Base64" : { "Ref" : "DSM1CompleteWaitHandle" }
+													}
+												]
+											]
+										}
+
+									]
+								},
+								"\n"
                             ]
                         ]
                     }
                 }
             }
-        }
-    },
+		}
+	},
     "Conditions"               : {
         "DBTypeIsOracle" : {
             "Fn::Equals" : [
@@ -843,16 +986,38 @@
                 }
             ]
         },
-		"AddToELB" : {
-			"Fn::Not" : [
+        "AddToELB"         : {
+            "Fn::Not" : [
+                {
+                    "Fn::Equals" : [
+                        {
+                            "Ref" : "DSIELB"
+                        },
+                        ""
+                    ]
+                }
+            ]
+        },
+		"WaitNotProvided" : {
+			"Fn::Equals" : [
+				"DSM1CompleteWaitHandle",
+				""
+				]
+			},
+		"SQLplusELB" : {
+			"Fn::And" : [
+				{ "Condition" : "AddToELB" },
+				{ "Condition" : "DoSQLSetup" }
+				]
+			},
+		"AddNodePlusELB" : {
+			"Fn::And" : [
 				{
-					"Fn::Equals" : [
-						{
-							"Ref" : "DSMELB"
-						},
-						""
-					]
-				}
+					"Fn::Not" : [
+						{ "Condition" : "IsFirstNode" }
+						]
+				},
+				{ "Condition" : "AddToELB" }
 			]
 		}
     },

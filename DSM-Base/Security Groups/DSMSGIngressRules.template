@@ -28,7 +28,7 @@
         }
     },
     "Resources"                : {
-        "DSMConsoleIngress" : {
+        "DSMConsoleIngressFromELB" : {
             "Type" : "AWS::EC2::SecurityGroupIngress",
             "Properties" : {
                 "GroupId" : {
@@ -46,7 +46,7 @@
                 }
             }
         },
-        "DSMHeartbeatIngress" : {
+        "DSMHeartbeatIngressFromELB" : {
             "Type" : "AWS::EC2::SecurityGroupIngress",
             "Properties" : {
                 "GroupId" : {
@@ -64,7 +64,7 @@
                 }
             }
         },
-        "DSMRelayIngress"     : {
+        "DSMRelayIngressFromELB"     : {
             "Type" : "AWS::EC2::SecurityGroupIngress",
             "Properties" : {
                 "GroupId" : {
@@ -85,6 +85,36 @@
 				"IpProtocol" : "tcp",
 				"FromPort" : "4118",
 				"ToPort" : "4118",
+				"SourceSecurityGroupId" : { "Ref" : "DSMSG" }
+				}
+			},
+		"DSMConsoleIngressSelf" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "tcp",
+				"FromPort" : { "Ref" : "DSIPGUIPort" },
+				"ToPort" : { "Ref" : "DSIPGUIPort" },
+				"SourceSecurityGroupId" : { "Ref" : "DSMSG" }
+				}
+			},
+		"DSMHeartbeatIngressSelf" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "tcp",
+				"FromPort" : { "Ref" : "DSIPHeartbeatPort" },
+				"ToPort" : { "Ref" : "DSIPHeartbeatPort" },
+				"SourceSecurityGroupId" : { "Ref" : "DSMSG" }
+				}
+			},
+		"DSMSelfIngressRelay" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "tcp",
+				"FromPort" : "4122",
+				"ToPort" : "4122",
 				"SourceSecurityGroupId" : { "Ref" : "DSMSG" }
 				}
 			}

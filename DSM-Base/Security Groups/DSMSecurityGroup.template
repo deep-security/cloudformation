@@ -30,38 +30,10 @@
         "DSMSG" : {
             "Type" : "AWS::EC2::SecurityGroup",
             "Properties" : {
-                "GroupDescription" : "Allow GUI, Hearbeat, and 4122 inbound to DSMs",
+                "GroupDescription" : "Allow GUI, Hearbeat, and 4122 inbound to DSMs from ELB",
                 "VpcId"            : {
                     "Ref" : "AWSIVPC"
                 },
-                "SecurityGroupIngress" : [
-                    {
-                        "IpProtocol" : "tcp",
-                        "FromPort"   : {
-                            "Ref" : "DSIPHeartbeatPort"
-                        },
-                        "ToPort"     : {
-                            "Ref" : "DSIPHeartbeatPort"
-                        },
-                        "CidrIp"     : "0.0.0.0/0"
-                    },
-                    {
-                        "IpProtocol" : "tcp",
-                        "FromPort"   : {
-                            "Ref" : "DSIPGUIPort"
-                        },
-                        "ToPort"     : {
-                            "Ref" : "DSIPGUIPort"
-                        },
-                        "CidrIp"     : "0.0.0.0/0"
-                    },
-                    {
-                        "IpProtocol" : "tcp",
-                        "FromPort"   : "4122",
-                        "ToPort"     : "4122",
-                        "CidrIp"     : "0.0.0.0/0"
-                    }
-                ],
                 "SecurityGroupEgress"  : [
                     {
                         "IpProtocol" : "-1",

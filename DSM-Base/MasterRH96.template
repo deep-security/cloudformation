@@ -277,7 +277,10 @@
                     "DSIPInstanceType"  : {
                         "Ref" : "DSIPInstanceType"
                     },
-                    "CreateEIP"         : "False"
+                    "CreateEIP"         : "False",
+					"DSIELB" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.DSIELB" ] },
+					"DSM1CompleteWaitHandle" : { "Ref" : "DSM1CompleteWaitHandle" },
+					"DSIELBFQDN" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.ELBFQDN" ] }
                 }
             }
         },
@@ -285,7 +288,7 @@
             "Type" : "AWS::CloudFormation::Stack",
             "DependsOn" : [
                 "DSIDSMSecurityGroup",
-                "DSM96Node1"
+                "DSM1CompleteWaitCondition"
             ],
             "Condition" : "DSM96Node2DB",
             "Properties" : {
@@ -343,7 +346,8 @@
                     "DSIPInstanceType"  : {
                         "Ref" : "DSIPInstanceType"
                     },
-                    "CreateEIP"         : "False"
+                    "CreateEIP"         : "False",
+					"DSIELB" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.DSIELB" ] }
                 }
             }
         },
@@ -405,13 +409,16 @@
                     "DSIPInstanceType"  : {
                         "Ref" : "DSIPInstanceType"
                     },
-                    "CreateEIP"         : "False"
+                    "CreateEIP"         : "False",
+					"DSIELB" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.DSIELB" ] },
+					"DSM1CompleteWaitHandle" : { "Ref" : "DSM1NoDBCompleteWaitHandle" },
+					"DSIELBFQDN" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.ELBFQDN" ] }
                 }
             }
         },
         "DSM96Node2NoDB" : {
             "Type" : "AWS::CloudFormation::Stack",
-            "DependsOn" : "DSM96Node1NoDB",
+            "DependsOn" : "DSM1NoDBCompleteWaitCondition",
             "Condition" : "DSM96Node2NoDB",
             "Properties" : {
                 "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/RH/DSM96RH.template",
@@ -465,7 +472,8 @@
                     "DSIPInstanceType"  : {
                         "Ref" : "DSIPInstanceType"
                     },
-                    "CreateEIP"         : "False"
+                    "CreateEIP"         : "False",
+					"DSIELB" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.DSIELB" ] }
                 }
             }
         },
@@ -587,7 +595,37 @@
 					"DSIPGUIPort" : { "Ref" : "DSIPGUIPort" }
 					}
 				}
-			}
+			},
+		"DSM1CompleteWaitHandle" : {
+			"Condition" : "LaunchRDSInstance",
+			"Type" : "AWS::CloudFormation::WaitConditionHandle"
+		},
+		"DSM1CompleteWaitCondition" : {
+			"Condition" : "LaunchRDSInstance",
+			"Type" : "AWS::CloudFormation::WaitCondition",
+			"DependsOn" : [
+				"DSM96Node1"
+				],
+			"Properties" : {
+				"Handle" : { "Ref" : "DSM1CompleteWaitHandle" },
+				"Timeout" : "1200"
+				}
+		},
+		"DSM1NoDBCompleteWaitHandle" : {
+			"Condition" : "DoNotLaunchRDSInstance",
+			"Type" : "AWS::CloudFormation::WaitConditionHandle"
+		},
+		"DSM1NoDBCompleteWaitCondition" : {
+			"Condition" : "DoNotLaunchRDSInstance",
+			"Type" : "AWS::CloudFormation::WaitCondition",
+			"DependsOn" : [
+					"DSM96Node1NoDB"
+				],
+			"Properties" : {
+				"Handle" : { "Ref" : "DSM1CompleteWaitHandle" },
+				"Timeout" : "1200"
+				}
+		}
     },
     "Conditions"               : {
         "DSIsMultiNode" : {

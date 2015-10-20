@@ -25,10 +25,6 @@
             "Default"     : "4119",
             "ConstraintDescription" : "Must be a valid TCP port."
         },
-        "DSMNodes"          : {
-            "Description" : "Instances to add to ELB",
-            "Type"        : "CommaDelimitedList"
-        },
         "DSELBPosture"      : {
             "Description" : "Internal or External ELB",
             "Type"        : "String",
@@ -74,9 +70,6 @@
                         "Ref" : "DSISubnetID"
                     }
                 ],
-                "Instances" : 
-                    { "Ref" : "DSMNodes" }
-                ,
                 "SecurityGroups" : [
                     {
                         "Fn::GetAtt" : [
@@ -166,6 +159,9 @@
                     "SourceSecurityGroup.OwnerAlias"
                 ]
             }
-        }
-    }
+        },
+		"DSIELB" : {
+			"Value" : { "Ref" : "DSMELB" }
+		}
+	}
 }

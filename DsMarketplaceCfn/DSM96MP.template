@@ -168,6 +168,10 @@
                 "False"
             ],
             "Default"       : "True"
+        },
+        "DSIELB"            : {
+            "Type" : "String",
+            "Default" : ""
         }
     },
     "Mappings"                 : {
@@ -883,6 +887,18 @@
                     "Ref" : "DSIPLicense"
                 },
                 "BYOL"
+            ]
+        },
+        "AddToELB"         : {
+            "Fn::Not" : [
+                {
+                    "Fn::Equals" : [
+                        {
+                            "Ref" : "DSIELB"
+                        },
+                        ""
+                    ]
+                }
             ]
         }
     },
