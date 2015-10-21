@@ -54,6 +54,12 @@
                             "Ref" : "DSIPGUIPort"
                         },
                         "CidrIp"     : "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "4122",
+                        "ToPort"     : "4122",
+                        "CidrIp"     : "0.0.0.0/0"
                     }
                 ],
                 "SecurityGroupEgress"  : [

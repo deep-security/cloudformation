@@ -103,6 +103,11 @@
                             "Ref" : "DSIPGUIPort"
                         },
                         "Protocol"         : "TCP"
+                    },
+                    {
+                        "LoadBalancerPort" : "4122",
+                        "InstancePort"     : "4122",
+                        "Protocol"         : "TCP"
                     }
                 ],
                 "HealthCheck"    : {
