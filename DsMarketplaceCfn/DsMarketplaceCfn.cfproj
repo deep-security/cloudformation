@@ -15,16 +15,10 @@
     <CloudFormationPath Condition=" '$(CloudFormationPath)' == '' AND Exists('$(MSBuildExtensionsPath)\Amazon Web Services LLC\AWSToolkit.VS2010\cloudformation.targets')">$(MSBuildExtensionsPath)\Amazon Web Services LLC\AWSToolkit.VS2010</CloudFormationPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DSM95MP.template">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DSM96MP.template">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MasterMP96.template">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MasterMarketplaceDS.template">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

@@ -684,7 +684,7 @@
                     "sqlSetup"        : {
                         "commands" : {
                             "1-get-sql-helper" : {
-                                "command" : "cd /etc/cfn/rhel-scripts; wget https://cf-deepsecurity.s3.amazonaws.com/master/cfn-rh-sql; chmod 775 cfn-rh-sql",
+                                "command" : "cd /etc/cfn/rhel-scripts; wget https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/Scripts/cfn-rh-sql; chmod 775 cfn-rh-sql",
                                 "ignoreErrors" : "false"
                             },
                             "2-run-helper"     : {
@@ -815,7 +815,7 @@
 					"fixManagerHostObject" : {
 						"files" : {
 							"/etc/cfn/reactivate-manager" : {
-								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/Scripts/reactivate-manager",
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/Scripts/reactivate-manager",
 								"owner" : "root",
 								"mode" : "000700"
 								}
@@ -886,7 +886,7 @@
                             [
                                 "#!/bin/bash -xe\n",
                                 "# cloud-init\n",
-                                "wget https://cf-deepsecurity.s3.amazonaws.com/master/cfn-rh-helper\n",
+                                "wget https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/Scripts/cfn-rh-helper\n",
                                 "sh cfn-rh-helper >> cfn-rh-helper.log\n",
                                 "cfn-init -v ",
                                 " --stack ",

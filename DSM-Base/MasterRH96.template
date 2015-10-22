@@ -600,7 +600,7 @@
         "DSIELB"              : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/DSM96ELB.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/ELB/DSM96ELB.template",
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"

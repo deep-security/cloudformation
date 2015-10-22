@@ -445,7 +445,6 @@
             "Metadata" : {
                 "AWS::CloudFormation::Init" : {
                     "configSets" : {
-                        "configSets" : {
                         "default" : [
                             "setup",
                             "prepDSMInstall",
@@ -746,7 +745,7 @@
                     "sqlSetup"         : {
                         "commands" : {
                             "1-get-create-script" : {
-                                "command" : "cd /etc/cfn/rhel-scripts; wget https://s3.amazonaws.com/cf-deepsecurity/master/create-DSM-SqlDB.py; chmod 755 create-DSM-SqlDB.py",
+                                "command" : "cd /etc/cfn/rhel-scripts; wget https://s3.amazonaws.com/cf-deepsecurity/96/v0.2/Scripts/create-DSM-SqlDB.py; chmod 755 create-DSM-SqlDB.py",
                                 "ignoreErrors" : "false"
                             },
                             "2-create-db"         : {
@@ -873,7 +872,7 @@
 					"fixManagerHostObject" : {
 						"files" : {
 							"/etc/cfn/reactivate-manager" : {
-								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/Scripts/reactivate-manager",
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/Scripts/reactivate-manager",
 								"owner" : "root",
 								"mode" : "000700"
 								}
@@ -1030,8 +1029,8 @@
                     }
                 }
             }
-        }
-    },
+		}
+	},
     "Conditions"               : {
         "DBTypeIsOracle" : {
             "Fn::Equals" : [
