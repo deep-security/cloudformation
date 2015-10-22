@@ -21,7 +21,7 @@
     <Compile Include="DSM96MP.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MasterMarketplace96.template">
+    <Compile Include="MasterMP96.template">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MasterMarketplaceDS.template">

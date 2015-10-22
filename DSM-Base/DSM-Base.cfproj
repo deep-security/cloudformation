@@ -39,9 +39,6 @@
     <Compile Include="Security Groups\DSELBSG.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Security Groups\DSISecurityGroups.template">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Security Groups\DSMSecurityGroup.template">
       <SubType>Code</SubType>
     </Compile>

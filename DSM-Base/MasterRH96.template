@@ -49,7 +49,7 @@
             "ConstraintDescription" : "must select a valid database instance type."
         },
         "DBIStorageAllocation" : {
-            "Default" : 10,
+            "Default" : 100,
             "Description" : "The Storage Allocated to Database Instance (in GB). Minimum 200 for SQL Server, 10 for Oracle.",
             "Type"        : "Number",
             "MinValue"    : 10,
@@ -164,7 +164,7 @@
             "Type"        : "Number",
             "MinValue"    : 0,
             "MaxValue"    : 65535,
-            "Default"     : "4119",
+            "Default"     : "443",
             "ConstraintDescription" : "Must be a valid TCP port."
         },
         "DSIPInstanceType"     : {
@@ -223,7 +223,7 @@
             ],
             "Condition" : "LaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/RH/DSM96RH.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/RH/DSM96RH.template",
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -304,7 +304,7 @@
             ],
             "Condition" : "DSM96Node2DB",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/RH/DSM96RH.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/RH/DSM96RH.template",
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -375,7 +375,7 @@
             ],
             "Condition" : "DoNotLaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/RH/DSM96RH.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/RH/DSM96RH.template",
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -450,7 +450,7 @@
             "DependsOn" : "DSM1NoDBCompleteWaitCondition",
             "Condition" : "DSM96Node2NoDB",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/RH/DSM96RH.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/RH/DSM96RH.template",
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -516,7 +516,7 @@
             "Condition" : "LaunchRDSInstance",
             "DependsOn" : "DSIRDSSecurityGroup",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/DSDBAbstract.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/DB/DSDBAbstract.template",
                 "Parameters"  : {
                     "DBPName" : {
                         "Ref" : "DBPName"
@@ -563,7 +563,7 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "LaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/SecurityGroups/RDSSecurityGroup.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/SecurityGroups/RDSSecurityGroup.template",
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -583,7 +583,7 @@
         "DSIDSMSecurityGroup" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/SecurityGroups/DSMSecurityGroup.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/SecurityGroups/DSMSecurityGroup.template",
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -621,7 +621,7 @@
         "DSIDSMSecurityGroupIngressRules" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/SecurityGroups/DSMSGIngressRules.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/SecurityGroups/DSMSGIngressRules.template",
                 "Parameters"  : {
                     "DSMSG" : {
                         "Fn::GetAtt" : [

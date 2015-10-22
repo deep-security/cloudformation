@@ -394,7 +394,6 @@
                             "prepDSMInstall",
                             "installDSM",
                             "addCloudAccount",
-							"addToELB",
 							"fixManagerHostObject"
                         ],
                         "doSqlSetup" : [
@@ -404,7 +403,7 @@
 							"fixManagerLoadBalancerSettings"
 							],
 						"fixManagerLocalLbAddress" : [
-							"fixManagerLocalLoadBalancerHosts"
+							"fixManagerLocalLoadBalancerHostsFile"
 							],
 						"fixManagerHostObject" : [
 							"fixManagerHostObject"
@@ -413,9 +412,13 @@
 							"setup",
                             "prepDSMInstall",
                             "installDSM",
-							"addToELB",
 							"fixManagerHostObject"
-                        ]
+                        ],
+						"setupELB" : [
+							"addToELB",
+							"fixManagerLocalLoadBalancerHostsFile",
+							"fixManagerLoadBalancerSettings"
+							]
                     },
                     "setup"      : {
                         "files" : {
@@ -720,20 +723,14 @@
 						"commands" : {
 							"0-add-instance-to-elb" : {
 								"command" : {
-									"Fn::If" : [
-										"AddToELB",
-										{	
-											"Fn::Join" : [
-												"",
-												[	
-													"aws elb register-instances-with-load-balancer --load-balancer ",
-													{ "Ref" : "DSIELB" },
-													" --instances $(curl http://169.254.169.254/latest/meta-data/instance-id/) --region ",
-													{ "Ref" : "AWS::Region" }
-												]
-											]
-										},
-										""
+									"Fn::Join" : [
+										"",
+										[	
+											"aws elb register-instances-with-load-balancer --load-balancer ",
+											{ "Ref" : "DSIELB" },
+											" --instances $(curl http://169.254.169.254/latest/meta-data/instance-id/) --region ",
+											{ "Ref" : "AWS::Region" }
+										]
 									]
 								},
 								"ignoreErrors" : "false"
@@ -799,7 +796,7 @@
 							}
 						}
 					},
-					"fixManagerLocalLoadBalancerHosts" : {
+					"fixManagerLocalLoadBalancerHostsFile" : {
 						"commands" : {
 							"setHostsFile" : {
 								"Fn::Join" : [
@@ -904,17 +901,22 @@
 								{
 									"Fn::If" : [
 										"SQLplusELB",
-										" -c doSQLSetup,default,fixManagerLoacalLbAddress,fixManagerLbSettings",
-										""
+										" -c doSqlSetup,default,setupELB",
+										{
+											"Fn::If" : [
+												"DoSQLSetup",
+												" -c doSqlSetup,default",
+												{
+													"Fn::If" : [
+														"IsFirstNodePlusELB",
+														" -c default,setupELB",
+														""
+													]
+												}
+											]
+										}
 									]
 								},
-                                {
-                                    "Fn::If" : [
-                                        "DoSQLSetup",
-                                        " -c doSqlSetup,default",
-                                        ""
-                                    ]
-                                },
 								{
 									"Fn::If" : [
 										"AddNodePlusELB",
@@ -945,7 +947,6 @@
 												]
 											]
 										}
-
 									]
 								},
 								"\n"
@@ -1042,6 +1043,12 @@
 						{ "Condition" : "IsFirstNode" }
 						]
 				},
+				{ "Condition" : "AddToELB" }
+			]
+		},
+		"IsFirstNodePlusELB" : {
+			"Fn::And" : [
+				{ "Condition" : "IsFirstNode" },
 				{ "Condition" : "AddToELB" }
 			]
 		}

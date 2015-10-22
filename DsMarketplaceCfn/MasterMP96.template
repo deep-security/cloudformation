@@ -49,7 +49,7 @@
             "ConstraintDescription" : "must select a valid database instance type."
         },
         "DBIStorageAllocation" : {
-            "Default" : 200,
+            "Default" : 100,
             "Description" : "The Storage Allocated to Database Instance (in GB). Minimum 200 for SQL Server, 10 for Oracle.",
             "Type"        : "Number",
             "MinValue"    : 10,
@@ -99,6 +99,11 @@
                 "SQL",
                 "Oracle"
             ]
+        },
+        "DBPEndpoint"          : {
+            "Type" : "String",
+            "Description" : "If you have an existing oracle instace, enter the endpoint address here, else this field will be ignored",
+            "Default"     : "Enter Oracle Address here if needed"
         },
         "DBPName"              : {
             "Default" : "dsm",
@@ -158,7 +163,7 @@
             "Type"        : "Number",
             "MinValue"    : 0,
             "MaxValue"    : 65535,
-            "Default"     : "4119",
+            "Default"     : "443",
             "ConstraintDescription" : "Must be a valid TCP port."
         },
         "DSIPInstanceType"     : {
@@ -185,6 +190,16 @@
                 "g2.2xlarge"
             ]
         },
+        "DBISubnet1"           : {
+            "Description" : "Choose a private subnets in the same VPC for the RDS instance",
+            "Type"        : "AWS::EC2::Subnet::Id",
+            "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template"
+        },
+        "DBISubnet2"           : {
+            "Description" : "Choose private subnets in the same VPC for this RDS instance",
+            "Type"        : "AWS::EC2::Subnet::Id",
+            "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template"
+        },
         "DBIInstanceIdentifier" : {
             "Description" : "Choose RDS Instance ID",
             "Type"        : "String",
@@ -200,21 +215,6 @@
                 "100",
                 "200"
             ]
-        },
-        "DBPEndpoint"           : {
-            "Type" : "String",
-            "Description" : "If you have an existing oracle instace, enter the endpoint address here, else this field will be ignored",
-            "Default"     : "Enter Oracle Address here if needed"
-        },
-        "DBISubnet1"            : {
-            "Description" : "Choose a private subnets in the same VPC for the RDS instance",
-            "Type"        : "AWS::EC2::Subnet::Id",
-            "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template"
-        },
-        "DBISubnet2"            : {
-            "Description" : "Choose private subnets in the same VPC for this RDS instance",
-            "Type"        : "AWS::EC2::Subnet::Id",
-            "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template"
         }
     },
     "Mappings"                 : {
@@ -299,13 +299,31 @@
                     "DSIPInstanceType"  : {
                         "Ref" : "DSIPInstanceType"
                     },
-                    "CreateEIP"         : "False"
+                    "CreateEIP"         : "False",
+                    "DSIELB"            : {
+                        "Fn::GetAtt" : [
+                            "DSIELB",
+                            "Outputs.DSIELB"
+                        ]
+                    },
+                    "DSM1CompleteWaitHandle" : {
+                        "Ref" : "DSM1CompleteWaitHandle"
+                    },
+                    "DSIELBFQDN"             : {
+                        "Fn::GetAtt" : [
+                            "DSIELB",
+                            "Outputs.ELBFQDN"
+                        ]
+                    }
                 }
             }
         },
         "DSM96Node2" : {
             "Type" : "AWS::CloudFormation::Stack",
-            "DependsOn" : "DSM96Node1",
+            "DependsOn" : [
+                "DSIDSMSecurityGroup",
+                "DSM1CompleteWaitCondition"
+            ],
             "Condition" : "DSM96Node2DB",
             "Properties" : {
                 "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/MP/DSM96MP.template",
@@ -365,7 +383,13 @@
                     "DSIPInstanceType"  : {
                         "Ref" : "DSIPInstanceType"
                     },
-                    "CreateEIP"         : "False"
+                    "CreateEIP"         : "False",
+                    "DSIELB"            : {
+                        "Fn::GetAtt" : [
+                            "DSIELB",
+                            "Outputs.DSIELB"
+                        ]
+                    }
                 }
             }
         },
@@ -430,13 +454,28 @@
                     "DSIPInstanceType"  : {
                         "Ref" : "DSIPInstanceType"
                     },
-                    "CreateEIP"         : "False"
+                    "CreateEIP"         : "False",
+                    "DSM1NoDBCompleteWaitHandle" : {
+                        "Ref" : "DSM1NoDBCompleteWaitHandle"
+                    },
+                    "DSIELB"            : {
+                        "Fn::GetAtt" : [
+                            "DSIELB",
+                            "Outputs.DSIELB"
+                        ]
+                    },
+                    "DSIELBFQDN"             : {
+                        "Fn::GetAtt" : [
+                            "DSIELB",
+                            "Outputs.ELBFQDN"
+                        ]
+                    }
                 }
             }
         },
         "DSM96Node2NoDB" : {
             "Type" : "AWS::CloudFormation::Stack",
-            "DependsOn" : "DSM96Node1NoDB",
+            "DependsOn" : "DSM1NoDBCompleteWaitCondition",
             "Condition" : "DSM96Node2NoDB",
             "Properties" : {
                 "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/MP/DSM96MP.template",
@@ -493,7 +532,13 @@
                     "DSIPInstanceType"  : {
                         "Ref" : "DSIPInstanceType"
                     },
-                    "CreateEIP"         : "False"
+                    "CreateEIP"         : "False",
+                    "DSIELB"            : {
+                        "Fn::GetAtt" : [
+                            "DSIELB",
+                            "Outputs.DSIELB"
+                        ]
+                    }
                 }
             }
         },
@@ -600,75 +645,68 @@
                     "DSELBPosture"      : "External",
                     "DSISubnetID"       : {
                         "Ref" : "DSISubnetID"
-                    },
-                    "DSMNodes"          : {
-                        "Fn::If" : [
-                            "DSIsMultiNode",
-                            {
-                                "Fn::If" : [
-                                    "LaunchRDSInstance",
-                                    {
-                                        "Fn::Join" : [
-                                            "",
-                                            [
-                                                {
-                                                    "Fn::GetAtt" : [
-                                                        "DSM96Node1",
-                                                        "Outputs.DSMInstanceId"
-                                                    ]
-                                                },
-                                                ",",
-                                                {
-                                                    "Fn::GetAtt" : [
-                                                        "DSM96Node2",
-                                                        "Outputs.DSMInstanceId"
-                                                    ]
-                                                }
-                                            ]
-                                        ]
-                                    },
-                                    {
-                                        "Fn::Join" : [
-                                            "",
-                                            [
-                                                {
-                                                    "Fn::GetAtt" : [
-                                                        "DSM96Node1NoDB",
-                                                        "Outputs.DSMInstanceId"
-                                                    ]
-                                                },
-                                                ",",
-                                                {
-                                                    "Fn::GetAtt" : [
-                                                        "DSM96Node2NoDB",
-                                                        "Outputs.DSMInstanceId"
-                                                    ]
-                                                }
-                                            ]
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "Fn::If" : [
-                                    "LaunchRDSInstance",
-                                    {
-                                        "Fn::GetAtt" : [
-                                            "DSM96Node1",
-                                            "Outputs.DSMInstanceId"
-                                        ]
-                                    },
-                                    {
-                                        "Fn::GetAtt" : [
-                                            "DSM96Node1NoDB",
-                                            "Outputs.DSMInstanceId"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
                     }
                 }
+            }
+        },
+        "DSIDSMSecurityGroupIngressRules" : {
+            "Type" : "AWS::CloudFormation::Stack",
+            "Properties" : {
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.1/SecurityGroups/DSMSGIngressRules.template",
+                "Parameters"  : {
+                    "DSMSG" : {
+                        "Fn::GetAtt" : [
+                            "DSIDSMSecurityGroup",
+                            "Outputs.DSMSG"
+                        ]
+                    },
+                    "ELBSourceSG" : {
+                        "Fn::GetAtt" : [
+                            "DSIELB",
+                            "Outputs.ELBSourceSecurityGroup"
+                        ]
+                    },
+                    "DSIPHeartbeatPort" : {
+                        "Ref" : "DSIPHeartbeatPort"
+                    },
+                    "DSIPGUIPort"       : {
+                        "Ref" : "DSIPGUIPort"
+                    }
+                }
+            }
+        },
+        "DSM1CompleteWaitHandle"          : {
+            "Condition" : "LaunchRDSInstance",
+            "Type"      : "AWS::CloudFormation::WaitConditionHandle"
+        },
+        "DSM1CompleteWaitCondition"       : {
+            "Condition" : "LaunchRDSInstance",
+            "Type"      : "AWS::CloudFormation::WaitCondition",
+            "DependsOn" : [
+                "DSM96Node1"
+            ],
+            "Properties" : {
+                "Handle" : {
+                    "Ref" : "DSM1CompleteWaitHandle"
+                },
+                "Timeout" : "1200"
+            }
+        },
+        "DSM1NoDBCompleteWaitHandle"      : {
+            "Condition" : "DoNotLaunchRDSInstance",
+            "Type"      : "AWS::CloudFormation::WaitConditionHandle"
+        },
+        "DSM1NoDBCompleteWaitCondition"   : {
+            "Condition" : "DoNotLaunchRDSInstance",
+            "Type"      : "AWS::CloudFormation::WaitCondition",
+            "DependsOn" : [
+                "DSM96Node1NoDB"
+            ],
+            "Properties" : {
+                "Handle" : {
+                    "Ref" : "DSM1CompleteWaitHandle"
+                },
+                "Timeout" : "1200"
             }
         }
     },
@@ -719,95 +757,7 @@
         }
     },
     "Outputs"                  : {
-        "DSM1FQDN" : {
-            "Value" : {
-                "Fn::If" : [
-                    "LaunchRDSInstance",
-                    {
-                        "Fn::GetAtt" : [
-                            "DSM96Node1",
-                            "Outputs.DSMFQDN"
-                        ]
-                    },
-                    {
-                        "Fn::GetAtt" : [
-                            "DSM96Node1NoDB",
-                            "Outputs.DSMFQDN"
-                        ]
-                    }
-                ]
-            }
-        },
-        "DSM1ConsoleURL" : {
-            "Value" : {
-                "Fn::If" : [
-                    "LaunchRDSInstance",
-                    {
-                        "Fn::GetAtt" : [
-                            "DSM96Node1",
-                            "Outputs.DSMURL"
-                        ]
-                    },
-                    {
-                        "Fn::GetAtt" : [
-                            "DSM96Node1NoDB",
-                            "Outputs.DSMURL"
-                        ]
-                    }
-                ]
-            }
-        },
-        "DSM2FQDN"       : {
-            "Value" : {
-                "Fn::If" : [
-                    "DSIsMultiNode",
-                    {
-                        "Fn::If" : [
-                            "LaunchRDSInstance",
-                            {
-                                "Fn::GetAtt" : [
-                                    "DSM96Node2",
-                                    "Outputs.DSMFQDN"
-                                ]
-                            },
-                            {
-                                "Fn::GetAtt" : [
-                                    "DSM96Node2NoDB",
-                                    "Outputs.DSMFQDN"
-                                ]
-                            }
-                        ]
-                    },
-                    "AWS::NoValue"
-                ]
-            }
-        },
-        "DSM2ConsoleURL" : {
-            "Value" : {
-                "Fn::If" : [
-                    "DSIsMultiNode",
-                    {
-                        "Fn::If" : [
-                            "LaunchRDSInstance",
-                            {
-                                "Fn::GetAtt" : [
-                                    "DSM96Node2",
-                                    "Outputs.DSMURL"
-                                ]
-                            },
-                            {
-                                "Fn::GetAtt" : [
-                                    "DSM96Node2NoDB",
-                                    "Outputs.DSMURL"
-                                ]
-                            }
-                        ]
-                    },
-                    "AWS::NoValue"
-                ]
-            }
-        },
-		"DeepSecurityConsole" : {
+        "DeepSecurityConsole" : {
             "Value" : {
                 "Fn::Join" : [
                     "",

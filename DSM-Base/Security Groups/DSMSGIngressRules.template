@@ -108,7 +108,7 @@
 				"SourceSecurityGroupId" : { "Ref" : "DSMSG" }
 				}
 			},
-		"DSMSelfIngressRelay" : {
+		"DSMRelayIngressSelf" : {
 			"Type" : "AWS::EC2::SecurityGroupIngress",
 			"Properties" : {
 				"GroupId" : { "Ref" : "DSMSG" },
@@ -116,6 +116,96 @@
 				"FromPort" : "4122",
 				"ToPort" : "4122",
 				"SourceSecurityGroupId" : { "Ref" : "DSMSG" }
+				}
+			},
+		"DSMConsoleIngress1921918" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "tcp",
+				"FromPort" : { "Ref" : "DSIPGUIPort" },
+				"ToPort" : { "Ref" : "DSIPGUIPort" },
+				"CidrIp"     : "192.168.0.0/16"
+				}
+			},
+		"DSMHeartbeatIngress1921918" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "tcp",
+				"FromPort" : { "Ref" : "DSIPHeartbeatPort" },
+				"ToPort" : { "Ref" : "DSIPHeartbeatPort" },
+				"CidrIp"     : "192.168.0.0/16"
+				}
+			},
+		"DSMRelayIngress1921918" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "tcp",
+				"FromPort" : "4122",
+				"ToPort" : "4122",
+				"CidrIp"     : "192.168.0.0/16"
+				}
+			},
+		"DSMConsoleIngress101918" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "tcp",
+				"FromPort" : { "Ref" : "DSIPGUIPort" },
+				"ToPort" : { "Ref" : "DSIPGUIPort" },
+				"CidrIp"     : "10.0.0.0/8"
+				}
+			},
+		"DSMHeartbeatIngress101918" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "tcp",
+				"FromPort" : { "Ref" : "DSIPHeartbeatPort" },
+				"ToPort" : { "Ref" : "DSIPHeartbeatPort" },
+				"CidrIp"     : "10.0.0.0/8"
+				}
+			},
+		"DSMRelayIngress101918" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "tcp",
+				"FromPort" : "4122",
+				"ToPort" : "4122",
+				"CidrIp"     : "10.0.0.0/8"
+				}
+			},
+		"DSMConsoleIngress1721918" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "tcp",
+				"FromPort" : { "Ref" : "DSIPGUIPort" },
+				"ToPort" : { "Ref" : "DSIPGUIPort" },
+				"CidrIp"     : "172.16.0.0/12"
+				}
+			},
+		"DSMHeartbeatIngress1721918" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "tcp",
+				"FromPort" : { "Ref" : "DSIPHeartbeatPort" },
+				"ToPort" : { "Ref" : "DSIPHeartbeatPort" },
+				"CidrIp"     : "172.16.0.0/12"
+				}
+			},
+		"DSMRelayIngress1721918" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "tcp",
+				"FromPort" : "4122",
+				"ToPort" : "4122",
+				"CidrIp"     : "172.16.0.0/12"
 				}
 			}
     },
