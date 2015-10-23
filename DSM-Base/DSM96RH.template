@@ -177,6 +177,14 @@
 		"DSM1CompleteWaitHandle" : {
 			"Type" : "String",
 			"Default" : ""
+			},
+		"PrivateDSIELBFQDN" : {
+			"Type" : "String",
+			"Default" : ""
+			},
+		"PrivateDSIELB" : {
+			"Type" : "String",
+			"Default" : ""
 			}
     },
     "Mappings"                 : {
@@ -350,6 +358,25 @@
 													]
 												]
 											}
+                                        },
+                                        {
+                                            "Effect" : "Allow",
+                                            "Action" : [
+                                                "elasticloadbalancing:RegisterInstancesWithLoadBalancer"
+                                            ],
+											"Resource" : {
+												"Fn::Join" : [
+													"",
+													[
+														"arn:aws:elasticloadbalancing:",
+														{ "Ref" : "AWS::Region"},
+														":",
+														{ "Ref" : "AWS::AccountId" },
+														":loadbalancer/",
+														{ "Ref" : "PrivateDSIELB" }
+													]
+												]
+											}
                                         }
                                     ]
                                 }
@@ -414,9 +441,11 @@
                             "installDSM",
 							"fixManagerHostObject"
                         ],
-						"setupELB" : [
+						"setupLocalELB" : [
 							"addToELB",
-							"fixManagerLocalLoadBalancerHostsFile",
+							"fixManagerLocalLoadBalancerHostsFile"
+						],
+						"setupGlobalELB" : [
 							"fixManagerLoadBalancerSettings"
 							]
                     },
@@ -610,9 +639,6 @@
                     },
                     "addCloudAccount" : {
                         "commands" : {
-                            "0-sleep" : {
-                                "command" : "/bin/sleep 90"
-                            },
                             "1-enableRestApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
                             },
@@ -625,6 +651,12 @@
                             "4-enableAgentInitiatedReactivateHost" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivationActiveHost -value 2"
                             },
+							"5-sleep" : {
+                                "command" : "/bin/sleep 30"
+                            },
+							"6-check-service" : { 
+								"command" : "service dsm_s start"
+								},
                             "8-addCloudAccount"                    : {
                                 "command" : {
                                     "Fn::Join" : [
@@ -734,18 +766,35 @@
 									]
 								},
 								"ignoreErrors" : "false"
+							},
+							"0-add-instance-to-internal-elb" : {
+								"command" : {
+									"Fn::Join" : [
+										"",
+										[	
+											"aws elb register-instances-with-load-balancer --load-balancer ",
+											{ "Ref" : "PrivateDSIELB" },
+											" --instances $(curl http://169.254.169.254/latest/meta-data/instance-id/) --region ",
+											{ "Ref" : "AWS::Region" }
+										]
+									]
+								},
+								"ignoreErrors" : "false"
 							}
 						}
 					},
 					"fixManagerLoadBalancerSettings" : {
 						"commands" : {
+							"0-wait-for-service-start" : {
+								"command" : "sleep 30"
+								},
 							"1-set-load-balancer-console" : {
 								"command" : {
 									"Fn::Join" : [
 										"",
 											[
-												"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerHostname blah -value ",
-												{ "Ref" : "DSIELBFQDN" }
+												"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerHostname -value ",
+												{ "Ref" : "PrivateDSIELBFQDN" }
 											]
 										]
 									}
@@ -755,7 +804,7 @@
 									"Fn::Join" : [
 										"",
 										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerPort blah -value ",
+											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerPort -value ",
 											{ "Ref" : "DSIPGUIPort" }
 									]
 									]
@@ -766,8 +815,8 @@
 									"Fn::Join" : [
 										"",
 										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatHostname blah -value ",
-											{ "Ref" : "DSIELBFQDN" }
+											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatHostname -value ",
+											{ "Ref" : "PrivateDSIELBFQDN" }
 										]
 									]
 								}
@@ -777,7 +826,7 @@
 									"Fn::Join" : [
 										"",
 										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatPort blah -value ",
+											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatPort -value ",
 											{ "Ref" : "DSIPHeartbeatPort" }
 										]
 									]
@@ -788,27 +837,33 @@
 									"Fn::Join" : [
 										"",
 										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerRelayHostname blah -value ",
-											{ "Ref" : "DSIELBFQDN" }
+											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerRelayHostname -value ",
+											{ "Ref" : "PrivateDSIELBFQDN" }
 										]
 									]
 								}
-							}
+							},
+							"6-check-service" : { 
+								"command" : "service dsm_s start"
+								}
+									
 						}
 					},
 					"fixManagerLocalLoadBalancerHostsFile" : {
 						"commands" : {
 							"setHostsFile" : {
-								"Fn::Join" : [
-									"",
-									[
-										"echo \"",
-										"$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
-										" ",
-										{ "Ref" : "DSIELBFQDN" },
-										"\" >> /etc/hosts"
+								"command" : {
+									"Fn::Join" : [
+										"",
+										[
+											"echo \"",
+											"$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
+											" ",
+											{ "Ref" : "PrivateDSIELBFQDN" },
+											"\" >> /etc/hosts"
+										]
 									]
-								]
+								}
 							}
 						}
 					},
@@ -901,7 +956,7 @@
 								{
 									"Fn::If" : [
 										"SQLplusELB",
-										" -c doSqlSetup,default,setupELB",
+										" -c doSqlSetup,default,setupLocalELB,setupGlobalELB",
 										{
 											"Fn::If" : [
 												"DoSQLSetup",
@@ -920,17 +975,16 @@
 								{
 									"Fn::If" : [
 										"AddNodePlusELB",
-										" -c fixManagerLocalLbAddress,addDsmNode",
-										""
+										" -c fixManagerLocalLbAddress,addDsmNode,setupLocalELB",
+										{
+											"Fn::If" : [
+												"IsFirstNode",
+												"",
+												" -c addDsmNode"
+											]
+										}
 									]
 								},
-                                {
-                                    "Fn::If" : [
-                                        "IsFirstNode",
-                                        "",
-                                        " -c addDsmNode"
-                                    ]
-                                },
                                 "\n",
 								{
 									"Fn::If" : [

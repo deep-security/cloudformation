@@ -292,7 +292,19 @@
                             "DSIELB",
                             "Outputs.ELBFQDN"
                         ]
-                    }
+                    },
+					"PrivateDSIELB" : {
+						"Fn::GetAtt" : [
+							"DSIELB",
+							"Outputs.PrivateDSIELB"
+							]
+						},
+					"PrivateDSIELBFQDN" : {
+						"Fn::GetAtt" : [
+							"DSIELB",
+							"Outputs.PrivateELBFQDN"
+							]
+					}
                 }
             }
         },
@@ -364,7 +376,19 @@
                             "DSIELB",
                             "Outputs.DSIELB"
                         ]
-                    }
+                    },
+					"PrivateDSIELB" : {
+						"Fn::GetAtt" : [
+							"DSIELB",
+							"Outputs.PrivateDSIELB"
+							]
+						},
+					"PrivateDSIELBFQDN" : {
+						"Fn::GetAtt" : [
+							"DSIELB",
+							"Outputs.PrivateELBFQDN"
+							]
+					}
                 }
             }
         },
@@ -441,7 +465,19 @@
                             "DSIELB",
                             "Outputs.ELBFQDN"
                         ]
-                    }
+                    },
+					"PrivateDSIELB" : {
+						"Fn::GetAtt" : [
+							"DSIELB",
+							"Outputs.PrivateDSIELB"
+							]
+						},
+					"PrivateDSIELBFQDN" : {
+						"Fn::GetAtt" : [
+							"DSIELB",
+							"Outputs.PrivateELBFQDN"
+							]
+					}
                 }
             }
         },
@@ -507,7 +543,19 @@
                             "DSIELB",
                             "Outputs.DSIELB"
                         ]
-                    }
+                    },
+					"PrivateDSIELB" : {
+						"Fn::GetAtt" : [
+							"DSIELB",
+							"Outputs.PrivateDSIELB"
+							]
+						},
+					"PrivateDSIELBFQDN" : {
+						"Fn::GetAtt" : [
+							"DSIELB",
+							"Outputs.PrivateELBFQDN"
+							]
+					}
                 }
             }
         },
@@ -658,7 +706,7 @@
                 "Handle" : {
                     "Ref" : "DSM1CompleteWaitHandle"
                 },
-                "Timeout" : "1200"
+                "Timeout" : "1500"
             }
         },
         "DSM1NoDBCompleteWaitHandle"      : {

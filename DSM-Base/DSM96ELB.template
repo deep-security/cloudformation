@@ -129,6 +129,69 @@
                     "Timeout"            : "5"
                 }
             }
+        },
+		"PrivateDSMELB" : {
+            "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
+            "DependsOn" : "ELBSG",
+            "Properties" : {
+                "Subnets" : [
+                    {
+                        "Ref" : "DSISubnetID"
+                    }
+                ],
+                "SecurityGroups" : [
+                    {
+                        "Fn::GetAtt" : [
+                            "ELBSG",
+                            "Outputs.ELBSG"
+                        ]
+                    }
+                ],
+                "Scheme"         : "internal",
+                "Listeners"      : [
+                    {
+                        "LoadBalancerPort" : {
+                            "Ref" : "DSIPHeartbeatPort"
+                        },
+                        "InstancePort"     : {
+                            "Ref" : "DSIPHeartbeatPort"
+                        },
+                        "Protocol"         : "TCP"
+                    },
+                    {
+                        "LoadBalancerPort" : {
+                            "Ref" : "DSIPGUIPort"
+                        },
+                        "InstancePort"     : {
+                            "Ref" : "DSIPGUIPort"
+                        },
+                        "Protocol"         : "TCP"
+                    },
+                    {
+                        "LoadBalancerPort" : "4122",
+                        "InstancePort"     : "4122",
+                        "Protocol"         : "TCP"
+                    }
+                ],
+                "HealthCheck"    : {
+                    "Target" : {
+                        "Fn::Join" : [
+                            "",
+                            [
+                                "HTTPS:",
+                                {
+                                    "Ref" : "DSIPGUIPort"
+                                },
+                                "/Signin.screen"
+                            ]
+                        ]
+                    },
+                    "HealthyThreshold" : "3",
+                    "UnhealthyThreshold" : "5",
+                    "Interval"           : "30",
+                    "Timeout"            : "5"
+                }
+            }
         }
     },
     "Conditions"               : {
@@ -167,6 +230,34 @@
         },
 		"DSIELB" : {
 			"Value" : { "Ref" : "DSMELB" }
-		}
+		},
+		"PrivateDSIELB" : {
+			"Value" : { "Ref" : "PrivateDSMELB" }
+			},
+		"PrivateELBFQDN" : {
+            "Value" : {
+                "Fn::GetAtt" : [
+                    "PrivateDSMELB",
+                    "DNSName"
+                ]
+            }
+        },
+        "PrivateELBSourceSecurityGroup" : {
+            "Value" : {
+                "Fn::GetAtt" : [
+					"ELBSG", "Outputs.ELBSG"
+					]
+            }
+        },
+        "PrivateELSBSourceSecurityGroupOnwerID" : {
+            "Value" : {
+                "Fn::GetAtt" : [
+                    "PrivateDSMELB",
+                    "SourceSecurityGroup.OwnerAlias"
+                ]
+            }
+        }
+
+
 	}
 }
