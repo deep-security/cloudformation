@@ -15,71 +15,64 @@
     <CloudFormationPath Condition=" '$(CloudFormationPath)' == '' AND Exists('$(MSBuildExtensionsPath)\Amazon Web Services LLC\AWSToolkit.VS2010\cloudformation.targets')">$(MSBuildExtensionsPath)\Amazon Web Services LLC\AWSToolkit.VS2010</CloudFormationPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DB\DSDBAbstract.template">
+    <Compile Include="Common\DB\DSDBAbstract.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DB\DSDBOracleRDS.template">
+    <Compile Include="Common\DB\DSDBOracleRDS.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DB\DSDBSQLRDS.template">
+    <Compile Include="Common\DB\DSDBSQLRDS.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DSM96ELB.template">
+    <Compile Include="Common\DSM96ELB.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DSM96RH.template">
+    <Compile Include="Common\Security Groups\DSELBSG.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="helpers\amznHelper.template">
+    <Compile Include="Common\Security Groups\DSMSecurityGroup.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MasterRH96.template">
+    <Compile Include="Common\Security Groups\DSMSGIngressRules.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Security Groups\DSELBSG.template">
+    <Compile Include="Common\Security Groups\RDSSecurityGroup.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Security Groups\DSMSecurityGroup.template">
+    <Compile Include="Marketplace\DSM96MP.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Security Groups\DSMSGIngressRules.template">
+    <Compile Include="Marketplace\MasterMP96.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Security Groups\RDSSecurityGroup.template">
+    <Compile Include="RHEL\DSM96RH.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="z-samples\DSAWSAccessKey.template">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="z-samples\DSM95RH.template">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="z-samples\DSMELB.template">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="z-samples\nestSgTest.template">
+    <Compile Include="RHEL\MasterRH96.template">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="helpers\cfn-rh-helper">
+    <Content Include="Common\helpers\cfn-rh-helper">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="helpers\cfn-rh-sql">
+    <Content Include="Common\helpers\cfn-rh-sql">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="helpers\create-DSM-SqlDB.py">
+    <Content Include="Common\helpers\create-DSM-SqlDB.py">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="helpers\reactivate-manager">
+    <Content Include="Common\helpers\reactivate-manager">
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DB" />
-    <Folder Include="helpers" />
-    <Folder Include="z-samples" />
-    <Folder Include="Security Groups" />
+    <Folder Include="Common\DB\" />
+    <Folder Include="Common\helpers\" />
+    <Folder Include="Common\Security Groups\" />
+    <Folder Include="Common" />
+    <Folder Include="Marketplace" />
+    <Folder Include="RHEL" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
   </PropertyGroup>
