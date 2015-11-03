@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{22325025-CDA3-4736-83CB-2D32D2FCC215}") = "DSM-Base", "DSM-Base\DSM-Base.cfproj", "{99999999-9999-9999-9999-999999999999}"
+Project("{22325025-CDA3-4736-83CB-2D32D2FCC215}") = "DeepSecurity", "DSM-Base\DeepSecurity.cfproj", "{99999999-9999-9999-9999-999999999999}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{99999999-9999-9999-9999-999999999999}</ProjectGuid>
     <AssemblyName>DSM-Base</AssemblyName>
-    <Name>DSM-Base</Name>
+    <Name>DeepSecurity</Name>
     <RootNamespace>DSM-Base</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
