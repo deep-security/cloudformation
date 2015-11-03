@@ -639,6 +639,9 @@
                     },
                     "addCloudAccount" : {
                         "commands" : {
+							"0-sleep" : {
+                                "command" : "/bin/sleep 60"
+                            },
                             "1-enableRestApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
                             },
@@ -767,7 +770,7 @@
 								},
 								"ignoreErrors" : "false"
 							},
-							"0-add-instance-to-internal-elb" : {
+							"1-add-instance-to-internal-elb" : {
 								"command" : {
 									"Fn::Join" : [
 										"",
@@ -786,7 +789,7 @@
 					"fixManagerLoadBalancerSettings" : {
 						"commands" : {
 							"0-wait-for-service-start" : {
-								"command" : "sleep 30"
+								"command" : "sleep 10"
 								},
 							"1-set-load-balancer-console" : {
 								"command" : {
@@ -994,7 +997,7 @@
 											"Fn::Join" : [
 												"",
 												[
-													"cfn-signal -e $? -r \"DSM Node 1 configuration complete\" ",
+													"cfn-signal -e $? -r \"DSM Node configuration complete\" ",
 													{
 														"Fn::Base64" : { "Ref" : "DSM1CompleteWaitHandle" }
 													}

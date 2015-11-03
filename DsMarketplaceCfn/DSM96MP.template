@@ -173,11 +173,19 @@
             "Type" : "String",
             "Default" : ""
         },
-		"DSIELBFQDN" : {
+        "DSIELBFQDN"        : {
+            "Type" : "String",
+            "Default" : ""
+        },
+        "DSM1CompleteWaitHandle" : {
+            "Type" : "String",
+            "Default" : ""
+        },
+		"PrivateDSIELBFQDN" : {
 			"Type" : "String",
 			"Default" : ""
-		},
-		"DSM1CompleteWaitHandle" : {
+			},
+		"PrivateDSIELB" : {
 			"Type" : "String",
 			"Default" : ""
 			}
@@ -393,6 +401,31 @@
                                             "Action" : [
                                                 "elasticloadbalancing:RegisterInstancesWithLoadBalancer"
                                             ],
+                                            "Resource" : {
+                                                "Fn::Join" : [
+                                                    "",
+                                                    [
+                                                        "arn:aws:elasticloadbalancing:",
+                                                        {
+                                                            "Ref" : "AWS::Region"
+                                                        },
+                                                        ":",
+                                                        {
+                                                            "Ref" : "AWS::AccountId"
+                                                        },
+                                                        ":loadbalancer/",
+                                                        {
+                                                            "Ref" : "DSIELB"
+                                                        }
+                                                    ]
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "Effect" : "Allow",
+                                            "Action" : [
+                                                "elasticloadbalancing:RegisterInstancesWithLoadBalancer"
+                                            ],
 											"Resource" : {
 												"Fn::Join" : [
 													"",
@@ -402,7 +435,7 @@
 														":",
 														{ "Ref" : "AWS::AccountId" },
 														":loadbalancer/",
-														{ "Ref" : "DSIELB" }
+														{ "Ref" : "PrivateDSIELB" }
 													]
 												]
 											}
@@ -470,13 +503,15 @@
                             "installDSM",
 							"fixManagerHostObject"
                         ],
-						"setupELB" : [
+						"setupLocalELB" : [
 							"addToELB",
-							"fixManagerLocalLoadBalancerHostsFile",
+							"fixManagerLocalLoadBalancerHostsFile"
+						],
+						"setupGlobalELB" : [
 							"fixManagerLoadBalancerSettings"
 							]
                     },
-                    "setup"            : {
+                    "setup"      : {
                         "files" : {
                             "/etc/cfn/cfn-hup.conf" : {
                                 "content" : {
@@ -537,7 +572,7 @@
                             }
                         }
                     },
-                    "prepDSMInstall"   : {
+                    "prepDSMInstall" : {
                         "files" : {
                             "/opt/trend/packages/dsm/default/Agent-amzn1-9.6.1-1308.x86_64.zip" : {
                                 "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-amzn1-9.6.1-1308.x86_64.zip",
@@ -549,7 +584,7 @@
                                 "owner"  : "root",
                                 "mode"   : "000600"
                             },
-                            "/opt/trend/packages/dsm/default/Agent-RedHat_EL6-9.6.1-1308.x86_64.zip" : {
+                            "/opt/trend/packages/dsm/default/Agent-RedHat_EL6-9.6.1-1308.x86_64.zip"    : {
                                 "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.1-1308.x86_64.zip",
                                 "owner"  : "root",
                                 "mode"   : "000600"
@@ -559,7 +594,7 @@
                                 "owner"  : "root",
                                 "mode"   : "000600"
                             },
-                            "/etc/cfn/dsmConfiguration.properties"                                   : {
+                            "/etc/cfn/dsmConfiguration.properties"                                           : {
                                 "content" : {
                                     "Fn::Join" : [
                                         "",
@@ -661,18 +696,18 @@
                             }
                         }
                     },
-                    "installDSM"       : {
+                    "installDSM"     : {
                         "commands" : {
-                            "1-install-DSM"    : {
+                            "1-install-DSM" : {
                                 "command" : "cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/Manager-AWS-9.6.2006.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
                                 "ignoreErrors" : "false"
                             }
                         }
                     },
-                    "addCloudAccount"  : {
+                    "addCloudAccount" : {
                         "commands" : {
-							"0-sleep" : {
-                                "command" : "/bin/sleep 90"
+                            "0-sleep" : {
+                                "command" : "/bin/sleep 60"
                             },
                             "1-enableRestApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
@@ -686,7 +721,13 @@
                             "4-enableAgentInitiatedReactivateHost" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivationActiveHost -value 2"
                             },
-                            "5-addCloudAccount"                    : {
+							"5-sleep" : {
+                                "command" : "/bin/sleep 30"
+                            },
+							"6-check-service" : { 
+								"command" : "service dsm_s start"
+								},
+                            "8-addCloudAccount"                    : {
                                 "command" : {
                                     "Fn::Join" : [
                                         "",
@@ -742,7 +783,7 @@
                             }
                         }
                     },
-                    "sqlSetup"         : {
+                    "sqlSetup"        : {
                         "commands" : {
                             "1-get-create-script" : {
                                 "command" : "cd /etc/cfn/rhel-scripts; wget https://s3.amazonaws.com/cf-deepsecurity/96/v0.2/Scripts/create-DSM-SqlDB.py; chmod 755 create-DSM-SqlDB.py",
@@ -776,15 +817,33 @@
                             }
                         }
                     },
-					"addToELB" : {
-						"commands" : {
-							"0-add-instance-to-elb" : {
+                    "addToELB"        : {
+                        "commands" : {
+                            "0-add-instance-to-elb" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "aws elb register-instances-with-load-balancer --load-balancer ",
+                                            {
+                                                "Ref" : "DSIELB"
+                                            },
+                                            " --instances $(curl http://169.254.169.254/latest/meta-data/instance-id/) --region ",
+                                            {
+                                                "Ref" : "AWS::Region"
+                                            }
+                                        ]
+                                    ]
+                                },
+                                "ignoreErrors" : "false"
+                            },
+							"1-add-instance-to-internal-elb" : {
 								"command" : {
 									"Fn::Join" : [
 										"",
 										[	
 											"aws elb register-instances-with-load-balancer --load-balancer ",
-											{ "Ref" : "DSIELB" },
+											{ "Ref" : "PrivateDSIELB" },
 											" --instances $(curl http://169.254.169.254/latest/meta-data/instance-id/) --region ",
 											{ "Ref" : "AWS::Region" }
 										]
@@ -792,112 +851,135 @@
 								},
 								"ignoreErrors" : "false"
 							}
-						}
-					},
-					"fixManagerLoadBalancerSettings" : {
-						"commands" : {
-							"1-set-load-balancer-console" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-											[
-												"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerHostname blah -value ",
-												{ "Ref" : "DSIELBFQDN" }
-											]
-										]
-									}
+                        }
+                    },
+                    "fixManagerLoadBalancerSettings" : {
+                        "commands" : {
+							"0-wait-for-service-start" : {
+								"command" : "sleep 10"
 								},
-							"2-set-load-balancer-console-port" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerPort blah -value ",
-											{ "Ref" : "DSIPGUIPort" }
-									]
-									]
-								}
-							},
-							"3-set-load-balancer-heartbeat" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatHostname blah -value ",
-											{ "Ref" : "DSIELBFQDN" }
-										]
-									]
-								}
-							},
-							"4-set-load-balancer-heartbeat-port" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatPort blah -value ",
-											{ "Ref" : "DSIPHeartbeatPort" }
-										]
-									]
-								}
-							},
-							"5-set-load-balancer-relay-hostname" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerRelayHostname blah -value ",
-											{ "Ref" : "DSIELBFQDN" }
-										]
-									]
-								}
-							}
-						}
-					},
-					"fixManagerLocalLoadBalancerHosts" : {
-						"commands" : {
-							"setHostsFile" : {
-								"Fn::Join" : [
-									"",
-									[
-										"echo \"",
-										"$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
-										" ",
-										{ "Ref" : "DSIELBFQDN" },
-										"\" >> /etc/hosts"
-									]
-								]
-							}
-						}
-					},
-					"fixManagerHostObject" : {
-						"files" : {
-							"/etc/cfn/reactivate-manager" : {
-								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/Scripts/reactivate-manager",
-								"owner" : "root",
-								"mode" : "000700"
-								}
-							},
-						"commands" : {
-							"0-install-xml_grep" : {
-								"command" : "yum -y install perl-XML-Twig"
-								},
-							"1-reactivate-manager" : {
-								"command" : {
-									"Fn::Join" : [ 
-										"", 
-										[
-											"/etc/cfn/reactivate-manager >> /etc/cfn/reactivate-manager.log ",
-											{ "Ref" : "DSCAdminName" },
-											" ",
-											{ "Ref" : "DSCAdminPassword" },
-											" ",
-											{ "Ref" : "DSIPHeartbeatPort" }
-										] 
-									]
-								}
-							}
-						}
-					}
+                            "1-set-load-balancer-console" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerHostname -value ",
+                                            {
+                                                "Ref" : "PrivateDSIELBFQDN"
+                                            }
+                                        ]
+                                    ]
+                                }
+                            },
+                            "2-set-load-balancer-console-port" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerPort -value ",
+                                            {
+                                                "Ref" : "DSIPGUIPort"
+                                            }
+                                        ]
+                                    ]
+                                }
+                            },
+                            "3-set-load-balancer-heartbeat"    : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatHostname -value ",
+                                            {
+                                                "Ref" : "PrivateDSIELBFQDN"
+                                            }
+                                        ]
+                                    ]
+                                }
+                            },
+                            "4-set-load-balancer-heartbeat-port" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatPort -value ",
+                                            {
+                                                "Ref" : "DSIPHeartbeatPort"
+                                            }
+                                        ]
+                                    ]
+                                }
+                            },
+                            "5-set-load-balancer-relay-hostname" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerRelayHostname -value ",
+                                            {
+                                                "Ref" : "PrivateDSIELBFQDN"
+                                            }
+                                        ]
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "fixManagerLocalLoadBalancerHostsFile" : {
+                        "commands" : {
+                            "setHostsFile" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "echo \"",
+                                            "$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
+                                            " ",
+                                            {
+                                                "Ref" : "DSIELBFQDN"
+                                            },
+                                            "\" >> /etc/hosts"
+                                        ]
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "fixManagerHostObject"             : {
+                        "files" : {
+                            "/etc/cfn/reactivate-manager" : {
+                                "source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/Scripts/reactivate-manager",
+                                "owner"  : "root",
+                                "mode"   : "000700"
+                            }
+                        },
+                        "commands" : {
+                            "0-install-xml_grep" : {
+                                "command" : "yum -y install perl-XML-Twig"
+                            },
+                            "1-reactivate-manager" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "/etc/cfn/reactivate-manager >> /etc/cfn/reactivate-manager.log ",
+                                            {
+                                                "Ref" : "DSCAdminName"
+                                            },
+                                            " ",
+                                            {
+                                                "Ref" : "DSCAdminPassword"
+                                            },
+                                            " ",
+                                            {
+                                                "Ref" : "DSIPGUIPort"
+                                            }
+                                        ]
+                                    ]
+                                }
+                            }
+                        }
+                    }
                 }
             },
             "Properties" : {
@@ -972,10 +1054,10 @@
                                 {
                                     "Ref" : "AWS::Region"
                                 },
-								{
+                                {
 									"Fn::If" : [
 										"SQLplusELB",
-										" -c doSqlSetup,default,setupELB",
+										" -c doSqlSetup,default,setupLocalELB,setupGlobalELB",
 										{
 											"Fn::If" : [
 												"DoSQLSetup",
@@ -994,43 +1076,42 @@
 								{
 									"Fn::If" : [
 										"AddNodePlusELB",
-										" -c fixManagerLocalLbAddress,addDsmNode",
-										""
-									]
-								},
-                                {
-                                    "Fn::If" : [
-                                        "IsFirstNode",
-                                        "",
-                                        " -c addDsmNode"
-                                    ]
-                                },
-                                "\n",
-								{
-									"Fn::If" : [
-										"WaitNotProvided",
-										"cfn-signal -e $?  -r \"Complete\" ''",
+										" -c fixManagerLocalLbAddress,addDsmNode,setupLocalELB",
 										{
-											"Fn::Join" : [
+											"Fn::If" : [
+												"IsFirstNode",
 												"",
-												[
-													"cfn-signal -e $? -r \"DSM Node 1 configuration complete\" ",
-													{
-														"Fn::Base64" : { "Ref" : "DSM1CompleteWaitHandle" }
-													}
-												]
+												" -c addDsmNode"
 											]
 										}
 									]
 								},
-								"\n"
+                                "\n",
+                                {
+                                    "Fn::If" : [
+                                        "WaitNotProvided",
+                                        "/opt/aws/bin/cfn-signal -e $?  -r \"Complete\" ''",
+                                        {
+                                            "Fn::Join" : [
+                                                "",
+                                                [
+                                                    "/opt/aws/bin/cfn-signal -e $? -r \"DSM Node configuration complete\" ",
+                                                    {
+                                                        "Fn::Base64" : { "Ref" : "DSM1CompleteWaitHandle" }
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "\n"
                             ]
                         ]
                     }
                 }
             }
-		}
-	},
+        }
+    },
     "Conditions"               : {
         "DBTypeIsOracle" : {
             "Fn::Equals" : [
@@ -1094,34 +1175,46 @@
                 }
             ]
         },
-		"WaitNotProvided" : {
-			"Fn::Equals" : [
-				"DSM1CompleteWaitHandle",
-				""
-				]
-			},
-		"SQLplusELB" : {
-			"Fn::And" : [
-				{ "Condition" : "AddToELB" },
-				{ "Condition" : "DoSQLSetup" }
-				]
-			},
-		"AddNodePlusELB" : {
-			"Fn::And" : [
-				{
-					"Fn::Not" : [
-						{ "Condition" : "IsFirstNode" }
-						]
-				},
-				{ "Condition" : "AddToELB" }
-			]
-		},
-		"IsFirstNodePlusELB" : {
-			"Fn::And" : [
-				{ "Condition" : "IsFirstNode" },
-				{ "Condition" : "AddToELB" }
-			]
-		}
+        "WaitNotProvided"  : {
+            "Fn::Equals" : [
+                "DSM1CompleteWaitHandle",
+                ""
+            ]
+        },
+        "SQLplusELB"       : {
+            "Fn::And" : [
+                {
+                    "Condition" : "AddToELB"
+                },
+                {
+                    "Condition" : "DoSQLSetup"
+                }
+            ]
+        },
+        "AddNodePlusELB"   : {
+            "Fn::And" : [
+                {
+                    "Fn::Not" : [
+                        {
+                            "Condition" : "IsFirstNode"
+                        }
+                    ]
+                },
+                {
+                    "Condition" : "AddToELB"
+                }
+            ]
+        },
+        "IsFirstNodePlusELB" : {
+            "Fn::And" : [
+                {
+                    "Condition" : "IsFirstNode"
+                },
+                {
+                    "Condition" : "AddToELB"
+                }
+            ]
+        }
     },
     "Outputs"                  : {
         "DSMFQDN" : {

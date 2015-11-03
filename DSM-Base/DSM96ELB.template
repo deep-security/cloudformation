@@ -119,7 +119,7 @@
                                 {
                                     "Ref" : "DSIPGUIPort"
                                 },
-                                "/Signin.screen"
+                                "/rest/status/manager/ping"
                             ]
                         ]
                     },
@@ -182,7 +182,7 @@
                                 {
                                     "Ref" : "DSIPGUIPort"
                                 },
-                                "/Signin.screen"
+                                "/rest/status/manager/ping"
                             ]
                         ]
                     },
