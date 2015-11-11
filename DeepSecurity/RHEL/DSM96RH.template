@@ -967,7 +967,7 @@
 												{
 													"Fn::If" : [
 														"IsFirstNodePlusELB",
-														" -c default,setupELB",
+														" -c default,setupLocalELB,setupGlobalELB",
 														""
 													]
 												}
