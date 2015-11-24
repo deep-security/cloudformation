@@ -1,0 +1,259 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description"              : "",
+    "Parameters"               : {
+        "AWSIKeyPairName" : {
+            "Description" : "Existing key pair to use for connecting to your Smart Protection Server",
+            "Type"        : "AWS::EC2::KeyPair::KeyName",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*",
+            "ConstraintDescription" : "Select an existing EC2 Key Pair."
+        },
+        "AWSIVPC"         : {
+            "Description" : "Existing VPC to deploy Smart Protection Server",
+            "Type"        : "AWS::EC2::VPC::Id",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*"
+        },
+        "AWSSubnetID"     : {
+            "Description" : "Existing Subnet for Smart Protection Server. Must be a subnet contained the in VPC chosen above.",
+            "Type"        : "AWS::EC2::Subnet::Id",
+            "MinLength"   : "1",
+            "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*",
+            "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
+        },
+        "SPSInstanceType" : {
+            "Description" : "Amazon EC2 instance type for the Smart Protection Server",
+            "Type"        : "String",
+            "Default"     : "t2.medium",
+            "AllowedValues" : [
+                "t2.medium",
+                "m3.medium",
+                "m3.large",
+                "m3.xlarge",
+                "m3.2xlarge",
+                "c4.large",
+                "c4.xlarge",
+                "c3.large",
+                "c3.xlarge",
+                "r3.large",
+                "r3.xlarge"
+            ]
+        },
+        "SPSWebAdminPassword" : {
+            "NoEcho" : true,
+            "Description" : "The Smart Protection Server admin account password",
+            "Type"        : "String",
+            "MinLength"   : 8,
+            "MaxLength"   : 41,
+            "AllowedPattern" : "[a-zA-Z0-9]*",
+            "ConstraintDescription" : "must contain only alphanumeric characters."
+        }
+    },
+    "Mappings"                 : {
+        "RegionToAMI" : {
+            "us-east-1"      : {
+                "64" : "ami-0a830666"
+            },
+			"us-west-1"      : {
+                "64" : "ami-42650c22"
+            },
+            "us-west-2"      : {
+                "64" : "ami-294d5e48"
+            },
+			"eu-west-1"      : {
+                "64" : "ami-591fba2a"
+            },
+			"eu-central-1" : {
+                "64" : "ami-918d9ffd"
+            },
+            "sa-east-1"    : {
+                "64" : "ami-0a830666"
+            },
+            "ap-northeast-1" : {
+                "64" : "ami-0e426f60"
+            },
+            "ap-southeast-1" : {
+                "64" : "ami-9c16d7ff"
+            },
+            "ap-southeast-2" : {
+                "64" : "ami-fea1f89d"
+            }
+        }
+    },
+    "Resources"                : {
+        "SPS" : {
+            "Type" : "AWS::EC2::Instance",
+            "Properties" : {
+                "ImageId" : {
+                    "Fn::FindInMap" : [
+                        "RegionToAMI",
+                        {
+                            "Ref" : "AWS::Region"
+                        },
+                        "64"
+                    ]
+                },
+                "InstanceType" : {
+                    "Ref" : "SPSInstanceType"
+                },
+                "NetworkInterfaces" : [
+                    {
+                        "DeviceIndex" : "0",
+                        "SubnetId"    : {
+                            "Ref" : "AWSSubnetID"
+                        },
+                        "AssociatePublicIpAddress" : "true",
+                        "GroupSet"                 : [
+                            {
+                                "Ref" : "TmSpsSecurityGroup"
+                            }
+                        ]
+                    }
+                ],
+                "Tags"              : [
+                    {
+                        "Key" : "Name",
+                        "Value" : "TM Smart Protection Server"
+                    }
+                ],
+                "KeyName"           : {
+                    "Ref" : "AWSIKeyPairName"
+                },
+                "UserData"          : {
+                    "Fn::Base64" : {
+                        "Fn::Join" : [
+                            "",
+                            [
+                                "#/bin/bash\n",
+                                "chpasswd <<<\"admin:",
+                                {
+                                    "Ref" : "SPSWebAdminPassword"
+                                },
+                                "\""
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        "TmSpsSecurityGroup" : {
+            "Type" : "AWS::EC2::SecurityGroup",
+            "Properties" : {
+                "GroupDescription" : "Allow FRS and WRS default ports",
+                "VpcId"            : {
+                    "Ref" : "AWSIVPC"
+                },
+                "SecurityGroupIngress" : [
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "443",
+                        "ToPort"     : "443",
+                        "CidrIp"     : "10.0.0.0/8"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "4343",
+                        "ToPort"     : "4343",
+                        "CidrIp"     : "10.0.0.0/8"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "5274",
+                        "ToPort"     : "5274",
+                        "CidrIp"     : "10.0.0.0/8"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "443",
+                        "ToPort"     : "443",
+                        "CidrIp"     : "172.16.0.0/12"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "4343",
+                        "ToPort"     : "4343",
+                        "CidrIp"     : "172.16.0.0/12"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "5274",
+                        "ToPort"     : "5274",
+                        "CidrIp"     : "172.16.0.0/12"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "443",
+                        "ToPort"     : "443",
+                        "CidrIp"     : "192.168.0.0/16"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "4343",
+                        "ToPort"     : "4343",
+                        "CidrIp"     : "192.168.0.0/16"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "5274",
+                        "ToPort"     : "5274",
+                        "CidrIp"     : "192.168.0.0/16"
+                    }
+                ],
+                "SecurityGroupEgress"  : [
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort"   : "443",
+                        "ToPort"     : "443",
+                        "CidrIp"     : "0.0.0.0/0"
+                    }
+                ],
+                "Tags"                 : [
+                    {
+                        "Key" : "Name",
+                        "Value" : "TmSpsSecurityGroup"
+                    }
+                ]
+            }
+        }
+    },
+    "Outputs"                  : {
+        "WRSurl" : {
+			"Value" : {
+				"Fn::Join" : [
+					"",
+					[
+					    "http://",
+						{
+					        "Fn::GetAtt" : [
+				                "SPS",
+			                    "PrivateIp"
+		                    ]
+	                    },
+						":5274"
+					]
+				]
+			}
+        },
+        "FRSurl" : {
+			"Value" : {
+				"Fn::Join" : [
+					"",
+				    [
+			            "https://",
+		                {
+	                        "Fn::GetAtt" : [
+							    "SPS",
+						        "PrivateIp"
+					        ]
+				        },
+			            ":443/tmcss"
+		            ]
+	            ]
+			}
+        }
+    }
+}
