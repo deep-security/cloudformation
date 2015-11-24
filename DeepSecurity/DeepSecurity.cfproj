@@ -39,6 +39,9 @@
     <Compile Include="Common\Security Groups\RDSSecurityGroup.template">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Common\sps.template">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Marketplace\DSM96MP.template">
       <SubType>Code</SubType>
     </Compile>
