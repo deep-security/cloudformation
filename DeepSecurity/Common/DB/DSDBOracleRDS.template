@@ -71,7 +71,10 @@
         },
         "StorageType"         : {
             "Default" : "gp2",
-            "Type"    : "String"
+            "Type"    : "String",
+            "AllowedValues" : [
+                "gp2"
+                ]
         },
         "RDSSG"               : {
             "Type" : "AWS::EC2::SecurityGroup::Id"
@@ -82,7 +85,16 @@
 			},
 		"DBISubnetGroupName" : {
 			"Type" : "String"
-			}
+			},
+        "MultiAZ": {
+            "Description": "Use Multi-AZ or SQL Mirroring Option Group for RDS Instance",
+            "Type" : "String",
+            "AllowedValues" : [
+                "true",
+                "false"
+                ],
+            "Default" : "false"
+            }
     },
     "Resources"                : {
         "DSDatabase" : {
@@ -109,12 +121,13 @@
                 "VPCSecurityGroups"  : [{
                     "Ref" : "RDSSG"
                 }],
-                "MultiAZ"            : false,
+                "MultiAZ" : { "Ref" : "MultiAZ" },
                 "BackupRetentionPeriod" : {
                     "Ref" : "DBPBackupDays"
                 },
                 "DBInstanceIdentifier"  : { "Ref" : "DBIInstanceIdentifier" },
-				"DBSubnetGroupName" : { "Ref" : "DBISubnetGroupName" }
+				"DBSubnetGroupName" : { "Ref" : "DBISubnetGroupName" },
+                "StorageType" : { "Ref" : "StorageType" }
             }
         }
     },
