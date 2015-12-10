@@ -512,7 +512,7 @@
                     },
                     "prepDSMInstall" : {
                         "files" : {
-                            "/tmp/Manager-Linux-9.6.1589.x64.sh" : {
+                            "/tmp/Manager-Linux-9.6.2613.x64.sh" : {
                                 "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/2613/Manager-Linux-9.6.2613.x64.sh",
                                 "owner"  : "root",
                                 "mode"   : "000700"
