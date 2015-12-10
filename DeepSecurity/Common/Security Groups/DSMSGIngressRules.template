@@ -207,6 +207,36 @@
 				"ToPort" : "4122",
 				"CidrIp"     : "172.16.0.0/12"
 				}
+			},
+		"DSMDNS1721918" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "udp",
+				"FromPort" : "53",
+				"ToPort" : "53",
+				"CidrIp"     : "172.16.0.0/12"
+				}
+			},
+		"DSMDNS101918" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "udp",
+				"FromPort" : "53",
+				"ToPort" : "53",
+				"CidrIp"     : "10.0.0.0/8"
+				}
+			},
+		"DSMDNS1921918" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : { "Ref" : "DSMSG" },
+				"IpProtocol" : "udp",
+				"FromPort" : "53",
+				"ToPort" : "53",
+				"CidrIp"     : "192.168.0.0/16"
+				}
 			}
     },
     "Outputs"                  : {
