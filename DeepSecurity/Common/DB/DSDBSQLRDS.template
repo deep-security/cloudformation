@@ -124,7 +124,6 @@
                 },
                 "DBInstanceIdentifier"  : { "Ref" : "DBIInstanceIdentifier" },
 				"DBSubnetGroupName" : { "Ref" : "DBISubnetGroupName" },
-                "MultiAZ" : { "Ref" : "MultiAZ" },
 				"OptionGroupName" : {
                     "Fn::If" : [
                         "MultiAZ",
