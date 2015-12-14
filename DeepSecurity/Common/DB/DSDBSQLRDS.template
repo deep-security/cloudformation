@@ -128,7 +128,7 @@
                     "Fn::If" : [
                         "MultiAZ",
                         { "Ref" : "DSSQLOptionGroup" },
-                        "AWS::NoValue"
+                        { "Ref" : "AWS::NoValue" }
                     ]
                 },
                 "StorageType" : { "Ref" : "StorageType" }
