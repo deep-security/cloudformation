@@ -601,7 +601,7 @@
                                         [
                                             {
                                                 "Fn::If" : [
-                                                    "UseBYOL",
+                                                    "AddAcAnswer",
                                                     {
                                                         "Fn::Join" : [
                                                             "",
@@ -716,7 +716,7 @@
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
                             },
                             "3-enableAgentIitiatedActivation" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivation -value 2"
+                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivation -value 1"
                             },
                             "4-enableAgentInitiatedReactivateHost" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivationActiveHost -value 2"
@@ -738,7 +738,7 @@
                                             },
                                             ", \"password\": ",
                                             {
-                                                "Ref" : "DBICAdminPassword"
+                                                "Ref" : "DSCAdminPassword"
                                             },
                                             "}}' https://localhost:",
                                             {
@@ -786,7 +786,7 @@
                     "sqlSetup"        : {
                         "commands" : {
                             "1-get-create-script" : {
-                                "command" : "cd /etc/cfn/rhel-scripts; wget https://s3.amazonaws.com/cf-deepsecurity/96/v0.2/Scripts/create-DSM-SqlDB.py; chmod 755 create-DSM-SqlDB.py",
+                                "command" : "cd /etc/cfn/rhel-scripts; wget https://s3.amazonaws.com/cf-deepsecurity/96/v0.4/Scripts/create-DSM-SqlDB.py; chmod 755 create-DSM-SqlDB.py",
                                 "ignoreErrors" : "false"
                             },
                             "2-create-db"         : {
@@ -948,7 +948,7 @@
                     "fixManagerHostObject"             : {
                         "files" : {
                             "/etc/cfn/reactivate-manager" : {
-                                "source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/Scripts/reactivate-manager",
+                                "source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.4/Scripts/reactivate-manager",
                                 "owner"  : "root",
                                 "mode"   : "000700"
                             }
@@ -1205,7 +1205,19 @@
                 }
             ]
         },
-        "IsFirstNodePlusELB" : {
+        "KeyProvided"      : {
+            "Fn::Not" : [
+                {
+                    "Fn::Equals" : [
+                        {
+                            "Ref" : "DSIPLicenseKey"
+                        },
+                        "XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
+                    ]
+                }
+            ]
+        },
+		"IsFirstNodePlusELB" : {
             "Fn::And" : [
                 {
                     "Condition" : "IsFirstNode"
@@ -1214,7 +1226,13 @@
                     "Condition" : "AddToELB"
                 }
             ]
-        }
+        },
+		"AddAcAnswer" : {
+			"Fn::And" : [
+				{ "Condition" : "KeyProvided" },
+				{ "Condition" : "UseBYOL" }
+			]
+		}
     },
     "Outputs"                  : {
         "DSMFQDN" : {
