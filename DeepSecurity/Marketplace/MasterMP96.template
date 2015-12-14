@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "",
+    "Description"              : "Trend Micro Deep Security Marketplace master template. For more information see http://aws.trendmicro.com",
     "Parameters"               : {
         "AWSIKeyPairName" : {
             "Description" : "Existing key pair to use for connecting to your Deep Security Manager Instance",
