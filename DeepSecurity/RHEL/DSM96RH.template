@@ -512,8 +512,8 @@
                     },
                     "prepDSMInstall" : {
                         "files" : {
-                            "/tmp/Manager-Linux-9.6.1589.x64.sh" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Manager-Linux-9.6.1589.x64.sh",
+                            "/tmp/Manager-Linux-9.6.2613.x64.sh" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/2613/Manager-Linux-9.6.2613.x64.sh",
                                 "owner"  : "root",
                                 "mode"   : "000700"
                             },
@@ -632,7 +632,7 @@
                     "installDSM"     : {
                         "commands" : {
                             "1-install-DSM" : {
-                                "command" : "cd /tmp; sh Manager-Linux-9.6.1589.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
+                                "command" : "cd /tmp; sh Manager-Linux-9.6.2613.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
                                 "ignoreErrors" : "false"
                             }
                         }
@@ -671,7 +671,7 @@
                                             },
                                             ", \"password\": ",
                                             {
-                                                "Ref" : "DBICAdminPassword"
+                                                "Ref" : "DSCAdminPassword"
                                             },
                                             "}}' https://localhost:",
                                             {
@@ -719,7 +719,7 @@
                     "sqlSetup"        : {
                         "commands" : {
                             "1-get-sql-helper" : {
-                                "command" : "cd /etc/cfn/rhel-scripts; wget https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/Scripts/cfn-rh-sql; chmod 775 cfn-rh-sql",
+                                "command" : "cd /etc/cfn/rhel-scripts; wget https://cf-deepsecurity.s3.amazonaws.com/96/v0.4/Scripts/cfn-rh-sql; chmod 775 cfn-rh-sql",
                                 "ignoreErrors" : "false"
                             },
                             "2-run-helper"     : {
@@ -873,7 +873,7 @@
 					"fixManagerHostObject" : {
 						"files" : {
 							"/etc/cfn/reactivate-manager" : {
-								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/Scripts/reactivate-manager",
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.4/Scripts/reactivate-manager",
 								"owner" : "root",
 								"mode" : "000700"
 								}
@@ -944,7 +944,7 @@
                             [
                                 "#!/bin/bash -xe\n",
                                 "# cloud-init\n",
-                                "wget https://cf-deepsecurity.s3.amazonaws.com/96/v0.2/Scripts/cfn-rh-helper\n",
+                                "wget https://cf-deepsecurity.s3.amazonaws.com/96/v0.4/Scripts/cfn-rh-helper\n",
                                 "sh cfn-rh-helper >> cfn-rh-helper.log\n",
                                 "cfn-init -v ",
                                 " --stack ",
@@ -967,7 +967,7 @@
 												{
 													"Fn::If" : [
 														"IsFirstNodePlusELB",
-														" -c default,setupELB",
+														" -c default,setupLocalELB,setupGlobalELB",
 														""
 													]
 												}

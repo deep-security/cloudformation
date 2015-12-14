@@ -71,7 +71,10 @@
         },
         "StorageType"         : {
             "Default" : "gp2",
-            "Type"    : "String"
+            "Type"    : "String",
+            "AllowedValues" : [
+                "gp2"
+                ]
         },
         "RDSSG"               : {
             "Type" : "AWS::EC2::SecurityGroup::Id"
@@ -82,7 +85,16 @@
 			},
 		"DBISubnetGroupName" : {
 			"Type" : "String"
-			}
+			},
+        "MultiAZ": {
+            "Description": "Use Multi-AZ or SQL Mirroring Option Group for RDS Instance",
+            "Type" : "String",
+            "AllowedValues" : [
+                "true",
+                "false"
+                ],
+            "Default" : "false"
+            }
     },
     "Resources"                : {
         "DSDatabase" : {
@@ -97,6 +109,7 @@
                     "Ref" : "DBIRDSInstanceSize"
                 },
                 "Engine"           : "sqlserver-se",
+                "EngineVersion" : "11.00.5058.0.v1",
                 "MasterUsername"   : {
                     "Ref" : "DBICAdminName"
                 },
@@ -110,11 +123,39 @@
                     "Ref" : "DBPBackupDays"
                 },
                 "DBInstanceIdentifier"  : { "Ref" : "DBIInstanceIdentifier" },
-				"DBSubnetGroupName" : { "Ref" : "DBISubnetGroupName" }
+				"DBSubnetGroupName" : { "Ref" : "DBISubnetGroupName" },
+				"OptionGroupName" : {
+                    "Fn::If" : [
+                        "MultiAZ",
+                        { "Ref" : "DSSQLOptionGroup" },
+                        "AWS::NoValue"
+                    ]
+                },
+                "StorageType" : { "Ref" : "StorageType" }
+            }
+        },
+        "DSSQLOptionGroup" : {
+            "Condition" : "MultiAZ",
+            "Type" : "AWS::RDS::OptionGroup",
+            "Properties": {
+                "EngineName": "sqlserver-se",
+                "MajorEngineVersion": "11.00",
+                "OptionGroupDescription": "Mirroring-enabled option group for DSM Database",
+                "OptionConfigurations":[
+                    {
+                        "OptionName": "Mirroring"
+                    }
+                ]
             }
         }
     },
 	"Conditions" : {
+		"MultiAZ" : {
+                "Fn::Equals" : [
+                    { "Ref" : "MultiAZ" },
+                    "true"
+                    ]
+            },
 		"DBISubnetGroupNameSpecified" : {
 			"Fn::Not" : [
 				{
