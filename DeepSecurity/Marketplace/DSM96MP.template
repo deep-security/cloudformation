@@ -716,7 +716,7 @@
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
                             },
                             "3-enableAgentIitiatedActivation" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivation -value 2"
+                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivation -value 1"
                             },
                             "4-enableAgentInitiatedReactivateHost" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivationActiveHost -value 2"
