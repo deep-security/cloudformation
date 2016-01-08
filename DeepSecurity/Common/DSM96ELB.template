@@ -47,7 +47,7 @@
         "ELBSG" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.4/SecurityGroups/DSELBSG.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/SecurityGroups/DSELBSG.template",
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -92,15 +92,6 @@
                         },
                         "InstancePort"     : {
                             "Ref" : "DSIPHeartbeatPort"
-                        },
-                        "Protocol"         : "TCP"
-                    },
-                    {
-                        "LoadBalancerPort" : {
-                            "Ref" : "DSIPGUIPort"
-                        },
-                        "InstancePort"     : {
-                            "Ref" : "DSIPGUIPort"
                         },
                         "Protocol"         : "TCP"
                     },
@@ -155,15 +146,6 @@
                         },
                         "InstancePort"     : {
                             "Ref" : "DSIPHeartbeatPort"
-                        },
-                        "Protocol"         : "TCP"
-                    },
-                    {
-                        "LoadBalancerPort" : {
-                            "Ref" : "DSIPGUIPort"
-                        },
-                        "InstancePort"     : {
-                            "Ref" : "DSIPGUIPort"
                         },
                         "Protocol"         : "TCP"
                     },

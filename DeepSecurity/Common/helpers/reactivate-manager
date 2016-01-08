@@ -1,4 +1,11 @@
 ##reactivate-manager <username> <password> <console-port>
+##If the Manager node is launched into a VPC with dns names turned on, we need to find the public hostname. If dns names are turned off in the VPC, the cloud connector will create an object named for the ip address
+public=$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)
+if [ -z $public ]
+  then
+    public=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+fi
+
 ## get a token
 SID=`curl -k -H "Content-Type: application/json" -X POST "https://localhost:$3/rest/authentication/login/primary" -d '{"dsCredentials":{"userName":"'$1'","password":"'$2'"}}'`
 ## delete host object matching local-hostname metadata
@@ -6,7 +13,7 @@ curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostdelete"' 
 ## delete host object matching local hostname from hostname command
 curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostdelete"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostDelete><urn:ids>'$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$(hostname)'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostDelete></soapenv:Body></soapenv:Envelope>'>mgract.log
 ## get hostId of object matcihng public-hostname metadata
-public_hostId=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$(curl http://169.254.169.254/latest/meta-data/public-hostname)'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)
+public_hostId=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$public'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)
 ## activate that hostId
 curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostAgentActivate"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostAgentActivate><urn:ids>'$public_hostId'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostAgentActivate></soapenv:Body></soapenv:Envelope>'>mgract.log
 ## get Deep Security Manager policyId

@@ -1,0 +1,17 @@
+#!/bin/bash
+## create listenter on elb
+## createlistener <elb name> <elb fqdn> <dsm console port>
+
+openssl req -nodes -new -sha256 -newkey rsa:2048 -subj '/CN='$2'/O=Trend Micro/OU=Deep Security Manager' -keyout /etc/cfn/privatekey -out /etc/cfn/csr
+openssl x509 -req -days 3650 -in /etc/cfn/csr -signkey /etc/cfn/privatekey -out /etc/cfn/certificatebody
+
+aws iam upload-server-certificate --server-certificate-name DeepSecurityElbCertificate --certificate-body file:///etc/cfn/certificatebody --private-key file:///etc/cfn/privatekey
+
+certid=$(aws iam get-server-certificate --server-certificate-name DeepSecurityElbCertificate --query ServerCertificate.ServerCertificateMetadata.Arn --output text)
+
+#sleep 10 seconds so iam has time to publish the certificate for other services to use
+sleep 20
+
+aws elb create-load-balancer-listeners --load-balancer-name $1 --listeners Protocol=HTTPS,LoadBalancerPort=$3,InstanceProtocol=HTTPS,InstancePort=$3,SSLCertificateId=$certid
+aws elb create-load-balancer-policy --load-balancer-name $1 --policy-name DSMConsoleStickySessions --policy-type-name LBCookieStickinessPolicyType --policy-attributes AttributeName=CookieExpirationPeriod,AttributeValue=600
+aws elb set-load-balancer-policies-of-listener --load-balancer-name $1 --load-balancer-port 443 --policy-names DSMConsoleStickySessions

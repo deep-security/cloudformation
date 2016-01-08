@@ -62,6 +62,12 @@
     <Content Include="Common\helpers\cfn-rh-sql">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Common\helpers\create-console-listener">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Common\helpers\create-console-listener-policy">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Common\helpers\create-DSM-SqlDB.py">
       <SubType>Content</SubType>
     </Content>

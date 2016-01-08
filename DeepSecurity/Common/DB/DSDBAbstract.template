@@ -118,7 +118,7 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "DBTypeIsOracle",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.4/DB/DSDBOracleRDS.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/DB/DSDBOracleRDS.template",
                 "TimeoutInMinutes" : "10",
                 "Parameters"       : {
                     "DBIRDSInstanceSize" : {
@@ -152,7 +152,7 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "DBTypeIsSQL",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.4/DB/DSDBSQLRDS.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/DB/DSDBSQLRDS.template",
                 "TimeoutInMinutes" : "10",
                 "Parameters"       : {
                     "DBIRDSInstanceSize" : {
