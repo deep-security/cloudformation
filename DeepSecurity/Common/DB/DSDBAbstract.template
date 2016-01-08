@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "",
+    "Description"              : "v2016-01-08: This template is an abstraction layer for choosing Oracle or MSSQL when deploying Deep Security Manager",
     "Parameters"               : {
         "DBIRDSInstanceSize" : {
             "Default" : "db.m3.large",

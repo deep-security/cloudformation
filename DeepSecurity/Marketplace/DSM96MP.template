@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "v2015-07-06: Deploys Deep Security Manager to AWS. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Description"              : "v2016-01-08: Deploys Deep Security Manager to AWS. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
     "Parameters"               : {
         "AWSIKeyPairName" : {
             "Description" : "Existing key pair to use for connecting to your Deep Security Manager Instance",
@@ -399,7 +399,10 @@
                                         {
                                             "Effect" : "Allow",
                                             "Action" : [
-                                                "elasticloadbalancing:RegisterInstancesWithLoadBalancer"
+                                                "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
+												"elasticloadbalancing:CreateLoadBalancerListeners",
+												"elasticloadbalancing:CreateLoadBalancerPolicy",
+												"elasticloadbalancing:SetLoadBalancerPoliciesOfListener"
                                             ],
                                             "Resource" : {
                                                 "Fn::Join" : [
@@ -424,7 +427,10 @@
                                         {
                                             "Effect" : "Allow",
                                             "Action" : [
-                                                "elasticloadbalancing:RegisterInstancesWithLoadBalancer"
+                                                "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
+												"elasticloadbalancing:CreateLoadBalancerListeners",
+												"elasticloadbalancing:CreateLoadBalancerPolicy",
+												"elasticloadbalancing:SetLoadBalancerPoliciesOfListener"
                                             ],
                                             "Resource" : {
                                                 "Fn::Join" : [
@@ -442,6 +448,28 @@
                                                         {
                                                             "Ref" : "PrivateDSIELB"
                                                         }
+                                                    ]
+                                                ]
+                                            }
+                                        },
+										{
+                                            "Effect" : "Allow",
+                                            "Action" : [
+                                                "iam:UploadServerCertificate",
+												"iam:GetServerCertificate"
+                                            ],
+                                            "Resource" : {
+                                                "Fn::Join" : [
+                                                    "",
+                                                    [
+                                                        "arn:aws:iam::",
+                                                        {
+                                                            "Ref" : "AWS::AccountId"
+                                                        },
+                                                        ":server-certificate/DeepSecurityElbCertificate-",
+														{
+															"Ref" : "AWS::StackName"
+														}
                                                     ]
                                                 ]
                                             }
@@ -885,7 +913,7 @@
 						},
                         "commands" : {
 							"0-setup-internal-elb-listener" : {
-								"commmand" : {
+								"command" : {
 									"Fn::Join" : [
 										"",
 										[
@@ -900,13 +928,19 @@
 											" ",
 											{
 												"Ref" : "DSIPGUIPort"
-											}
+											},
+											" ",
+											{ "Ref" : "AWS::StackName" },
+											" ",
+											"1 ",
+											{ "Ref" : "AWS::Region" },
+											" >> /tmp/internallistener.log"
 										]
 									]
 								}
 							},
 							"1-setup-external-elb-listener" : {
-								"commmand" : {
+								"command" : {
 									"Fn::Join" : [
 										"",
 										[
@@ -921,7 +955,13 @@
 											" ",
 											{
 												"Ref" : "DSIPGUIPort"
-											}
+											},
+											" ",
+											{ "Ref" : "AWS::StackName" },
+											" ",
+											"0 ",
+											{ "Ref" : "AWS::Region" },
+											" >> /tmp/internallistener.log"
 										]
 									]
 								}
