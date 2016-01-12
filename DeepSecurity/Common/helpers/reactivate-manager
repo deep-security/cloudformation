@@ -55,8 +55,25 @@ case $dnsHostnamesOn in
 ## AIA for manager node
     /opt/ds_agent/dsa_control -r
     /opt/ds_agent/dsa_control -a dsm://localhost:4120/ "policyid:${policyid}"
-    sleep 5
-    /opt/dsm/dsm_c -action changesetting -computername $(curl http://169.254.169.254/latest/meta-data/public-ipv4) -name settings.configuration.relayState -value true
+## get hostid for this manager
+    publicip_hostId=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$(curl http://169.254.169.254/latest/meta-data/public-ipv4)'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)
+## enable relay for this agent
+curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostSettingSet"' "https://${manager}/webservice/Manager" -d \
+'<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
+'<soapenv:Header/>'\
+'<soapenv:Body>'\
+'<urn:hostSettingSet>'\
+'<urn:hostID>'$hostId'</urn:hostID>'\
+'<urn:editableSettings>'\
+'<urn:settingKey>CONFIGURATION_RELAYSTATE</urn:settingKey>'\
+'<urn:settingUnit>NONE</urn:settingUnit>'\
+'<urn:settingValue>true</urn:settingValue>'\
+'</urn:editableSettings>'\
+'<urn:sID>'${SID}'</urn:sID>'\
+'</urn:hostSettingSet>'\
+'</soapenv:Body>'\
+'</soapenv:Envelope>'
+
     ;;
   true)
     echo -e "public hostname returned from meta-data endpoint was non-zero length; using MIA\n" >> mgract.log
