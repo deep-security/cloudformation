@@ -63,7 +63,7 @@ curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostSettin
 '<soapenv:Header/>'\
 '<soapenv:Body>'\
 '<urn:hostSettingSet>'\
-'<urn:hostID>'$hostId'</urn:hostID>'\
+'<urn:hostID>'$publicip_hostId'</urn:hostID>'\
 '<urn:editableSettings>'\
 '<urn:settingKey>CONFIGURATION_RELAYSTATE</urn:settingKey>'\
 '<urn:settingUnit>NONE</urn:settingUnit>'\
