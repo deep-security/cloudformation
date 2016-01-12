@@ -28,7 +28,7 @@ policyid=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "s
 echo -e "policyid for Deep Security Manager Policy is $policyid\n" >> mgract.log
 
 ## If the Manager node is launched into a VPC with dns names turned off, we'll need to use AIA to get the Manager nodes activated
-case $dnshostnameson in    
+case $dnsHostnamesOn in    
   false)
     echo -e "public hostname returned from meta-data endpoint was zero length; using AIA\n" >> mgract.log
 
