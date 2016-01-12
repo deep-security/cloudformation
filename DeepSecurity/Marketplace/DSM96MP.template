@@ -738,7 +738,7 @@
                                         "",
                                         [
                                             "echo ",
-                                            "\"AddressAndPortsScreen.ManagerAddress=$(curl http://169.254.169.254/latest/meta-data/local-hostname/)\" >> /etc/cfn/dsmConfiguration.properties"
+                                            "\"AddressAndPortsScreen.ManagerAddress=$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)\" >> /etc/cfn/dsmConfiguration.properties"
                                         ]
                                     ]
                                 },
@@ -1038,7 +1038,23 @@
                     },
                     "fixManagerLocalLoadBalancerHostsFile" : {
                         "commands" : {
-                            "setHostsFile" : {
+                            "0-setHostsFilePrivateELB" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "echo \"",
+                                            "$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
+                                            " ",
+                                            {
+                                                "Ref" : "PrivateDSIELBFQDN"
+                                            },
+                                            "\" >> /etc/hosts"
+                                        ]
+                                    ]
+                                }
+                            },
+							"1-setHostsFilePublicELB" : {
                                 "command" : {
                                     "Fn::Join" : [
                                         "",
