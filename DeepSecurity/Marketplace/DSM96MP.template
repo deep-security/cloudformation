@@ -738,7 +738,7 @@
                                         "",
                                         [
                                             "echo ",
-                                            "\"AddressAndPortsScreen.ManagerAddress=$(curl http://169.254.169.254/latest/meta-data/public-ipv4/)\" >> /etc/cfn/dsmConfiguration.properties"
+                                            "\"AddressAndPortsScreen.ManagerAddress=$(curl http://169.254.169.254/latest/meta-data/local-hostname/)\" >> /etc/cfn/dsmConfiguration.properties"
                                         ]
                                     ]
                                 },
