@@ -58,7 +58,7 @@ case $dnsHostnamesOn in
 ## get hostid for this manager
     publicip_hostId=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$(curl http://169.254.169.254/latest/meta-data/public-ipv4)'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)
 ## enable relay for this agent
-curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostSettingSet"' "https://${manager}/webservice/Manager" -d \
+curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostSettingSet"' "https://localhost:$3/webservice/Manager" -d \
 '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
 '<soapenv:Header/>'\
 '<soapenv:Body>'\
