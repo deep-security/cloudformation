@@ -745,12 +745,19 @@
                                 "ignoreErrors" : "false"
                             },
                             "1-install-DSM"        : {
-                                "command" : "cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/Manager-AWS-9.6.2006.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
+                                "command" : "cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/Manager-AWS-9.6.2980.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
                                 "ignoreErrors" : "false"
                             }
                         }
                     },
                     "addCloudAccount" : {
+						"files" : {
+							"/etc/cfn/set-aiaSettings" : {
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/set-aiaSettings",
+								"owner" : "root",
+								"mode" : "000700"
+							}
+						},
                         "commands" : {
                             "0-sleep" : {
                                 "command" : "/bin/sleep 60"
@@ -761,18 +768,32 @@
                             "2-enableSoapApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
                             },
-                            "3-enableAgentIitiatedActivation" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivation -value 1"
-                            },
-                            "4-enableAgentInitiatedReactivateHost" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivationActiveHost -value 2"
-                            },
                             "5-sleep"                              : {
                                 "command" : "/bin/sleep 30"
                             },
                             "6-check-service"                      : {
                                 "command" : "service dsm_s start"
                             },
+							"4-set-aia-settings": {
+								"command" : {
+									"Fn::Join" : [
+										"",
+										[
+											"/etc/cfn/set-aiaSettings ",
+											{
+												"Ref" : "DSCAdminName"
+											},
+											" ",
+											{ "Ref" : "DSCAdminPassword" },
+											" ",
+											{ "Ref" : "PrivateDSIELBFQDN" },
+											" ",
+											{ "Ref" : "DSIPGUIPort" },
+											" >> /tmp/set-aiaSettings.log"
+										]
+									]
+								}
+							},
                             "8-addCloudAccount"                    : {
                                 "command" : {
                                     "Fn::Join" : [
@@ -909,6 +930,11 @@
 								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/create-console-listener",
 								"owner" : "root",
 								"mode" : "000700"
+							},
+							"/etc/cfn/set-lbSettings" : {
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/set-lbSettings",
+								"owner" : "root",
+								"mode" : "000700"
 							}
 						},
                         "commands" : {
@@ -966,74 +992,28 @@
 									]
 								}
 							},
-                            "3-wait-for-service-start" : {
-                                "command" : "sleep 10"
-                            },
-                            "4-set-load-balancer-console" : {
-                                "command" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerHostname -value ",
-                                            {
-                                                "Ref" : "PrivateDSIELBFQDN"
-                                            }
-                                        ]
-                                    ]
-                                }
-                            },
-                            "5-set-load-balancer-console-port" : {
-                                "command" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerPort -value ",
-                                            {
-                                                "Ref" : "DSIPGUIPort"
-                                            }
-                                        ]
-                                    ]
-                                }
-                            },
-                            "6-set-load-balancer-heartbeat"    : {
-                                "command" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatHostname -value ",
-                                            {
-                                                "Ref" : "PrivateDSIELBFQDN"
-                                            }
-                                        ]
-                                    ]
-                                }
-                            },
-                            "7-set-load-balancer-heartbeat-port" : {
-                                "command" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatPort -value ",
-                                            {
-                                                "Ref" : "DSIPHeartbeatPort"
-                                            }
-                                        ]
-                                    ]
-                                }
-                            },
-                            "8-set-load-balancer-relay-hostname" : {
-                                "command" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerRelayHostname -value ",
-                                            {
-                                                "Ref" : "PrivateDSIELBFQDN"
-                                            }
-                                        ]
-                                    ]
-                                }
-                            }
+							"4-set-load-balancer-settings": {
+								"command" : {
+									"Fn::Join" : [
+										"",
+										[
+											"/etc/cfn/set-lbSettings ",
+											{
+												"Ref" : "DSCAdminName"
+											},
+											" ",
+											{ "Ref" : "DSCAdminPassword" },
+											" ",
+											{ "Ref" : "PrivateDSIELBFQDN" },
+											" ",
+											{ "Ref" : "DSIPGUIPort" },
+											" ",
+											{ "Ref" : "DSIPHeartbeatPort" },
+											" >> /tmp/set-lbSettings.log"
+										]
+									]
+								}
+							}
                         }
                     },
                     "fixManagerLocalLoadBalancerHostsFile" : {

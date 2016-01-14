@@ -74,6 +74,12 @@
     <Content Include="Common\helpers\reactivate-manager">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Common\helpers\set-aiaSettings">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Common\helpers\set-lbSettings">
+      <SubType>Content</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\DB\" />
