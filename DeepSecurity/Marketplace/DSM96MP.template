@@ -768,13 +768,13 @@
                             "2-enableSoapApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
                             },
-                            "5-sleep"                              : {
+                            "3-sleep"                              : {
                                 "command" : "/bin/sleep 30"
                             },
-                            "6-check-service"                      : {
+                            "4-check-service"                      : {
                                 "command" : "service dsm_s start"
                             },
-							"4-set-aia-settings": {
+							"5-set-aia-settings": {
 								"command" : {
 									"Fn::Join" : [
 										"",
