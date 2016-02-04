@@ -7,7 +7,7 @@
             "Type"        : "AWS::EC2::KeyPair::KeyName",
             "MinLength"   : "1",
             "MaxLength"   : "255",
-            "AllowedPattern" : "[-_a-zA-Z0-9]*",
+            "AllowedPattern" : "[-_a-zA-Z0-9 ]*",
             "ConstraintDescription" : "Select an existing EC2 Key Pair."
         },
         "AWSIVPC"         : {
