@@ -57,7 +57,7 @@
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9!$^*-_+]*",
+            "AllowedPattern" : " [a-zA-Z0-9!$^​*\\-_+]*​",
             "ConstraintDescription" : "must contain only alphanumeric characters."
         },
         "DBPName"             : {
