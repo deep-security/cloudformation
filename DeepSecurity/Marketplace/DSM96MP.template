@@ -33,7 +33,7 @@
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9]*",
+            "AllowedPattern" : "[a-zA-Z0-9!$^*-_+]*",
             "ConstraintDescription" : "must contain only alphanumeric characters."
         },
         "DSIPLicenseKey"   : {
@@ -101,7 +101,7 @@
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9]*",
+            "AllowedPattern" : "[a-zA-Z0-9!$^*-_+]*",
             "ConstraintDescription" : "must contain only alphanumeric characters."
         },
         "DBPName"           : {
@@ -624,26 +624,41 @@
                     },
                     "prepDSMInstall" : {
                         "files" : {
-                            "/opt/trend/packages/dsm/default/Agent-amzn1-9.6.1-1308.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-amzn1-9.6.1-1308.x86_64.zip",
+                            "/opt/trend/packages/dsm/default/Agent-amzn1-9.6.2-5027.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-amzn1-9.6.2-5027.x86_64.zip",
                                 "owner"  : "root",
                                 "mode"   : "000600"
                             },
-                            "/opt/trend/packages/dsm/default/KernelSupport-amzn1-9.6.1-1540.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-amzn1-9.6.1-1540.x86_64.zip",
+                            "/opt/trend/packages/dsm/default/KernelSupport-amzn1-9.6.2-5312.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-amzn1-9.6.2-5312.x86_64.zip",
                                 "owner"  : "root",
                                 "mode"   : "000600"
                             },
-                            "/opt/trend/packages/dsm/default/Agent-RedHat_EL6-9.6.1-1308.x86_64.zip"    : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.1-1308.x86_64.zip",
+                            "/opt/trend/packages/dsm/default/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip"    : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip",
                                 "owner"  : "root",
                                 "mode"   : "000600"
                             },
-                            "/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL6-9.6.1-1628.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.1-1628.x86_64.zip",
+                            "/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL6-9.6.2-5324.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.2-5324.x86_64.zip",
                                 "owner"  : "root",
                                 "mode"   : "000600"
                             },
+							"/opt/trend/packages/dsm/default/Agent-RedHat_EL7-9.6.2-5027.x86_64.zip" : {
+								"source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL7-9.6.2-5027.x86_64.zip",
+								"owner"  : "root",
+								"mode"   : "000600"
+								},
+							"/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL7-9.6.2-5280.x86_64.zip" : {
+								"source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL7-9.6.2-5280.x86_64.zip",
+								"owner"  : "root",
+								"mode"   : "000600"
+								},
+							"/opt/trend/packages/dsm/default/Agent-Windows-9.6.2-5029.x86_64.zip" : {
+								"source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-Windows-9.6.2-5029.x86_64.zip",
+								"owner"  : "root",
+								"mode"   : "000600"
+								},
                             "/etc/cfn/dsmConfiguration.properties"                                           : {
                                 "content" : {
                                     "Fn::Join" : [
@@ -761,7 +776,7 @@
                                 "ignoreErrors" : "false"
                             },
                             "1-install-DSM"        : {
-                                "command" : "cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/Manager-AWS-9.6.2980.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
+                                "command" : "cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/Manager-AWS-9.6.11662.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
                                 "ignoreErrors" : "false"
                             }
                         }
@@ -775,8 +790,8 @@
 							}
 						},
                         "commands" : {
-                            "0-sleep" : {
-                                "command" : "/bin/sleep 60"
+                            "0-stop-service" : {
+                                "command" : "service dsm_s stop"
                             },
                             "1-enableRestApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
@@ -784,11 +799,20 @@
                             "2-enableSoapApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
                             },
-                            "3-sleep"                              : {
-                                "command" : "/bin/sleep 30"
+                            "3-start-service"                              : {
+                                "command" : "service dsm_s start"
                             },
                             "4-check-service"                      : {
-                                "command" : "service dsm_s start"
+                                "command" : {
+									"Fn::Join" : [
+										"",
+										[
+											"until curl -vk https://127.0.0.1:",
+											{ "Ref" : "DSIPGUIPort" },
+											"/rest/status/manager/current/ping; do echo \"manager not started yet\" >> /tmp/4-check-service; sleep 1; done"
+										]
+									]
+								}
                             },
 							"5-set-aia-settings": {
 								"command" : {
@@ -941,18 +965,18 @@
                         }
                     },
                     "fixManagerLoadBalancerSettings" : {
-						"files" : {
-							"/etc/cfn/create-console-listener" : {
-								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/create-console-listener",
-								"owner" : "root",
-								"mode" : "000700"
+							"files" : {
+								"/etc/cfn/create-console-listener" : {
+									"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/create-console-listener",
+									"owner" : "root",
+									"mode" : "000700"
+								},
+								"/etc/cfn/set-lbSettings" : {
+									"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/set-lbSettings",
+									"owner" : "root",
+									"mode" : "000700"
+								}
 							},
-							"/etc/cfn/set-lbSettings" : {
-								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/set-lbSettings",
-								"owner" : "root",
-								"mode" : "000700"
-							}
-						},
                         "commands" : {
 							"0-setup-internal-elb-listener" : {
 								"command" : {

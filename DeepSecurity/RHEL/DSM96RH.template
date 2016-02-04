@@ -33,7 +33,7 @@
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9]*",
+            "AllowedPattern" : "[a-zA-Z0-9!$^*-_+]*",
             "ConstraintDescription" : "must contain only alphanumeric characters."
         },
         "DSIPLicenseKey"   : {
@@ -113,7 +113,7 @@
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9]*",
+            "AllowedPattern" : "[a-zA-Z0-9!$^*-_+]*",
             "ConstraintDescription" : "must contain only alphanumeric characters."
         },
         "DBPName"           : {
@@ -525,21 +525,46 @@
                     },
                     "prepDSMInstall" : {
                         "files" : {
-                            "/tmp/Manager-Linux-9.6.2613.x64.sh" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/2613/Manager-Linux-9.6.2613.x64.sh",
+                            "/tmp/Manager-Linux-9.6.3177.x64.sh" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/9.6_ServicePack1/Manager-Linux-9.6.3177.x64.sh",
                                 "owner"  : "root",
                                 "mode"   : "000700"
                             },
-                            "/tmp/Agent-RedHat_EL6-9.6.1-1308.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.1-1308.x86_64.zip",
+							"/opt/trend/packages/dsm/default/Agent-amzn1-9.6.2-5027.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-amzn1-9.6.2-5027.x86_64.zip",
                                 "owner"  : "root",
                                 "mode"   : "000600"
                             },
-                            "/tmp/KernelSupport-RedHat_EL6-9.6.1-1628.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.1-1628.x86_64.zip",
+                            "/opt/trend/packages/dsm/default/KernelSupport-amzn1-9.6.2-5312.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-amzn1-9.6.2-5312.x86_64.zip",
                                 "owner"  : "root",
                                 "mode"   : "000600"
                             },
+                            "/opt/trend/packages/dsm/default/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip"    : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip",
+                                "owner"  : "root",
+                                "mode"   : "000600"
+                            },
+                            "/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL6-9.6.2-5324.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.2-5324.x86_64.zip",
+                                "owner"  : "root",
+                                "mode"   : "000600"
+                            },
+							"/opt/trend/packages/dsm/default/Agent-RedHat_EL7-9.6.2-5027.x86_64.zip" : {
+								"source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL7-9.6.2-5027.x86_64.zip",
+								"owner"  : "root",
+								"mode"   : "000600"
+								},
+							"/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL7-9.6.2-5280.x86_64.zip" : {
+								"source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL7-9.6.2-5280.x86_64.zip",
+								"owner"  : "root",
+								"mode"   : "000600"
+								},
+							"/opt/trend/packages/dsm/default/Agent-Windows-9.6.2-5029.x86_64.zip" : {
+								"source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-Windows-9.6.2-5029.x86_64.zip",
+								"owner"  : "root",
+								"mode"   : "000600"
+								},
                             "/etc/cfn/dsmConfiguration.properties"                : {
                                 "content" : {
                                     "Fn::Join" : [
@@ -644,16 +669,35 @@
                     },
                     "installDSM"     : {
                         "commands" : {
+							"0-sethostnameinprops" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "echo ",
+                                            "\"AddressAndPortsScreen.ManagerAddress=$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)\" >> /etc/cfn/dsmConfiguration.properties"
+                                        ]
+                                    ]
+                                },
+                                "ignoreErrors" : "false"
+                            },
                             "1-install-DSM" : {
-                                "command" : "cd /tmp; sh Manager-Linux-9.6.2613.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
+                                "command" : "cd /tmp; sh Manager-Linux-9.6.3177.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
                                 "ignoreErrors" : "false"
                             }
                         }
                     },
                     "addCloudAccount" : {
+						"files" : {
+							"/etc/cfn/set-aiaSettings" : {
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/set-aiaSettings",
+								"owner" : "root",
+								"mode" : "000700"
+							}
+						},
                         "commands" : {
 							"0-sleep" : {
-                                "command" : "/bin/sleep 60"
+                                "command" : "service dsm_s stop"
                             },
                             "1-enableRestApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
@@ -661,18 +705,41 @@
                             "2-enableSoapApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
                             },
-                            "3-enableAgentIitiatedActivation" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivation -value 2"
+                            "3-start-service"                              : {
+                                "command" : "service dsm_s start"
                             },
-                            "4-enableAgentInitiatedReactivateHost" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivationActiveHost -value 2"
+                            "4-check-service"                      : {
+                                "command" : {
+									"Fn::Join" : [
+										"",
+										[
+											"until curl -vk https://127.0.0.1:",
+											{ "Ref" : "DSIPGUIPort" },
+											"/rest/status/manager/current/ping; do echo \"manager not started yet\" >> /tmp/4-check-service; sleep 1; done"
+										]
+									]
+								}
                             },
-							"5-sleep" : {
-                                "command" : "/bin/sleep 30"
-                            },
-							"6-check-service" : { 
-								"command" : "service dsm_s start"
-								},
+							"5-set-aia-settings": {
+								"command" : {
+									"Fn::Join" : [
+										"",
+										[
+											"/etc/cfn/set-aiaSettings ",
+											{
+												"Ref" : "DSCAdminName"
+											},
+											" ",
+											{ "Ref" : "DSCAdminPassword" },
+											" ",
+											{ "Ref" : "PrivateDSIELBFQDN" },
+											" ",
+											{ "Ref" : "DSIPGUIPort" },
+											" >> /tmp/set-aiaSettings.log"
+										]
+									]
+								}
+							},
                             "8-addCloudAccount"                    : {
                                 "command" : {
                                     "Fn::Join" : [
@@ -800,89 +867,133 @@
 						}
 					},
 					"fixManagerLoadBalancerSettings" : {
+						"files" : {
+							"/etc/cfn/create-console-listener" : {
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/create-console-listener",
+								"owner" : "root",
+								"mode" : "000700"
+							},
+							"/etc/cfn/set-lbSettings" : {
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/set-lbSettings",
+								"owner" : "root",
+								"mode" : "000700"
+							}
+						},
 						"commands" : {
-							"0-wait-for-service-start" : {
-								"command" : "sleep 10"
-								},
-							"1-set-load-balancer-console" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-											[
-												"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerHostname -value ",
-												{ "Ref" : "PrivateDSIELBFQDN" }
-											]
-										]
-									}
-								},
-							"2-set-load-balancer-console-port" : {
+							"0-setup-internal-elb-listener" : {
 								"command" : {
 									"Fn::Join" : [
 										"",
 										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerPort -value ",
-											{ "Ref" : "DSIPGUIPort" }
-									]
-									]
-								}
-							},
-							"3-set-load-balancer-heartbeat" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatHostname -value ",
-											{ "Ref" : "PrivateDSIELBFQDN" }
+											"/etc/cfn/create-console-listener ",
+											{
+												"Ref" : "PrivateDSIELB"
+											},
+											" ",
+											{
+												"Ref" : "PrivateDSIELBFQDN"
+											},
+											" ",
+											{
+												"Ref" : "DSIPGUIPort"
+											},
+											" ",
+											{ "Ref" : "AWS::StackName" },
+											" ",
+											"1 ",
+											{ "Ref" : "AWS::Region" },
+											" >> /tmp/internallistener.log"
 										]
 									]
 								}
 							},
-							"4-set-load-balancer-heartbeat-port" : {
+							"1-setup-external-elb-listener" : {
 								"command" : {
 									"Fn::Join" : [
 										"",
 										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatPort -value ",
-											{ "Ref" : "DSIPHeartbeatPort" }
+											"/etc/cfn/create-console-listener ",
+											{
+												"Ref" : "DSIELB"
+											},
+											" ",
+											{
+												"Ref" : "DSIELBFQDN"
+											},
+											" ",
+											{
+												"Ref" : "DSIPGUIPort"
+											},
+											" ",
+											{ "Ref" : "AWS::StackName" },
+											" ",
+											"0 ",
+											{ "Ref" : "AWS::Region" },
+											" >> /tmp/internallistener.log"
 										]
 									]
 								}
 							},
-							"5-set-load-balancer-relay-hostname" : {
+							"4-set-load-balancer-settings": {
 								"command" : {
 									"Fn::Join" : [
 										"",
 										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerRelayHostname -value ",
-											{ "Ref" : "PrivateDSIELBFQDN" }
-										]
-									]
-								}
-							},
-							"6-check-service" : { 
-								"command" : "service dsm_s start"
-								}
-									
-						}
-					},
-					"fixManagerLocalLoadBalancerHostsFile" : {
-						"commands" : {
-							"setHostsFile" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"echo \"",
-											"$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
+											"/etc/cfn/set-lbSettings ",
+											{
+												"Ref" : "DSCAdminName"
+											},
+											" ",
+											{ "Ref" : "DSCAdminPassword" },
 											" ",
 											{ "Ref" : "PrivateDSIELBFQDN" },
-											"\" >> /etc/hosts"
+											" ",
+											{ "Ref" : "DSIPGUIPort" },
+											" ",
+											{ "Ref" : "DSIPHeartbeatPort" },
+											" >> /tmp/set-lbSettings.log"
 										]
 									]
 								}
 							}
-						}
-					},
+                        }
+                    },
+					"fixManagerLocalLoadBalancerHostsFile" : {
+						"commands" : {
+							"0-setHostsFilePrivateELB" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "echo \"",
+                                            "$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
+                                            " ",
+                                            {
+                                                "Ref" : "PrivateDSIELBFQDN"
+                                            },
+                                            "\" >> /etc/hosts"
+                                        ]
+                                    ]
+                                }
+                            },
+							"1-setHostsFilePublicELB" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "echo \"",
+                                            "$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
+                                            " ",
+                                            {
+                                                "Ref" : "DSIELBFQDN"
+                                            },
+                                            "\" >> /etc/hosts"
+                                        ]
+                                    ]
+                                }
+                            }
+                        }
+                    },
 					"fixManagerHostObject" : {
 						"files" : {
 							"/etc/cfn/reactivate-manager" : {
@@ -892,6 +1003,9 @@
 								}
 							},
 						"commands" : {
+                            "0-install-xml_grep" : {
+                                "command" : "yum -y install perl-XML-Twig"
+                            },
 							"1-reactivate-manager" : {
 								"command" : {
 									"Fn::Join" : [ 
