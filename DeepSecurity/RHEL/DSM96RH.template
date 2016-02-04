@@ -70,6 +70,10 @@
                 "m3.large",
                 "m3.xlarge",
                 "m3.2xlarge",
+				"m4.medium",
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge",
                 "c4.large",
                 "c4.xlarge",
                 "c4.2xlarge",
@@ -217,7 +221,7 @@
                 "64" : "ami-fc98a9ae"
             }
         },
-        "TrendRegionMap"    : {
+        "TrendRegionMap" : {
             "us-east-1" : {
                 "regionkey" : "amazon.cloud.region.key.1"
             },
@@ -238,6 +242,15 @@
             },
             "sa-east-1"      : {
                 "regionkey" : "amazon.cloud.region.key.7"
+            },
+			"ap-southeast-2"      : {
+                "regionkey" : "amazon.cloud.region.key.8"
+            },
+			"eu-central-1"      : {
+                "regionkey" : "amazon.cloud.region.key.9"
+            },
+			"ap-northeast-2"      : {
+                "regionkey" : "amazon.cloud.region.key.12"
             }
         },
         "DSMDBMap"          : {
