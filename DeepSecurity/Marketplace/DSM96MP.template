@@ -787,6 +787,11 @@
 								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/set-aiaSettings",
 								"owner" : "root",
 								"mode" : "000700"
+							},
+							"/etc/cfn/createCloudAccount" : {
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/createCloudAccount",
+								"owner" : "root",
+								"mode" : "000700"
 							}
 						},
                         "commands" : {
@@ -839,50 +844,33 @@
                                     "Fn::Join" : [
                                         "",
                                         [
-                                            "export sID=`curl -k -X POST -H \"Content-Type:application/json\" -d '{ \"dsCredentials\": {\"userName\": ",
+                                            "/etc/cfn/createCloudAccount ",
                                             {
                                                 "Ref" : "DSCAdminName"
                                             },
-                                            ", \"password\": ",
+											" \"",
                                             {
                                                 "Ref" : "DSCAdminPassword"
                                             },
-                                            "}}' https://localhost:",
+											"\" ",
+											{
+												"Ref" : "AWS::AccountId"
+											},
+											" ",
                                             {
                                                 "Ref" : "DSIPGUIPort"
                                             },
-                                            "/rest/authentication/login`; ",
-                                            "curl -k -X POST -H \"Content-Type:application/json\" -d '{\"createCloudAccountRequest\":{\"sessionId\":\"'\"${sID}\"'\",\"cloudAccountElement\":{\"accessKey\":\"",
+											" ",
                                             {
                                                 "Ref" : "AccessKeys"
                                             },
-                                            "\",\"cloudRegion\":\"",
-                                            {
-                                                "Fn::FindInMap" : [
-                                                    "TrendRegionMap",
-                                                    {
-                                                        "Ref" : "AWS::Region"
-                                                    },
-                                                    "regionkey"
-                                                ]
-                                            },
-                                            "\",\"cloudType\":\"AMAZON\",\"name\":\"Amazon\",\"azureCertificate\":\"\",\"secretKey\":\"",
+											" ",
                                             {
                                                 "Fn::GetAtt" : [
                                                     "AccessKeys",
                                                     "SecretAccessKey"
                                                 ]
-                                            },
-                                            "\"}}}' https://localhost:",
-                                            {
-                                                "Ref" : "DSIPGUIPort"
-                                            },
-                                            "/rest/cloudaccounts; ",
-                                            "curl -k -X DELETE https://localhost:",
-                                            {
-                                                "Ref" : "DSIPGUIPort"
-                                            },
-                                            "/rest/authentication/logout?sID=\"${sID}\""
+                                            }
                                         ]
                                     ]
                                 },
