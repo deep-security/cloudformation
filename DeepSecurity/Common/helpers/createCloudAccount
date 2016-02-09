@@ -44,7 +44,7 @@ for region in "${REGIONS[@]}"
 do
 	endpoint="${region}ep"
 	echo "##### creating connector for $region region with endpoint ${!endpoint}"
-	curl -ks -H "Content-Type: application/json" "Accept: application/json" -X POST "https://$DSMURL/rest/cloudaccounts" -d '{"createCloudAccountRequest":{"cloudAccountElement":{"accessKey":"'${accesskey}'","cloudRegion":"'${!region}'","cloudType":"AMAZON","name":"'$3-$region'","secretKey":"'${secretkey}'","endpoint":"'${!endpoint}'","azureCertificate":"-"},"sessionId":"'$tempDSSID'"}}'
+	curl -ks -H "Content-Type: application/json" "Accept: application/json" -X POST "https://$DSMURL/rest/cloudaccounts" -d '{"createCloudAccountRequest":{"cloudAccountElement":{"accessKey":"'${accesskey}'","cloudRegion":"'${!region}'","cloudType":"AMAZON","name":"'$3'","secretKey":"'${secretkey}'","endpoint":"'${!endpoint}'","azureCertificate":"-"},"sessionId":"'$tempDSSID'"}}'
 done
 
 curl -k -X DELETE https://$DSMURL/rest/authentication/logout?sID=$tempDSSID
