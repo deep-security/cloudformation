@@ -1,6 +1,51 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
     "Description"              : "Trend Micro Deep Security Marketplace master template. For more information see http://aws.trendmicro.com",
+	"Metadata" : {
+		"AWS::CloudFormation::Interface" : {
+			"ParameterGroups" : [
+				{
+					"Label" : { "default" : "Deep Security Manager Configuration" },
+					"Parameters" : [ "DSCAdminName", "DSCAdminPassword", "DSIPInstanceType", "AWSIKeyPairName", "DSIPLicense", "DSIMultiNode", "DSIPLicenseKey", "DSIPGUIPort", "DSIPHeartbeatPort" ]
+				},
+				{
+					"Label" : { "default" : "Network Configuration" },
+					"Parameters" : [ "AWSIVPC", "DSISubnetID", "DBISubnet1", "DBISubnet2" ]
+				},
+				{
+					"Label" : { "default" : "Database Configuration" },
+					"Parameters" : [ "DBICAdminName", "DBICAdminPassword", "DBIInstanceIdentifier", "DBPName", "DBPMultiAZ", "DBPEngine", "DBPCreateDbInstance", "DBIRDSInstanceSize", "DBIStorageAllocation", "DBPBackupDays", "DBPEndpoint" ]
+				}
+
+			],
+			"ParameterLabels" : {
+				"AWSIKeyPairName" : { "default" : "EC2 Key Pair for SSH access" },
+				"AWSIVPC" : { "default" : "VPC for Deep Security Components" },
+				"DSISubnetID" : { "default" : "Public Subnet for Deep Security Managers" },
+				"DBIRDSInstanceSize" : { "default" : "RDS Instance Type" },
+				"DBIStorageAllocation" : { "default" : "RDS Storage Size" },
+				"DBPBackupDays" : { "default" : "Backup Retention" },
+				"DBPCreateDbInstance" : { "default" : "Create new DB Instance?" },
+				"DBICAdminName" : { "default" : "Admin username for Database" },
+				"DBICAdminPassword" : { "default" : "Admin password for Database" },
+				"DBPEngine" : { "default" : "Choose SQL or Oracle Engine" },
+				"DBPEndpoint" : { "default" : "Existing Database Endpoint if not creating new" },
+				"DBPName" : { "default" : "Name of database" },
+				"DSCAdminName" : { "default" : "Admin username for Deep Security" },
+				"DSCAdminPassword" : { "default" : "Admin password for Deep Security" },
+				"DSIMultiNode" : { "default" : "Number of Deep Security Managers to deploy" },
+				"DSIPLicenseKey" : { "default" : "License Key" },
+				"DSIPHeartbeatPort" : { "default" : "TCP port for Deep Security Agents" },
+				"DSIPGUIPort" : { "default" : "TCP port for Deep Security Console" },
+				"DSIPInstanceType" : { "default" : "EC2 Instance Type for Deep Security Manager" },
+				"DBISubnet1" : { "default" : "Primary private subnet for RDS" },
+				"DBISubnet2" : { "default" : "Secondary private subnet for RDS" },
+				"DBIInstanceIdentifier" : { "default" : "Unique RDS Instance ID" },
+				"DSIPLicense" : { "default" : "Deep Security License Type" },
+				"DBPMultiAZ" : { "default" : "Single- or Multi- AZ RDS instance" }
+			}
+		}
+	},
     "Parameters"               : {
         "AWSIKeyPairName" : {
             "Description" : "Existing key pair to use for connecting to your Deep Security Manager Instance",
@@ -11,14 +56,14 @@
             "ConstraintDescription" : "Select an existing EC2 Key Pair."
         },
         "AWSIVPC"         : {
-            "Description" : "Existing VPC to deploy Deep Security Manager",
+            "Description" : "Existing VPC to deploy Deep Security Manager. Must contain at least 1 public and 2 private subnets",
             "Type"        : "AWS::EC2::VPC::Id",
             "MinLength"   : "1",
             "MaxLength"   : "255",
             "AllowedPattern" : "[-_a-zA-Z0-9]*"
         },
         "DSISubnetID"     : {
-            "Description" : "Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
+            "Description" : "Choose a public subnet for Deep Seucurity Manager. Must be in same AZ as primary RDS subnet.",
             "Type"        : "AWS::EC2::Subnet::Id",
             "MinLength"   : "1",
             "MaxLength"   : "255",
@@ -102,7 +147,7 @@
         },
         "DBPEndpoint"          : {
             "Type" : "String",
-            "Description" : "If you have an existing oracle instace, enter the endpoint address here, else this field will be ignored",
+            "Description" : "If you have an existing oracle instance, enter the endpoint address here, else this field will be ignored",
             "Default"     : "Enter Oracle Address here if needed"
         },
         "DBPName"              : {
@@ -142,7 +187,7 @@
             ]
         },
         "DSIPLicenseKey"       : {
-            "Description" : "Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
+            "Description" : "Deep Security License key including dashes. Only required for BYOL license type. (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
             "Type"        : "String",
             "MinLength"   : 37,
             "MaxLength"   : 37,
@@ -198,12 +243,12 @@
             ]
         },
         "DBISubnet1"           : {
-            "Description" : "Choose a private subnets in the same VPC for the RDS instance",
+            "Description" : "Choose a primary private subnet for RDS instance. Must be in same AZ as Deep Security Manager",
             "Type"        : "AWS::EC2::Subnet::Id",
             "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template"
         },
         "DBISubnet2"           : {
-            "Description" : "Choose private subnets in the same VPC for this RDS instance",
+            "Description" : "Choose a secondary private subnet for RDS instance. Must not be the same as primary subnet.",
             "Type"        : "AWS::EC2::Subnet::Id",
             "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template"
         },

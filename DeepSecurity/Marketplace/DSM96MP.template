@@ -814,7 +814,7 @@
 										[
 											"until curl -vk https://127.0.0.1:",
 											{ "Ref" : "DSIPGUIPort" },
-											"/rest/status/manager/current/ping; do echo \"manager not started yet\" >> /tmp/4-check-service; sleep 1; done"
+											"/rest/status/manager/current/ping; do echo \"manager not started yet\" >> /tmp/4-check-service; service dsm_s start >> /tmp/4-check-service; sleep 5; done"
 										]
 									]
 								}
