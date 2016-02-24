@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "",
+    "Description"              : "v2016-01-08: This template is an abstraction layer for choosing Oracle or MSSQL when deploying Deep Security Manager",
     "Parameters"               : {
         "DBIRDSInstanceSize" : {
             "Default" : "db.m3.large",
@@ -57,8 +57,8 @@
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9]*",
-            "ConstraintDescription" : "Must contain only alphanumeric characters. Min length 8, max length 41"
+            "AllowedPattern" : "[a-zA-Z0-9!^*\\-_+]*",
+            "ConstraintDescription" : "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
         },
         "DBPName"             : {
             "Default" : "dsm",
@@ -118,7 +118,7 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "DBTypeIsOracle",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.4/DB/DSDBOracleRDS.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/DB/DSDBOracleRDS.template",
                 "TimeoutInMinutes" : "10",
                 "Parameters"       : {
                     "DBIRDSInstanceSize" : {
@@ -152,7 +152,7 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "DBTypeIsSQL",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.4/DB/DSDBSQLRDS.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/DB/DSDBSQLRDS.template",
                 "TimeoutInMinutes" : "10",
                 "Parameters"       : {
                     "DBIRDSInstanceSize" : {

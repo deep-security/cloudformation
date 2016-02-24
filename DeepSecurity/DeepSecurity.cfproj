@@ -62,10 +62,28 @@
     <Content Include="Common\helpers\cfn-rh-sql">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Common\helpers\create-console-listener">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Common\helpers\create-console-listener-policy">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Common\helpers\create-DSM-SqlDB.py">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Common\helpers\createCloudAccount">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Common\helpers\reactivate-manager">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Common\helpers\set-aiaSettings">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Common\helpers\set-lbSettings">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Common\helpers\wait-for-relay-and-stop-manager">
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>

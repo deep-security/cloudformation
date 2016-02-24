@@ -7,7 +7,6 @@
             "Type"        : "AWS::EC2::KeyPair::KeyName",
             "MinLength"   : "1",
             "MaxLength"   : "255",
-            "AllowedPattern" : "[-_a-zA-Z0-9]*",
             "ConstraintDescription" : "Select an existing EC2 Key Pair."
         },
         "AWSIVPC"         : {
@@ -33,8 +32,8 @@
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9]*",
-            "ConstraintDescription" : "must contain only alphanumeric characters."
+            "AllowedPattern" : "[a-zA-Z0-9!^*\\-_+]*",
+            "ConstraintDescription" : "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
         },
         "DSIPLicenseKey"   : {
             "Description" : "Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
@@ -66,20 +65,20 @@
             "Type"        : "String",
             "Default"     : "m3.medium",
             "AllowedValues" : [
-                "m3.medium",
                 "m3.large",
                 "m3.xlarge",
                 "m3.2xlarge",
-                "c4.large",
-                "c4.xlarge",
-                "c4.2xlarge",
-                "c4.4xlarge",
-                "c4.8xlarge",
-                "c3.large",
+				"m4.large",
+                "m4.xlarge",
+                "m4.2xlarge",
                 "c3.xlarge",
                 "c3.2xlarge",
                 "c3.4xlarge",
                 "c3.8xlarge",
+				"c4.xlarge",
+                "c4.2xlarge",
+                "c4.4xlarge",
+                "c4.8xlarge",
                 "r3.large",
                 "r3.xlarge",
                 "r3.2xlarge",
@@ -89,7 +88,6 @@
                 "i2.2xlarge",
                 "i2.4xlarge",
                 "i2.8xlarge",
-                "hs1.8xlarge",
                 "g2.2xlarge"
             ]
         },
@@ -109,8 +107,8 @@
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9]*",
-            "ConstraintDescription" : "must contain only alphanumeric characters."
+            "AllowedPattern" : "[a-zA-Z0-9!^*\\-_+]*",
+            "ConstraintDescription" : "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
         },
         "DBPName"           : {
             "Default" : "dsm",
@@ -217,7 +215,7 @@
                 "64" : "ami-fc98a9ae"
             }
         },
-        "TrendRegionMap"    : {
+        "TrendRegionMap" : {
             "us-east-1" : {
                 "regionkey" : "amazon.cloud.region.key.1"
             },
@@ -238,6 +236,15 @@
             },
             "sa-east-1"      : {
                 "regionkey" : "amazon.cloud.region.key.7"
+            },
+			"ap-southeast-2"      : {
+                "regionkey" : "amazon.cloud.region.key.8"
+            },
+			"eu-central-1"      : {
+                "regionkey" : "amazon.cloud.region.key.9"
+            },
+			"ap-northeast-2"      : {
+                "regionkey" : "amazon.cloud.region.key.12"
             }
         },
         "DSMDBMap"          : {
@@ -512,21 +519,46 @@
                     },
                     "prepDSMInstall" : {
                         "files" : {
-                            "/tmp/Manager-Linux-9.6.2613.x64.sh" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/2613/Manager-Linux-9.6.2613.x64.sh",
+                            "/tmp/Manager-Linux-9.6.3177.x64.sh" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/9.6_ServicePack1/Manager-Linux-9.6.3177.x64.sh",
                                 "owner"  : "root",
                                 "mode"   : "000700"
                             },
-                            "/tmp/Agent-RedHat_EL6-9.6.1-1308.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.1-1308.x86_64.zip",
+							"/tmp/Agent-amzn1-9.6.2-5027.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-amzn1-9.6.2-5027.x86_64.zip",
                                 "owner"  : "root",
                                 "mode"   : "000600"
                             },
-                            "/tmp/KernelSupport-RedHat_EL6-9.6.1-1628.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.1-1628.x86_64.zip",
+                            "/tmp/KernelSupport-amzn1-9.6.2-5312.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-amzn1-9.6.2-5312.x86_64.zip",
                                 "owner"  : "root",
                                 "mode"   : "000600"
                             },
+                            "/tmp/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip"    : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip",
+                                "owner"  : "root",
+                                "mode"   : "000600"
+                            },
+                            "/tmp/KernelSupport-RedHat_EL6-9.6.2-5324.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.2-5324.x86_64.zip",
+                                "owner"  : "root",
+                                "mode"   : "000600"
+                            },
+							"/tmp/Agent-RedHat_EL7-9.6.2-5027.x86_64.zip" : {
+								"source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL7-9.6.2-5027.x86_64.zip",
+								"owner"  : "root",
+								"mode"   : "000600"
+								},
+							"/tmp/KernelSupport-RedHat_EL7-9.6.2-5280.x86_64.zip" : {
+								"source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL7-9.6.2-5280.x86_64.zip",
+								"owner"  : "root",
+								"mode"   : "000600"
+								},
+							"/tmp/Agent-Windows-9.6.2-5029.x86_64.zip" : {
+								"source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-Windows-9.6.2-5029.x86_64.zip",
+								"owner"  : "root",
+								"mode"   : "000600"
+								},
                             "/etc/cfn/dsmConfiguration.properties"                : {
                                 "content" : {
                                     "Fn::Join" : [
@@ -631,16 +663,45 @@
                     },
                     "installDSM"     : {
                         "commands" : {
+							"0-sethostnameinprops" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "echo ",
+                                            "\"AddressAndPortsScreen.ManagerAddress=$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)\" >> /etc/cfn/dsmConfiguration.properties"
+                                        ]
+                                    ]
+                                },
+                                "ignoreErrors" : "false"
+                            },
                             "1-install-DSM" : {
-                                "command" : "cd /tmp; sh Manager-Linux-9.6.2613.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
+                                "command" : "cd /tmp; sh Manager-Linux-9.6.3177.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
                                 "ignoreErrors" : "false"
                             }
                         }
                     },
                     "addCloudAccount" : {
+						"files" : {
+							"/etc/cfn/set-aiaSettings" : {
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/set-aiaSettings",
+								"owner" : "root",
+								"mode" : "000700"
+							},
+							"/etc/cfn/createCloudAccount" : {
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/createCloudAccount",
+								"owner" : "root",
+								"mode" : "000700"
+							},
+							"/etc/cfn/wait-for-relay-and-stop-manager" : {
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/wait-for-relay-and-stop-manager",
+								"owner" : "root",
+								"mode" : "000700"
+ 							}
+						},
                         "commands" : {
 							"0-sleep" : {
-                                "command" : "/bin/sleep 60"
+                                "command" : "/etc/cfn/wait-for-relay-and-stop-manager >> /tmp/0-stop-service"
                             },
                             "1-enableRestApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
@@ -648,67 +709,73 @@
                             "2-enableSoapApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
                             },
-                            "3-enableAgentIitiatedActivation" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivation -value 2"
+                            "3-start-service"                              : {
+                                "command" : "service dsm_s start"
                             },
-                            "4-enableAgentInitiatedReactivateHost" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentInitiatedActivationActiveHost -value 2"
+                            "4-check-service"                      : {
+                                "command" : {
+									"Fn::Join" : [
+										"",
+										[
+											"until curl -vk https://127.0.0.1:",
+											{ "Ref" : "DSIPGUIPort" },
+											"/rest/status/manager/current/ping; do echo \"manager not started yet\" >> /tmp/4-check-service; service dsm_s start >> /tmp/4-check-service; sleep 30; done"
+										]
+									]
+								}
                             },
-							"5-sleep" : {
-                                "command" : "/bin/sleep 30"
-                            },
-							"6-check-service" : { 
-								"command" : "service dsm_s start"
-								},
+							"5-set-aia-settings": {
+								"command" : {
+									"Fn::Join" : [
+										"",
+										[
+											"/etc/cfn/set-aiaSettings ",
+											{
+												"Ref" : "DSCAdminName"
+											},
+											" ",
+											{ "Ref" : "DSCAdminPassword" },
+											" ",
+											{ "Ref" : "PrivateDSIELBFQDN" },
+											" ",
+											{ "Ref" : "DSIPGUIPort" },
+											" >> /tmp/set-aiaSettings.log"
+										]
+									]
+								}
+							},
                             "8-addCloudAccount"                    : {
                                 "command" : {
                                     "Fn::Join" : [
                                         "",
                                         [
-                                            "export sID=`curl -k -X POST -H \"Content-Type:application/json\" -d '{ \"dsCredentials\": {\"userName\": ",
+                                            "/etc/cfn/createCloudAccount ",
                                             {
                                                 "Ref" : "DSCAdminName"
                                             },
-                                            ", \"password\": ",
+											" \"",
                                             {
                                                 "Ref" : "DSCAdminPassword"
                                             },
-                                            "}}' https://localhost:",
+											"\" ",
+											{
+												"Ref" : "AWS::AccountId"
+											},
+											" ",
                                             {
                                                 "Ref" : "DSIPGUIPort"
                                             },
-                                            "/rest/authentication/login`; ",
-                                            "curl -k -X POST -H \"Content-Type:application/json\" -d '{\"createCloudAccountRequest\":{\"sessionId\":\"'\"${sID}\"'\",\"cloudAccountElement\":{\"accessKey\":\"",
+											" ",
                                             {
                                                 "Ref" : "AccessKeys"
                                             },
-                                            "\",\"cloudRegion\":\"",
-                                            {
-                                                "Fn::FindInMap" : [
-                                                    "TrendRegionMap",
-                                                    {
-                                                        "Ref" : "AWS::Region"
-                                                    },
-                                                    "regionkey"
-                                                ]
-                                            },
-                                            "\",\"cloudType\":\"AMAZON\",\"name\":\"Amazon\",\"azureCertificate\":\"\",\"secretKey\":\"",
+											" ",
                                             {
                                                 "Fn::GetAtt" : [
                                                     "AccessKeys",
                                                     "SecretAccessKey"
                                                 ]
-                                            },
-                                            "\"}}}' https://localhost:",
-                                            {
-                                                "Ref" : "DSIPGUIPort"
-                                            },
-                                            "/rest/cloudaccounts; ",
-                                            "curl -k -X DELETE https://localhost:",
-                                            {
-                                                "Ref" : "DSIPGUIPort"
-                                            },
-                                            "/rest/authentication/logout?sID=\"${sID}\""
+                                            }
                                         ]
                                     ]
                                 },
@@ -719,7 +786,7 @@
                     "sqlSetup"        : {
                         "commands" : {
                             "1-get-sql-helper" : {
-                                "command" : "cd /etc/cfn/rhel-scripts; wget https://cf-deepsecurity.s3.amazonaws.com/96/v0.4/Scripts/cfn-rh-sql; chmod 775 cfn-rh-sql",
+                                "command" : "cd /etc/cfn/rhel-scripts; wget https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/cfn-rh-sql; chmod 775 cfn-rh-sql",
                                 "ignoreErrors" : "false"
                             },
                             "2-run-helper"     : {
@@ -787,98 +854,145 @@
 						}
 					},
 					"fixManagerLoadBalancerSettings" : {
+						"files" : {
+							"/etc/cfn/create-console-listener" : {
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/create-console-listener",
+								"owner" : "root",
+								"mode" : "000700"
+							},
+							"/etc/cfn/set-lbSettings" : {
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/set-lbSettings",
+								"owner" : "root",
+								"mode" : "000700"
+							}
+						},
 						"commands" : {
-							"0-wait-for-service-start" : {
-								"command" : "sleep 10"
-								},
-							"1-set-load-balancer-console" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-											[
-												"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerHostname -value ",
-												{ "Ref" : "PrivateDSIELBFQDN" }
-											]
-										]
-									}
-								},
-							"2-set-load-balancer-console-port" : {
+							"0-setup-internal-elb-listener" : {
 								"command" : {
 									"Fn::Join" : [
 										"",
 										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerManagerPort -value ",
-											{ "Ref" : "DSIPGUIPort" }
-									]
-									]
-								}
-							},
-							"3-set-load-balancer-heartbeat" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatHostname -value ",
-											{ "Ref" : "PrivateDSIELBFQDN" }
-										]
-									]
-								}
-							},
-							"4-set-load-balancer-heartbeat-port" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerHeartbeatPort -value ",
-											{ "Ref" : "DSIPHeartbeatPort" }
-										]
-									]
-								}
-							},
-							"5-set-load-balancer-relay-hostname" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"/opt/dsm/dsm_c -action changesetting -name settings.configuration.systemLoadBalancerRelayHostname -value ",
-											{ "Ref" : "PrivateDSIELBFQDN" }
-										]
-									]
-								}
-							},
-							"6-check-service" : { 
-								"command" : "service dsm_s start"
-								}
-									
-						}
-					},
-					"fixManagerLocalLoadBalancerHostsFile" : {
-						"commands" : {
-							"setHostsFile" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"echo \"",
-											"$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
+											"/etc/cfn/create-console-listener ",
+											{
+												"Ref" : "PrivateDSIELB"
+											},
 											" ",
-											{ "Ref" : "PrivateDSIELBFQDN" },
-											"\" >> /etc/hosts"
+											{
+												"Ref" : "PrivateDSIELBFQDN"
+											},
+											" ",
+											{
+												"Ref" : "DSIPGUIPort"
+											},
+											" ",
+											{ "Ref" : "AWS::StackName" },
+											" ",
+											"1 ",
+											{ "Ref" : "AWS::Region" },
+											" >> /tmp/internallistener.log"
+										]
+									]
+								}
+							},
+							"1-setup-external-elb-listener" : {
+								"command" : {
+									"Fn::Join" : [
+										"",
+										[
+											"/etc/cfn/create-console-listener ",
+											{
+												"Ref" : "DSIELB"
+											},
+											" ",
+											{
+												"Ref" : "DSIELBFQDN"
+											},
+											" ",
+											{
+												"Ref" : "DSIPGUIPort"
+											},
+											" ",
+											{ "Ref" : "AWS::StackName" },
+											" ",
+											"0 ",
+											{ "Ref" : "AWS::Region" },
+											" >> /tmp/internallistener.log"
+										]
+									]
+								}
+							},
+							"4-set-load-balancer-settings": {
+								"command" : {
+									"Fn::Join" : [
+										"",
+										[
+											"/etc/cfn/set-lbSettings ",
+											{
+												"Ref" : "DSCAdminName"
+											},
+											" ",
+											{ "Ref" : "DSCAdminPassword" },
+											" ",
+											{ "Ref" : "DSIELBFQDN" },
+											" ",
+											{ "Ref" : "DSIPGUIPort" },
+											" ",
+											{ "Ref" : "DSIPHeartbeatPort" },
+											" >> /tmp/set-lbSettings.log"
 										]
 									]
 								}
 							}
-						}
-					},
+                        }
+                    },
+					"fixManagerLocalLoadBalancerHostsFile" : {
+						"commands" : {
+							"0-setHostsFilePrivateELB" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "echo \"",
+                                            "$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
+                                            " ",
+                                            {
+                                                "Ref" : "PrivateDSIELBFQDN"
+                                            },
+                                            "\" >> /etc/hosts"
+                                        ]
+                                    ]
+                                }
+                            },
+							"1-setHostsFilePublicELB" : {
+                                "command" : {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "echo \"",
+                                            "$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
+                                            " ",
+                                            {
+                                                "Ref" : "DSIELBFQDN"
+                                            },
+                                            "\" >> /etc/hosts"
+                                        ]
+                                    ]
+                                }
+                            }
+                        }
+                    },
 					"fixManagerHostObject" : {
 						"files" : {
 							"/etc/cfn/reactivate-manager" : {
-								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.4/Scripts/reactivate-manager",
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/reactivate-manager",
 								"owner" : "root",
 								"mode" : "000700"
 								}
 							},
 						"commands" : {
+                            "0-install-xml_grep" : {
+                                "command" : "yum -y install perl-XML-Twig"
+                            },
 							"1-reactivate-manager" : {
 								"command" : {
 									"Fn::Join" : [ 
@@ -944,7 +1058,7 @@
                             [
                                 "#!/bin/bash -xe\n",
                                 "# cloud-init\n",
-                                "wget https://cf-deepsecurity.s3.amazonaws.com/96/v0.4/Scripts/cfn-rh-helper\n",
+                                "wget https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/cfn-rh-helper\n",
                                 "sh cfn-rh-helper >> cfn-rh-helper.log\n",
                                 "cfn-init -v ",
                                 " --stack ",

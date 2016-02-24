@@ -1,0 +1,12 @@
+#!/bin/bash
+
+relaylog=$(grep "AgentEvent 5101: RELAY" /var/opt/ds_agent/diag/ds_agent.log)
+
+until [ -n "$relaylog" -a "$relaylog" != " " ]
+do
+	echo 'dsm not online as relay yet, waiting for this before service restart'
+	sleep 5
+	relaylog=$(grep "AgentEvent 5101: RELAY" /var/opt/ds_agent/diag/ds_agent.log)
+done
+
+service dsm_s stop
