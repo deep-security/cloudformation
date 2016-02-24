@@ -7,7 +7,6 @@
             "Type"        : "AWS::EC2::KeyPair::KeyName",
             "MinLength"   : "1",
             "MaxLength"   : "255",
-            "AllowedPattern" : "[-_a-zA-Z0-9. ]*",
             "ConstraintDescription" : "Select an existing EC2 Key Pair."
         },
         "AWSIVPC"         : {
@@ -33,8 +32,8 @@
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9!$^​*\\-_+]*",
-            "ConstraintDescription" : "must contain only alphanumeric characters."
+            "AllowedPattern" : "[a-zA-Z0-9!^*\\-_+]*",
+            "ConstraintDescription" : "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
         },
         "DSIPLicenseKey"   : {
             "Description" : "Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
@@ -69,10 +68,17 @@
                 "m3.large",
                 "m3.xlarge",
                 "m3.2xlarge",
+				"m4.large",
+                "m4.xlarge",
+                "m4.2xlarge",
                 "c3.xlarge",
                 "c3.2xlarge",
                 "c3.4xlarge",
                 "c3.8xlarge",
+				"c4.xlarge",
+                "c4.2xlarge",
+                "c4.4xlarge",
+                "c4.8xlarge",
                 "r3.large",
                 "r3.xlarge",
                 "r3.2xlarge",
@@ -101,8 +107,8 @@
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9!$^​*\\-_+]*",
-            "ConstraintDescription" : "must contain only alphanumeric characters."
+            "AllowedPattern" : "[a-zA-Z0-9!^*\\-_+]*",
+            "ConstraintDescription" : "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
         },
         "DBPName"           : {
             "Default" : "dsm",
@@ -264,20 +270,75 @@
             }
         },
         "DSMSIZE" : {
-            "BYOL" : {
-                "TYPE" : "c3.2xlarge"
+			"us-east-1"      : {
+				"BYOL" : "c3.xlarge",
+                "25" : "m4.large",
+				"50" : "m4.xlarge",
+				"100": "m4.2xlarge",
+				"200": "c4.4xlarge"
             },
-            "25"   : {
-                "TYPE" : "m4.large"
+			"us-west-1"      : {
+				"BYOL" : "c3.xlarge",
+				"25" : "m4.large",
+				"50" : "m4.xlarge",
+				"100": "m4.2xlarge",
+				"200": "c4.4xlarge"
             },
-            "50"   : {
-                "TYPE" : "m4.xlarge"
+            "us-west-2"      : {
+				"BYOL" : "c3.xlarge",
+				"25" : "m4.large",
+				"50" : "m4.xlarge",
+				"100": "m4.2xlarge",
+				"200": "c4.4xlarge"
             },
-            "100"  : {
-                "TYPE" : "m4.2xlarge"
+			"eu-west-1"      : {
+				"BYOL" : "c3.xlarge",
+				"25" : "m4.large",
+				"50" : "m4.xlarge",
+				"100": "m4.2xlarge",
+				"200": "c4.4xlarge"
             },
-            "200"  : {
-                "TYPE" : "c4.4xlarge"
+			"eu-central-1" : {
+				"BYOL" : "c3.xlarge",
+				"25" : "m4.large",
+				"50" : "m4.xlarge",
+				"100": "m4.2xlarge",
+				"200": "c4.4xlarge"
+            },
+            "sa-east-1"    : {
+				"BYOL" : "c3.xlarge",
+				"25" : "m3.large",
+				"50" : "m3.xlarge",
+				"100": "m3.2xlarge",
+				"200": "c3.4xlarge"
+            },
+            "ap-northeast-1" : {
+				"BYOL" : "c3.xlarge",
+				"25" : "m4.large",
+				"50" : "m4.xlarge",
+				"100": "m4.2xlarge",
+				"200": "c4.4xlarge"
+            },
+            "ap-southeast-1" : {
+				"BYOL" : "c3.xlarge",
+				"25" : "m4.large",
+				"50" : "m4.xlarge",
+				"100": "m4.2xlarge",
+				"200": "c4.4xlarge"
+            },
+            "ap-southeast-2" : {
+				"BYOL" : "c3.xlarge",
+				"25" : "m4.large",
+				"50" : "m4.xlarge",
+				"100": "m4.2xlarge",
+				"200": "c4.4xlarge"
+            },
+			"ap-northeast-2" : {
+				"BYOL" : "m4.xlarge",
+				"25" : "m4.large",
+				"50" : "m4.xlarge",
+				"100": "m4.2xlarge",
+				"200": "c4.4xlarge"
             }
         },
         "TrendRegionMap" : {
@@ -489,7 +550,14 @@
                                                     ]
                                                 ]
                                             }
-                                        }
+                                        },
+										{
+                                            "Effect" : "Allow",
+                                            "Action" : [
+                                                "elasticloadbalancing:DescribeLoadBalancers"
+                                            ],
+                                            "Resource" : "*"
+			                            }
                                     ]
                                 }
                             },
@@ -792,11 +860,16 @@
 								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/createCloudAccount",
 								"owner" : "root",
 								"mode" : "000700"
-							}
+							},
+							"/etc/cfn/wait-for-relay-and-stop-manager" : {
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/wait-for-relay-and-stop-manager",
+								"owner" : "root",
+								"mode" : "000700"
+ 							}
 						},
                         "commands" : {
                             "0-stop-service" : {
-                                "command" : "service dsm_s stop"
+                                "command" : "/etc/cfn/wait-for-relay-and-stop-manager >> /tmp/0-stop-service"
                             },
                             "1-enableRestApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
@@ -814,7 +887,7 @@
 										[
 											"until curl -vk https://127.0.0.1:",
 											{ "Ref" : "DSIPGUIPort" },
-											"/rest/status/manager/current/ping; do echo \"manager not started yet\" >> /tmp/4-check-service; service dsm_s start >> /tmp/4-check-service; sleep 5; done"
+											"/rest/status/manager/current/ping; do echo \"manager not started yet\" >> /tmp/4-check-service; service dsm_s start >> /tmp/4-check-service; sleep 30; done"
 										]
 									]
 								}
@@ -1032,7 +1105,7 @@
 											" ",
 											{ "Ref" : "DSCAdminPassword" },
 											" ",
-											{ "Ref" : "PrivateDSIELBFQDN" },
+											{ "Ref" : "DSIELBFQDN" },
 											" ",
 											{ "Ref" : "DSIPGUIPort" },
 											" ",
@@ -1142,9 +1215,11 @@
                             "Fn::FindInMap" : [
                                 "DSMSIZE",
                                 {
+									"Ref" : "AWS::Region"
+								},
+								{
                                     "Ref" : "DSIPLicense"
-                                },
-                                "TYPE"
+                                }
                             ]
                         }
                     ]

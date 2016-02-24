@@ -52,7 +52,6 @@
             "Type"        : "AWS::EC2::KeyPair::KeyName",
             "MinLength"   : "1",
             "MaxLength"   : "255",
-            "AllowedPattern" : "[-_a-zA-Z0-9. ]*",
             "ConstraintDescription" : "Select an existing EC2 Key Pair."
         },
         "AWSIVPC"         : {
@@ -133,8 +132,8 @@
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9!$^​*\\-_+]*",
-            "ConstraintDescription" : "Must contain only alphanumeric characters. Min length 8, max length 41"
+            "AllowedPattern" : "[a-zA-Z0-9!^*\\-_+]*",
+            "ConstraintDescription" : "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
         },
         "DBPEngine"            : {
             "Description" : "Choose SQL or Oracle for DSM database Engine",
@@ -175,8 +174,8 @@
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9!$^​*\\-_+]*",
-            "ConstraintDescription" : "must contain only alphanumeric characters."
+            "AllowedPattern" : "[a-zA-Z0-9!^*\\-_+]*",
+            "ConstraintDescription" : "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
         },
         "DSIMultiNode"         : {
             "Description" : "Select number of Deep Security Managers to Deploy",
@@ -815,7 +814,7 @@
                 "Handle" : {
                     "Ref" : "DSM1CompleteWaitHandle"
                 },
-                "Timeout" : "1500"
+                "Timeout" : "1800"
             }
         }
     },

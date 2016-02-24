@@ -83,6 +83,9 @@
     <Content Include="Common\helpers\set-lbSettings">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Common\helpers\wait-for-relay-and-stop-manager">
+      <SubType>Content</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\DB\" />

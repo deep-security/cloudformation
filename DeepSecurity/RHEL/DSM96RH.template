@@ -7,7 +7,6 @@
             "Type"        : "AWS::EC2::KeyPair::KeyName",
             "MinLength"   : "1",
             "MaxLength"   : "255",
-            "AllowedPattern" : "[-_a-zA-Z0-9. ]*",
             "ConstraintDescription" : "Select an existing EC2 Key Pair."
         },
         "AWSIVPC"         : {
@@ -33,8 +32,8 @@
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9!$^​*\\-_+]*",
-            "ConstraintDescription" : "must contain only alphanumeric characters."
+            "AllowedPattern" : "[a-zA-Z0-9!^*\\-_+]*",
+            "ConstraintDescription" : "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
         },
         "DSIPLicenseKey"   : {
             "Description" : "Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
@@ -66,24 +65,20 @@
             "Type"        : "String",
             "Default"     : "m3.medium",
             "AllowedValues" : [
-                "m3.medium",
                 "m3.large",
                 "m3.xlarge",
                 "m3.2xlarge",
-				"m4.medium",
-                "m4.large",
+				"m4.large",
                 "m4.xlarge",
                 "m4.2xlarge",
-                "c4.large",
-                "c4.xlarge",
-                "c4.2xlarge",
-                "c4.4xlarge",
-                "c4.8xlarge",
-                "c3.large",
                 "c3.xlarge",
                 "c3.2xlarge",
                 "c3.4xlarge",
                 "c3.8xlarge",
+				"c4.xlarge",
+                "c4.2xlarge",
+                "c4.4xlarge",
+                "c4.8xlarge",
                 "r3.large",
                 "r3.xlarge",
                 "r3.2xlarge",
@@ -93,7 +88,6 @@
                 "i2.2xlarge",
                 "i2.4xlarge",
                 "i2.8xlarge",
-                "hs1.8xlarge",
                 "g2.2xlarge"
             ]
         },
@@ -113,8 +107,8 @@
             "Type"        : "String",
             "MinLength"   : 8,
             "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9!$^​*\\-_+]*",
-            "ConstraintDescription" : "must contain only alphanumeric characters."
+            "AllowedPattern" : "[a-zA-Z0-9!^*\\-_+]*",
+            "ConstraintDescription" : "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
         },
         "DBPName"           : {
             "Default" : "dsm",
@@ -698,11 +692,16 @@
 								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/createCloudAccount",
 								"owner" : "root",
 								"mode" : "000700"
-							}
+							},
+							"/etc/cfn/wait-for-relay-and-stop-manager" : {
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/wait-for-relay-and-stop-manager",
+								"owner" : "root",
+								"mode" : "000700"
+ 							}
 						},
                         "commands" : {
 							"0-sleep" : {
-                                "command" : "service dsm_s stop"
+                                "command" : "/etc/cfn/wait-for-relay-and-stop-manager >> /tmp/0-stop-service"
                             },
                             "1-enableRestApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
@@ -720,7 +719,7 @@
 										[
 											"until curl -vk https://127.0.0.1:",
 											{ "Ref" : "DSIPGUIPort" },
-											"/rest/status/manager/current/ping; do echo \"manager not started yet\" >> /tmp/4-check-service; service dsm_s start >> /tmp/4-check-service; sleep 5; done"
+											"/rest/status/manager/current/ping; do echo \"manager not started yet\" >> /tmp/4-check-service; service dsm_s start >> /tmp/4-check-service; sleep 30; done"
 										]
 									]
 								}
@@ -934,7 +933,7 @@
 											" ",
 											{ "Ref" : "DSCAdminPassword" },
 											" ",
-											{ "Ref" : "PrivateDSIELBFQDN" },
+											{ "Ref" : "DSIELBFQDN" },
 											" ",
 											{ "Ref" : "DSIPGUIPort" },
 											" ",
