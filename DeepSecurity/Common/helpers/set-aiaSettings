@@ -1,10 +1,10 @@
 #!/bin/bash
-## set-aiaSettings <user> <pass> <consoleport>
+## set-aiaSettings <user> <pass> <elbfqdn> <consoleport>
 user=$1
 pass=$2
-managerfqdn=$4
-consoleport=$3
-manager=localhost:${3}
+managerfqdn=$3
+consoleport=$4
+manager=localhost:${4}
 
 
 SID=`curl -k -H "Content-Type: application/json" -X POST "https://${manager}/rest/authentication/login/primary" -d '{"dsCredentials":{"userName":"'${user}'","password":"'${pass}'"}}'`
