@@ -63,7 +63,7 @@
         "DSIPInstanceType"  : {
             "Description" : "Amazon EC2 instance type for the Deep Security Manager Node Instances",
             "Type"        : "String",
-            "Default"     : "m3.medium",
+            "Default"     : "m4.large",
             "AllowedValues" : [
                 "m3.large",
                 "m3.xlarge",
