@@ -350,41 +350,88 @@
                                         {
                                             "Effect" : "Allow",
                                             "Action" : [
-                                                "elasticloadbalancing:RegisterInstancesWithLoadBalancer"
+                                                "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
+												"elasticloadbalancing:CreateLoadBalancerListeners",
+												"elasticloadbalancing:CreateLoadBalancerPolicy",
+												"elasticloadbalancing:SetLoadBalancerPoliciesOfListener"
                                             ],
-											"Resource" : {
-												"Fn::Join" : [
-													"",
-													[
-														"arn:aws:elasticloadbalancing:",
-														{ "Ref" : "AWS::Region"},
-														":",
-														{ "Ref" : "AWS::AccountId" },
-														":loadbalancer/",
-														{ "Ref" : "DSIELB" }
-													]
-												]
-											}
+                                            "Resource" : {
+                                                "Fn::Join" : [
+                                                    "",
+                                                    [
+                                                        "arn:aws:elasticloadbalancing:",
+                                                        {
+                                                            "Ref" : "AWS::Region"
+                                                        },
+                                                        ":",
+                                                        {
+                                                            "Ref" : "AWS::AccountId"
+                                                        },
+                                                        ":loadbalancer/",
+                                                        {
+                                                            "Ref" : "DSIELB"
+                                                        }
+                                                    ]
+                                                ]
+                                            }
                                         },
                                         {
                                             "Effect" : "Allow",
                                             "Action" : [
-                                                "elasticloadbalancing:RegisterInstancesWithLoadBalancer"
+                                                "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
+												"elasticloadbalancing:CreateLoadBalancerListeners",
+												"elasticloadbalancing:CreateLoadBalancerPolicy",
+												"elasticloadbalancing:SetLoadBalancerPoliciesOfListener"
                                             ],
-											"Resource" : {
-												"Fn::Join" : [
-													"",
-													[
-														"arn:aws:elasticloadbalancing:",
-														{ "Ref" : "AWS::Region"},
-														":",
-														{ "Ref" : "AWS::AccountId" },
-														":loadbalancer/",
-														{ "Ref" : "PrivateDSIELB" }
-													]
-												]
-											}
-                                        }
+                                            "Resource" : {
+                                                "Fn::Join" : [
+                                                    "",
+                                                    [
+                                                        "arn:aws:elasticloadbalancing:",
+                                                        {
+                                                            "Ref" : "AWS::Region"
+                                                        },
+                                                        ":",
+                                                        {
+                                                            "Ref" : "AWS::AccountId"
+                                                        },
+                                                        ":loadbalancer/",
+                                                        {
+                                                            "Ref" : "PrivateDSIELB"
+                                                        }
+                                                    ]
+                                                ]
+                                            }
+                                        },
+										{
+                                            "Effect" : "Allow",
+                                            "Action" : [
+                                                "iam:UploadServerCertificate",
+												"iam:GetServerCertificate"
+                                            ],
+                                            "Resource" : {
+                                                "Fn::Join" : [
+                                                    "",
+                                                    [
+                                                        "arn:aws:iam::",
+                                                        {
+                                                            "Ref" : "AWS::AccountId"
+                                                        },
+                                                        ":server-certificate/DeepSecurityElbCertificate-",
+														{
+															"Ref" : "AWS::StackName"
+														}
+                                                    ]
+                                                ]
+                                            }
+                                        },
+										{
+                                            "Effect" : "Allow",
+                                            "Action" : [
+                                                "elasticloadbalancing:DescribeLoadBalancers"
+                                            ],
+                                            "Resource" : "*"
+			                            }
                                     ]
                                 }
                             },
