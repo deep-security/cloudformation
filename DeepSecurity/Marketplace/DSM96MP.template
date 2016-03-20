@@ -159,7 +159,8 @@
             "Description" : "Choose License Model. If choosing BYOL you may enter the license below",
             "Type"        : "String",
             "AllowedValues" : [
-                "BYOL",
+                "MMS",
+				"BYOL",
                 "25",
                 "50",
                 "100",
@@ -199,6 +200,7 @@
     "Mappings"                 : {
         "DSMAMI" : {
 			"us-east-1" : {
+				"MMS" : "ami-bf2d29d5",
                 "BYOL" : "ami-371e3c5d",
                 "25"   : "ami-d61634bc",
                 "50"   : "ami-d61634bc",
@@ -213,6 +215,7 @@
                 "200"  : "ami-9dbfc8fd"
             },
             "us-west-2" : {
+				"MMS"  : "ami-20bf5140",
                 "BYOL" : "ami-09ec0b69",
                 "25"   : "ami-5fea0d3f",
                 "50"   : "ami-5fea0d3f",
@@ -271,6 +274,7 @@
         },
         "DSMSIZE" : {
 			"us-east-1"      : {
+				"MMS" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
                 "25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -278,6 +282,7 @@
 				"200": "c4.4xlarge"
             },
 			"us-west-1"      : {
+				"MMS" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -285,6 +290,7 @@
 				"200": "c4.4xlarge"
             },
             "us-west-2"      : {
+				"MMS" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -292,6 +298,7 @@
 				"200": "c4.4xlarge"
             },
 			"eu-west-1"      : {
+				"MMS" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -299,6 +306,7 @@
 				"200": "c4.4xlarge"
             },
 			"eu-central-1" : {
+				"MMS" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -306,6 +314,7 @@
 				"200": "c4.4xlarge"
             },
             "sa-east-1"    : {
+				"MMS" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m3.large",
 				"50" : "m3.xlarge",
@@ -313,6 +322,7 @@
 				"200": "c3.4xlarge"
             },
             "ap-northeast-1" : {
+				"MMS" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -320,6 +330,7 @@
 				"200": "c4.4xlarge"
             },
             "ap-southeast-1" : {
+				"MMS" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -327,6 +338,7 @@
 				"200": "c4.4xlarge"
             },
             "ap-southeast-2" : {
+				"MMS" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -334,6 +346,7 @@
 				"200": "c4.4xlarge"
             },
 			"ap-northeast-2" : {
+				"MMS" : "c3.xlarge",
 				"BYOL" : "m4.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -844,7 +857,13 @@
                                 "ignoreErrors" : "false"
                             },
                             "1-install-DSM"        : {
-                                "command" : "cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/Manager-AWS-9.6.11662.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
+                                "command" : {
+									"Fn::If" : [
+										"UseMMS",
+										"cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/Manager-AWS-9.6.11937.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
+										"cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/Manager-AWS-9.6.11662.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog"
+									]
+								},
                                 "ignoreErrors" : "false"
                             }
                         }
@@ -852,17 +871,17 @@
                     "addCloudAccount" : {
 						"files" : {
 							"/etc/cfn/set-aiaSettings" : {
-								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/set-aiaSettings",
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/Scripts/set-aiaSettings",
 								"owner" : "root",
 								"mode" : "000700"
 							},
 							"/etc/cfn/createCloudAccount" : {
-								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/createCloudAccount",
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/Scripts/createCloudAccount",
 								"owner" : "root",
 								"mode" : "000700"
 							},
 							"/etc/cfn/wait-for-relay-and-stop-manager" : {
-								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/wait-for-relay-and-stop-manager",
+								"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/Scripts/wait-for-relay-and-stop-manager",
 								"owner" : "root",
 								"mode" : "000700"
  							}
@@ -954,7 +973,7 @@
                     "sqlSetup"        : {
                         "commands" : {
                             "1-get-create-script" : {
-                                "command" : "cd /etc/cfn/rhel-scripts; wget https://s3.amazonaws.com/cf-deepsecurity/96/v0.5/Scripts/create-DSM-SqlDB.py; chmod 755 create-DSM-SqlDB.py",
+                                "command" : "cd /etc/cfn/rhel-scripts; wget https://s3.amazonaws.com/cf-deepsecurity/96/v0.6/Scripts/create-DSM-SqlDB.py; chmod 755 create-DSM-SqlDB.py",
                                 "ignoreErrors" : "false"
                             },
                             "2-create-db"         : {
@@ -1028,12 +1047,12 @@
                     "fixManagerLoadBalancerSettings" : {
 							"files" : {
 								"/etc/cfn/create-console-listener" : {
-									"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/create-console-listener",
+									"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/Scripts/create-console-listener",
 									"owner" : "root",
 									"mode" : "000700"
 								},
 								"/etc/cfn/set-lbSettings" : {
-									"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/set-lbSettings",
+									"source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/Scripts/set-lbSettings",
 									"owner" : "root",
 									"mode" : "000700"
 								}
@@ -1156,7 +1175,7 @@
                     "fixManagerHostObject"                 : {
                         "files" : {
                             "/etc/cfn/reactivate-manager" : {
-                                "source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/Scripts/reactivate-manager",
+                                "source" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/Scripts/reactivate-manager",
                                 "owner"  : "root",
                                 "mode"   : "000700"
                             }
@@ -1207,7 +1226,7 @@
                 },
                 "InstanceType"       : {
                     "Fn::If" : [
-                        "UseBYOL",
+                        "PPUNotSelected",
                         {
                             "Ref" : "DSIPInstanceType"
                         },
@@ -1375,6 +1394,20 @@
                 "BYOL"
             ]
         },
+		"UseMMS"		: {
+			"Fn::Equals" : [
+				{
+					"Ref" : "DSIPLicense"
+				},
+				"MMS"
+			]
+		},
+		"PPUNotSelected"          : {
+            "Fn::Or" : [
+				{ "Condition" : "UseMMS" },
+				{ "Condition" : "UseBYOL" }
+            ]
+        },
         "AddToELB"         : {
             "Fn::Not" : [
                 {
@@ -1445,7 +1478,7 @@
                     "Condition" : "KeyProvided"
                 },
                 {
-                    "Condition" : "UseBYOL"
+                    "Condition" : "PPUNotSelected"
                 }
             ]
         }

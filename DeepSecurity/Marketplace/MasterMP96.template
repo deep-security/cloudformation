@@ -74,6 +74,10 @@
             "Description" : "Trend Micro Deep Security Database instance class",
             "Type"        : "String",
             "AllowedValues" : [
+				"db.m4.medium",
+				"db.m4.large",
+				"db.m4.xlarge",
+				"db.m4.2xlarge",
                 "db.m3.medium",
                 "db.m3.large",
                 "db.m3.xlarge",
@@ -260,6 +264,7 @@
             "Description" : "Choose License Model. If choosing BYOL you may enter the license below",
             "Type"        : "String",
             "AllowedValues" : [
+				"MMS",
                 "BYOL",
                 "25",
                 "50",
@@ -302,7 +307,7 @@
             ],
             "Condition" : "LaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/MP/DSM96MP.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/MP/DSM96MP.template",
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -398,7 +403,7 @@
             ],
             "Condition" : "DSM96Node2DB",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/MP/DSM96MP.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/MP/DSM96MP.template",
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -484,7 +489,7 @@
             ],
             "Condition" : "DoNotLaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/MP/DSM96MP.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/MP/DSM96MP.template",
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -574,7 +579,7 @@
             "DependsOn" : "DSM1NoDBCompleteWaitCondition",
             "Condition" : "DSM96Node2NoDB",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/MP/DSM96MP.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/MP/DSM96MP.template",
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -655,7 +660,7 @@
             "Condition" : "LaunchRDSInstance",
             "DependsOn" : "DSIRDSSecurityGroup",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/DB/DSDBAbstract.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/DB/DSDBAbstract.template",
                 "Parameters"  : {
                     "DBPName" : {
                         "Ref" : "DBPName"
@@ -702,7 +707,7 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "LaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/SecurityGroups/RDSSecurityGroup.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/SecurityGroups/RDSSecurityGroup.template",
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -722,7 +727,7 @@
         "DSIDSMSecurityGroup" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/SecurityGroups/DSMSecurityGroup.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/SecurityGroups/DSMSecurityGroup.template",
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -739,7 +744,7 @@
         "DSIELB"              : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/ELB/DSM96ELB.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/ELB/DSM96ELB.template",
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -760,7 +765,7 @@
         "DSIDSMSecurityGroupIngressRules" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/SecurityGroups/DSMSGIngressRules.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/SecurityGroups/DSMSGIngressRules.template",
                 "Parameters"  : {
                     "DSMSG" : {
                         "Fn::GetAtt" : [
@@ -862,7 +867,25 @@
                     "Condition" : "DoNotLaunchRDSInstance"
                 }
             ]
-        }
+        },
+		"RegionIsEast1" : {
+			"Fn::Equals" : [
+					{ "Ref" : "AWS::Region" },
+					"us-east-1"
+				]
+		},
+		"RegionIsWest2" : {
+			"Fn::Equals" : [
+					{ "Ref" : "AWS::Region" },
+					"us-west-2"
+				]
+		},
+		"MmsSupportedRegion"	: {
+			"Fn::Or" : [
+				{ "Condition" : "RegionIsWest2" },
+				{ "Condition" : "RegionIsEast1" }
+			]
+		}
     },
     "Outputs"                  : {
         "DeepSecurityConsole" : {

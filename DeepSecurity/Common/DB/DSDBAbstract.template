@@ -7,6 +7,10 @@
             "Description" : "Trend Micro Deep Security Database instance class",
             "Type"        : "String",
             "AllowedValues" : [
+				"db.m4.medium",
+				"db.m4.large",
+				"db.m4.xlarge",
+				"db.m4.2xlarge",
                 "db.m3.medium",
                 "db.m3.large",
                 "db.m3.xlarge",
@@ -118,7 +122,7 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "DBTypeIsOracle",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/DB/DSDBOracleRDS.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/DB/DSDBOracleRDS.template",
                 "TimeoutInMinutes" : "10",
                 "Parameters"       : {
                     "DBIRDSInstanceSize" : {
@@ -152,7 +156,7 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "DBTypeIsSQL",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/DB/DSDBSQLRDS.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/DB/DSDBSQLRDS.template",
                 "TimeoutInMinutes" : "10",
                 "Parameters"       : {
                     "DBIRDSInstanceSize" : {

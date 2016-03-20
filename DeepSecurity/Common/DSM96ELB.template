@@ -47,7 +47,7 @@
         "ELBSG" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.5/SecurityGroups/DSELBSG.template",
+                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/SecurityGroups/DSELBSG.template",
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
