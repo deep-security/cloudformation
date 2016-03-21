@@ -54,6 +54,9 @@
     <Compile Include="Quickstart\TMQuickStartBYOL.template">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Quickstart\TMQuickStartMMS.template">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Quickstart\TMQuickStartPocMMS.template">
       <SubType>Code</SubType>
     </Compile>
@@ -84,6 +87,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Common\helpers\createCloudAccount">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Common\helpers\kill-mp-web-installer">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Common\helpers\reactivate-manager">
