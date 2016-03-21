@@ -470,6 +470,13 @@
                         }
                     ]
                 },
+				"ManagedPolicyArns": {
+					"Fn::If" : [
+						"UseMMS",
+						[ "arn:aws:iam::aws:policy/AWSMarketplaceMeteringFullAccess" ],
+						{ "Ref" : "AWS::NoValue" }
+					]
+				},
                 "Path"                     : "/",
                 "Policies"                 : [
                     {
