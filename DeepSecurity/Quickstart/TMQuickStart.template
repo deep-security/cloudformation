@@ -86,71 +86,71 @@
                 "1-100",
                 "101-500",
 				"501-1000",
-				"1001-2000+"
+				"1001-2000"
             ]
         }
     },
     "Mappings"                 : {
 		"DSMSIZE" : {
 	        "us-east-1"      : {
-                "1-100" : "m3.large",
-				"101-500" : "m3.large",
-				"501-1000" : "c3.xlarge",
-				"1001-2000+" : "c3.xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
 			"us-west-1"      : {
-                "1-100" : "m3.large",
-				"101-500" : "m3.large",
-				"501-1000" : "c3.xlarge",
-				"1001-2000+" : "c3.xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
             "us-west-2"      : {
-                "1-100" : "m3.large",
-				"101-500" : "m3.large",
-				"501-1000" : "c3.xlarge",
-				"1001-2000+" : "c3.xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
 			"eu-west-1"      : {
-                "1-100" : "m3.large",
-				"101-500" : "m3.large",
-				"501-1000" : "c3.xlarge",
-				"1001-2000+" : "c3.xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
 			"eu-central-1" : {
-                "1-100" : "m3.large",
-				"101-500" : "m3.large",
-				"501-1000" : "c3.xlarge",
-				"1001-2000+" : "c3.xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
             "sa-east-1"    : {
-                "1-100" : "m3.large",
-				"101-500" : "m3.large",
-				"501-1000" : "c3.xlarge",
-				"1001-2000+" : "c3.xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
             "ap-northeast-1" : {
-                "1-100" : "m3.large",
-				"101-500" : "m3.large",
-				"501-1000" : "c3.xlarge",
-				"1001-2000+" : "c3.xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
             "ap-southeast-1" : {
-                "1-100" : "m3.large",
-				"101-500" : "m3.large",
-				"501-1000" : "c3.xlarge",
-				"1001-2000+" : "c3.xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
             "ap-southeast-2" : {
-                "1-100" : "m3.large",
-				"101-500" : "m3.large",
-				"501-1000" : "c3.xlarge",
-				"1001-2000+" : "c3.xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
 			"ap-northeast-2" : {
-                "1-100" : "m4.large",
-				"101-500" : "m4.large",
-				"501-1000" : "m4.xlarge",
-				"1001-2000+" : "m4.xlarge"
+                "1" : "m4.large",
+				"2" : "m4.large",
+				"3" : "m4.xlarge",
+				"4" : "m4.xlarge"
             }
         },
 		"RDSStorageSize" : {
@@ -163,76 +163,91 @@
             "501-1000"  : {
                 "Size" : "200"
             },
-			"1001-2000+" : {
+			"1001-2000" : {
 				"Size" : "300"
 			}
         },
         "RDSInstanceSize" : {
             "us-east-1"      : {
-                "1-100" : "db.m4.large",
-				"101-500" : "db.m4.large",
-				"501-1000" : "db.m4.xlarge",
-				"1001-2000+" : "db.m4.xlarge"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             },
 			"us-west-1"      : {
-                "1-100" : "db.m4.large",
-				"101-500" : "db.m4.large",
-				"501-1000" : "db.m4.xlarge",
-				"1001-2000+" : "db.m4.xlarge"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             },
             "us-west-2"      : {
-                "1-100" : "db.m4.large",
-				"101-500" : "db.m4.large",
-				"501-1000" : "db.m4.xlarge",
-				"1001-2000+" : "db.m4.xlarge"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             },
 			"eu-west-1"      : {
-                "1-100" : "db.m4.large",
-				"101-500" : "db.m4.large",
-				"501-1000" : "db.m4.xlarge",
-				"1001-2000+" : "db.m4.xlarge"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             },
 			"eu-central-1" : {
-                "1-100" : "db.m4.large",
-				"101-500" : "db.m4.large",
-				"501-1000" : "db.m4.xlarge",
-				"1001-2000+" : "db.m4.xlarge"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             },
             "sa-east-1"    : {
-                "1-100" : "db.m3.large",
-				"101-500" : "db.m3.large",
-				"501-1000" : "db.m3.xlarge",
-				"1001-2000+" : "db.m3.xlarge"
+                "1" : "db.m3.large",
+				"2" : "db.m3.large",
+				"3" : "db.m3.xlarge",
+				"4" : "db.m3.xlarge"
             },
             "ap-northeast-1" : {
-                "1-100" : "db.m4.large",
-				"101-500" : "db.m4.large",
-				"501-1000" : "db.m4.xlarge",
-				"1001-2000+" : "db.m4.xlarge"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             },
             "ap-southeast-1" : {
-                "1-100" : "db.m4.large",
-				"101-500" : "db.m4.large",
-				"501-1000" : "db.m4.xlarge",
-				"1001-2000+" : "db.m4.xlarge"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             },
             "ap-southeast-2" : {
-                "1-100" : "db.m3.large",
-				"101-500" : "db.m3.large",
-				"501-1000" : "db.m3.xlarge",
-				"1001-2000+" : "db.m3.xlarge"
+                "1" : "db.m3.large",
+				"2" : "db.m3.large",
+				"3" : "db.m3.xlarge",
+				"4" : "db.m3.xlarge"
             },
 			"ap-northeast-2" : {
-                "1-100" : "db.m4.large",
-				"101-500" : "db.m4.large",
-				"501-1000" : "db.m4.xlarge",
-				"1001-2000+" : "db.m4.xlarge"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             }
-        }
+        },
+		"DeploymentSize" : {
+			"1-100" : {
+				"Size" : "1"
+			},
+			"101-500" : {
+				"Size" : "2"
+			},
+			"501-1000" : {
+				"Size" : "3"
+			},
+			"1001-2000" : {
+				"Size" : "4"
+			}
+		}
     },
     "Resources"                : {
         "MasterMP96" : {
             "Type" : "AWS::CloudFormation::Stack",
+			"Condition" : "PerHostSupportedRegion",
             "Properties" : {
                 "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Marketplace/MasterMP96.template",
                 "Parameters"  : {
@@ -252,7 +267,13 @@
 								"Ref" : "AWS::Region"
 							},
 							{
-								"Ref" : "ProtectedInstances"
+								"Fn::FindInMap" : [
+									"DeploymentSize",
+									{
+										"Ref" : "ProtectedInstances"
+									},
+									"Size"
+								]	
 							}
 						]				
 					},
@@ -291,7 +312,13 @@
 								"Ref" : "AWS::Region"
 							},
 							{
-								"Ref" : "ProtectedInstances"
+								"Fn::FindInMap" : [
+									"DeploymentSize",
+									{
+										"Ref" : "ProtectedInstances"
+									},
+									"Size"
+								]	
 							}
 						]		
 					},
@@ -308,6 +335,26 @@
             }
         }
     },
+	"Conditions" : {
+		"RegionIsEast1" : {
+			"Fn::Equals" : [
+					{ "Ref" : "AWS::Region" },
+					"us-east-1"
+				]
+		},
+		"RegionIsWest2" : {
+			"Fn::Equals" : [
+					{ "Ref" : "AWS::Region" },
+					"us-west-2"
+				]
+		},
+		"PerHostSupportedRegion"	: {
+			"Fn::Or" : [
+				{ "Condition" : "RegionIsWest2" },
+				{ "Condition" : "RegionIsEast1" }
+			]
+		}
+	},
 	"Outputs"                  : {
         "DeepSecurityConsole" : {
             "Value" : {
