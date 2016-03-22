@@ -1,12 +1,12 @@
 #!/bin/bash
 cd /etc/cfn/rhel-scripts
-wget http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+curl -O http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
 rpm -ivh epel-release-6-8.noarch.rpm
 yum -y install python-pip
 yum -y install gcc-c++
 yum -y install python-devel
 yum -y install freetds-devel
 pip install  pymssql
-wget https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/Scripts/create-DSM-SqlDB.py
+curl -O https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/Scripts/create-DSM-SqlDB.py
 chmod 755 create-DSM-SqlDB.py
 

@@ -307,7 +307,7 @@
             ],
             "Condition" : "LaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/MP/DSM96MP.template",
+                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Marketplace/DSM96MP.template",
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -403,7 +403,7 @@
             ],
             "Condition" : "DSM96Node2DB",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/MP/DSM96MP.template",
+                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Marketplace/DSM96MP.template",
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -489,7 +489,7 @@
             ],
             "Condition" : "DoNotLaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/MP/DSM96MP.template",
+                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Marketplace/DSM96MP.template",
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -579,7 +579,7 @@
             "DependsOn" : "DSM1NoDBCompleteWaitCondition",
             "Condition" : "DSM96Node2NoDB",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/MP/DSM96MP.template",
+                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Marketplace/DSM96MP.template",
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -707,7 +707,7 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "LaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/SecurityGroups/RDSSecurityGroup.template",
+                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/SecurityGroups/RDSSecurityGroup.template",
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -727,7 +727,7 @@
         "DSIDSMSecurityGroup" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/SecurityGroups/DSMSecurityGroup.template",
+                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/SecurityGroups/DSMSecurityGroup.template",
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -744,7 +744,7 @@
         "DSIELB"              : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/ELB/DSM96ELB.template",
+                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/DSM96ELB.template",
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -765,7 +765,7 @@
         "DSIDSMSecurityGroupIngressRules" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/SecurityGroups/DSMSGIngressRules.template",
+                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/SecurityGroups/DSMSGIngressRules.template",
                 "Parameters"  : {
                     "DSMSG" : {
                         "Fn::GetAtt" : [

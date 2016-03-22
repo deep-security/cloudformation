@@ -170,7 +170,7 @@
         "MasterMP96" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/cf-deepsecurity/96/v0.6/MP/MasterMP96.template",
+                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/MP/MasterMP96.template",
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSKeyPairName"

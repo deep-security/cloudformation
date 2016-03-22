@@ -71,43 +71,43 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\helpers\cfn-rh-helper">
+    <Content Include="Common\Scripts\cfn-rh-helper">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\helpers\cfn-rh-sql">
+    <Content Include="Common\Scripts\cfn-rh-sql">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\helpers\create-console-listener">
+    <Content Include="Common\Scripts\create-console-listener">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\helpers\create-console-listener-policy">
+    <Content Include="Common\Scripts\create-console-listener-policy">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\helpers\create-DSM-SqlDB.py">
+    <Content Include="Common\Scripts\create-DSM-SqlDB.py">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\helpers\createCloudAccount">
+    <Content Include="Common\Scripts\createCloudAccount">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\helpers\kill-mp-web-installer">
+    <Content Include="Common\Scripts\kill-mp-web-installer">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\helpers\reactivate-manager">
+    <Content Include="Common\Scripts\reactivate-manager">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\helpers\set-aiaSettings">
+    <Content Include="Common\Scripts\set-aiaSettings">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\helpers\set-lbSettings">
+    <Content Include="Common\Scripts\set-lbSettings">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\helpers\wait-for-relay-and-stop-manager">
+    <Content Include="Common\Scripts\wait-for-relay-and-stop-manager">
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\DB\" />
-    <Folder Include="Common\helpers\" />
+    <Folder Include="Common\Scripts" />
     <Folder Include="Common\Security Groups\" />
     <Folder Include="Common" />
     <Folder Include="Marketplace" />
