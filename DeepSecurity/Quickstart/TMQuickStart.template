@@ -15,7 +15,7 @@
 
 			],
 			"ParameterLabels" : {
-				"AWSIKeyPairName" : { "default" : "EC2 Key Pair for SSH access" },
+				"AWSKeyPairName" : { "default" : "EC2 Key Pair for SSH access" },
 				"AWSVPC" : { "default" : "VPC for Deep Security Components" },
 				"DeepSecuritySubnet" : { "default" : "Public Subnet for Deep Security Managers" },
 				"DeepSecurityAdminName" : { "default" : "Administrator username for Deep Security" },
@@ -251,7 +251,9 @@
 							{
 								"Ref" : "AWS::Region"
 							},
-								"Oracle"
+							{
+								"Ref" : "ProtectedInstances"
+							}
 						]				
 					},
 					"DBIStorageAllocation"         : {
@@ -290,8 +292,7 @@
 							},
 							{
 								"Ref" : "ProtectedInstances"
-							},
-							"InstanceType"
+							}
 						]		
 					},
 					"DBISubnet1"         : {
