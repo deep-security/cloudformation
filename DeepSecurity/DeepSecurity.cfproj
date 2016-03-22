@@ -54,10 +54,10 @@
     <Compile Include="Quickstart\TMQuickStartBYOL.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Quickstart\TMQuickStartMMS.template">
+    <Compile Include="Quickstart\TMQuickStart.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Quickstart\TMQuickStartPocMMS.template">
+    <Compile Include="Quickstart\TMQuickStartPoc.template">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Quickstart\TMQuickStartPPU.template">
