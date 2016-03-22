@@ -926,7 +926,10 @@
 									]
 								}
                             },
-							"6-set-aia-settings": {
+							"6-install-xml_grep" : {
+                                "command" : "yum -y install perl-XML-Twig"
+                            },
+							"7-set-aia-settings": {
 								"command" : {
 									"Fn::Join" : [
 										"",
@@ -983,7 +986,7 @@
                                 },
                                 "ignoreErrors" : "False"
                             },
-							"9-killWebInstaller" : {
+							"10-killWebInstaller" : {
 								"command" : "/etc/cfn/kill-mp-web-installer"
 							}
                         }
@@ -1199,9 +1202,6 @@
                             }
                         },
                         "commands" : {
-                            "0-install-xml_grep" : {
-                                "command" : "yum -y install perl-XML-Twig"
-                            },
                             "1-reactivate-manager" : {
                                 "command" : {
                                     "Fn::Join" : [
