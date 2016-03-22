@@ -891,7 +891,12 @@
 								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/Scripts/wait-for-relay-and-stop-manager",
 								"owner" : "root",
 								"mode" : "000700"
- 							}
+ 							},
+							"/etc/cfn/kill-mp-web-installer" : {
+								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/Scripts/kill-mp-web-installer",
+								"owner" : "root",
+								"mode" : "000700"
+							}
 						},
                         "commands" : {
                             "0-stop-service" : {
@@ -903,10 +908,13 @@
                             "2-enableSoapApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
                             },
-                            "3-start-service"                              : {
+							"3-setAicDefaultComm" : {
+								"command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentCommunications -value 1"
+							},
+                            "4-start-service"                              : {
                                 "command" : "service dsm_s start"
                             },
-                            "4-check-service"                      : {
+                            "5-check-service"                      : {
                                 "command" : {
 									"Fn::Join" : [
 										"",
@@ -918,7 +926,7 @@
 									]
 								}
                             },
-							"5-set-aia-settings": {
+							"6-set-aia-settings": {
 								"command" : {
 									"Fn::Join" : [
 										"",
@@ -974,7 +982,10 @@
                                     ]
                                 },
                                 "ignoreErrors" : "False"
-                            }
+                            },
+							"9-killWebInstaller" : {
+								"command" : "/etc/cfn/kill-mp-web-installer"
+							}
                         }
                     },
                     "sqlSetup"        : {

@@ -756,10 +756,13 @@
                             "2-enableSoapApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
                             },
-                            "3-start-service"                              : {
+							"3-setAicDefaultComm" : {
+								"command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentCommunications -value 1"
+							},
+                            "4-start-service"                              : {
                                 "command" : "service dsm_s start"
                             },
-                            "4-check-service"                      : {
+                            "5-check-service"                      : {
                                 "command" : {
 									"Fn::Join" : [
 										"",
@@ -771,7 +774,7 @@
 									]
 								}
                             },
-							"5-set-aia-settings": {
+							"6-set-aia-settings": {
 								"command" : {
 									"Fn::Join" : [
 										"",
