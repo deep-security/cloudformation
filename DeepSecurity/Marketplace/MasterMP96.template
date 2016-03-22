@@ -705,10 +705,7 @@
         },
         "DSIRDSSecurityGroup" : {
             "Type" : "AWS::CloudFormation::Stack",
-            "Condition" : [ 
-				"LaunchRDSInstance",
-				"PerHostSupportedRegion"
-				],
+            "Condition" : "LaunchRDSInstance",
             "Properties" : {
                 "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/SecurityGroups/RDSSecurityGroup.template",
                 "Parameters"  : {
