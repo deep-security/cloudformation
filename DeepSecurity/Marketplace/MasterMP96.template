@@ -264,7 +264,7 @@
             "Description" : "Choose License Model. If choosing BYOL you may enter the license below",
             "Type"        : "String",
             "AllowedValues" : [
-				"MMS",
+				"PerHost",
                 "BYOL",
                 "25",
                 "50",
@@ -660,7 +660,7 @@
             "Condition" : "LaunchRDSInstance",
             "DependsOn" : "DSIRDSSecurityGroup",
             "Properties" : {
-                "TemplateURL" : "https://cf-deepsecurity.s3.amazonaws.com/96/v0.6/DB/DSDBAbstract.template",
+                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/DB/DSDBAbstract.template",
                 "Parameters"  : {
                     "DBPName" : {
                         "Ref" : "DBPName"
@@ -705,7 +705,10 @@
         },
         "DSIRDSSecurityGroup" : {
             "Type" : "AWS::CloudFormation::Stack",
-            "Condition" : "LaunchRDSInstance",
+            "Condition" : [ 
+				"LaunchRDSInstance",
+				"PerHostSupportedRegion"
+				],
             "Properties" : {
                 "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/SecurityGroups/RDSSecurityGroup.template",
                 "Parameters"  : {
@@ -880,7 +883,7 @@
 					"us-west-2"
 				]
 		},
-		"MmsSupportedRegion"	: {
+		"PerHostSupportedRegion"	: {
 			"Fn::Or" : [
 				{ "Condition" : "RegionIsWest2" },
 				{ "Condition" : "RegionIsEast1" }

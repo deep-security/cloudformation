@@ -27,16 +27,16 @@
     <Compile Include="Common\DSM96ELB.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Common\Security Groups\DSELBSG.template">
+    <Compile Include="Common\SecurityGroups\DSELBSG.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Common\Security Groups\DSMSecurityGroup.template">
+    <Compile Include="Common\SecurityGroups\DSMSecurityGroup.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Common\Security Groups\DSMSGIngressRules.template">
+    <Compile Include="Common\SecurityGroups\DSMSGIngressRules.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Common\Security Groups\RDSSecurityGroup.template">
+    <Compile Include="Common\SecurityGroups\RDSSecurityGroup.template">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Common\sps.template">
@@ -108,7 +108,7 @@
   <ItemGroup>
     <Folder Include="Common\DB\" />
     <Folder Include="Common\Scripts" />
-    <Folder Include="Common\Security Groups\" />
+    <Folder Include="Common\SecurityGroups" />
     <Folder Include="Common" />
     <Folder Include="Marketplace" />
     <Folder Include="Quickstart" />

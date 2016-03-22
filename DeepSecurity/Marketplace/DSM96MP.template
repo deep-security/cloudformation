@@ -159,7 +159,7 @@
             "Description" : "Choose License Model. If choosing BYOL you may enter the license below",
             "Type"        : "String",
             "AllowedValues" : [
-                "MMS",
+                "PerHost",
 				"BYOL",
                 "25",
                 "50",
@@ -200,7 +200,7 @@
     "Mappings"                 : {
         "DSMAMI" : {
 			"us-east-1" : {
-				"MMS" : "ami-bf2d29d5",
+				"PerHost" : "ami-bf2d29d5",
                 "BYOL" : "ami-371e3c5d",
                 "25"   : "ami-d61634bc",
                 "50"   : "ami-d61634bc",
@@ -215,7 +215,7 @@
                 "200"  : "ami-9dbfc8fd"
             },
             "us-west-2" : {
-				"MMS"  : "ami-20bf5140",
+				"PerHost"  : "ami-20bf5140",
                 "BYOL" : "ami-09ec0b69",
                 "25"   : "ami-5fea0d3f",
                 "50"   : "ami-5fea0d3f",
@@ -274,7 +274,7 @@
         },
         "DSMSIZE" : {
 			"us-east-1"      : {
-				"MMS" : "c3.xlarge",
+				"PerHost" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
                 "25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -282,7 +282,7 @@
 				"200": "c4.4xlarge"
             },
 			"us-west-1"      : {
-				"MMS" : "c3.xlarge",
+				"PerHost" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -290,7 +290,7 @@
 				"200": "c4.4xlarge"
             },
             "us-west-2"      : {
-				"MMS" : "c3.xlarge",
+				"PerHost" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -298,7 +298,7 @@
 				"200": "c4.4xlarge"
             },
 			"eu-west-1"      : {
-				"MMS" : "c3.xlarge",
+				"PerHost" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -306,7 +306,7 @@
 				"200": "c4.4xlarge"
             },
 			"eu-central-1" : {
-				"MMS" : "c3.xlarge",
+				"PerHost" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -314,7 +314,7 @@
 				"200": "c4.4xlarge"
             },
             "sa-east-1"    : {
-				"MMS" : "c3.xlarge",
+				"PerHost" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m3.large",
 				"50" : "m3.xlarge",
@@ -322,7 +322,7 @@
 				"200": "c3.4xlarge"
             },
             "ap-northeast-1" : {
-				"MMS" : "c3.xlarge",
+				"PerHost" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -330,7 +330,7 @@
 				"200": "c4.4xlarge"
             },
             "ap-southeast-1" : {
-				"MMS" : "c3.xlarge",
+				"PerHost" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -338,7 +338,7 @@
 				"200": "c4.4xlarge"
             },
             "ap-southeast-2" : {
-				"MMS" : "c3.xlarge",
+				"PerHost" : "c3.xlarge",
 				"BYOL" : "c3.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -346,7 +346,7 @@
 				"200": "c4.4xlarge"
             },
 			"ap-northeast-2" : {
-				"MMS" : "c3.xlarge",
+				"PerHost" : "c3.xlarge",
 				"BYOL" : "m4.xlarge",
 				"25" : "m4.large",
 				"50" : "m4.xlarge",
@@ -472,7 +472,7 @@
                 },
 				"ManagedPolicyArns": {
 					"Fn::If" : [
-						"UseMMS",
+						"UsePerHost",
 						[ "arn:aws:iam::aws:policy/AWSMarketplaceMeteringFullAccess" ],
 						{ "Ref" : "AWS::NoValue" }
 					]
@@ -866,7 +866,7 @@
                             "1-install-DSM"        : {
                                 "command" : {
 									"Fn::If" : [
-										"UseMMS",
+										"UsePerHost",
 										"cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/Manager-AWS-9.6.11937.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
 										"cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/Manager-AWS-9.6.11662.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog"
 									]
@@ -1401,17 +1401,17 @@
                 "BYOL"
             ]
         },
-		"UseMMS"		: {
+		"UsePerHost"		: {
 			"Fn::Equals" : [
 				{
 					"Ref" : "DSIPLicense"
 				},
-				"MMS"
+				"PerHost"
 			]
 		},
 		"PPUNotSelected"          : {
             "Fn::Or" : [
-				{ "Condition" : "UseMMS" },
+				{ "Condition" : "UsePerHost" },
 				{ "Condition" : "UseBYOL" }
             ]
         },

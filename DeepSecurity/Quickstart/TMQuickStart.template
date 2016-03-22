@@ -85,84 +85,148 @@
             "AllowedValues" : [
                 "1-100",
                 "101-500",
-				"501-1000"
+				"501-1000",
+				"1001-2000+"
             ]
         }
     },
     "Mappings"                 : {
 		"DSMSIZE" : {
 	        "us-east-1"      : {
-                "MMS" : "c3.xlarge"
+                "1-100" : "m3.large",
+				"101-500" : "m3.large",
+				"501-1000" : "c3.xlarge",
+				"1001-2000+" : "c3.xlarge"
             },
 			"us-west-1"      : {
-				"MMS" : "c3.xlarge"
+                "1-100" : "m3.large",
+				"101-500" : "m3.large",
+				"501-1000" : "c3.xlarge",
+				"1001-2000+" : "c3.xlarge"
             },
             "us-west-2"      : {
-				"MMS" : "c3.xlarge"
+                "1-100" : "m3.large",
+				"101-500" : "m3.large",
+				"501-1000" : "c3.xlarge",
+				"1001-2000+" : "c3.xlarge"
             },
 			"eu-west-1"      : {
-				"MMS" : "c3.xlarge"
+                "1-100" : "m3.large",
+				"101-500" : "m3.large",
+				"501-1000" : "c3.xlarge",
+				"1001-2000+" : "c3.xlarge"
             },
 			"eu-central-1" : {
-				"MMS" : "c3.xlarge"
+                "1-100" : "m3.large",
+				"101-500" : "m3.large",
+				"501-1000" : "c3.xlarge",
+				"1001-2000+" : "c3.xlarge"
             },
             "sa-east-1"    : {
-				"MMS" : "c3.xlarge"
+                "1-100" : "m3.large",
+				"101-500" : "m3.large",
+				"501-1000" : "c3.xlarge",
+				"1001-2000+" : "c3.xlarge"
             },
             "ap-northeast-1" : {
-				"MMS" : "c3.xlarge"
+                "1-100" : "m3.large",
+				"101-500" : "m3.large",
+				"501-1000" : "c3.xlarge",
+				"1001-2000+" : "c3.xlarge"
             },
             "ap-southeast-1" : {
-				"MMS" : "c3.xlarge"
+                "1-100" : "m3.large",
+				"101-500" : "m3.large",
+				"501-1000" : "c3.xlarge",
+				"1001-2000+" : "c3.xlarge"
             },
             "ap-southeast-2" : {
-				"MMS" : "c3.xlarge"
+                "1-100" : "m3.large",
+				"101-500" : "m3.large",
+				"501-1000" : "c3.xlarge",
+				"1001-2000+" : "c3.xlarge"
             },
 			"ap-northeast-2" : {
-				"MMS" : "m4.xlarge"
+                "1-100" : "m4.large",
+				"101-500" : "m4.large",
+				"501-1000" : "m4.xlarge",
+				"1001-2000+" : "m4.xlarge"
             }
         },
 		"RDSStorageSize" : {
             "1-100"   : {
-                "Size" : "75"
+                "Size" : "50"
             },
             "101-500"   : {
-                "Size" : "200"
+                "Size" : "150"
             },
             "501-1000"  : {
-                "Size" : "300"
-            }
+                "Size" : "200"
+            },
+			"1001-2000+" : {
+				"Size" : "300"
+			}
         },
         "RDSInstanceSize" : {
             "us-east-1"      : {
-                "Oracle" : "db.m4.large"
+                "1-100" : "db.m4.large",
+				"101-500" : "db.m4.large",
+				"501-1000" : "db.m4.xlarge",
+				"1001-2000+" : "db.m4.xlarge"
             },
 			"us-west-1"      : {
-                "Oracle" : "db.m4.large"
+                "1-100" : "db.m4.large",
+				"101-500" : "db.m4.large",
+				"501-1000" : "db.m4.xlarge",
+				"1001-2000+" : "db.m4.xlarge"
             },
             "us-west-2"      : {
-                "Oracle" : "db.m4.large"
+                "1-100" : "db.m4.large",
+				"101-500" : "db.m4.large",
+				"501-1000" : "db.m4.xlarge",
+				"1001-2000+" : "db.m4.xlarge"
             },
 			"eu-west-1"      : {
-                "Oracle" : "db.m4.large"
+                "1-100" : "db.m4.large",
+				"101-500" : "db.m4.large",
+				"501-1000" : "db.m4.xlarge",
+				"1001-2000+" : "db.m4.xlarge"
             },
 			"eu-central-1" : {
-                "Oracle" : "db.m4.large"
+                "1-100" : "db.m4.large",
+				"101-500" : "db.m4.large",
+				"501-1000" : "db.m4.xlarge",
+				"1001-2000+" : "db.m4.xlarge"
             },
             "sa-east-1"    : {
-                "Oracle" : "db.m3.large"
+                "1-100" : "db.m3.large",
+				"101-500" : "db.m3.large",
+				"501-1000" : "db.m3.xlarge",
+				"1001-2000+" : "db.m3.xlarge"
             },
             "ap-northeast-1" : {
-                "Oracle" : "db.m4.large"
+                "1-100" : "db.m4.large",
+				"101-500" : "db.m4.large",
+				"501-1000" : "db.m4.xlarge",
+				"1001-2000+" : "db.m4.xlarge"
             },
             "ap-southeast-1" : {
-                "Oracle" : "db.m4.large"
+                "1-100" : "db.m4.large",
+				"101-500" : "db.m4.large",
+				"501-1000" : "db.m4.xlarge",
+				"1001-2000+" : "db.m4.xlarge"
             },
             "ap-southeast-2" : {
-                "Oracle" : "db.m3.large"
+                "1-100" : "db.m3.large",
+				"101-500" : "db.m3.large",
+				"501-1000" : "db.m3.xlarge",
+				"1001-2000+" : "db.m3.xlarge"
             },
 			"ap-northeast-2" : {
-                "Oracle" : "db.m4.large"
+                "1-100" : "db.m4.large",
+				"101-500" : "db.m4.large",
+				"501-1000" : "db.m4.xlarge",
+				"1001-2000+" : "db.m4.xlarge"
             }
         }
     },
@@ -224,8 +288,11 @@
 							{
 								"Ref" : "AWS::Region"
 							},
-							"MMS"
-						]				
+							{
+								"Ref" : "ProtectedInstances"
+							},
+							"InstanceType"
+						]		
 					},
 					"DBISubnet1"         : {
                         "Ref" : "DatabaseSubnet1"
@@ -234,7 +301,7 @@
                         "Ref" : "DatabaseSubnet2"
                     },
 					"DBIInstanceIdentifier" : "deep-security",
-					"DSIPLicense"         : "MMS",
+					"DSIPLicense"         : "PerHost",
 					"DBPMultiAZ": "true"
                 }
             }
