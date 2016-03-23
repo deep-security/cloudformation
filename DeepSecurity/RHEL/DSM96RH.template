@@ -725,6 +725,10 @@
                             "1-install-DSM" : {
                                 "command" : "cd /tmp; sh Manager-Linux-9.6.3177.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
                                 "ignoreErrors" : "false"
+                            },
+							
+							"6-install-xml_grep" : {
+                                "command" : "yum -y install perl-XML-Twig"
                             }
                         }
                     },
@@ -773,9 +777,6 @@
 										]
 									]
 								}
-                            },
-							"6-install-xml_grep" : {
-                                "command" : "yum -y install perl-XML-Twig"
                             },
 							"7-set-aia-settings": {
 								"command" : {

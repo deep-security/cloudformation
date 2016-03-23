@@ -872,6 +872,9 @@
 									]
 								},
                                 "ignoreErrors" : "false"
+                            },
+							"6-install-xml_grep" : {
+                                "command" : "yum -y install perl-XML-Twig"
                             }
                         }
                     },
@@ -925,9 +928,6 @@
 										]
 									]
 								}
-                            },
-							"6-install-xml_grep" : {
-                                "command" : "yum -y install perl-XML-Twig"
                             },
 							"7-set-aia-settings": {
 								"command" : {
