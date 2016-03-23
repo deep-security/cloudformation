@@ -3,6 +3,7 @@ bucketname=trend-micro-quick-start
 version=3.1
 url=https://s3.amazonaws.com/${bucketname}/${version}/Common/Scripts/
 cd /etc/cfn/
+curl -O ${url}cfn-rh-sql
 curl -O ${url}createCloudAccount
 curl -O ${url}create-console-listener
 curl -O ${url}create-console-listener-policy

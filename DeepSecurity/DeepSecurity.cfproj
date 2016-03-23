@@ -98,6 +98,9 @@
     <Content Include="Common\Scripts\reactivate-manager-rh">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Common\Scripts\rh-download-helper">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Common\Scripts\set-aiaSettings">
       <SubType>Content</SubType>
     </Content>
