@@ -1,0 +1,13 @@
+[Unit]
+Description=TrendMicro Deep Security Manager
+After=default.target
+
+[Service]
+Type=forking
+ExecStart=/etc/init.d/dsm_s start
+ExecStop=/etc/init.d/dsm_s stop
+TimeoutStartSec=0
+TimeoutStopSec=0
+
+[Install]
+WantedBy=default.target

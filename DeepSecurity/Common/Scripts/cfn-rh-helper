@@ -6,7 +6,7 @@ tar -zxf aws-cfn-bootstrap-latest.tar.gz -C aws-cfn-bootstrap-latest
 easy_install aws-cfn-bootstrap-latest
 easy_install pip
 pip install awscli
-ln -s /etc/cfn/rhel-scripts/aws-cfn-bootstrap-latest/aws-cfn-bootstrap-1.4/init/redhat/cfn-hup /etc/init.d/cfn-hup
+cp /etc/cfn/rhel-scripts/aws-cfn-bootstrap-latest/aws-cfn-bootstrap-1.4/init/redhat/cfn-hup /etc/init.d/cfn-hup
 chmod 775 /etc/cfn/rhel-scripts/aws-cfn-bootstrap-latest/aws-cfn-bootstrap-1.4/init/redhat/cfn-hup
 mkdir -p /opt/aws/bin/
 ln -s /usr/bin/cfn-hup /opt/aws/bin/cfn-hup

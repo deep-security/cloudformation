@@ -89,6 +89,9 @@
     <Content Include="Common\Scripts\createCloudAccount">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Common\Scripts\dsm_s.service">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Common\Scripts\kill-mp-web-installer">
       <SubType>Content</SubType>
     </Content>

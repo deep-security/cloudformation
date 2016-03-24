@@ -188,31 +188,34 @@
     "Mappings"                 : {
         "AWSRegionArch2AMI" : {
             "eu-central-1" : {
-                "64" : "ami-fa0538e7"
+                "64" : "ami-875042eb"
             },
             "sa-east-1"    : {
-                "64" : "ami-81fb409c"
+                "64" : "ami-27b3094b"
             },
             "ap-northeast-1" : {
-                "64" : "ami-67e01667"
+                "64" : "ami-0dd8f963"
             },
+			"ap-northeast-2" : {
+				"64" : "ami-3f03c55c"
+			},
             "eu-west-1"      : {
-                "64" : "ami-837de3f4"
+                "64" : "ami-0dd8f963"
             },
             "us-east-1"      : {
-                "64" : "ami-b0fed2d8"
+                "64" : "ami-8b8c57f8"
             },
             "us-west-1"      : {
-                "64" : "ami-f3a243b7"
+                "64" : "ami-2051294a"
             },
             "us-west-2"      : {
-                "64" : "ami-2faa861f"
+                "64" : "ami-d1315fb1"
             },
             "ap-southeast-2" : {
-                "64" : "ami-e5ec9cdf"
+                "64" : "ami-e0c19f83"
             },
             "ap-southeast-1" : {
-                "64" : "ami-fc98a9ae"
+                "64" : "ami-e0c19f83"
             }
         },
         "TrendRegionMap" : {
@@ -709,6 +712,13 @@
                         }
                     },
                     "installDSM"     : {
+						"files" : {
+							"/etc/systemd/system/dsm_s.service" : {
+								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/dsm_s.service",
+								"owner" : "root",
+								"mode" : "00755"
+							}
+						},
                         "commands" : {
 							"0-sethostnameinprops" : {
                                 "command" : {
@@ -726,7 +736,9 @@
                                 "command" : "cd /tmp; sh Manager-Linux-9.6.3177.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
                                 "ignoreErrors" : "false"
                             },
-							
+							"2-fix-for-systemd" : {
+								"command" : "systemctl daemon-reload; systemctl start dsm_s; systemctl enable dsm_s"
+							},
 							"6-install-xml_grep" : {
                                 "command" : "yum -y install perl-XML-Twig"
                             }
@@ -735,17 +747,17 @@
                     "addCloudAccount" : {
 						"files" : {
 							"/etc/cfn/set-aiaSettings" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/Scripts/set-aiaSettings",
+								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/set-aiaSettings",
 								"owner" : "root",
 								"mode" : "000700"
 							},
 							"/etc/cfn/createCloudAccount" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/Scripts/createCloudAccount",
+								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/createCloudAccount",
 								"owner" : "root",
 								"mode" : "000700"
 							},
 							"/etc/cfn/wait-for-relay-and-stop-manager" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/Scripts/wait-for-relay-and-stop-manager",
+								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/wait-for-relay-and-stop-manager",
 								"owner" : "root",
 								"mode" : "000700"
  							}
@@ -840,7 +852,7 @@
                     "sqlSetup"        : {
                         "commands" : {
                             "1-get-sql-helper" : {
-                                "command" : "cd /etc/cfn/rhel-scripts; wget https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/Scripts/cfn-rh-sql; chmod 775 cfn-rh-sql",
+                                "command" : "cd /etc/cfn/rhel-scripts; curl -O https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/cfn-rh-sql; chmod 775 cfn-rh-sql",
                                 "ignoreErrors" : "false"
                             },
                             "2-run-helper"     : {
@@ -910,12 +922,12 @@
 					"fixManagerLoadBalancerSettings" : {
 						"files" : {
 							"/etc/cfn/create-console-listener" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/Scripts/create-console-listener",
+								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/create-console-listener",
 								"owner" : "root",
 								"mode" : "000700"
 							},
 							"/etc/cfn/set-lbSettings" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/Scripts/set-lbSettings",
+								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/set-lbSettings",
 								"owner" : "root",
 								"mode" : "000700"
 							}
@@ -1038,7 +1050,7 @@
 					"fixManagerHostObject" : {
 						"files" : {
 							"/etc/cfn/reactivate-manager" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/Scripts/reactivate-manager",
+								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/reactivate-manager",
 								"owner" : "root",
 								"mode" : "000700"
 								}
@@ -1109,7 +1121,7 @@
                             [
                                 "#!/bin/bash -xe\n",
                                 "# cloud-init\n",
-                                "wget https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/Scripts/cfn-rh-helper\n",
+                                "curl -O https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/cfn-rh-helper\n",
                                 "sh cfn-rh-helper >> cfn-rh-helper.log\n",
                                 "cfn-init -v ",
                                 " --stack ",
