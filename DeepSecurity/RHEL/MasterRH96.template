@@ -699,7 +699,7 @@
         "DSIELB"              : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https:/s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/DSM96ELB.template",
+                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Common/DSM96ELB.template",
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
