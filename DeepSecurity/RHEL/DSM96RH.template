@@ -209,7 +209,7 @@
                 "64" : "ami-d1315fb1"
             },
             "us-west-2"      : {
-                "64" : " ami-775e4f16"
+                "64" : "ami-775e4f16"
             },
             "ap-southeast-2" : {
                 "64" : "ami-e0c19f83"
@@ -737,7 +737,7 @@
                                 "ignoreErrors" : "false"
                             },
 							"2-fix-for-systemd" : {
-								"command" : "systemctl daemon-reload; systemctl start dsm_s; systemctl enable dsm_s"
+								"command" : "systemctl daemon-reload; systemctl enable dsm_s"
 							},
 							"6-install-xml_grep" : {
                                 "command" : "yum -y install perl-XML-Twig"
