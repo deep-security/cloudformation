@@ -216,7 +216,10 @@
             },
             "ap-southeast-1" : {
                 "64" : "ami-3f03c55c"
-            }
+            },
+			"us-gov-west-1" : {
+				"64" : "ami-299e2248"
+			}
         },
         "TrendRegionMap" : {
             "us-east-1" : {
@@ -362,7 +365,7 @@
                                                 "Fn::Join" : [
                                                     "",
                                                     [
-                                                        "arn:aws:elasticloadbalancing:",
+                                                        "arn:aws-us-gov:elasticloadbalancing:",
                                                         {
                                                             "Ref" : "AWS::Region"
                                                         },
@@ -390,7 +393,7 @@
                                                 "Fn::Join" : [
                                                     "",
                                                     [
-                                                        "arn:aws:elasticloadbalancing:",
+                                                        "arn:aws-us-gov:elasticloadbalancing:",
                                                         {
                                                             "Ref" : "AWS::Region"
                                                         },
@@ -416,7 +419,7 @@
                                                 "Fn::Join" : [
                                                     "",
                                                     [
-                                                        "arn:aws:iam::",
+                                                        "arn:aws-us-gov:iam::",
                                                         {
                                                             "Ref" : "AWS::AccountId"
                                                         },
@@ -714,7 +717,7 @@
                     "installDSM"     : {
 						"files" : {
 							"/etc/systemd/system/dsm_s.service" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/dsm_s.service",
+								"source" : "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/dsm_s.service",
 								"owner" : "root",
 								"mode" : "00755"
 							}
@@ -747,17 +750,17 @@
                     "addCloudAccount" : {
 						"files" : {
 							"/etc/cfn/set-aiaSettings" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/set-aiaSettings",
+								"source" : "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/set-aiaSettings",
 								"owner" : "root",
 								"mode" : "000700"
 							},
 							"/etc/cfn/createCloudAccount" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/createCloudAccount",
+								"source" : "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/createCloudAccountGc",
 								"owner" : "root",
 								"mode" : "000700"
 							},
 							"/etc/cfn/wait-for-relay-and-stop-manager" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/wait-for-relay-and-stop-manager",
+								"source" : "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/wait-for-relay-and-stop-manager",
 								"owner" : "root",
 								"mode" : "000700"
  							}
@@ -852,7 +855,7 @@
                     "sqlSetup"        : {
                         "commands" : {
                             "1-get-sql-helper" : {
-                                "command" : "cd /etc/cfn/rhel-scripts; curl -O https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/cfn-rh-sql; chmod 775 cfn-rh-sql",
+                                "command" : "cd /etc/cfn/rhel-scripts; curl -O https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/cfn-rh-sql; chmod 775 cfn-rh-sql",
                                 "ignoreErrors" : "false"
                             },
                             "2-run-helper"     : {
@@ -922,12 +925,12 @@
 					"fixManagerLoadBalancerSettings" : {
 						"files" : {
 							"/etc/cfn/create-console-listener" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/create-console-listener",
+								"source" : "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/create-console-listener",
 								"owner" : "root",
 								"mode" : "000700"
 							},
 							"/etc/cfn/set-lbSettings" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/set-lbSettings",
+								"source" : "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/set-lbSettings",
 								"owner" : "root",
 								"mode" : "000700"
 							}
@@ -1050,7 +1053,7 @@
 					"fixManagerHostObject" : {
 						"files" : {
 							"/etc/cfn/reactivate-manager" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/reactivate-manager",
+								"source" : "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/reactivate-manager",
 								"owner" : "root",
 								"mode" : "000700"
 								}
@@ -1121,7 +1124,7 @@
                             [
                                 "#!/bin/bash -xe\n",
                                 "# cloud-init\n",
-                                "curl -O https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/cfn-rh-helper\n",
+                                "curl -O https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v3.2/Common/Scripts/cfn-rh-helper\n",
                                 "sh cfn-rh-helper >> cfn-rh-helper.log\n",
                                 "cfn-init -v ",
                                 " --stack ",

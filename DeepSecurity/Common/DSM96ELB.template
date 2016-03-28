@@ -47,7 +47,7 @@
         "ELBSG" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/SecurityGroups/DSELBSG.template",
+                "TemplateURL" : "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v3.2/Common/SecurityGroups/DSELBSG.template",
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"

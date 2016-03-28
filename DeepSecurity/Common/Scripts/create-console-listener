@@ -4,7 +4,7 @@
 if [ $5 -eq 1 ]; then
   openssl req -nodes -new -sha256 -newkey rsa:2048 -subj '/CN='DeepSecurityManager'/O=Trend Micro/OU=Deep Security Manager' -keyout /etc/cfn/privatekey -out /etc/cfn/csr;
   openssl x509 -req -days 3650 -in /etc/cfn/csr -signkey /etc/cfn/privatekey -out /etc/cfn/certificatebody;
-  aws iam upload-server-certificate --server-certificate-name DeepSecurityElbCertificate-$4 --certificate-body file:///etc/cfn/certificatebody --private-key file:///etc/cfn/privatekey
+  aws iam upload-server-certificate --server-certificate-name DeepSecurityElbCertificate-$4 --certificate-body file:///etc/cfn/certificatebody --private-key file:///etc/cfn/privatekey --region $6
 fi
 
 loop=1
@@ -15,7 +15,7 @@ do
   if [ $loop -eq 1 ]; then echo 'checking for cert availability in iam'; else echo 'cert not yet available in iam'; fi
   loop=$((loop+1))
   sleep 10
-  certid=$(aws iam get-server-certificate --server-certificate-name DeepSecurityElbCertificate-$4 --query ServerCertificate.ServerCertificateMetadata.Arn --output text)
+  certid=$(aws iam get-server-certificate --server-certificate-name DeepSecurityElbCertificate-$4 --query ServerCertificate.ServerCertificateMetadata.Arn --region $6 --output text)
 done
 
 loadbalancer=" "
