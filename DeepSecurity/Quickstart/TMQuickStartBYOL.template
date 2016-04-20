@@ -27,7 +27,7 @@
 				"DatabaseSubnet1" : { "default" : "Primary private subnet for RDS" },
 				"DatabaseSubnet2" : { "default" : "Secondary private subnet for RDS" },
 				"DatabaseEngine" : { "default" : "Choose the backend database" },
-				"DatabaseInstanceID" : { "default" : "RDS Instance ID" },
+				"DatabaseInstanceId" : { "default" : "RDS Instance ID" },
 				"DatabaseAdminName" : { "default" : "Administrator username for RDS Instance" },
 				"DatabaseAdminPassword" : { "default" : "Administrator password for RDS Instance" },
 				"LicenseKey" : { "default" : "Deep Security License Key. May be left default to enter key after deployment" }
