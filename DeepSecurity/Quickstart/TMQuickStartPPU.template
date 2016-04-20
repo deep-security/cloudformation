@@ -1,7 +1,32 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
     "Description"              : "v2 Quick Start that deploys Trend Micro Deep Security into an exisintg VPC with a Multi-AZ Oracle RDS instance  **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
-    "Parameters"               : {
+        "Metadata" : {
+		"AWS::CloudFormation::Interface" : {
+			"ParameterGroups" : [
+				{
+					"Label" : { "default" : "Deep Security Manager Configuration" },
+					"Parameters" : [ "DeepSecurityAdminName", "DeepSecurityAdminPass", "AWSKeyPairName", "ProtectedInstances" ]
+				},
+				{
+					"Label" : { "default" : "Network Configuration" },
+					"Parameters" : [ "AWSVPC", "DeepSecuritySubnet", "DatabaseSubnet1", "DatabaseSubnet2" ]
+				}
+
+			],
+			"ParameterLabels" : {
+				"AWSKeyPairName" : { "default" : "EC2 Key Pair for SSH access" },
+				"AWSVPC" : { "default" : "VPC for Deep Security Components" },
+				"DeepSecuritySubnet" : { "default" : "Public Subnet for Deep Security Managers" },
+				"DeepSecurityAdminName" : { "default" : "Administrator username for Deep Security" },
+				"DeepSecurityAdminPass" : { "default" : "Administrator password for Deep Security" },
+				"DatabaseSubnet1" : { "default" : "Primary private subnet for RDS" },
+				"DatabaseSubnet2" : { "default" : "Secondary private subnet for RDS" },
+				"ProtectedInstances" : { "default" : "Number of instances you expect to protect with Deep Security Agents" }
+			}
+		}
+	},
+	"Parameters"               : {
         "AWSKeyPairName" : {
             "Description" : "Select an existing key pair to use for connecting to your Deep Security Manager Instance.",
             "Type"        : "AWS::EC2::KeyPair::KeyName",
@@ -193,7 +218,7 @@
         "MasterMP96" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.1/Marketplace/MasterMP96.template",
+                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Marketplace/MasterMP96.template",
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSKeyPairName"

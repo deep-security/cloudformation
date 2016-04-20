@@ -122,7 +122,7 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "DBTypeIsOracle",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/DB/DSDBOracleRDS.template",
+                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/DB/DSDBOracleRDS.template",
                 "TimeoutInMinutes" : "10",
                 "Parameters"       : {
                     "DBIRDSInstanceSize" : {
@@ -156,7 +156,7 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "DBTypeIsSQL",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.2/Common/DB/DSDBSQLRDS.template",
+                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/DB/DSDBSQLRDS.template",
                 "TimeoutInMinutes" : "10",
                 "Parameters"       : {
                     "DBIRDSInstanceSize" : {
