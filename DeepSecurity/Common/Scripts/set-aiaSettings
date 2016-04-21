@@ -34,13 +34,13 @@ curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "systemSett
 '</soapenv:Body>'\
 '</soapenv:Envelope'\>
 
-## get Deep Security Manager policyId
+## get Base Policy policyId
 policyid=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileRetrieveByName"' "https://${manager}/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:securityProfileRetrieveByName><urn:name>Base Policy</urn:name><urn:sID>'${SID}'</urn:sID></urn:securityProfileRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)
 
 echo -e "policyid for Deep Security Manager Policy is $policyid\n" >> aiaSettings.log
 
 ## Set Communication Direction to Agent Initated on Base Policy
-    curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileSettingGet"' "https://${manager}/webservice/Manager" -d \
+    curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileSettingSet"' "https://${manager}/webservice/Manager" -d \
 '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
 '<soapenv:Header/>'\
 '<soapenv:Body>'\
@@ -56,5 +56,29 @@ echo -e "policyid for Deep Security Manager Policy is $policyid\n" >> aiaSetting
 '</soapenv:Body>'\
 '</soapenv:Envelope>'
 
+## get Deep Security Virtual Appliance policyId
+policyid=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileRetrieveByName"' "https://${manager}/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:securityProfileRetrieveByName><urn:name>Deep Security Virtual Appliance</urn:name><urn:sID>'${SID}'</urn:sID></urn:securityProfileRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)
+
+echo -e "policyid for Deep Security Virtual Appliance Policy is $policyid\n" >> aiaSettings.log
+
+## Set Communication Direction to Bi-directional on DSVA policy
+    curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileSettingSet"' "https://${manager}/webservice/Manager" -d \
+'<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
+'<soapenv:Header/>'\
+'<soapenv:Body>'\
+'<urn:securityProfileSettingSet>'\
+'<urn:securityProfileID>'${policyid}'</urn:securityProfileID>'\
+'<urn:editableSettings>'\
+'<urn:settingKey>CONFIGURATION_AGENTCOMMUNICATIONS</urn:settingKey>'\
+'<urn:settingUnit>NONE</urn:settingUnit>'\
+'<urn:settingValue>3</urn:settingValue>'\
+'</urn:editableSettings>'\
+'<urn:sID>'${SID}'</urn:sID>'\
+'</urn:securityProfileSettingSet>'\
+'</soapenv:Body>'\
+'</soapenv:Envelope>'
 
 
+## log out
+curl -k -X DELETE https://localhost:$3/rest/authentication/logout?sID="$SID"
+exit 

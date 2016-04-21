@@ -101,9 +101,31 @@ curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostSettin
 ## assign Deep Security Manager Policy to that hostId
     curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileAssignToHost"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:securityProfileAssignToHost><urn:securityProfileID>'$policyid'</urn:securityProfileID><urn:hostIDs>'$public_hostId'</urn:hostIDs><urn:sID>'$SID'</urn:sID></urn:securityProfileAssignToHost></soapenv:Body></soapenv:Envelope>'>>mgract.log
 
+## reset agent because current securityProfile is AIC
+    /opt/ds_agent/dsa_control -r
+
 ## activate that hostId
     curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostAgentActivate"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostAgentActivate><urn:ids>'$public_hostId'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostAgentActivate></soapenv:Body></soapenv:Envelope>'>>mgract.log
     echo -e "\n" >> mgract.log
+    echo -e "enable relay" >> mgract.log
+    echo -e "\n" >> mgract.log
+## enable relay for this agent
+    curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostSettingSet"' "https://localhost:$3/webservice/Manager" -d \
+'<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
+'<soapenv:Header/>'\
+'<soapenv:Body>'\
+'<urn:hostSettingSet>'\
+'<urn:hostID>'$public_hostId'</urn:hostID>'\
+'<urn:editableSettings>'\
+'<urn:settingKey>CONFIGURATION_RELAYSTATE</urn:settingKey>'\
+'<urn:settingUnit>NONE</urn:settingUnit>'\
+'<urn:settingValue>true</urn:settingValue>'\
+'</urn:editableSettings>'\
+'<urn:sID>'${SID}'</urn:sID>'\
+'</urn:hostSettingSet>'\
+'</soapenv:Body>'\
+'</soapenv:Envelope>' >>mgract.log
+
 esac
 
 ## log out
