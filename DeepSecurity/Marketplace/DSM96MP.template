@@ -200,7 +200,7 @@
     "Mappings"                 : {
         "DSMAMI" : {
 			"us-east-1" : {
-				"PerHost" : "ami-a71904cd",
+				"PerHost" : "ami-096e7463",
                 "BYOL" : "ami-ed213e87",
                 "25"   : "ami-9d203ff7",
                 "50"   : "ami-9d203ff7",
@@ -215,7 +215,7 @@
                 "200"  : "ami-a0b4cbc0"
             },
             "us-west-2" : {
-				"PerHost"  : "ami-d956a1b9",
+				"PerHost"  : "ami-27a95947",
                 "BYOL" : "ami-8a3dcbea",
                 "25"   : "ami-853dcbe5",
                 "50"   : "ami-853dcbe5",
