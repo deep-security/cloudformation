@@ -347,10 +347,17 @@
 					"us-west-2"
 				]
 		},
+		"RegionIsEuWest1" : {
+			"Fn::Equals" : [
+					{ "Ref" : "AWS::Region" },
+					"eu-west-1"
+				]
+		},
 		"PerHostSupportedRegion"	: {
 			"Fn::Or" : [
 				{ "Condition" : "RegionIsWest2" },
-				{ "Condition" : "RegionIsEast1" }
+				{ "Condition" : "RegionIsEast1" },
+				{ "Condition" : "RegionIsEuWest1" }
 			]
 		}
 	},
