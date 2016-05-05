@@ -223,6 +223,7 @@
                 "200"  : "ami-853dcbe5"
             },
             "eu-west-1" : {
+				"PerHost" : "ami-0329a670",
                 "BYOL" : "ami-ab119cd8",
                 "25"   : "ami-96139ee5",
                 "50"   : "ami-96139ee5",
@@ -713,7 +714,7 @@
                     "prepDSMInstall" : {
                         "files" : {
                             "/opt/trend/packages/dsm/default/Agent-amzn1-9.6.2-5027.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-amzn1-9.6.2-5027.x86_64.zip",
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-amzn1-9.6.2-5451.x86_64.zip",
                                 "owner"  : "root",
                                 "mode"   : "000600"
                             },
