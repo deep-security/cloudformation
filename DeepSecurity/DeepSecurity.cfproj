@@ -63,6 +63,9 @@
     <Compile Include="Quickstart\TMQuickStartPPU.template">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Quickstart\TMQuickStartRHEL.template">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="RHEL\DSM96RH.template">
       <SubType>Code</SubType>
     </Compile>

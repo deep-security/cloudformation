@@ -844,6 +844,26 @@
                     ]
                 ]
             }
-        }
+        },
+		"DeepSecurityHeartbeat" : {
+			"Value" : {
+				"Fn::Join" : [
+					"",[
+						"dsm://",
+						{
+							"Fn::GetAtt" : [
+								"DSIELB",
+								"Outputs.ELBFQDN"
+							]
+						},
+						":",
+						{
+							"Ref" : "DSIPHeartbeatPort"
+						},
+						"/"
+					]
+				]
+			}
+		}
     }
 }
