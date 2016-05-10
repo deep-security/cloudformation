@@ -876,22 +876,22 @@
                     "addCloudAccount" : {
 						"files" : {
 							"/etc/cfn/set-aiaSettings" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/set-aiaSettings",
+								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/Scripts/set-aiaSettings",
 								"owner" : "root",
 								"mode" : "000700"
 							},
 							"/etc/cfn/createCloudAccount" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/createCloudAccount",
+								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/Scripts/createCloudAccount",
 								"owner" : "root",
 								"mode" : "000700"
 							},
 							"/etc/cfn/wait-for-relay-and-stop-manager" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/wait-for-relay-and-stop-manager",
+								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/Scripts/wait-for-relay-and-stop-manager",
 								"owner" : "root",
 								"mode" : "000700"
  							},
 							"/etc/cfn/kill-mp-web-installer" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/kill-mp-web-installer",
+								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/Scripts/kill-mp-web-installer",
 								"owner" : "root",
 								"mode" : "000700"
 							}
@@ -989,7 +989,7 @@
                     "sqlSetup"        : {
                         "commands" : {
                             "1-get-create-script" : {
-                                "command" : "cd /etc/cfn/rhel-scripts; curl -O https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/create-DSM-SqlDB.py; chmod 755 create-DSM-SqlDB.py",
+                                "command" : "cd /etc/cfn/rhel-scripts; curl -O https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/Scripts/create-DSM-SqlDB.py; chmod 755 create-DSM-SqlDB.py",
                                 "ignoreErrors" : "false"
                             },
                             "2-create-db"         : {
@@ -1063,12 +1063,12 @@
                     "fixManagerLoadBalancerSettings" : {
 							"files" : {
 								"/etc/cfn/create-console-listener" : {
-									"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/create-console-listener",
+									"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/Scripts/create-console-listener",
 									"owner" : "root",
 									"mode" : "000700"
 								},
 								"/etc/cfn/set-lbSettings" : {
-									"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/set-lbSettings",
+									"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/Scripts/set-lbSettings",
 									"owner" : "root",
 									"mode" : "000700"
 								}
@@ -1191,7 +1191,7 @@
                     "fixManagerHostObject"                 : {
                         "files" : {
                             "/etc/cfn/reactivate-manager" : {
-                                "source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/reactivate-manager",
+                                "source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/Scripts/reactivate-manager",
                                 "owner"  : "root",
                                 "mode"   : "000700"
                             }
