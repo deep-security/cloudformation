@@ -25,15 +25,6 @@
             "Default"     : "4119",
             "ConstraintDescription" : "Must be a valid TCP port."
         },
-        "DSELBPosture"      : {
-            "Description" : "Internal or External ELB",
-            "Type"        : "String",
-            "AllowedValues" : [
-                "External",
-                "Internal"
-            ],
-            "Default"       : "External"
-        },
         "DSISubnetID"       : {
             "Description" : "Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
             "Type"        : "String",
@@ -78,13 +69,7 @@
                         ]
                     }
                 ],
-                "Scheme"         : {
-                    "Fn::If" : [
-                        "InternetFacingELB",
-                        "internet-facing",
-                        "internal"
-                    ]
-                },
+                "Scheme"         : "internet-facing",
                 "Listeners"      : [
                     {
                         "LoadBalancerPort" : {
@@ -174,16 +159,6 @@
                     "Timeout"            : "5"
                 }
             }
-        }
-    },
-    "Conditions"               : {
-        "InternetFacingELB" : {
-            "Fn::Equals" : [
-                {
-                    "Ref" : "DSELBPosture"
-                },
-                "External"
-            ]
         }
     },
     "Outputs"                  : {

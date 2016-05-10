@@ -10,7 +10,7 @@
 				},
 				{
 					"Label" : { "default" : "Network Configuration" },
-					"Parameters" : [ "AWSIVPC", "DSISubnetID", "DBISubnet1", "DBISubnet2" ]
+					"Parameters" : [ "AWSIVPC", "DSISubnetID", "DBISubnet1", "DBISubnet2", "DSELBPosture" ]
 				},
 				{
 					"Label" : { "default" : "Database Configuration" },
@@ -41,7 +41,8 @@
 				"DBISubnet1" : { "default" : "Primary private subnet for RDS" },
 				"DBISubnet2" : { "default" : "Secondary private subnet for RDS" },
 				"DBIInstanceIdentifier" : { "default" : "Unique RDS Instance ID" },
-				"DBPMultiAZ" : { "default" : "Single- or Multi- AZ RDS instance" }
+				"DBPMultiAZ" : { "default" : "Single- or Multi- AZ RDS instance" },
+				"DSELBPosture" : { "default" : "Use internal or external ELB" }
 			}
 		}
 	},
@@ -263,7 +264,16 @@
                 "false"
                 ],
             "Default" : "false"
-            }
+            },
+		"DSELBPosture" : {
+			"Description" : "Use internal or external ELB",
+			"Type" : "String",
+			"AllowedValues" : [
+				"External",
+				"Internal"
+				],
+			"Default" : "External"
+			}
     },
     "Resources"                : {
         "DSM96Node1" : {
@@ -355,6 +365,9 @@
 							"DSIELB",
 							"Outputs.PrivateELBFQDN"
 							]
+					},
+					"DSELBPosture" : {
+						"Ref" : "DSELBPosture"
 					}
                 }
             }
@@ -528,6 +541,9 @@
 							"DSIELB",
 							"Outputs.PrivateELBFQDN"
 							]
+					},
+					"DSELBPosture" : {
+						"Ref" : "DSELBPosture"
 					}
                 }
             }
@@ -710,7 +726,6 @@
                     "DSIPGUIPort"       : {
                         "Ref" : "DSIPGUIPort"
                     },
-                    "DSELBPosture"      : "External",
                     "DSISubnetID"       : {
                         "Ref" : "DSISubnetID"
                     }
@@ -822,6 +837,14 @@
                     "Condition" : "DoNotLaunchRDSInstance"
                 }
             ]
+        },
+		"InternetFacingELB" : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DSELBPosture"
+                },
+                "External"
+            ]
         }
     },
     "Outputs"                  : {
@@ -848,13 +871,25 @@
 		"DeepSecurityHeartbeat" : {
 			"Value" : {
 				"Fn::Join" : [
-					"",[
-						"dsm://",
-						{
-							"Fn::GetAtt" : [
-								"DSIELB",
-								"Outputs.ELBFQDN"
-							]
+					"",
+					[
+					"dsm://",
+						{ 
+							"Fn::If" : [
+								"InternetFacingELB",
+									{
+										"Fn::GetAtt" : [
+										"DSIELB",
+										"Outputs.ELBFQDN"
+										]
+									},
+									{
+										"Fn::GetAtt" : [
+										"DSIELB",
+										"Outputs.PrivateELBFQDN"
+										]
+									}
+								]
 						},
 						":",
 						{

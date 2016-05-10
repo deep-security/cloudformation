@@ -183,6 +183,15 @@
 		"PrivateDSIELB" : {
 			"Type" : "String",
 			"Default" : ""
+			},
+		"DSELBPosture" : {
+			"Description" : "Use internal or external ELB",
+			"Type" : "String",
+			"AllowedValues" : [
+				"External",
+				"Internal"
+				],
+			"Default" : "External"
 			}
     },
     "Mappings"                 : {
@@ -999,7 +1008,13 @@
 											" ",
 											{ "Ref" : "DSCAdminPassword" },
 											" ",
-											{ "Ref" : "DSIELBFQDN" },
+											{
+												"Fn::If" : [
+													"InternetFacingELB",
+													{ "Ref" : "DSIELBFQDN" },
+													{ "Ref" : "PrivateDSIELBFQDN" }
+													]
+											},
 											" ",
 											{ "Ref" : "DSIPGUIPort" },
 											" ",
@@ -1285,7 +1300,15 @@
 				{ "Condition" : "IsFirstNode" },
 				{ "Condition" : "AddToELB" }
 			]
-		}
+		},
+		"InternetFacingELB" : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DSELBPosture"
+                },
+                "External"
+            ]
+        }
     },
     "Outputs"                  : {
         "DSMFQDN" : {
