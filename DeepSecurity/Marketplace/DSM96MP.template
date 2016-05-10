@@ -722,17 +722,7 @@
                     },
                     "prepDSMInstall" : {
                         "files" : {
-                            "/opt/trend/packages/dsm/default/Agent-amzn1-9.6.2-5027.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-amzn1-9.6.2-5451.x86_64.zip",
-                                "owner"  : "root",
-                                "mode"   : "000600"
-                            },
-                            "/opt/trend/packages/dsm/default/KernelSupport-amzn1-9.6.2-5312.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-amzn1-9.6.2-5312.x86_64.zip",
-                                "owner"  : "root",
-                                "mode"   : "000600"
-                            },
-                            "/opt/trend/packages/dsm/default/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip"    : {
+							"/opt/trend/packages/dsm/default/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip"    : {
                                 "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip",
                                 "owner"  : "root",
                                 "mode"   : "000600"
