@@ -225,7 +225,10 @@
             },
             "ap-southeast-1" : {
                 "64" : "ami-3f03c55c"
-            }
+            },
+			"us-gov-west-1" : {
+				"64" : "ami-299e2248"
+			}
         },
         "TrendRegionMap" : {
             "us-east-1" : {
