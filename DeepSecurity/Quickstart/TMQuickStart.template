@@ -241,6 +241,11 @@
 			"1001-2000" : {
 				"Size" : "4"
 			}
+		},
+		"Parameters" : {
+			"CfnUrlPrefix" : {
+				"Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/"
+			}
 		}
     },
     "Resources"                : {
@@ -248,7 +253,15 @@
             "Type" : "AWS::CloudFormation::Stack",
 			"Condition" : "PerHostSupportedRegion",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Marketplace/MasterMP96.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "Prefix" ] },
+							"Marketplace/MasterMP96.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSKeyPairName"

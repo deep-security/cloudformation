@@ -254,13 +254,33 @@
 			"1001-2000" : {
 				"Size" : "4"
 			}
+		},
+		"Parameters" : {
+			"CfnUrlPrefix" : {
+				"CommericalPrefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/",
+				"GovCloudPrefix" : "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v3.4/"
+			}
 		}
     },
     "Resources"                : {
         "MasterRH96" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/RHEL/MasterRH96.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{
+								"Fn::If" : [
+									"RegionIsUsGovWest1",
+									{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "CommericalPrefix" ] },
+									{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "GovCloudPrefix" ] }
+								]
+							},
+							"RHEL/MasterRH96.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSKeyPairName"
@@ -345,6 +365,14 @@
             }
         }
     },
+	"Conditions" : {
+		"RegionIsUsGovWest1" : {
+			"Fn::Equals" : [
+				{ "Ref" : "AWS::Region" },
+				"us-gov-west-1"
+			]
+		}
+	},
 	"Outputs"                  : {
         "DeepSecurityConsole" : {
             "Value" : {

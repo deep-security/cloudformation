@@ -115,14 +115,26 @@
             "Description" : "Choose private subnets in the same VPC for this RDS instance",
             "Type"        : "AWS::EC2::Subnet::Id",
             "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template"
-        }
+        },
+		"CfnUrlPrefix" : {
+			"Type" : "String",
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/"
+		}
     },
     "Resources"                : {
         "DSOracleRDS" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "DBTypeIsOracle",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/DB/DSDBOracleRDS.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Common/DB/DSDBOracleRDS.template"
+						]
+					]
+				},
                 "TimeoutInMinutes" : "10",
                 "Parameters"       : {
                     "DBIRDSInstanceSize" : {
@@ -156,7 +168,15 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "DBTypeIsSQL",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/DB/DSDBSQLRDS.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Common/DB/DSDBSQLRDS.template"
+						]
+					]
+				},
                 "TimeoutInMinutes" : "10",
                 "Parameters"       : {
                     "DBIRDSInstanceSize" : {

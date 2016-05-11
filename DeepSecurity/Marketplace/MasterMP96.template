@@ -289,7 +289,11 @@
 				"Internal"
 				],
 			"Default" : "External"
-			}
+			},
+		"CfnUrlPrefix" : {
+			"Type" : "String",
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/"
+		}
     },
     "Mappings"                 : {
         "DSMNodeDependency" : {
@@ -316,7 +320,15 @@
             ],
             "Condition" : "LaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Marketplace/DSM96MP.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Marketplace/DSM96MP.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -403,7 +415,8 @@
 					},
 					"DSELBPosture" : {
 						"Ref" : "DSELBPosture"
-					}
+					},
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
         },
@@ -415,7 +428,15 @@
             ],
             "Condition" : "DSM96Node2DB",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Marketplace/DSM96MP.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Marketplace/DSM96MP.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -490,7 +511,8 @@
 							"DSIELB",
 							"Outputs.PrivateELBFQDN"
 							]
-					}
+					},
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
         },
@@ -501,7 +523,15 @@
             ],
             "Condition" : "DoNotLaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Marketplace/DSM96MP.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Marketplace/DSM96MP.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -585,7 +615,8 @@
 					},
 					"DSELBPosture" : {
 						"Ref" : "DSELBPosture"
-					}
+					},
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
         },
@@ -594,7 +625,15 @@
             "DependsOn" : "DSM1NoDBCompleteWaitCondition",
             "Condition" : "DSM96Node2NoDB",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Marketplace/DSM96MP.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Marketplace/DSM96MP.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -666,7 +705,8 @@
 							"DSIELB",
 							"Outputs.PrivateELBFQDN"
 							]
-					}
+					},
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
         },
@@ -675,7 +715,15 @@
             "Condition" : "LaunchRDSInstance",
             "DependsOn" : "DSIRDSSecurityGroup",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/DB/DSDBAbstract.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Common/DB/DSDBAbstract.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "DBPName" : {
                         "Ref" : "DBPName"
@@ -714,7 +762,8 @@
                     },
                     "DBISubnet2"            : {
                         "Ref" : "DBISubnet2"
-                    }
+                    },
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
         },
@@ -722,7 +771,15 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "LaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/SecurityGroups/RDSSecurityGroup.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Common/SecurityGroups/RDSSecurityGroup.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -742,7 +799,15 @@
         "DSIDSMSecurityGroup" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/SecurityGroups/DSMSecurityGroup.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Common/SecurityGroups/DSMSecurityGroup.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -759,7 +824,15 @@
         "DSIELB"              : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/DSM96ELB.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Common/DSM96ELB.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -772,14 +845,23 @@
                     },
                     "DSISubnetID"       : {
                         "Ref" : "DSISubnetID"
-                    }
+                    },
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
         },
         "DSIDSMSecurityGroupIngressRules" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Common/SecurityGroups/DSMSGIngressRules.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Common/SecurityGroups/DSMSGIngressRules.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "DSMSG" : {
                         "Fn::GetAtt" : [

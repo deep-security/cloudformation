@@ -247,13 +247,26 @@
                 "Oracle" : "true",
 				"MSSQL" : "false"
             }
-        }
+        },
+		"Parameters" : {
+			"CfnUrlPrefix" : {
+				"Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/"
+			}
+		}
     },
     "Resources"                : {
         "MasterMP96" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/Marketplace/MasterMP96.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "Prefix" ] },
+							"Marketplace/MasterMP96.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSKeyPairName"
