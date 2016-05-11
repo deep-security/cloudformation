@@ -882,24 +882,6 @@
                 }
             ]
         },
-		"RegionIsEast1" : {
-			"Fn::Equals" : [
-					{ "Ref" : "AWS::Region" },
-					"us-east-1"
-				]
-		},
-		"RegionIsWest2" : {
-			"Fn::Equals" : [
-					{ "Ref" : "AWS::Region" },
-					"us-west-2"
-				]
-		},
-		"PerHostSupportedRegion"	: {
-			"Fn::Or" : [
-				{ "Condition" : "RegionIsWest2" },
-				{ "Condition" : "RegionIsEast1" }
-			]
-		},
 		"InternetFacingELB" : {
             "Fn::Equals" : [
                 {
