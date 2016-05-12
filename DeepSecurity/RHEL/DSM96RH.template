@@ -183,7 +183,20 @@
 		"PrivateDSIELB" : {
 			"Type" : "String",
 			"Default" : ""
-			}
+			},
+		"DSELBPosture" : {
+			"Description" : "Use internal or external ELB",
+			"Type" : "String",
+			"AllowedValues" : [
+				"External",
+				"Internal"
+				],
+			"Default" : "External"
+			},
+		"CfnUrlPrefix" : {
+			"Type" : "String",
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/"
+		}
     },
     "Mappings"                 : {
         "AWSRegionArch2AMI" : {
@@ -216,7 +229,10 @@
             },
             "ap-southeast-1" : {
                 "64" : "ami-3f03c55c"
-            }
+            },
+			"us-gov-west-1" : {
+				"64" : "ami-299e2248"
+			}
         },
         "TrendRegionMap" : {
             "us-east-1" : {
@@ -362,7 +378,13 @@
                                                 "Fn::Join" : [
                                                     "",
                                                     [
-                                                        "arn:aws:elasticloadbalancing:",
+														{
+															"Fn::If" : [
+																"RegionIsUsGovWest1",
+																"arn:aws-us-gov:elasticloadbalancing",
+																"arn:aws:elasticloadbalancing:"
+															]
+														},
                                                         {
                                                             "Ref" : "AWS::Region"
                                                         },
@@ -390,7 +412,13 @@
                                                 "Fn::Join" : [
                                                     "",
                                                     [
-                                                        "arn:aws:elasticloadbalancing:",
+                                                        {
+															"Fn::If" : [
+																"RegionIsUsGovWest1",
+																"arn:aws-us-gov:elasticloadbalancing",
+																"arn:aws:elasticloadbalancing:"
+															]
+														},
                                                         {
                                                             "Ref" : "AWS::Region"
                                                         },
@@ -416,7 +444,13 @@
                                                 "Fn::Join" : [
                                                     "",
                                                     [
-                                                        "arn:aws:iam::",
+														{
+															"Fn::If" : [
+																"RegionIsUsGovWest1",
+																"arn:aws-us-gov:iam::",
+																"arn:aws:iam::"
+															]
+														},
                                                         {
                                                             "Ref" : "AWS::AccountId"
                                                         },
@@ -714,7 +748,15 @@
                     "installDSM"     : {
 						"files" : {
 							"/etc/systemd/system/dsm_s.service" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/dsm_s.service",
+								"source" : {
+									"Fn::Join" : [
+										"",
+										[
+											{ "Ref" : "CfnUrlPrefix" },
+											"Common/Scripts/dsm_s.service"
+										]
+									]
+								},
 								"owner" : "root",
 								"mode" : "00755"
 							}
@@ -747,17 +789,47 @@
                     "addCloudAccount" : {
 						"files" : {
 							"/etc/cfn/set-aiaSettings" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/set-aiaSettings",
+								"source" : {
+									"Fn::Join" : [
+										"",
+										[
+											{ "Ref" : "CfnUrlPrefix" },
+											"Common/Scripts/set-aiaSettings"
+										]
+									]
+								},
 								"owner" : "root",
 								"mode" : "000700"
 							},
 							"/etc/cfn/createCloudAccount" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/createCloudAccount",
+								"source" : {
+									"Fn::Join" : [
+										"",
+										[
+											{ "Ref" : "CfnUrlPrefix" },
+											{
+												"Fn::If" : [
+													"RegionIsUsGovWest1",
+													"Common/Scripts/createCloudAccount",
+													"Common/Scripts/createCloudAccountGc"
+												]
+											}
+										]
+									]
+								},
 								"owner" : "root",
 								"mode" : "000700"
 							},
 							"/etc/cfn/wait-for-relay-and-stop-manager" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/wait-for-relay-and-stop-manager",
+								"source" : {
+									"Fn::Join" : [
+										"",
+										[
+											{ "Ref" : "CfnUrlPrefix" },
+											"Common/Scripts/wait-for-relay-and-stop-manager"
+										]
+									]
+								},
 								"owner" : "root",
 								"mode" : "000700"
  							}
@@ -852,8 +924,17 @@
                     "sqlSetup"        : {
                         "commands" : {
                             "1-get-sql-helper" : {
-                                "command" : "cd /etc/cfn/rhel-scripts; curl -O https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/cfn-rh-sql; chmod 775 cfn-rh-sql",
-                                "ignoreErrors" : "false"
+                                "command" : {
+									"Fn::Join" : [
+									"",
+										[								
+											"cd /etc/cfn/rhel-scripts; curl -O ",
+											{ "Ref" : "CfnUrlPrefix" },
+											"Common/Scripts/cfn-rh-sql; chmod 775 cfn-rh-sql"
+										]
+									]
+								},
+								"ignoreErrors" : "false"
                             },
                             "2-run-helper"     : {
                                 "command" : "cd /etc/cfn/rhel-scripts; sh cfn-rh-sql",
@@ -922,12 +1003,28 @@
 					"fixManagerLoadBalancerSettings" : {
 						"files" : {
 							"/etc/cfn/create-console-listener" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/create-console-listener",
+								"source" : {
+									"Fn::Join" : [
+										"",
+										[
+											{ "Ref" : "CfnUrlPrefix" },
+											"Common/Scripts/create-console-listener"
+										]
+									]
+								},
 								"owner" : "root",
 								"mode" : "000700"
 							},
 							"/etc/cfn/set-lbSettings" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/set-lbSettings",
+								"source" : {
+									"Fn::Join" : [
+										"",
+										[
+											{ "Ref" : "CfnUrlPrefix" },
+											"Common/Scripts/set-lbSettings"
+										]
+									]
+								},
 								"owner" : "root",
 								"mode" : "000700"
 							}
@@ -999,7 +1096,13 @@
 											" ",
 											{ "Ref" : "DSCAdminPassword" },
 											" ",
-											{ "Ref" : "DSIELBFQDN" },
+											{
+												"Fn::If" : [
+													"InternetFacingELB",
+													{ "Ref" : "DSIELBFQDN" },
+													{ "Ref" : "PrivateDSIELBFQDN" }
+													]
+											},
 											" ",
 											{ "Ref" : "DSIPGUIPort" },
 											" ",
@@ -1050,7 +1153,15 @@
 					"fixManagerHostObject" : {
 						"files" : {
 							"/etc/cfn/reactivate-manager" : {
-								"source" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/reactivate-manager",
+								"source" : {
+									"Fn::Join" : [
+										"",
+										[
+											{ "Ref" : "CfnUrlPrefix" },
+											"Common/Scripts/reactivate-manager"
+										]
+									]
+								},
 								"owner" : "root",
 								"mode" : "000700"
 								}
@@ -1121,7 +1232,9 @@
                             [
                                 "#!/bin/bash -xe\n",
                                 "# cloud-init\n",
-                                "curl -O https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/Scripts/cfn-rh-helper\n",
+                                "curl -O ",
+								{ "Ref" : "CfnUrlPrefix" },
+								"Common/Scripts/cfn-rh-helper\n",
                                 "sh cfn-rh-helper >> cfn-rh-helper.log\n",
                                 "cfn-init -v ",
                                 " --stack ",
@@ -1284,6 +1397,20 @@
 			"Fn::And" : [
 				{ "Condition" : "IsFirstNode" },
 				{ "Condition" : "AddToELB" }
+			]
+		},
+		"InternetFacingELB" : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DSELBPosture"
+                },
+                "External"
+            ]
+        },
+		"RegionIsUsGovWest1" : {
+			"Fn::Equals" : [
+				{ "Ref" : "AWS::Region" },
+				"us-gov-west-1"
 			]
 		}
     },

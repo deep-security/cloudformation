@@ -1,7 +1,7 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "v3.3 Quick Start that deploys Trend Micro Deep Security into an exisintg VPC with a Multi-AZ Oracle RDS instance  **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
-        "Metadata" : {
+    "Description"              : "v3.2 Quick Start that deploys Trend Micro Deep Security into an exisintg VPC with a Multi-AZ Oracle RDS instance  **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Metadata" : {
 		"AWS::CloudFormation::Interface" : {
 			"ParameterGroups" : [
 				{
@@ -32,6 +32,7 @@
             "Type"        : "AWS::EC2::KeyPair::KeyName",
             "MinLength"   : "1",
             "MaxLength"   : "255",
+            "AllowedPattern" : "[-_a-zA-Z0-9]*",
             "ConstraintDescription" : "Select an existing EC2 Key Pair."
         },
         "AWSVPC"         : {
@@ -82,152 +83,201 @@
             "Description" : "Select how many instances would you like to protect.",
             "Type"        : "String",
             "AllowedValues" : [
-                "1-25",
-                "26-50",
-				"51-100",
-				"101-200"
+                "1-100",
+                "101-500",
+				"501-1000",
+				"1001-2000"
             ]
         }
     },
     "Mappings"                 : {
-		"EC2InstanceSize" : {
-			"us-east-1"      : {
-                "25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
+		"DSMSIZE" : {
+	        "us-east-1"      : {
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
 			"us-west-1"      : {
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
             "us-west-2"      : {
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
 			"eu-west-1"      : {
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
 			"eu-central-1" : {
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
             "sa-east-1"    : {
-				"25" : "m3.large",
-				"50" : "m3.xlarge",
-				"100": "m3.2xlarge",
-				"200": "c3.4xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
             "ap-northeast-1" : {
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
             "ap-southeast-1" : {
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
             "ap-southeast-2" : {
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "c3.xlarge",
+				"4" : "c3.xlarge"
             },
 			"ap-northeast-2" : {
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
+                "1" : "m4.large",
+				"2" : "m4.large",
+				"3" : "m4.xlarge",
+				"4" : "m4.xlarge"
+            },
+			"us-gov-west-1" : {
+                "1" : "m3.large",
+				"2" : "m3.large",
+				"3" : "m3.xlarge",
+				"4" : "m3.xlarge"
             }
         },
 		"RDSStorageSize" : {
-            "1-25"   : {
-                "Size" : "25"
-            },
-            "26-50"   : {
+            "1-100"   : {
                 "Size" : "50"
             },
-            "51-100"  : {
-                "Size" : "100"
+            "101-500"   : {
+                "Size" : "150"
             },
-            "101-200"  : {
+            "501-1000"  : {
                 "Size" : "200"
-            }
-        },
-		"PPULicenseSize" : {
-            "1-25"   : {
-                "Size" : "25"
             },
-            "26-50"   : {
-                "Size" : "50"
-            },
-            "51-100"  : {
-                "Size" : "100"
-            },
-            "101-200"  : {
-                "Size" : "200"
-            }
+			"1001-2000" : {
+				"Size" : "300"
+			}
         },
         "RDSInstanceSize" : {
             "us-east-1"      : {
-                "Oracle" : "db.m4.large"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             },
 			"us-west-1"      : {
-                "Oracle" : "db.m4.large"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             },
             "us-west-2"      : {
-                "Oracle" : "db.m4.large"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             },
 			"eu-west-1"      : {
-                "Oracle" : "db.m4.large"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             },
 			"eu-central-1" : {
-                "Oracle" : "db.m4.large"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             },
             "sa-east-1"    : {
-                "Oracle" : "db.m3.large"
+                "1" : "db.m3.large",
+				"2" : "db.m3.large",
+				"3" : "db.m3.xlarge",
+				"4" : "db.m3.xlarge"
             },
             "ap-northeast-1" : {
-                "Oracle" : "db.m4.large"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             },
             "ap-southeast-1" : {
-                "Oracle" : "db.m4.large"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
             },
             "ap-southeast-2" : {
-                "Oracle" : "db.m3.large"
+                "1" : "db.m3.large",
+				"2" : "db.m3.large",
+				"3" : "db.m3.xlarge",
+				"4" : "db.m3.xlarge"
             },
 			"ap-northeast-2" : {
-                "Oracle" : "db.m4.large"
+                "1" : "db.m4.large",
+				"2" : "db.m4.large",
+				"3" : "db.m4.xlarge",
+				"4" : "db.m4.xlarge"
+            },
+			"us-gov-west-1" : {
+                "1" : "db.m3.large",
+				"2" : "db.m3.large",
+				"3" : "db.m3.xlarge",
+				"4" : "db.m3.xlarge"
             }
         },
+		"DeploymentSize" : {
+			"1-100" : {
+				"Size" : "1"
+			},
+			"101-500" : {
+				"Size" : "2"
+			},
+			"501-1000" : {
+				"Size" : "3"
+			},
+			"1001-2000" : {
+				"Size" : "4"
+			}
+		},
 		"Parameters" : {
 			"CfnUrlPrefix" : {
-				"Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/"
+				"CommericalPrefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/",
+				"GovCloudPrefix" : "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v3.4/"
 			}
 		}
     },
     "Resources"                : {
-        "MasterMP96" : {
+        "MasterRH96" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
                 "TemplateURL" : {
 					"Fn::Join" : [
 						"",
 						[
-							{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "Prefix" ] },
-							"Marketplace/MasterMP96.template"
+							{
+								"Fn::If" : [
+									"RegionIsUsGovWest1",
+									{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "CommericalPrefix" ] },
+									{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "GovCloudPrefix" ] }
+								]
+							},
+							"RHEL/MasterRH96.template"
 						]
 					]
 				},
@@ -247,7 +297,15 @@
 							{
 								"Ref" : "AWS::Region"
 							},
-								"Oracle"
+							{
+								"Fn::FindInMap" : [
+									"DeploymentSize",
+									{
+										"Ref" : "ProtectedInstances"
+									},
+									"Size"
+								]	
+							}
 						]				
 					},
 					"DBIStorageAllocation"         : {
@@ -274,26 +332,26 @@
 					"DSCAdminPassword"         : {
                         "Ref" : "DeepSecurityAdminPass"
                     },
-					"DSIMultiNode"         : "1" ,
+					"DSIMultiNode"         : "2" ,
 					"DSIPLicenseKey" : "XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
 					"DSIPHeartbeatPort" : "4120",
 					"DSIPGUIPort"       : "443",
 					"DSIPInstanceType"         : {
 						"Fn::FindInMap" : [
-							"EC2InstanceSize",
+							"DSMSIZE",
 							{
 								"Ref" : "AWS::Region"
 							},
 							{
 								"Fn::FindInMap" : [
-									"PPULicenseSize",
+									"DeploymentSize",
 									{
 										"Ref" : "ProtectedInstances"
 									},
-										"Size"
-								]
+									"Size"
+								]	
 							}
-						]				
+						]		
 					},
 					"DBISubnet1"         : {
                         "Ref" : "DatabaseSubnet1"
@@ -302,25 +360,24 @@
                         "Ref" : "DatabaseSubnet2"
                     },
 					"DBIInstanceIdentifier" : "deep-security",
-					"DSIPLicense"         : {
-						"Fn::FindInMap" : [
-							"PPULicenseSize",
-							{
-								"Ref" : "ProtectedInstances"
-							},
-								"Size"
-						]						
-                    },
 					"DBPMultiAZ": "true"
                 }
             }
         }
     },
+	"Conditions" : {
+		"RegionIsUsGovWest1" : {
+			"Fn::Equals" : [
+				{ "Ref" : "AWS::Region" },
+				"us-gov-west-1"
+			]
+		}
+	},
 	"Outputs"                  : {
         "DeepSecurityConsole" : {
             "Value" : {
 	            "Fn::GetAtt" : [
-					"MasterMP96",
+					"MasterRH96",
                     "Outputs.DeepSecurityConsole"
 				]
             }

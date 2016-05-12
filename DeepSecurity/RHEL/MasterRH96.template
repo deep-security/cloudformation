@@ -10,7 +10,7 @@
 				},
 				{
 					"Label" : { "default" : "Network Configuration" },
-					"Parameters" : [ "AWSIVPC", "DSISubnetID", "DBISubnet1", "DBISubnet2" ]
+					"Parameters" : [ "AWSIVPC", "DSISubnetID", "DBISubnet1", "DBISubnet2", "DSELBPosture" ]
 				},
 				{
 					"Label" : { "default" : "Database Configuration" },
@@ -41,7 +41,8 @@
 				"DBISubnet1" : { "default" : "Primary private subnet for RDS" },
 				"DBISubnet2" : { "default" : "Secondary private subnet for RDS" },
 				"DBIInstanceIdentifier" : { "default" : "Unique RDS Instance ID" },
-				"DBPMultiAZ" : { "default" : "Single- or Multi- AZ RDS instance" }
+				"DBPMultiAZ" : { "default" : "Single- or Multi- AZ RDS instance" },
+				"DSELBPosture" : { "default" : "Use internal or external ELB" }
 			}
 		}
 	},
@@ -263,7 +264,20 @@
                 "false"
                 ],
             "Default" : "false"
-            }
+            },
+		"DSELBPosture" : {
+			"Description" : "Use internal or external ELB",
+			"Type" : "String",
+			"AllowedValues" : [
+				"External",
+				"Internal"
+				],
+			"Default" : "External"
+			},
+		"CfnUrlPrefix" : {
+			"Type" : "String",
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/"
+		}
     },
     "Resources"                : {
         "DSM96Node1" : {
@@ -274,7 +288,15 @@
             ],
             "Condition" : "LaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/RHEL/DSM96RH.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"RHEL/DSM96RH.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -355,7 +377,11 @@
 							"DSIELB",
 							"Outputs.PrivateELBFQDN"
 							]
-					}
+					},
+					"DSELBPosture" : {
+						"Ref" : "DSELBPosture"
+					},
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
         },
@@ -367,7 +393,15 @@
             ],
             "Condition" : "DSM96Node2DB",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/RHEL/DSM96RH.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"RHEL/DSM96RH.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -439,7 +473,8 @@
 							"DSIELB",
 							"Outputs.PrivateELBFQDN"
 							]
-					}
+					},
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
         },
@@ -450,7 +485,15 @@
             ],
             "Condition" : "DoNotLaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/RHEL/DSM96RH.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"RHEL/DSM96RH.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -528,7 +571,11 @@
 							"DSIELB",
 							"Outputs.PrivateELBFQDN"
 							]
-					}
+					},
+					"DSELBPosture" : {
+						"Ref" : "DSELBPosture"
+					},
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
         },
@@ -537,7 +584,15 @@
             "DependsOn" : "DSM1NoDBCompleteWaitCondition",
             "Condition" : "DSM96Node2NoDB",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/RHEL/DSM96RH.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"RHEL/DSM96RH.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIKeyPairName" : {
                         "Ref" : "AWSIKeyPairName"
@@ -606,7 +661,8 @@
 							"DSIELB",
 							"Outputs.PrivateELBFQDN"
 							]
-					}
+					},
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
         },
@@ -615,7 +671,15 @@
             "Condition" : "LaunchRDSInstance",
             "DependsOn" : "DSIRDSSecurityGroup",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/DB/DSDBAbstract.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Common/DB/DSDBAbstract.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "DBPName" : {
                         "Ref" : "DBPName"
@@ -654,7 +718,8 @@
                     },
                     "DBISubnet2"            : {
                         "Ref" : "DBISubnet2"
-                    }
+                    },
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
         },
@@ -662,7 +727,15 @@
             "Type" : "AWS::CloudFormation::Stack",
             "Condition" : "LaunchRDSInstance",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/SecurityGroups/RDSSecurityGroup.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Common/SecurityGroups/RDSSecurityGroup.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -682,7 +755,15 @@
         "DSIDSMSecurityGroup" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/SecurityGroups/DSMSecurityGroup.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Common/SecurityGroups/DSMSecurityGroup.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -699,7 +780,15 @@
         "DSIELB"              : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/DSM96ELB.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Common/DSM96ELB.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -710,17 +799,25 @@
                     "DSIPGUIPort"       : {
                         "Ref" : "DSIPGUIPort"
                     },
-                    "DSELBPosture"      : "External",
                     "DSISubnetID"       : {
                         "Ref" : "DSISubnetID"
-                    }
+                    },
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
         },
         "DSIDSMSecurityGroupIngressRules" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/SecurityGroups/DSMSGIngressRules.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Common/SecurityGroups/DSMSGIngressRules.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "DSMSG" : {
                         "Fn::GetAtt" : [
@@ -822,6 +919,14 @@
                     "Condition" : "DoNotLaunchRDSInstance"
                 }
             ]
+        },
+		"InternetFacingELB" : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DSELBPosture"
+                },
+                "External"
+            ]
         }
     },
     "Outputs"                  : {
@@ -844,6 +949,38 @@
                     ]
                 ]
             }
-        }
+        },
+		"DeepSecurityHeartbeat" : {
+			"Value" : {
+				"Fn::Join" : [
+					"",
+					[
+					"dsm://",
+						{ 
+							"Fn::If" : [
+								"InternetFacingELB",
+									{
+										"Fn::GetAtt" : [
+										"DSIELB",
+										"Outputs.ELBFQDN"
+										]
+									},
+									{
+										"Fn::GetAtt" : [
+										"DSIELB",
+										"Outputs.PrivateELBFQDN"
+										]
+									}
+								]
+						},
+						":",
+						{
+							"Ref" : "DSIPHeartbeatPort"
+						},
+						"/"
+					]
+				]
+			}
+		}
     }
 }

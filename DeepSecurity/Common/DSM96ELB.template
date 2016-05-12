@@ -25,15 +25,6 @@
             "Default"     : "4119",
             "ConstraintDescription" : "Must be a valid TCP port."
         },
-        "DSELBPosture"      : {
-            "Description" : "Internal or External ELB",
-            "Type"        : "String",
-            "AllowedValues" : [
-                "External",
-                "Internal"
-            ],
-            "Default"       : "External"
-        },
         "DSISubnetID"       : {
             "Description" : "Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
             "Type"        : "String",
@@ -41,13 +32,25 @@
             "MaxLength"   : "255",
             "AllowedPattern" : "[-_a-zA-Z0-9]*",
             "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
-        }
+        },
+		"CfnUrlPrefix" : {
+			"Type" : "String",
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/"
+		}
     },
     "Resources"                : {
         "ELBSG" : {
             "Type" : "AWS::CloudFormation::Stack",
             "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.3/Common/SecurityGroups/DSELBSG.template",
+                "TemplateURL" : {
+					"Fn::Join" : [
+						"",
+						[
+							{ "Ref" : "CfnUrlPrefix" },
+							"Common/SecurityGroups/DSELBSG.template"
+						]
+					]
+				},
                 "Parameters"  : {
                     "AWSIVPC" : {
                         "Ref" : "AWSIVPC"
@@ -78,13 +81,7 @@
                         ]
                     }
                 ],
-                "Scheme"         : {
-                    "Fn::If" : [
-                        "InternetFacingELB",
-                        "internet-facing",
-                        "internal"
-                    ]
-                },
+                "Scheme"         : "internet-facing",
                 "Listeners"      : [
                     {
                         "LoadBalancerPort" : {
@@ -174,16 +171,6 @@
                     "Timeout"            : "5"
                 }
             }
-        }
-    },
-    "Conditions"               : {
-        "InternetFacingELB" : {
-            "Fn::Equals" : [
-                {
-                    "Ref" : "DSELBPosture"
-                },
-                "External"
-            ]
         }
     },
     "Outputs"                  : {

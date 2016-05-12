@@ -63,6 +63,9 @@
     <Compile Include="Quickstart\TMQuickStartPPU.template">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Quickstart\TMQuickStartRHEL.template">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="RHEL\DSM96RH.template">
       <SubType>Code</SubType>
     </Compile>
@@ -87,6 +90,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Common\Scripts\createCloudAccount">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Common\Scripts\createCloudAccountGc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Common\Scripts\dsm_s.service">
