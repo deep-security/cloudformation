@@ -341,7 +341,8 @@
 							{	"Ref" : "AWS::Region" },
 							{	"Ref" : "DatabaseEngine" }
 						]		
-					}
+					},
+					"CfnUrlPrefix" : { "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "Prefix" ] }
                 }
             }
         }
