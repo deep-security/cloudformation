@@ -214,7 +214,7 @@
         },
 		"Parameters" : {
 			"CfnUrlPrefix" : {
-				"Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/"
+				"Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/NIST/"
 			}
 		}
     },

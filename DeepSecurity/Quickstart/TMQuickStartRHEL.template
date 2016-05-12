@@ -257,8 +257,8 @@
 		},
 		"Parameters" : {
 			"CfnUrlPrefix" : {
-				"CommericalPrefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.4/",
-				"GovCloudPrefix" : "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v3.4/"
+				"CommericalPrefix" : "https://s3.amazonaws.com/trend-micro-quick-start/NIST/",
+				"GovCloudPrefix" : "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/NIST/"
 			}
 		}
     },
