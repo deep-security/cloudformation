@@ -381,7 +381,7 @@
 														{
 															"Fn::If" : [
 																"RegionIsUsGovWest1",
-																"arn:aws-us-gov:elasticloadbalancing",
+																"arn:aws-us-gov:elasticloadbalancing:",
 																"arn:aws:elasticloadbalancing:"
 															]
 														},
@@ -415,7 +415,7 @@
                                                         {
 															"Fn::If" : [
 																"RegionIsUsGovWest1",
-																"arn:aws-us-gov:elasticloadbalancing",
+																"arn:aws-us-gov:elasticloadbalancing:",
 																"arn:aws:elasticloadbalancing:"
 															]
 														},
