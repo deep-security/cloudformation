@@ -247,7 +247,8 @@
                     },
 					"DBIInstanceIdentifier" : "deep-security",
 					"DSIPLicense"         : "MMS",
-					"DBPMultiAZ": "true"
+					"DBPMultiAZ": "true",
+					"CfnUrlPrefix" : { "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "Prefix" ] }
                 }
             }
         }

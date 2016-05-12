@@ -360,7 +360,14 @@
                         "Ref" : "DatabaseSubnet2"
                     },
 					"DBIInstanceIdentifier" : "deep-security",
-					"DBPMultiAZ": "true"
+					"DBPMultiAZ": "true",
+					"CfnUrlPrefix" : {
+								"Fn::If" : [
+									"RegionIsUsGovWest1",
+									{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "CommericalPrefix" ] },
+									{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "GovCloudPrefix" ] }
+								]
+							}
                 }
             }
         }
