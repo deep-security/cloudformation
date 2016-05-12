@@ -273,8 +273,8 @@
 							{
 								"Fn::If" : [
 									"RegionIsUsGovWest1",
-									{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "CommericalPrefix" ] },
-									{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "GovCloudPrefix" ] }
+									{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "GovCloudPrefix" ] },
+									{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "CommericalPrefix" ] }
 								]
 							},
 							"RHEL/MasterRH96.template"
@@ -364,8 +364,8 @@
 					"CfnUrlPrefix" : {
 								"Fn::If" : [
 									"RegionIsUsGovWest1",
-									{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "CommericalPrefix" ] },
-									{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "GovCloudPrefix" ] }
+									{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "GovCloudPrefix" ] },
+									{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "CommericalPrefix" ] }
 								]
 							}
                 }

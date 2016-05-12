@@ -810,8 +810,8 @@
 											{
 												"Fn::If" : [
 													"RegionIsUsGovWest1",
-													"Common/Scripts/createCloudAccount",
-													"Common/Scripts/createCloudAccountGc"
+													"Common/Scripts/createCloudAccountGc",
+													"Common/Scripts/createCloudAccount"
 												]
 											}
 										]
