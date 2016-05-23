@@ -74,6 +74,10 @@
             "Description" : "Trend Micro Deep Security Database instance class",
             "Type"        : "String",
             "AllowedValues" : [
+				"db.m4.medium",
+				"db.m4.large",
+				"db.m4.xlarge",
+				"db.m4.2xlarge",
                 "db.m3.medium",
                 "db.m3.large",
                 "db.m3.xlarge",
@@ -950,6 +954,38 @@
                 ]
             }
         },
+		"DeepSecurityAgentDownload" : {
+			"Value" : {
+				"Fn::Join" : [
+					"",
+					[
+					"https://",
+						{ 
+							"Fn::If" : [
+								"InternetFacingELB",
+									{
+										"Fn::GetAtt" : [
+										"DSIELB",
+										"Outputs.ELBFQDN"
+										]
+									},
+									{
+										"Fn::GetAtt" : [
+										"DSIELB",
+										"Outputs.PrivateELBFQDN"
+										]
+									}
+								]
+						},
+						":",
+						{
+							"Ref" : "DSIPGUIPort"
+						},
+						"/"
+					]
+				]
+			}
+		},
 		"DeepSecurityHeartbeat" : {
 			"Value" : {
 				"Fn::Join" : [
