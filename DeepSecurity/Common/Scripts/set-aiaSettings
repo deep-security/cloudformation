@@ -24,11 +24,6 @@ curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "systemSett
 '<urn:settingUnit>NONE</urn:settingUnit>'\
 '<urn:settingValue>2</urn:settingValue>'\
 '</urn:editableSettings>'\
-'<urn:editableSettings>'\
-'<urn:settingKey>CONFIGURATION_AGENTCOMMUNICATIONS</urn:settingKey>'\
-'<urn:settingUnit>NONE</urn:settingUnit>'\
-'<urn:settingValue>1</urn:settingValue>'\
-'</urn:editableSettings>'\
 '<urn:sID>'${SID}'</urn:sID>'\
 '</urn:systemSettingSet>'\
 '</soapenv:Body>'\
