@@ -14,7 +14,7 @@
 				},
 				{
 					"Label" : { "default" : "RDS Configuration" },
-					"Parameters" : [ "DatabaseEngine", "DatabaseInstanceID", "DatabaseAdminName", "DatabaseAdminPassword" ]
+					"Parameters" : [ "DatabaseEngine", "DatabaseInstanceId", "DatabaseAdminName", "DatabaseAdminPassword" ]
 				}
 
 			],
