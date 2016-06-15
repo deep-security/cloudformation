@@ -1293,7 +1293,7 @@
 												]
 											]
 										},
-                                        "cfn-signal -e $?  -r \"Complete\" ''"
+                                        ""
 									]
 								},
 								"\n"
