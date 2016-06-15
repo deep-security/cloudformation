@@ -1281,8 +1281,7 @@
                                 "\n",
 								{
 									"Fn::If" : [
-										"WaitNotProvided",
-										"cfn-signal -e $?  -r \"Complete\" ''",
+										"IsFirstNode",
 										{
 											"Fn::Join" : [
 												"",
@@ -1293,7 +1292,8 @@
 													}
 												]
 											]
-										}
+										},
+                                        "cfn-signal -e $?  -r \"Complete\" ''"
 									]
 								},
 								"\n"
