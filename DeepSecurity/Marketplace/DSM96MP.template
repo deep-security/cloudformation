@@ -265,6 +265,7 @@
                 "200"  : "ami-2bd60248"
             },
             "ap-northeast-1" : {
+                "PerHost" : "ami-cbefc2a8",
                 "BYOL" : "ami-d854beb9",
                 "25"   : "ami-b2aeb2dc",
                 "50"   : "ami-b2aeb2dc",
