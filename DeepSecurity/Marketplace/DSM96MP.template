@@ -221,7 +221,7 @@
                 "200"  : "ami-a1f036cc"
             },
             "us-west-1" : {
-              "PerHost"  : "ami-820779e2"
+              "PerHost"  : "ami-820779e2",
                 "BYOL" : "ami-a8bffac8",
                 "25"   : "ami-99b9fcf9",
                 "50"   : "ami-99b9fcf9",
