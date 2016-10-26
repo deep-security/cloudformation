@@ -452,9 +452,14 @@
                         {
                             "Effect" : "Allow",
                             "Action" : [
-                                "ec2:DescribeInstances",
                                 "ec2:DescribeImages",
-                                "ec2:DescribeTags"
+                                "ec2:DescribeInstances",
+                                "ec2:DescribeRegions",
+                                "ec2:DescribeSubnets",
+                                "ec2:DescribeTags",
+                                "ec2:DescribeVpcs",
+                                "iam:ListAccountAliases",
+                                "sts:AssumeRole"
                             ],
                             "Resource" : "*"
                         }
@@ -611,7 +616,15 @@
                                         {
                                             "Effect" : "Allow",
                                             "Action" : [
-                                                "ec2:DescribeLicenses"
+                                                "ec2:DescribeLicenses",
+                                                "ec2:DescribeImages",
+                                                "ec2:DescribeInstances",
+                                                "ec2:DescribeRegions",
+                                                "ec2:DescribeSubnets",
+                                                "ec2:DescribeTags",
+                                                "ec2:DescribeVpcs",
+                                                "iam:ListAccountAliases",
+                                                "sts:AssumeRole"
                                             ],
                                             "Resource" : "*"
                                         }
@@ -1436,6 +1449,21 @@
                     }
                 }
             }
+        },
+        "LogBucket" : {
+            "Type" : "AWS::S3::Bucket",
+            "Condition" : "IsFirstNode",
+            "Properties" : {
+                "BucketName" : {
+                    "Fn::Join" : [
+                        "",
+                        [
+                            "dsmcfnlogs"
+                        ]
+                    ]
+                }
+            },
+            "DeletionPolicy" : "Retain"
         }
     },
     "Conditions"               : {
