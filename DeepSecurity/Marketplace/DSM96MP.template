@@ -1449,21 +1449,6 @@
                     }
                 }
             }
-        },
-        "LogBucket" : {
-            "Type" : "AWS::S3::Bucket",
-            "Condition" : "IsFirstNode",
-            "Properties" : {
-                "BucketName" : {
-                    "Fn::Join" : [
-                        "",
-                        [
-                            "dsmcfnlogs"
-                        ]
-                    ]
-                }
-            },
-            "DeletionPolicy" : "Retain"
         }
     },
     "Conditions"               : {
