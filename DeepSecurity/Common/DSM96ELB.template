@@ -115,6 +115,9 @@
                     "UnhealthyThreshold" : "5",
                     "Interval"           : "30",
                     "Timeout"            : "5"
+                },
+                "ConnectionSettings" : {
+                    "IdleTimeout" : 600
                 }
             }
         },
@@ -169,6 +172,9 @@
                     "UnhealthyThreshold" : "5",
                     "Interval"           : "30",
                     "Timeout"            : "5"
+                },
+                "ConnectionSettings" : {
+                    "IdleTimeout" : 600
                 }
             }
         }
