@@ -758,6 +758,16 @@
                                 "owner"  : "root",
                                 "mode"   : "000600"
                             },
+                            "/opt/trend/packages/dsm/default/Agent-RedHat_EL6-9.6.2-6400.x86_64.zip"    : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.2-6400.x86_64.zip",
+                                "owner"  : "root",
+                                "mode"   : "000600"
+                            },
+                            "/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL6-9.6.2-7547.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.2-7547.x86_64.zip",
+                                "owner"  : "root",
+                                "mode"   : "000600"
+                            },
 							"/opt/trend/packages/dsm/default/Agent-RedHat_EL7-9.6.2-5027.x86_64.zip" : {
 								"source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL7-9.6.2-5027.x86_64.zip",
 								"owner"  : "root",
