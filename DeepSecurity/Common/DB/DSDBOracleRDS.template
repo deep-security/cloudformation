@@ -117,7 +117,13 @@
                 "DBInstanceClass"  : {
                     "Ref" : "DBIRDSInstanceSize"
                 },
-                "Engine"           : "oracle-se1",
+                "Engine"           : {
+                    "Fn::If" : [
+                        "RegionIsUsGovCloud",
+                        "oracle-se1",
+                        "oracle-se2"
+                    ]
+                },
                 "MasterUsername"   : {
                     "Ref" : "DBICAdminName"
                 },
@@ -135,6 +141,14 @@
 				"DBSubnetGroupName" : { "Ref" : "DBISubnetGroupName" },
                 "StorageType" : { "Ref" : "StorageType" }
             }
+        }
+    },
+    "Conditions" : {
+        "RegionIsUsGovCloud" : {
+            "Fn::Equals" : [
+                { "Ref" : "AWS::Region" },
+                "us-gov-west-1"
+            ]
         }
     },
     "Outputs"                  : {
