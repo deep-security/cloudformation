@@ -81,7 +81,15 @@
             },
             "ap-southeast-2" : {
                 "64" : "ami-fea1f89d"
-            }
+            },
+            "ap-northeast-2" : {
+                "64" : "ami-2b5c9445"
+            },
+            "us-east-2" : {
+                "64" : "ami-f2653f97"
+            },
+            "ap-south-1",
+                "64" : "ami-6e304701"
         }
     },
     "Resources"                : {
