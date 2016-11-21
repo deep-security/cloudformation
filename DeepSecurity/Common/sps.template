@@ -88,8 +88,9 @@
             "us-east-2" : {
                 "64" : "ami-f2653f97"
             },
-            "ap-south-1",
-                "64" : "ami-6e304701"
+            "ap-south-1" : {
+                "64": "ami-6e304701"
+            }
         }
     },
     "Resources"                : {
