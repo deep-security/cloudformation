@@ -6,7 +6,7 @@
 			"ParameterGroups" : [
 				{
 					"Label" : { "default" : "Deep Security Manager Configuration" },
-					"Parameters" : [ "DSCAdminName", "DSCAdminPassword", "DSIPInstanceType", "AWSIKeyPairName", "DSIPLicense", "DSIMultiNode", "DSIPLicenseKey", "DSIPGUIPort", "DSIPHeartbeatPort" ]
+					"Parameters" : [ "DSCAdminName", "DSCAdminPassword", "DSIPInstanceType", "AWSIKeyPairName", "DSIPLicense", "DSIMultiNode", "DSIPLicenseKey", "DSIPGUIPort", "DSIPHeartbeatPort", "DSCLicenseType" ]
 				},
 				{
 					"Label" : { "default" : "Network Configuration" },
@@ -42,7 +42,8 @@
 				"DBISubnet2" : { "default" : "Secondary private subnet for RDS" },
 				"DBIInstanceIdentifier" : { "default" : "Unique RDS Instance ID" },
 				"DSIPLicense" : { "default" : "Deep Security License Type" },
-				"DBPMultiAZ" : { "default" : "Single- or Multi- AZ RDS instance" }
+				"DBPMultiAZ" : { "default" : "Single- or Multi- AZ RDS instance" },
+                "DSCLicenseType" : { "default" : "Select Enterprise or Network License Key Type"}
 			}
 		}
 	},
@@ -292,8 +293,16 @@
 			},
 		"CfnUrlPrefix" : {
 			"Type" : "String",
-			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.8/"
-		}
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.9/"
+		    },
+        "DSCLicenseType" : {
+            "Type" : "String",
+            "Default" : "Enterprise",
+            "AllowedValues" : [
+                "Enterprise",
+                "Network"
+            ]
+        }
     },
     "Mappings"                 : {
         "DSMNodeDependency" : {
@@ -416,7 +425,8 @@
 					"DSELBPosture" : {
 						"Ref" : "DSELBPosture"
 					},
-					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" },
+                    "DSCLicenseType" : { "Ref" : "DSCLicenseType"}
                 }
             }
         },

@@ -207,7 +207,15 @@
 			},
 		"CfnUrlPrefix" : {
 			"Type" : "String",
-			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.7/"
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.9/"
+        },
+        "DSCLicenseType" : {
+            "Type" : "String",
+            "Default" : "Enterprise",
+            "AllowedValues" : [
+                "Enterprise",
+                "Network"
+            ]
         }
     },
     "Mappings"                 : {
@@ -792,14 +800,30 @@
                                                 "Fn::If" : [
                                                     "AddAcAnswer",
                                                     {
-                                                        "Fn::Join" : [
-                                                            "",
-                                                            [
-                                                                "LicenseScreen.License.-1=",
-                                                                {
-                                                                    "Ref" : "DSIPLicenseKey"
-                                                                }
-                                                            ]
+                                                        "Fn::If" : [
+                                                            "NetworkOnlyLicense",
+                                                            {
+                                                                "Fn::Join": [
+                                                                    "",
+                                                                    [
+                                                                        "LicenseScreen.License.1=",
+                                                                        {
+                                                                            "Ref": "DSIPLicenseKey"
+                                                                        }
+                                                                    ]
+                                                                ]
+                                                            },
+                                                            {
+                                                                "Fn::Join" : [
+                                                                    "",
+                                                                    [
+                                                                        "LicenseScreen.License.-1=",
+                                                                        {
+                                                                            "Ref" : "DSIPLicenseKey"
+                                                                        }
+                                                                    ]
+                                                                ]
+                                                            }
                                                         ]
                                                     },
                                                     "\n"
@@ -1606,6 +1630,14 @@
                     "Ref" : "DSELBPosture"
                 },
                 "External"
+            ]
+        },
+        "NetworkOnlyLicense" : {
+            "Fn:Equals" : [
+                {
+                    "Ref" : "DSCLicenseType"
+                },
+                "Network"
             ]
         }
     },
