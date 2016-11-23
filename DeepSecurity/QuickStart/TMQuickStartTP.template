@@ -287,7 +287,13 @@
                         "Ref" : "DeepSecurityAdminPass"
                     },
 					"DSIMultiNode"         : "1" ,
-					"DSIPLicenseKey" : { "Ref" : "DeepSecurityLicenseKey"},
+					"DSIPLicenseKey" : {
+						"Fn::If" : [
+							"NoLicenseKey",
+							"XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
+							{ "Ref" : "DeepSecurityLicenseKey" }
+						]
+					},
 					"DSIPHeartbeatPort" : "4120",
 					"DSIPGUIPort"       : "443",
 					"DSIPInstanceType"         : {
@@ -319,6 +325,16 @@
             }
         }
     },
+	"Conditions"               : {
+		"NoLicenseKey": {
+			"Fn::Equals": [
+				{
+					"Ref": "DeepSecurityLicenseKey"
+				},
+				""
+			]
+		}
+	},
 	"Outputs"                  : {
         "DeepSecurityConsole" : {
             "Value" : {
