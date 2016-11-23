@@ -247,7 +247,7 @@
                         "Fn::GetAtt" : [ "Infrastructure", "Outputs.VPCID"]
                     },
 					"DSISubnetID"         : {
-                        "Fn::GetAtt" : [ "Infrastructure", "Outputs.PublicSubnet1"]
+                        "Fn::GetAtt" : [ "Infrastructure", "Outputs.PublicSubnet"]
                     },
 					"DBIRDSInstanceSize"         : {
 						"Fn::FindInMap" : [
