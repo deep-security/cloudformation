@@ -320,7 +320,8 @@
 					"DBIInstanceIdentifier" : "deep-security",
 					"DSIPLicense"         : "BYOL",
 					"DBPMultiAZ": "true",
-					"CfnUrlPrefix" : { "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "Prefix" ] }
+					"CfnUrlPrefix" : { "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "Prefix" ] },
+					"DSCLicenseType" : "Network"
                 }
             }
         }
