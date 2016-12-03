@@ -1633,7 +1633,7 @@
             ]
         },
         "NetworkOnlyLicense" : {
-            "Fn:Equals" : [
+            "Fn::Equals" : [
                 {
                     "Ref" : "DSCLicenseType"
                 },
