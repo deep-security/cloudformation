@@ -340,7 +340,6 @@
 					"DBISubnet2"         : {
                         "Ref" : "DatabaseSubnet2"
                     },
-					"DBIInstanceIdentifier" : "deep-security",
 					"DSIPLicense"         : "PerHost",
 					"DBPMultiAZ": "true",
 					"CfnUrlPrefix" : { "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "Prefix" ] }

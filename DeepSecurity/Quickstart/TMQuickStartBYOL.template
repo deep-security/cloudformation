@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "v3.9 Quick Start that deploys Trend Micro Deep Security into an exisintg VPC with a Multi-AZ Oracle RDS instance  **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Description"              : "v4.0 Quick Start that deploys Trend Micro Deep Security into an exisintg VPC with a Multi-AZ Oracle RDS instance  **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
         "Metadata" : {
 		"AWS::CloudFormation::Interface" : {
 			"ParameterGroups" : [
@@ -14,7 +14,7 @@
 				},
 				{
 					"Label" : { "default" : "RDS Configuration" },
-					"Parameters" : [ "DatabaseEngine", "DatabaseInstanceId", "DatabaseAdminName", "DatabaseAdminPassword" ]
+					"Parameters" : [ "DatabaseEngine", "DatabaseAdminName", "DatabaseAdminPassword" ]
 				}
 
 			],
@@ -27,7 +27,6 @@
 				"DatabaseSubnet1" : { "default" : "Primary private subnet for RDS" },
 				"DatabaseSubnet2" : { "default" : "Secondary private subnet for RDS" },
 				"DatabaseEngine" : { "default" : "Choose the backend database" },
-				"DatabaseInstanceId" : { "default" : "RDS Instance ID" },
 				"DatabaseAdminName" : { "default" : "Administrator username for RDS Instance" },
 				"DatabaseAdminPassword" : { "default" : "Administrator password for RDS Instance" },
 				"LicenseKey" : { "default" : "Deep Security License Key. May be left default to enter key after deployment" }
@@ -57,14 +56,6 @@
                 "Oracle",
                 "MSSQL"
             ]
-        },
-		"DatabaseInstanceId": {
-            "Description" : "RDS Instance ID. Can only contain alphanumeric characters or dashes(-). Min length 1, max length 15.",
-            "Type"        : "String",
-            "MinLength"   : 1,
-			"MaxLength"   : "15",
-			"AllowedPattern" : "[a-zA-Z0-9-]*",
-            "ConstraintDescription" : "Can only contain alphanumeric characters or dashes(-). Min length 1, max length 15"
         },
 		"DatabaseSubnet1"           : {
             "Description" : "Select a private subnet for the RDS database.  Must be a private subnet contained the in VPC chosen above.",
@@ -250,7 +241,7 @@
         },
 		"Parameters" : {
 			"CfnUrlPrefix" : {
-				"Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.9/"
+				"Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v4.0/"
 			}
 		}
     },
@@ -330,9 +321,6 @@
                     },
 					"DBISubnet2"         : {
                         "Ref" : "DatabaseSubnet2"
-                    },
-					"DBIInstanceIdentifier"         : {
-                        "Ref" : "DatabaseInstanceId"
                     },
 					"DSIPLicense"         : "BYOL",
 					"DBPMultiAZ": {

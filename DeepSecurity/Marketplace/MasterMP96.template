@@ -14,7 +14,7 @@
 				},
 				{
 					"Label" : { "default" : "Database Configuration" },
-					"Parameters" : [ "DBICAdminName", "DBICAdminPassword", "DBIInstanceIdentifier", "DBPName", "DBPMultiAZ", "DBPEngine", "DBPCreateDbInstance", "DBIRDSInstanceSize", "DBIStorageAllocation", "DBPBackupDays", "DBPEndpoint" ]
+					"Parameters" : [ "DBICAdminName", "DBICAdminPassword", "DBPName", "DBPMultiAZ", "DBPEngine", "DBPCreateDbInstance", "DBIRDSInstanceSize", "DBIStorageAllocation", "DBPBackupDays", "DBPEndpoint" ]
 				}
 
 			],
@@ -40,7 +40,6 @@
 				"DSIPInstanceType" : { "default" : "EC2 Instance Type for Deep Security Manager" },
 				"DBISubnet1" : { "default" : "Primary private subnet for RDS" },
 				"DBISubnet2" : { "default" : "Secondary private subnet for RDS" },
-				"DBIInstanceIdentifier" : { "default" : "Unique RDS Instance ID" },
 				"DSIPLicense" : { "default" : "Deep Security License Type" },
 				"DBPMultiAZ" : { "default" : "Single- or Multi- AZ RDS instance" },
                 "DSCLicenseType" : { "default" : "Select Enterprise or Network License Key Type"}
@@ -256,11 +255,6 @@
             "Type"        : "AWS::EC2::Subnet::Id",
             "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template"
         },
-        "DBIInstanceIdentifier" : {
-            "Description" : "Choose RDS Instance ID",
-            "Type"        : "String",
-            "MaxLength"   : "15"
-        },
         "DSIPLicense"           : {
             "Description" : "Choose License Model. If choosing BYOL you may enter the license below",
             "Type"        : "String",
@@ -293,7 +287,7 @@
 			},
 		"CfnUrlPrefix" : {
 			"Type" : "String",
-			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.9/"
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v4.0/"
 		    },
         "DSCLicenseType" : {
             "Type" : "String",
@@ -763,9 +757,6 @@
                     "StorageType"          : "gp2",
                     "DBPBackupDays"        : {
                         "Ref" : "DBPBackupDays"
-                    },
-                    "DBIInstanceIdentifier" : {
-                        "Ref" : "DBIInstanceIdentifier"
                     },
                     "DBISubnet1"            : {
                         "Ref" : "DBISubnet1"

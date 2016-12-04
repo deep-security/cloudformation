@@ -257,8 +257,8 @@
 		},
 		"Parameters" : {
 			"CfnUrlPrefix" : {
-				"CommericalPrefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.9/",
-				"GovCloudPrefix" : "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v3.9/"
+				"CommericalPrefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v4.0/",
+				"GovCloudPrefix" : "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v4.0/"
 			}
 		}
     },
@@ -359,7 +359,6 @@
 					"DBISubnet2"         : {
                         "Ref" : "DatabaseSubnet2"
                     },
-					"DBIInstanceIdentifier" : "deep-security",
 					"DBPMultiAZ": "true",
 					"CfnUrlPrefix" : {
 								"Fn::If" : [

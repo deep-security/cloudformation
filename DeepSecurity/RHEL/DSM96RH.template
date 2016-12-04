@@ -195,7 +195,7 @@
 			},
 		"CfnUrlPrefix" : {
 			"Type" : "String",
-			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.9/"
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v4.0/"
 		}
     },
     "Mappings"                 : {

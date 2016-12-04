@@ -14,7 +14,7 @@
 				},
 				{
 					"Label" : { "default" : "Database Configuration" },
-					"Parameters" : [ "DBICAdminName", "DBICAdminPassword", "DBIInstanceIdentifier", "DBPName", "DBPMultiAZ", "DBPEngine", "DBPCreateDbInstance", "DBIRDSInstanceSize", "DBIStorageAllocation", "DBPBackupDays", "DBPEndpoint" ]
+					"Parameters" : [ "DBICAdminName", "DBICAdminPassword", "DBPName", "DBPMultiAZ", "DBPEngine", "DBPCreateDbInstance", "DBIRDSInstanceSize", "DBIStorageAllocation", "DBPBackupDays", "DBPEndpoint" ]
 				}
 
 			],
@@ -40,7 +40,6 @@
 				"DSIPInstanceType" : { "default" : "EC2 Instance Type for Deep Security Manager" },
 				"DBISubnet1" : { "default" : "Primary private subnet for RDS" },
 				"DBISubnet2" : { "default" : "Secondary private subnet for RDS" },
-				"DBIInstanceIdentifier" : { "default" : "Unique RDS Instance ID" },
 				"DBPMultiAZ" : { "default" : "Single- or Multi- AZ RDS instance" },
 				"DSELBPosture" : { "default" : "Use internal or external ELB" }
 			}
@@ -256,10 +255,6 @@
             "Type"        : "AWS::EC2::Subnet::Id",
             "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template"
         },
-        "DBIInstanceIdentifier" : {
-            "Description" : "Choose RDS Instance ID",
-            "Type"        : "String"
-        },
         "DBPMultiAZ": {
             "Description": "Use Multi-AZ or SQL Mirroring Option Group for RDS Instance",
             "Type" : "String",
@@ -280,7 +275,7 @@
 			},
 		"CfnUrlPrefix" : {
 			"Type" : "String",
-			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.9/"
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v4.0/"
 		}
     },
     "Resources"                : {
@@ -713,9 +708,6 @@
                     "StorageType"          : "gp2",
                     "DBPBackupDays"        : {
                         "Ref" : "DBPBackupDays"
-                    },
-                    "DBIInstanceIdentifier" : {
-                        "Ref" : "DBIInstanceIdentifier"
                     },
                     "DBISubnet1"            : {
                         "Ref" : "DBISubnet1"

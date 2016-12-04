@@ -85,10 +85,6 @@
         "RDSSG"               : {
             "Type" : "AWS::EC2::SecurityGroup::Id"
         },
-		"DBIInstanceIdentifier" : {
-			"Description" : "Choose RDS Instance ID",
-			"Type" : "String"
-			},
 		"DBISubnetGroupName" : {
 			"Type" : "String"
 			},
@@ -128,7 +124,6 @@
                 "BackupRetentionPeriod" : {
                     "Ref" : "DBPBackupDays"
                 },
-                "DBInstanceIdentifier"  : { "Ref" : "DBIInstanceIdentifier" },
 				"DBSubnetGroupName" : { "Ref" : "DBISubnetGroupName" },
 				"OptionGroupName" : {
                     "Fn::If" : [
@@ -137,7 +132,13 @@
                         { "Ref" : "AWS::NoValue" }
                     ]
                 },
-                "StorageType" : { "Ref" : "StorageType" }
+                "StorageType" : { "Ref" : "StorageType" },
+                "Tags"               : [
+                    {
+                        "Key" : "Application",
+                        "Value" : "Deep Security Manager"
+                    }
+                ]
             }
         },
         "DSSQLOptionGroup" : {
