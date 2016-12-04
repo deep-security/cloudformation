@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "v3.9 Quick Start that deploys a new VPC with Trend Micro Deep Security **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Description"              : "v4.0 Quick Start that deploys a new VPC with Trend Micro Deep Security **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
     "Metadata" : {
 		"AWS::CloudFormation::Interface" : {
 			"ParameterGroups" : [
@@ -208,7 +208,7 @@
 		},
 		"Parameters" : {
 			"CfnUrlPrefix" : {
-				"Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.9/"
+				"Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v4.0/"
 			}
 		}
     },
@@ -317,7 +317,6 @@
 					"DBISubnet2"         : {
 						"Fn::GetAtt" : [ "Infrastructure", "Outputs.PrivateSubnet2"]
                     },
-					"DBIInstanceIdentifier" : "deep-security",
 					"DSIPLicense"         : "BYOL",
 					"DBPMultiAZ": "true",
 					"CfnUrlPrefix" : { "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "Prefix" ] },
