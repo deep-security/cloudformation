@@ -348,7 +348,7 @@
 			"Value" : {
 				"Fn::GetAtt" : [
 					"MasterMP96",
-					"Outputs.DeepSecurityConsole"
+					"Outputs.DeepSecurityHeartbeat"
 				]
 			}
 		}
