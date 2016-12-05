@@ -343,6 +343,14 @@
                     "Outputs.DeepSecurityConsole"
 				]
             }
-        }
+        },
+		"DeepSecurityHeartbeat" : {
+			"Value" : {
+				"Fn::GetAtt" : [
+					"MasterMP96",
+					"Outputs.DeepSecurityConsole"
+				]
+			}
+		}
     }
 }
