@@ -84,7 +84,7 @@
         },
         "RDSSG"               : {
             "Type" : "AWS::EC2::SecurityGroup::Id"
-        }
+        },
 		"DBISubnetGroupName" : {
 			"Type" : "String"
 			},
