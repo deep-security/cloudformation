@@ -139,7 +139,7 @@
             ]
         },
         "DSISubnetID"       : {
-            "Description" : "Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
+            "Description" : "Existing Subnet for Deep Security Manager. Must be a public subnet contained the in VPC chosen above.",
             "Type"        : "AWS::EC2::Subnet::Id",
             "MinLength"   : "1",
             "MaxLength"   : "255",

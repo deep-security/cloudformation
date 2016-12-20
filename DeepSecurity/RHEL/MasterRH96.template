@@ -61,7 +61,7 @@
             "AllowedPattern" : "[-_a-zA-Z0-9]*"
         },
         "DSISubnetID"     : {
-            "Description" : "Choose a public subnet for Deep Seucurity Manager. Must be in same AZ as primary RDS subnet.",
+            "Description" : "Choose a public subnet for Deep Security Manager. Must be in same AZ as primary RDS subnet.",
             "Type"        : "AWS::EC2::Subnet::Id",
             "MinLength"   : "1",
             "MaxLength"   : "255",

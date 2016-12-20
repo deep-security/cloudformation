@@ -52,7 +52,7 @@
             "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones within the specified VPC for deploying this template"
         },
 		"DeepSecuritySubnet"   : {
-            "Description" : "Select an existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
+            "Description" : "Select an existing Subnet for Deep Security Manager. Must be a public subnet contained the in VPC chosen above.",
             "Type"        : "AWS::EC2::Subnet::Id",
             "MinLength"   : "1",
             "MaxLength"   : "255",
