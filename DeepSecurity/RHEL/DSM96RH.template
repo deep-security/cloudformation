@@ -215,8 +215,14 @@
             "eu-west-1"      : {
                 "64" : "ami-8b8c57f8"
             },
+            "ca-central-1" : {
+                "64" : "ami-9062d0f4"
+            },
             "us-east-1"      : {
                 "64" : "ami-2051294a"
+            },
+            "us-east-2" : {
+                "64" : "ami-0a33696f"
             },
             "us-west-1"      : {
                 "64" : "ami-d1315fb1"
