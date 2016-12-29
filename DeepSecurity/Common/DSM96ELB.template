@@ -231,6 +231,12 @@
                     "SourceSecurityGroup.OwnerAlias"
                 ]
             }
+        },
+        "PublicELBCanonicalHostedZoneNameID" : {
+            "Value" : { "Fn::GetAtt" : [ "DSMELB" : "CanonicalHostedZoneNameID" ] }
+        },
+        "PublicELBDNSName" : {
+            "Value" : { "Fn::GetAtt" : [ "DSMELB" : "DNSName" ] }
         }
 
 
