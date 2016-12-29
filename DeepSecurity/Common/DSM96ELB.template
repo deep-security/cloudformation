@@ -233,10 +233,10 @@
             }
         },
         "PublicELBCanonicalHostedZoneNameID" : {
-            "Value" : { "Fn::GetAtt" : [ "DSMELB" : "CanonicalHostedZoneNameID" ] }
+            "Value" : { "Fn::GetAtt" : [ "DSMELB" , "CanonicalHostedZoneNameID" ] }
         },
         "PublicELBDNSName" : {
-            "Value" : { "Fn::GetAtt" : [ "DSMELB" : "DNSName" ] }
+            "Value" : { "Fn::GetAtt" : [ "DSMELB" , "DNSName" ] }
         }
 
 
