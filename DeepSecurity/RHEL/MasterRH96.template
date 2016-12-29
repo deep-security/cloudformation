@@ -1007,8 +1007,14 @@
 						},
 						"/"
 					]
-				]
-			}
-		}
+                ]
+            }
+        },
+        "PublicELBCanonicalHostedZoneNameID" : {
+          "Value" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.PublicELBCanonicalHostedZoneNameID" ] }
+        },
+        "PublicELBDNSName" : {
+          "Value" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.PublicELBDNSName" ] }
+        }
     }
 }
