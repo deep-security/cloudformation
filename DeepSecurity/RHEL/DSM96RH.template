@@ -373,7 +373,7 @@
                                             "Action" : [
                                                 "ec2:DescribeLicenses",
                                                 "ec2:DescribeInstances",
-                                                "ec2:DescribeImages"
+                                                "ec2:DescribeImages",
                                                 "ec2:DescribeRegions",
                                                 "ec2:DescribeVpcs",
                                                 "ec2:DescribeSubnets",
