@@ -317,6 +317,9 @@
                             "Action" : [
                                 "ec2:DescribeInstances",
                                 "ec2:DescribeImages",
+                                "ec2:DescribeRegions",
+                                "ec2:DescribeVpcs",
+                                "ec2:DescribeSubnets",
                                 "ec2:DescribeTags"
                             ],
                             "Resource" : "*"
@@ -362,13 +365,19 @@
                         "Fn::If" : [
                             "AddToELB",
                             {
-                                "PolicyName" : "PlaceholderPolicy",
+                                "PolicyName" : "DeepSecurityManagerInstancePolicy",
                                 "PolicyDocument" : {
                                     "Statement" : [
                                         {
                                             "Effect" : "Allow",
                                             "Action" : [
-                                                "ec2:DescribeLicenses"
+                                                "ec2:DescribeLicenses",
+                                                "ec2:DescribeInstances",
+                                                "ec2:DescribeImages"
+                                                "ec2:DescribeRegions",
+                                                "ec2:DescribeVpcs",
+                                                "ec2:DescribeSubnets",
+                                                "ec2:DescribeTags"
                                             ],
                                             "Resource" : "*"
                                         },
@@ -479,13 +488,19 @@
                                 }
                             },
                             {
-                                "PolicyName" : "PlaceholderPolicy",
+                                "PolicyName" : "DeepSecurityManagerInstancePolicy",
                                 "PolicyDocument" : {
                                     "Statement" : [
                                         {
                                             "Effect" : "Allow",
                                             "Action" : [
-                                                "ec2:DescribeLicenses"
+                                                "ec2:DescribeLicenses",
+                                                "ec2:DescribeInstances",
+                                                "ec2:DescribeImages",
+                                                "ec2:DescribeRegions",
+                                                "ec2:DescribeVpcs",
+                                                "ec2:DescribeSubnets",
+                                                "ec2:DescribeTags"
                                             ],
                                             "Resource" : "*"
                                         }
@@ -621,6 +636,16 @@
                             },
                             "/tmp/KernelSupport-RedHat_EL6-10.0.0-2019.x86_64.zip" : {
                                 "source" : "https://s3.amazonaws.com/trendctf/DS10/KernelSupport-RedHat_EL6-10.0.0-2019.x86_64.zip",
+                                "owner" : "root",
+                                "mode" : "000600"
+                            },
+                            "/tmp/Agent-RedHat_EL7-10.0.0-2020.x86_64.zip" : {
+                                "source" : "https://s3.amazonaws.com/trendctf/DS10/Agent-RedHat_EL7-10.0.0-2020.x86_64.zip",
+                                "owner" : "root",
+                                "mode" : "000600"
+                            },
+                            "/tmp/KernelSupport-RedHat_EL7-10.0.0-2020.x86_64.zip" : {
+                                "source" : "https://s3.amazonaws.com/trendctf/DS10/KernelSupport-RedHat_EL7-10.0.0-2020.x86_64.zip",
                                 "owner" : "root",
                                 "mode" : "000600"
                             },
@@ -853,7 +878,22 @@
 								},
 								"owner" : "root",
 								"mode" : "000700"
- 							}
+ 							},
+                            "/etc/cfn/ds10-rest-cloudAccountCreateWithInstanceRole.sh" : {
+                                "source" : {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            {
+                                                "Ref": "CfnUrlPrefix"
+                                            },
+                                            "Common/Scripts/ds10-rest-cloudAccountCreateWithInstanceRole.sh"
+                                        ]
+                                    ]
+                                },
+                                "owner" : "root",
+                                "mode" : "000700"
+                            }
 						},
                         "commands" : {
 							"0-sleep" : {
@@ -908,33 +948,14 @@
                                     "Fn::Join" : [
                                         "",
                                         [
-                                            "/etc/cfn/createCloudAccount ",
-                                            {
-                                                "Ref" : "DSCAdminName"
-                                            },
-											" \"",
-                                            {
-                                                "Ref" : "DSCAdminPassword"
-                                            },
-											"\" ",
-											{
-												"Ref" : "AWS::AccountId"
-											},
-											" ",
-                                            {
-                                                "Ref" : "DSIPGUIPort"
-                                            },
-											" ",
-                                            {
-                                                "Ref" : "AccessKeys"
-                                            },
-											" ",
-                                            {
-                                                "Fn::GetAtt" : [
-                                                    "AccessKeys",
-                                                    "SecretAccessKey"
-                                                ]
-                                            }
+                                            "/etc/cfn/ds10-rest-cloudAccountCreateWithInstanceRole.sh ",
+                                            { "Ref" : "DSCAdminName" },
+                                            " ",
+                                            { "Ref": "DSCAdminPassword" },
+                                            " ",
+                                            { "Ref": "PrivateDSIELBFQDN" },
+                                            " ",
+                                            { "Ref": "DSIPGUIPort" }
                                         ]
                                     ]
                                 },
