@@ -134,7 +134,20 @@
                     "Ref" : "DBPBackupDays"
                 },
 				"DBSubnetGroupName" : { "Ref" : "DBISubnetGroupName" },
-                "StorageType" : { "Ref" : "StorageType" },
+                "StorageType" : {
+                    "Fn::If" : [
+                        "MultiAZ",
+                        "io1",
+                        { "Ref" : "StorageType" }
+                    ]
+                },
+                "Iops" : {
+                    "Fn::If" : [
+                        "MultiAZ",
+                        "2000",
+                        { "Ref": "AWS::NoValue" }
+                    ]
+                },
                 "Tags"               : [
                     {
                         "Key" : "Application",
@@ -149,6 +162,12 @@
             "Fn::Equals" : [
                 { "Ref" : "AWS::Region" },
                 "us-gov-west-1"
+            ]
+        },
+        "MultiAZ" : {
+            "Fn::Equals" : [
+                { "Ref": "MultiAZ" },
+                "true"
             ]
         }
     },
