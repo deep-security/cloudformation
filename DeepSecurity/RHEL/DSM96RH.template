@@ -649,6 +649,16 @@
                                 "owner" : "root",
                                 "mode" : "000600"
                             },
+                            "/tmp/KernelSupport-Ubuntu_16.04-9.6.2-7643.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-Ubuntu_16.04-9.6.2-7643.x86_64.zip",
+                                "owner" : "root",
+                                "mode" : "000600"
+                            },
+                            "/tmp/Agent-Ubuntu_16.04-9.6.2-7599.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-Ubuntu_16.04-9.6.2-7599.x86_64.zip",
+                                "owner" : "root",
+                                "mode" : "000600"
+                            },
                             "/tmp/Manager-Linux-9.6.4000.x64.sh" : {
                                 "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/9.6_ServicePack1/Manager-Linux-9.6.4000.x64.sh",
                                 "owner"  : "root",
@@ -952,9 +962,7 @@
                                             { "Ref" : "DSCAdminName" },
                                             " ",
                                             { "Ref": "DSCAdminPassword" },
-                                            " ",
-                                            { "Ref": "PrivateDSIELBFQDN" },
-                                            " ",
+                                            " localhost ",
                                             { "Ref": "DSIPGUIPort" }
                                         ]
                                     ]
