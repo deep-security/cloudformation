@@ -620,32 +620,37 @@
                                     ]
                                 }
                             }
+                        },
+                        "commands" : {
+                            "0-set-vmoptions" : {
+                                "command" : "mkdir /opt/dsm/; echo -Xmx12g >> /opt/dsm/dsm_s.vmoptions"
+                            }
                         }
                     },
                     "prepDSMInstall" : {
                         "files" : {
-                            "/tmp/Manager-Linux-10.0.3005.x64.sh" : {
-                                "source" : "https://s3.amazonaws.com/trendctf/DS10/Manager-Linux-10.0.3005.x64.sh",
+                            "/tmp/Manager-Linux-10.0.3064.x64.sh" : {
+                                "source" : "https://s3.amazonaws.com/trendctf/DS10/Manager-Linux-10.0.3064.x64.sh",
                                 "owner" : "root",
                                 "mode" : "000700"
                             },
-                            "/tmp/Agent-RedHat_EL6-10.0.0-2019.x86_64.zip" : {
-                                "source" : "https://s3.amazonaws.com/trendctf/DS10/Agent-RedHat_EL6-10.0.0-2019.x86_64.zip",
+                            "/tmp/Agent-RedHat_EL6-10.0.0-2032.x86_64.zip" : {
+                                "source" : "https://s3.amazonaws.com/trendctf/DS10/Agent-RedHat_EL6-10.0.0-2032.x86_64.zip",
                                 "owner" : "root",
                                 "mode" : "000600"
                             },
-                            "/tmp/KernelSupport-RedHat_EL6-10.0.0-2019.x86_64.zip" : {
-                                "source" : "https://s3.amazonaws.com/trendctf/DS10/KernelSupport-RedHat_EL6-10.0.0-2019.x86_64.zip",
+                            "/tmp/KernelSupport-RedHat_EL6-10.0.0-2032.x86_64.zip" : {
+                                "source" : "https://s3.amazonaws.com/trendctf/DS10/KernelSupport-RedHat_EL6-10.0.0-2032.x86_64.zip",
                                 "owner" : "root",
                                 "mode" : "000600"
                             },
-                            "/tmp/Agent-RedHat_EL7-10.0.0-2020.x86_64.zip" : {
-                                "source" : "https://s3.amazonaws.com/trendctf/DS10/Agent-RedHat_EL7-10.0.0-2020.x86_64.zip",
+                            "/tmp/Agent-RedHat_EL7-10.0.0-2032.x86_64.zip" : {
+                                "source" : "https://s3.amazonaws.com/trendctf/DS10/Agent-RedHat_EL7-10.0.0-2032.x86_64.zip",
                                 "owner" : "root",
                                 "mode" : "000600"
                             },
-                            "/tmp/KernelSupport-RedHat_EL7-10.0.0-2020.x86_64.zip" : {
-                                "source" : "https://s3.amazonaws.com/trendctf/DS10/KernelSupport-RedHat_EL7-10.0.0-2020.x86_64.zip",
+                            "/tmp/KernelSupport-RedHat_EL7-10.0.0-2032.x86_64.zip" : {
+                                "source" : "https://s3.amazonaws.com/trendctf/DS10/KernelSupport-RedHat_EL7-10.0.0-2032.x86_64.zip",
                                 "owner" : "root",
                                 "mode" : "000600"
                             },
@@ -656,6 +661,16 @@
                             },
                             "/tmp/Agent-Ubuntu_16.04-9.6.2-7599.x86_64.zip" : {
                                 "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-Ubuntu_16.04-9.6.2-7599.x86_64.zip",
+                                "owner" : "root",
+                                "mode" : "000600"
+                            },
+                            "/tmp/KernelSupport-Ubuntu_14.04-9.6.2-7652.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-Ubuntu_14.04-9.6.2-7652.x86_64.zip",
+                                "owner" : "root",
+                                "mode" : "000600"
+                            },
+                            "/tmp/Agent-Ubuntu_14.04-9.6.2-7599.x86_64.zip" : {
+                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-Ubuntu_14.04-9.6.2-7599.x86_64.zip",
                                 "owner" : "root",
                                 "mode" : "000600"
                             },
@@ -831,7 +846,7 @@
                                 "ignoreErrors" : "false"
                             },
                             "1-install-DSM" : {
-                                "command" : "cd /tmp; sh Manager-Linux-10.0.3005.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
+                                "command" : "cd /tmp; sh Manager-Linux-10.0.3064.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
                                 "ignoreErrors" : "false"
                             },
 							"2-fix-for-systemd" : {
@@ -907,7 +922,7 @@
 						},
                         "commands" : {
 							"0-sleep" : {
-                                "command" : "/etc/cfn/wait-for-relay-and-stop-manager >> /tmp/0-stop-service; curl https://s3.amazonaws.com/trendctf/DS10/module-com.trendmicro.ds.appcontrol-10.0.878.jar -o /opt/dsm/plugins/module-com.trendmicro.ds.appcontrol-10.0.878.jar"
+                                "command" : "/etc/cfn/wait-for-relay-and-stop-manager >> /tmp/0-stop-service"
                             },
                             "1-enableRestApi" : {
                                 "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
