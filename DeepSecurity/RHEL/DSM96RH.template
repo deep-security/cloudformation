@@ -926,21 +926,6 @@
                             }
 						},
                         "commands" : {
-							"0-sleep" : {
-                                "command" : "/etc/cfn/wait-for-relay-and-stop-manager >> /tmp/0-stop-service"
-                            },
-                            "1-enableRestApi" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
-                            },
-                            "2-enableSoapApi" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
-                            },
-							"3-setAicDefaultComm" : {
-								"command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentCommunications -value 1"
-							},
-                            "4-start-service"                              : {
-                                "command" : "service dsm_s start"
-                            },
                             "5-check-service"                      : {
                                 "command" : {
 									"Fn::Join" : [
