@@ -811,7 +811,8 @@
                                             "RelayScreen.ProxyPort=None\n",
                                             "RelayScreen.Proxy=False\n",
                                             "RelayScreen.AntiMalware=True\n",
-                                            "RelayScreen.ProxyAuthentication=False\n"
+                                            "RelayScreen.ProxyAuthentication=False\n",
+                                            "Override.Automation=True\n"
                                         ]
                                     ]
                                 },
