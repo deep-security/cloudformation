@@ -134,20 +134,7 @@
                     "Ref" : "DBPBackupDays"
                 },
 				"DBSubnetGroupName" : { "Ref" : "DBISubnetGroupName" },
-                "StorageType" : {
-                    "Fn::If" : [
-                        "MultiAZ",
-                        "io1",
-                        { "Ref" : "StorageType" }
-                    ]
-                },
-                "Iops" : {
-                    "Fn::If" : [
-                        "MultiAZ",
-                        "2000",
-                        { "Ref": "AWS::NoValue" }
-                    ]
-                },
+                "StorageType" : { "Ref" : "StorageType" },
                 "Tags"               : [
                     {
                         "Key" : "Application",
