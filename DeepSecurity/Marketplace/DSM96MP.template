@@ -519,13 +519,21 @@
                         "Fn::If" : [
                             "AddToELB",
                             {
-                                "PolicyName" : "PlaceholderPolicy",
+                                "PolicyName" : "DeepSecurityManagerInstancePolicy",
                                 "PolicyDocument" : {
                                     "Statement" : [
                                         {
                                             "Effect" : "Allow",
                                             "Action" : [
-                                                "ec2:DescribeLicenses"
+                                                "ec2:DescribeLicenses",
+                                                "ec2:DescribeInstances",
+                                                "ec2:DescribeImages",
+                                                "ec2:DescribeRegions",
+                                                "ec2:DescribeVpcs",
+                                                "ec2:DescribeSubnets",
+                                                "ec2:DescribeTags",
+                                                "ec2:DescribeAvailabilityZones",
+                                                "ec2:DescribeSecurityGroups"
                                             ],
                                             "Resource" : "*"
                                         },
@@ -618,7 +626,7 @@
                                 }
                             },
                             {
-                                "PolicyName" : "PlaceholderPolicy",
+                                "PolicyName" : "DeepSecurityManagerInstancePolicy",
                                 "PolicyDocument" : {
                                     "Statement" : [
                                         {
