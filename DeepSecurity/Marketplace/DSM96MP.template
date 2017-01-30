@@ -985,7 +985,22 @@
 								},
 								"owner" : "root",
 								"mode" : "000700"
-							}
+							},
+                            "/etc/cfn/ds10-rest-cloudAccountCreateWithInstanceRole.sh" : {
+                                "source" : {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            {
+                                                "Ref": "CfnUrlPrefix"
+                                            },
+                                            "Common/Scripts/ds10-rest-cloudAccountCreateWithInstanceRole.sh"
+                                        ]
+                                    ]
+                                },
+                                "owner" : "root",
+                                "mode" : "000700"
+                            }
 						},
                         "commands" : {
                             "0-stop-service" : {
@@ -1040,33 +1055,12 @@
                                     "Fn::Join" : [
                                         "",
                                         [
-                                            "/etc/cfn/createCloudAccount ",
-                                            {
-                                                "Ref" : "DSCAdminName"
-                                            },
-											" \"",
-                                            {
-                                                "Ref" : "DSCAdminPassword"
-                                            },
-											"\" ",
-											{
-												"Ref" : "AWS::AccountId"
-											},
-											" ",
-                                            {
-                                                "Ref" : "DSIPGUIPort"
-                                            },
-											" ",
-                                            {
-                                                "Ref" : "AccessKeys"
-                                            },
-											" ",
-                                            {
-                                                "Fn::GetAtt" : [
-                                                    "AccessKeys",
-                                                    "SecretAccessKey"
-                                                ]
-                                            }
+                                            "/etc/cfn/ds10-rest-cloudAccountCreateWithInstanceRole.sh ",
+                                            { "Ref" : "DSCAdminName" },
+                                            " ",
+                                            { "Ref": "DSCAdminPassword" },
+                                            " localhost ",
+                                            { "Ref": "DSIPGUIPort" }
                                         ]
                                     ]
                                 },
