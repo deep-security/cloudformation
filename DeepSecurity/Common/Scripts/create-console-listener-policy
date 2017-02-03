@@ -1,5 +1,0 @@
-#/bin/bash
-##create-listener-policy <load balancer name>
-aws elb create-load-balancer-listeners --load-balancer-name $1 --listeners Protocol=HTTPS,LoadBalancerPort=$3,InstanceProtocol=HTTPS,InstancePort=$3,SSLCertificateId=$certid
-aws elb create-load-balancer-policy --load-balancer-name $1 --policy-name DSMConsoleStickySessions --policy-type-name LBCookieStickinessPolicyType --policy-attributes AttributeName=CookieExpirationPeriod,AttributeValue=600
-aws elb set-load-balancer-policies-of-listener --load-balancer-name $1 --load-balancer-port 443 --policy-names DSMConsoleStickySessions

@@ -1,5 +1,5 @@
 #!/bin/bash
-## set-aiaSettings <user> <pass> <elbfqdn> <consoleport>
+## set-aia-settings <user> <pass> <elbfqdn> <consoleport>
 user=$1
 pass=$2
 managerfqdn=$3

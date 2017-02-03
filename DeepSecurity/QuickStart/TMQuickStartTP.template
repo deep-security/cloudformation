@@ -1,356 +1,451 @@
-{
-    "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "v4.0 Quick Start that deploys a new VPC with Trend Micro Deep Security **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
-    "Metadata" : {
-		"AWS::CloudFormation::Interface" : {
-			"ParameterGroups" : [
-				{
-					"Label" : { "default" : "Deep Security Manager Configuration" },
-					"Parameters" : [ "DeepSecurityAdminName", "DeepSecurityAdminPass", "AWSKeyPairName", "DeepSecurityLicenseKey" ]
-				}
-			],
-			"ParameterLabels" : {
-				"AWSKeyPairName" : { "default" : "EC2 Key Pair for SSH access" },
-				"DeepSecurityAdminName" : { "default" : "Administrator username for Deep Security" },
-				"DeepSecurityAdminPass" : { "default" : "Administrator password for Deep Security" },
-				"DeepSecurityLicenseKey" : { "default" : "Activation Code for Deep Security IPS"}
-			}
-		}
-	},
-	"Parameters"               : {
-        "AWSKeyPairName" : {
-            "Description" : "Select an existing key pair to use for connecting to your Deep Security Manager Instance.",
-            "Type"        : "AWS::EC2::KeyPair::KeyName",
-            "MinLength"   : "1",
-            "MaxLength"   : "255",
-            "ConstraintDescription" : "Select an existing EC2 Key Pair."
-        },
-        "DeepSecurityAdminName"         : {
-            "Default" : "MasterAdmin",
-            "NoEcho"  : false,
-            "Description" : "The Deep Security Manager administrator username for Web Console Access.",
-            "Type"        : "String",
-            "MinLength"   : 1,
-            "MaxLength"   : 16,
-            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
-            "ConstraintDescription" : "Must begin with a letter and contain only alphanumeric characters. Min length 1, max length 16"
-        },
-        "DeepSecurityAdminPass"     : {
-            "NoEcho" : true,
-            "Description" : "The Deep Security Manager administrator password. Must be 8-41 characters long and can only contain alphanumeric characters or the following special characters !^*-_+",
-            "Type"        : "String",
-            "MinLength"   : 8,
-            "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9!^*\\-_+]*",
-            "ConstraintDescription" : "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
-        },
-		"DeepSecurityLicenseKey"       : {
-			"Description" : "If you have a Deep Security license key, enter it here. Including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG).",
-			"Type"        : "String",
-			"MinLength"   : 0,
-			"MaxLength"   : 37,
-			"AllowedPattern" : "(?:[A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5})?",
-			"ConstraintDescription" : "Key can only contain ASCII characters."
-		}
-    },
-    "Mappings"                 : {
-		"DSMSIZE" : {
-	        "us-east-1"      : {
-                "1" : "m3.large",
-				"2" : "m3.large",
-				"3" : "c3.xlarge",
-				"4" : "c3.xlarge"
-            },
-			"us-west-1"      : {
-                "1" : "m3.large",
-				"2" : "m3.large",
-				"3" : "c3.xlarge",
-				"4" : "c3.xlarge"
-            },
-            "us-west-2"      : {
-                "1" : "m3.large",
-				"2" : "m3.large",
-				"3" : "c3.xlarge",
-				"4" : "c3.xlarge"
-            },
-			"eu-west-1"      : {
-                "1" : "m3.large",
-				"2" : "m3.large",
-				"3" : "c3.xlarge",
-				"4" : "c3.xlarge"
-            },
-			"eu-central-1" : {
-                "1" : "m3.large",
-				"2" : "m3.large",
-				"3" : "c3.xlarge",
-				"4" : "c3.xlarge"
-            },
-            "sa-east-1"    : {
-                "1" : "m3.large",
-				"2" : "m3.large",
-				"3" : "c3.xlarge",
-				"4" : "c3.xlarge"
-            },
-            "ap-northeast-1" : {
-                "1" : "m3.large",
-				"2" : "m3.large",
-				"3" : "c3.xlarge",
-				"4" : "c3.xlarge"
-            },
-            "ap-southeast-1" : {
-                "1" : "m3.large",
-				"2" : "m3.large",
-				"3" : "c3.xlarge",
-				"4" : "c3.xlarge"
-            },
-            "ap-southeast-2" : {
-                "1" : "m3.large",
-				"2" : "m3.large",
-				"3" : "c3.xlarge",
-				"4" : "c3.xlarge"
-            },
-			"ap-northeast-2" : {
-                "1" : "m4.large",
-				"2" : "m4.large",
-				"3" : "m4.xlarge",
-				"4" : "m4.xlarge"
+{  
+   "AWSTemplateFormatVersion":"2010-09-09",
+   "Description":"v5.0: Quick Start that deploys a new VPC with Trend Micro Deep Security **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
+   "Metadata":{  
+      "AWS::CloudFormation::Interface":{  
+         "ParameterGroups":[  
+            {  
+               "Label":{  
+                  "default":"Deep Security Manager Configuration"
+               },
+               "Parameters":[  
+                  "DeepSecurityAdminName",
+                  "DeepSecurityAdminPass",
+                  "AWSKeyPairName",
+                  "DeepSecurityLicenseKey"
+               ]
             }
-        },
-		"RDSStorageSize" : {
-            "1-100"   : {
-                "Size" : "50"
+         ],
+         "ParameterLabels":{  
+            "AWSKeyPairName":{  
+               "default":"EC2 Key Pair for SSH access"
             },
-            "101-500"   : {
-                "Size" : "150"
+            "DeepSecurityAdminName":{  
+               "default":"Administrator username for Deep Security"
             },
-            "501-1000"  : {
-                "Size" : "200"
+            "DeepSecurityAdminPass":{  
+               "default":"Administrator password for Deep Security"
             },
-			"1001-2000" : {
-				"Size" : "300"
-			}
-        },
-        "RDSInstanceSize" : {
-            "us-east-1"      : {
-                "1" : "db.m4.large",
-				"2" : "db.m4.large",
-				"3" : "db.m4.xlarge",
-				"4" : "db.m4.xlarge"
-            },
-			"us-west-1"      : {
-                "1" : "db.m4.large",
-				"2" : "db.m4.large",
-				"3" : "db.m4.xlarge",
-				"4" : "db.m4.xlarge"
-            },
-            "us-west-2"      : {
-                "1" : "db.m4.large",
-				"2" : "db.m4.large",
-				"3" : "db.m4.xlarge",
-				"4" : "db.m4.xlarge"
-            },
-			"eu-west-1"      : {
-                "1" : "db.m4.large",
-				"2" : "db.m4.large",
-				"3" : "db.m4.xlarge",
-				"4" : "db.m4.xlarge"
-            },
-			"eu-central-1" : {
-                "1" : "db.m4.large",
-				"2" : "db.m4.large",
-				"3" : "db.m4.xlarge",
-				"4" : "db.m4.xlarge"
-            },
-            "sa-east-1"    : {
-                "1" : "db.m3.large",
-				"2" : "db.m3.large",
-				"3" : "db.m3.xlarge",
-				"4" : "db.m3.xlarge"
-            },
-            "ap-northeast-1" : {
-                "1" : "db.m4.large",
-				"2" : "db.m4.large",
-				"3" : "db.m4.xlarge",
-				"4" : "db.m4.xlarge"
-            },
-            "ap-southeast-1" : {
-                "1" : "db.m4.large",
-				"2" : "db.m4.large",
-				"3" : "db.m4.xlarge",
-				"4" : "db.m4.xlarge"
-            },
-            "ap-southeast-2" : {
-                "1" : "db.m3.large",
-				"2" : "db.m3.large",
-				"3" : "db.m3.xlarge",
-				"4" : "db.m3.xlarge"
-            },
-			"ap-northeast-2" : {
-                "1" : "db.m4.large",
-				"2" : "db.m4.large",
-				"3" : "db.m4.xlarge",
-				"4" : "db.m4.xlarge"
+            "DeepSecurityLicenseKey":{  
+               "default":"Activation Code for Deep Security IPS"
             }
-        },
-		"DeploymentSize" : {
-			"1-100" : {
-				"Size" : "1"
-			},
-			"101-500" : {
-				"Size" : "2"
-			},
-			"501-1000" : {
-				"Size" : "3"
-			},
-			"1001-2000" : {
-				"Size" : "4"
-			}
-		},
-		"Parameters" : {
-			"CfnUrlPrefix" : {
-				"Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.9/"
-			}
-		}
-    },
-    "Resources"                : {
-		"Infrastructure" : {
-			"Type" : "AWS::CloudFormation::Stack",
-			"Properties" : {
-				"TemplateURL" : {
-					"Fn::Join" : [
-						"",
-						[
-							{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "Prefix" ] },
-							"Quickstart/Infrastructure.template"
-						]
-					]
-				}
-			}
-		},
-		"MasterMP96" : {
-            "Type" : "AWS::CloudFormation::Stack",
-            "Properties" : {
-                "TemplateURL" : {
-					"Fn::Join" : [
-						"",
-						[
-							{ "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "Prefix" ] },
-							"Marketplace/MasterMP96.template"
-						]
-					]
-				},
-                "Parameters"  : {
-                    "AWSIKeyPairName" : {
-                        "Ref" : "AWSKeyPairName"
-                    },
-                    "AWSIVPC"         : {
-                        "Fn::GetAtt" : [ "Infrastructure", "Outputs.VPCID"]
-                    },
-					"DSISubnetID"         : {
-                        "Fn::GetAtt" : [ "Infrastructure", "Outputs.PublicSubnet"]
-                    },
-					"DBIRDSInstanceSize"         : {
-						"Fn::FindInMap" : [
-							"RDSInstanceSize",
-							{
-								"Ref" : "AWS::Region"
-							},
-							{
-								"Fn::FindInMap" : [
-									"DeploymentSize",
-									"1-100",
-									"Size"
-								]	
-							}
-						]				
-					},
-					"DBIStorageAllocation"         : {
-						"Fn::FindInMap" : [
-							"RDSStorageSize",
-							"1-100",
-							"Size"
-						]					
-					},
-					"DBPBackupDays"         : "5",
-					"DBPCreateDbInstance"         : "Yes" ,
-					"DBICAdminName"         : "dsmadmin",
-					"DBICAdminPassword"         : {
-                        "Ref" : "DeepSecurityAdminPass"
-                    },
-					"DBPEngine"         : "Oracle",
-					"DBPEndpoint" : "" ,
-					"DBPName"         :"dsm",
-					"DSCAdminName"         : {
-                        "Ref" : "DeepSecurityAdminName"
-                    },
-					"DSCAdminPassword"         : {
-                        "Ref" : "DeepSecurityAdminPass"
-                    },
-					"DSIMultiNode"         : "1" ,
-					"DSIPLicenseKey" : {
-						"Fn::If" : [
-							"NoLicenseKey",
-							"XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
-							{ "Ref" : "DeepSecurityLicenseKey" }
-						]
-					},
-					"DSIPHeartbeatPort" : "4120",
-					"DSIPGUIPort"       : "443",
-					"DSIPInstanceType"         : {
-						"Fn::FindInMap" : [
-							"DSMSIZE",
-							{
-								"Ref" : "AWS::Region"
-							},
-							{
-								"Fn::FindInMap" : [
-									"DeploymentSize",
-									"1-100",
-									"Size"
-								]	
-							}
-						]		
-					},
-					"DBISubnet1"         : {
-						"Fn::GetAtt" : [ "Infrastructure", "Outputs.PrivateSubnet1"]
-                    },
-					"DBISubnet2"         : {
-						"Fn::GetAtt" : [ "Infrastructure", "Outputs.PrivateSubnet2"]
-                    },
-					"DSIPLicense"         : "BYOL",
-					"DBPMultiAZ": "true",
-					"CfnUrlPrefix" : { "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "Prefix" ] },
-					"DSCLicenseType" : "Network"
-                }
+         }
+      }
+   },
+   "Parameters":{  
+      "AWSKeyPairName":{  
+         "Description":"Select an existing key pair to use for connecting to your Deep Security Manager Instance.",
+         "Type":"AWS::EC2::KeyPair::KeyName",
+         "MinLength":"1",
+         "MaxLength":"255",
+         "ConstraintDescription":"Select an existing EC2 Key Pair."
+      },
+      "DeepSecurityAdminName":{  
+         "Default":"MasterAdmin",
+         "NoEcho":false,
+         "Description":"The Deep Security Manager administrator username for Web Console Access.",
+         "Type":"String",
+         "MinLength":1,
+         "MaxLength":16,
+         "AllowedPattern":"[a-zA-Z][a-zA-Z0-9]*",
+         "ConstraintDescription":"Must begin with a letter and contain only alphanumeric characters. Min length 1, max length 16"
+      },
+      "DeepSecurityAdminPass":{  
+         "NoEcho":true,
+         "Description":"The Deep Security Manager administrator password. Must be 8-41 characters long and can only contain alphanumeric characters or the following special characters !^*-_+",
+         "Type":"String",
+         "MinLength":8,
+         "MaxLength":41,
+         "AllowedPattern":"[a-zA-Z0-9!^*\\-_+]*",
+         "ConstraintDescription":"Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
+      },
+      "DeepSecurityLicenseKey":{  
+         "Description":"If you have a Deep Security license key, enter it here. Including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG).",
+         "Type":"String",
+         "MinLength":0,
+         "MaxLength":37,
+         "AllowedPattern":"(?:[A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5})?",
+         "ConstraintDescription":"Key can only contain ASCII characters."
+      }
+   },
+   "Mappings":{  
+      "DSMSIZE":{  
+         "us-east-1":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         },
+         "us-west-1":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         },
+         "us-west-2":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         },
+         "eu-west-1":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         },
+         "eu-central-1":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         },
+         "sa-east-1":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         },
+         "ap-northeast-1":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         },
+         "ap-southeast-1":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         },
+         "ap-southeast-2":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         },
+         "ap-northeast-2":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         },
+         "us-east-2":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         },
+         "ca-central-1":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         },
+         "ap-south-1":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         },
+         "eu-west-2":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         }
+      },
+      "RDSStorageSize":{  
+         "1-100":{  
+            "Size":"50"
+         },
+         "101-500":{  
+            "Size":"150"
+         },
+         "501-1000":{  
+            "Size":"200"
+         },
+         "1001-2000":{  
+            "Size":"300"
+         }
+      },
+      "RDSInstanceSize":{  
+         "us-east-1":{  
+            "1":"db.m4.large",
+            "2":"db.m4.large",
+            "3":"db.m4.xlarge",
+            "4":"db.m4.xlarge"
+         },
+         "us-west-1":{  
+            "1":"db.m4.large",
+            "2":"db.m4.large",
+            "3":"db.m4.xlarge",
+            "4":"db.m4.xlarge"
+         },
+         "us-west-2":{  
+            "1":"db.m4.large",
+            "2":"db.m4.large",
+            "3":"db.m4.xlarge",
+            "4":"db.m4.xlarge"
+         },
+         "eu-west-1":{  
+            "1":"db.m4.large",
+            "2":"db.m4.large",
+            "3":"db.m4.xlarge",
+            "4":"db.m4.xlarge"
+         },
+         "eu-central-1":{  
+            "1":"db.m4.large",
+            "2":"db.m4.large",
+            "3":"db.m4.xlarge",
+            "4":"db.m4.xlarge"
+         },
+         "sa-east-1":{  
+            "1":"db.m3.large",
+            "2":"db.m3.large",
+            "3":"db.m3.xlarge",
+            "4":"db.m3.xlarge"
+         },
+         "ap-northeast-1":{  
+            "1":"db.m4.large",
+            "2":"db.m4.large",
+            "3":"db.m4.xlarge",
+            "4":"db.m4.xlarge"
+         },
+         "ap-southeast-1":{  
+            "1":"db.m4.large",
+            "2":"db.m4.large",
+            "3":"db.m4.xlarge",
+            "4":"db.m4.xlarge"
+         },
+         "ap-southeast-2":{  
+            "1":"db.m4.large",
+            "2":"db.m4.large",
+            "3":"db.m4.xlarge",
+            "4":"db.m4.xlarge"
+         },
+         "ap-northeast-2":{  
+            "1":"db.m4.large",
+            "2":"db.m4.large",
+            "3":"db.m4.xlarge",
+            "4":"db.m4.xlarge"
+         },
+         "us-east-2":{  
+            "1":"db.m4.large",
+            "2":"db.m4.large",
+            "3":"db.m4.xlarge",
+            "4":"db.m4.xlarge"
+         },
+         "ca-central-1":{  
+            "1":"db.m4.large",
+            "2":"db.m4.large",
+            "3":"db.m4.xlarge",
+            "4":"db.m4.xlarge"
+         },
+         "ap-south-1":{  
+            "1":"db.m4.large",
+            "2":"db.m4.large",
+            "3":"db.m4.xlarge",
+            "4":"db.m4.xlarge"
+         },
+         "eu-west-2":{  
+            "1":"db.m4.large",
+            "2":"db.m4.large",
+            "3":"db.m4.xlarge",
+            "4":"db.m4.xlarge"
+         }
+      },
+      "DeploymentSize":{  
+         "1-100":{  
+            "Size":"1"
+         },
+         "101-500":{  
+            "Size":"2"
+         },
+         "501-1000":{  
+            "Size":"3"
+         },
+         "1001-2000":{  
+            "Size":"4"
+         }
+      },
+      "Parameters":{  
+         "CfnUrlPrefix":{  
+            "Prefix":"https://s3.amazonaws.com/trend-micro-quick-start/v3.9/"
+         }
+      }
+   },
+   "Resources":{  
+      "Infrastructure":{  
+         "Type":"AWS::CloudFormation::Stack",
+         "Properties":{  
+            "TemplateURL":{  
+               "Fn::Join":[  
+                  "",
+                  [  
+                     {  
+                        "Fn::FindInMap":[  
+                           "Parameters",
+                           "CfnUrlPrefix",
+                           "Prefix"
+                        ]
+                     },
+                     "Quickstart/Infrastructure.template"
+                  ]
+               ]
             }
-        }
-    },
-	"Conditions"               : {
-		"NoLicenseKey": {
-			"Fn::Equals": [
-				{
-					"Ref": "DeepSecurityLicenseKey"
-				},
-				""
-			]
-		}
-	},
-	"Outputs"                  : {
-        "DeepSecurityConsole" : {
-            "Value" : {
-	            "Fn::GetAtt" : [
-					"MasterMP96",
-                    "Outputs.DeepSecurityConsole"
-				]
+         }
+      },
+      "MasterMP":{  
+         "Type":"AWS::CloudFormation::Stack",
+         "Properties":{  
+            "TemplateURL":{  
+               "Fn::Join":[  
+                  "",
+                  [  
+                     {  
+                        "Fn::FindInMap":[  
+                           "Parameters",
+                           "CfnUrlPrefix",
+                           "Prefix"
+                        ]
+                     },
+                     "Marketplace/MasterMP.template"
+                  ]
+               ]
+            },
+            "Parameters":{  
+               "AWSIKeyPairName":{  
+                  "Ref":"AWSKeyPairName"
+               },
+               "AWSIVPC":{  
+                  "Fn::GetAtt":[  
+                     "Infrastructure",
+                     "Outputs.VPCID"
+                  ]
+               },
+               "DSISubnetID":{  
+                  "Fn::GetAtt":[  
+                     "Infrastructure",
+                     "Outputs.PublicSubnet"
+                  ]
+               },
+               "DBIRDSInstanceSize":{  
+                  "Fn::FindInMap":[  
+                     "RDSInstanceSize",
+                     {  
+                        "Ref":"AWS::Region"
+                     },
+                     {  
+                        "Fn::FindInMap":[  
+                           "DeploymentSize",
+                           "1-100",
+                           "Size"
+                        ]
+                     }
+                  ]
+               },
+               "DBIStorageAllocation":{  
+                  "Fn::FindInMap":[  
+                     "RDSStorageSize",
+                     "1-100",
+                     "Size"
+                  ]
+               },
+               "DBPBackupDays":"5",
+               "DBPCreateDbInstance":"Yes",
+               "DBICAdminName":"dsmadmin",
+               "DBICAdminPassword":{  
+                  "Ref":"DeepSecurityAdminPass"
+               },
+               "DBPEngine":"Oracle",
+               "DBPEndpoint":"",
+               "DBPName":"dsm",
+               "DSCAdminName":{  
+                  "Ref":"DeepSecurityAdminName"
+               },
+               "DSCAdminPassword":{  
+                  "Ref":"DeepSecurityAdminPass"
+               },
+               "DSIMultiNode":"1",
+               "DSIPLicenseKey":{  
+                  "Fn::If":[  
+                     "NoLicenseKey",
+                     "XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
+                     {  
+                        "Ref":"DeepSecurityLicenseKey"
+                     }
+                  ]
+               },
+               "DSIPHeartbeatPort":"4120",
+               "DSIPGUIPort":"443",
+               "DSIPInstanceType":{  
+                  "Fn::FindInMap":[  
+                     "DSMSIZE",
+                     {  
+                        "Ref":"AWS::Region"
+                     },
+                     {  
+                        "Fn::FindInMap":[  
+                           "DeploymentSize",
+                           "1-100",
+                           "Size"
+                        ]
+                     }
+                  ]
+               },
+               "DBISubnet1":{  
+                  "Fn::GetAtt":[  
+                     "Infrastructure",
+                     "Outputs.PrivateSubnet1"
+                  ]
+               },
+               "DBISubnet2":{  
+                  "Fn::GetAtt":[  
+                     "Infrastructure",
+                     "Outputs.PrivateSubnet2"
+                  ]
+               },
+               "DSIPLicense":"BYOL",
+               "DBPMultiAZ":"true",
+               "CfnUrlPrefix":{  
+                  "Fn::FindInMap":[  
+                     "Parameters",
+                     "CfnUrlPrefix",
+                     "Prefix"
+                  ]
+               },
+               "DSCLicenseType":"Network"
             }
-        },
-		"DeepSecurityHeartbeat" : {
-			"Value" : {
-				"Fn::GetAtt" : [
-					"MasterMP96",
-					"Outputs.DeepSecurityConsole"
-				]
-			}
-		}
-    }
+         }
+      }
+   },
+   "Conditions":{  
+      "NoLicenseKey":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"DeepSecurityLicenseKey"
+            },
+            ""
+         ]
+      }
+   },
+   "Outputs":{  
+      "DeepSecurityConsole":{  
+         "Value":{  
+            "Fn::GetAtt":[  
+               "MasterMP",
+               "Outputs.DeepSecurityConsole"
+            ]
+         }
+      },
+      "DeepSecurityHeartbeat":{  
+         "Value":{  
+            "Fn::GetAtt":[  
+               "MasterMP",
+               "Outputs.DeepSecurityConsole"
+            ]
+         }
+      }
+   }
 }

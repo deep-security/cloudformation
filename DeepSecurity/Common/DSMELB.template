@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "v2016-01-08: Deploys Elastic Load Balancers and Security Groups for Deep Security Manager.",
+    "Description"              : "v5.0: Deploys Elastic Load Balancers and Security Groups for Deep Security Manager.",
     "Parameters"               : {
         "AWSIVPC" : {
             "Description" : "Existing VPC to deploy Deep Security Manager",
@@ -35,7 +35,7 @@
         },
 		"CfnUrlPrefix" : {
 			"Type" : "String",
-			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v4.0/"
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v5.0:/"
 		}
     },
     "Resources"                : {

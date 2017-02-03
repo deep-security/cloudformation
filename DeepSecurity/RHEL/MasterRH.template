@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "",
+    "Description"              : "v5.0: Trend Micro Deep Security AWS RHEL master template.",
 	"Metadata" : {
 		"AWS::CloudFormation::Interface" : {
 			"ParameterGroups" : [
@@ -275,11 +275,11 @@
 			},
 		"CfnUrlPrefix" : {
 			"Type" : "String",
-			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v4.0/"
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v5.0:/"
 		}
     },
     "Resources"                : {
-        "DSM96Node1" : {
+        "DSMNode1" : {
             "Type" : "AWS::CloudFormation::Stack",
             "DependsOn" : [
                 "DSDatabaseAbstract",
@@ -292,7 +292,7 @@
 						"",
 						[
 							{ "Ref" : "CfnUrlPrefix" },
-							"RHEL/DSM96RH.template"
+							"RHEL/DSMRH.template"
 						]
 					]
 				},
@@ -384,20 +384,20 @@
                 }
             }
         },
-        "DSM96Node2" : {
+        "DSMNode2" : {
             "Type" : "AWS::CloudFormation::Stack",
             "DependsOn" : [
                 "DSIDSMSecurityGroup",
                 "DSM1CompleteWaitCondition"
             ],
-            "Condition" : "DSM96Node2DB",
+            "Condition" : "DSMNode2DB",
             "Properties" : {
                 "TemplateURL" : {
 					"Fn::Join" : [
 						"",
 						[
 							{ "Ref" : "CfnUrlPrefix" },
-							"RHEL/DSM96RH.template"
+							"RHEL/DSMRH.template"
 						]
 					]
 				},
@@ -477,7 +477,7 @@
                 }
             }
         },
-        "DSM96Node1NoDB" : {
+        "DSMNode1NoDB" : {
             "Type" : "AWS::CloudFormation::Stack",
             "DependsOn" : [
                 "DSIDSMSecurityGroup"
@@ -489,7 +489,7 @@
 						"",
 						[
 							{ "Ref" : "CfnUrlPrefix" },
-							"RHEL/DSM96RH.template"
+							"RHEL/DSMRH.template"
 						]
 					]
 				},
@@ -578,17 +578,17 @@
                 }
             }
         },
-        "DSM96Node2NoDB" : {
+        "DSMNode2NoDB" : {
             "Type" : "AWS::CloudFormation::Stack",
             "DependsOn" : "DSM1NoDBCompleteWaitCondition",
-            "Condition" : "DSM96Node2NoDB",
+            "Condition" : "DSMNode2NoDB",
             "Properties" : {
                 "TemplateURL" : {
 					"Fn::Join" : [
 						"",
 						[
 							{ "Ref" : "CfnUrlPrefix" },
-							"RHEL/DSM96RH.template"
+							"RHEL/DSMRH.template"
 						]
 					]
 				},
@@ -781,7 +781,7 @@
 						"",
 						[
 							{ "Ref" : "CfnUrlPrefix" },
-							"Common/DSM96ELB.template"
+							"Common/DSMELB.template"
 						]
 					]
 				},
@@ -844,7 +844,7 @@
             "Condition" : "LaunchRDSInstance",
             "Type"      : "AWS::CloudFormation::WaitCondition",
             "DependsOn" : [
-                "DSM96Node1"
+                "DSMNode1"
             ],
             "Properties" : {
                 "Handle" : {
@@ -861,7 +861,7 @@
             "Condition" : "DoNotLaunchRDSInstance",
             "Type"      : "AWS::CloudFormation::WaitCondition",
             "DependsOn" : [
-                "DSM96Node1NoDB"
+                "DSMNode1NoDB"
             ],
             "Properties" : {
                 "Handle" : {
@@ -896,7 +896,7 @@
                 "No"
             ]
         },
-        "DSM96Node2DB"           : {
+        "DSMNode2DB"           : {
             "Fn::And" : [
                 {
                     "Condition" : "DSIsMultiNode"
@@ -906,7 +906,7 @@
                 }
             ]
         },
-        "DSM96Node2NoDB"         : {
+        "DSMNode2NoDB"         : {
             "Fn::And" : [
                 {
                     "Condition" : "DSIsMultiNode"

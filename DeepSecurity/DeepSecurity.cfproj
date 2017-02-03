@@ -24,7 +24,7 @@
     <Compile Include="Common\DB\DSDBSQLRDS.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Common\DSM96ELB.template">
+    <Compile Include="Common\DSMELB.template">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Common\SecurityGroups\DSELBSG.template">
@@ -42,10 +42,10 @@
     <Compile Include="Common\sps.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Marketplace\DSM96MP.template">
+    <Compile Include="Marketplace\DSMMP.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Marketplace\MasterMP96.template">
+    <Compile Include="Marketplace\MasterMP.template">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Quickstart\Infrastructure.template">
@@ -66,51 +66,51 @@
     <Compile Include="Quickstart\TMQuickStartRHEL.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RHEL\DSM96RH.template">
+    <Compile Include="RHEL\DSMRH.template">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RHEL\MasterRH96.template">
+    <Compile Include="RHEL\MasterRH.template">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\Scripts\cfn-rh-helper">
+    <Content Include="Common\Scripts\cfn-rh-helper.sh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\Scripts\cfn-rh-sql">
+    <Content Include="Common\Scripts\cfn-rh-sql.sh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\Scripts\create-console-listener">
+    <Content Include="Common\Scripts\create-console-listener.sh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\Scripts\create-console-listener-policy">
+    <Content Include="Common\Scripts\create-console-listener-policy.sh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\Scripts\create-DSM-SqlDB.py">
+    <Content Include="Common\Scripts\create-dsm-db.py">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\Scripts\createCloudAccount">
+    <Content Include="Common\Scripts\createCloudAccount.sh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\Scripts\createCloudAccountGc">
+    <Content Include="Common\Scripts\createCloudAccountGc.sh">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Common\Scripts\dsm_s.service">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\Scripts\kill-mp-web-installer">
+    <Content Include="Common\Scripts\kill-mp-web-installer.sh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\Scripts\reactivate-manager">
+    <Content Include="Common\Scripts\reactivate-manager.sh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\Scripts\set-aiaSettings">
+    <Content Include="Common\Scripts\set-aia-settings.sh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\Scripts\set-lbSettings">
+    <Content Include="Common\Scripts\set-lb-Settings.sh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Common\Scripts\wait-for-relay-and-stop-manager">
+    <Content Include="Common\Scripts\wait-for-relay-and-stop-manager.sh">
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>
