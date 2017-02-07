@@ -320,7 +320,8 @@
                                 "ec2:DescribeRegions",
                                 "ec2:DescribeVpcs",
                                 "ec2:DescribeSubnets",
-                                "ec2:DescribeTags"
+                                "ec2:DescribeTags",
+                                "iam:ListAccountAliases"
                             ],
                             "Resource" : "*"
                         }
