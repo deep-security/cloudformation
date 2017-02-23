@@ -899,7 +899,7 @@
                 "Handle" : {
                     "Ref" : "DSM1CompleteWaitHandle"
                 },
-                "Timeout" : "1200"
+                "Timeout" : "1800"
             }
         },
         "DSM1NoDBCompleteWaitHandle"      : {

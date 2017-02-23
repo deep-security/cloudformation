@@ -1,1679 +1,1681 @@
-{
-    "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "v2016-01-08: Deploys Deep Security Manager to AWS. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
-    "Parameters"               : {
-        "AWSIKeyPairName" : {
-            "Description" : "Existing key pair to use for connecting to your Deep Security Manager Instance",
-            "Type"        : "AWS::EC2::KeyPair::KeyName",
-            "MinLength"   : "1",
-            "MaxLength"   : "255",
-            "ConstraintDescription" : "Select an existing EC2 Key Pair."
-        },
-        "AWSIVPC"         : {
-            "Description" : "Existing VPC to deploy Deep Security Manager",
-            "Type"        : "AWS::EC2::VPC::Id",
-            "MinLength"   : "1",
-            "MaxLength"   : "255",
-            "AllowedPattern" : "[-_a-zA-Z0-9]*"
-        },
-        "DSCAdminName"    : {
-            "Default" : "MasterAdmin",
-            "NoEcho"  : false,
-            "Description" : "The Deep Security Manager administrator account username for Web Console Access",
-            "Type"        : "String",
-            "MinLength"   : 1,
-            "MaxLength"   : 16,
-            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
-            "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
-        },
-        "DSCAdminPassword" : {
-            "NoEcho" : true,
-            "Description" : "The Deep Security Manager administrator account password",
-            "Type"        : "String",
-            "MinLength"   : 8,
-            "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9!^*\\-_+]*",
-            "ConstraintDescription" : "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
-        },
-        "DSIPLicenseKey"   : {
-            "Description" : "Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
-            "Type"        : "String",
-            "MinLength"   : 37,
-            "MaxLength"   : 37,
-            "AllowedPattern" : "[A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}",
-            "ConstraintDescription" : "Key can only contain ASCII characters.",
-            "Default"               : "XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
-        },
-        "DSIPHeartbeatPort" : {
-            "Description" : "The heartbeat port used by Deep Security Agents and appliances to communicate with the Deep Security Manager.",
-            "Type"        : "Number",
-            "MinValue"    : 0,
-            "MaxValue"    : 65535,
-            "Default"     : "4120",
-            "ConstraintDescription" : "Must be a valid TCP port."
-        },
-        "DSIPGUIPort"       : {
-            "Description" : "The Deep Security Manager application and GUI port.",
-            "Type"        : "Number",
-            "MinValue"    : 0,
-            "MaxValue"    : 65535,
-            "Default"     : "4119",
-            "ConstraintDescription" : "Must be a valid TCP port."
-        },
-        "DSIPInstanceType"  : {
-            "Description" : "Amazon EC2 instance type for the Deep Security Manager Node Instances",
-            "Type"        : "String",
-            "Default"     : "m3.large",
-            "AllowedValues" : [
-                "m3.large",
-                "m3.xlarge",
-                "m3.2xlarge",
-				"m4.large",
-                "m4.xlarge",
-                "m4.2xlarge",
-                "c3.xlarge",
-                "c3.2xlarge",
-                "c3.4xlarge",
-                "c3.8xlarge",
-				"c4.xlarge",
-                "c4.2xlarge",
-                "c4.4xlarge",
-                "c4.8xlarge",
-                "r3.large",
-                "r3.xlarge",
-                "r3.2xlarge",
-                "r3.4xlarge",
-                "r3.8xlarge",
-                "i2.xlarge",
-                "i2.2xlarge",
-                "i2.4xlarge",
-                "i2.8xlarge",
-                "g2.2xlarge"
+{  
+   "AWSTemplateFormatVersion":"2010-09-09",
+   "Description":"v2016-01-08: Deploys Deep Security Manager to AWS. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
+   "Parameters":{  
+      "AWSIKeyPairName":{  
+         "Description":"Existing key pair to use for connecting to your Deep Security Manager Instance",
+         "Type":"AWS::EC2::KeyPair::KeyName",
+         "MinLength":"1",
+         "MaxLength":"255",
+         "ConstraintDescription":"Select an existing EC2 Key Pair."
+      },
+      "AWSIVPC":{  
+         "Description":"Existing VPC to deploy Deep Security Manager",
+         "Type":"AWS::EC2::VPC::Id",
+         "MinLength":"1",
+         "MaxLength":"255",
+         "AllowedPattern":"[-_a-zA-Z0-9]*"
+      },
+      "DSCAdminName":{  
+         "Default":"MasterAdmin",
+         "NoEcho":false,
+         "Description":"The Deep Security Manager administrator account username for Web Console Access",
+         "Type":"String",
+         "MinLength":1,
+         "MaxLength":16,
+         "AllowedPattern":"[a-zA-Z][a-zA-Z0-9]*",
+         "ConstraintDescription":"must begin with a letter and contain only alphanumeric characters."
+      },
+      "DSCAdminPassword":{  
+         "NoEcho":true,
+         "Description":"The Deep Security Manager administrator account password",
+         "Type":"String",
+         "MinLength":8,
+         "MaxLength":41,
+         "AllowedPattern":"[a-zA-Z0-9!^*\\-_+]*",
+         "ConstraintDescription":"Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
+      },
+      "DSIPLicenseKey":{  
+         "Description":"Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
+         "Type":"String",
+         "MinLength":37,
+         "MaxLength":37,
+         "AllowedPattern":"[A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}",
+         "ConstraintDescription":"Key can only contain ASCII characters.",
+         "Default":"XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
+      },
+      "DSIPHeartbeatPort":{  
+         "Description":"The heartbeat port used by Deep Security Agents and appliances to communicate with the Deep Security Manager.",
+         "Type":"Number",
+         "MinValue":0,
+         "MaxValue":65535,
+         "Default":"4120",
+         "ConstraintDescription":"Must be a valid TCP port."
+      },
+      "DSIPGUIPort":{  
+         "Description":"The Deep Security Manager application and GUI port.",
+         "Type":"Number",
+         "MinValue":0,
+         "MaxValue":65535,
+         "Default":"4119",
+         "ConstraintDescription":"Must be a valid TCP port."
+      },
+      "DSIPInstanceType":{  
+         "Description":"Amazon EC2 instance type for the Deep Security Manager Node Instances",
+         "Type":"String",
+         "Default":"m3.large",
+         "AllowedValues":[  
+            "m3.large",
+            "m3.xlarge",
+            "m3.2xlarge",
+            "m4.large",
+            "m4.xlarge",
+            "m4.2xlarge",
+            "c3.xlarge",
+            "c3.2xlarge",
+            "c3.4xlarge",
+            "c3.8xlarge",
+            "c4.xlarge",
+            "c4.2xlarge",
+            "c4.4xlarge",
+            "c4.8xlarge",
+            "r3.large",
+            "r3.xlarge",
+            "r3.2xlarge",
+            "r3.4xlarge",
+            "r3.8xlarge",
+            "i2.xlarge",
+            "i2.2xlarge",
+            "i2.4xlarge",
+            "i2.8xlarge",
+            "g2.2xlarge"
+         ]
+      },
+      "DBICAdminName":{  
+         "Default":"dsadmin",
+         "NoEcho":false,
+         "Description":"Admin account username to be used for the database instance",
+         "Type":"String",
+         "MinLength":1,
+         "MaxLength":16,
+         "AllowedPattern":"[a-zA-Z][a-zA-Z0-9]*",
+         "ConstraintDescription":"must begin with a letter and contain only alphanumeric characters."
+      },
+      "DBICAdminPassword":{  
+         "NoEcho":true,
+         "Description":"Password to be used for the database admin account",
+         "Type":"String",
+         "MinLength":8,
+         "MaxLength":41,
+         "AllowedPattern":"[a-zA-Z0-9!^*\\-_+]*",
+         "ConstraintDescription":"Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
+      },
+      "DBPName":{  
+         "Default":"dsm",
+         "Description":"Name to be assigned to the database",
+         "Type":"String",
+         "MinLength":1,
+         "MaxLength":64,
+         "AllowedPattern":"[a-zA-Z][a-zA-Z0-9]*",
+         "ConstraintDescription":"must begin with a letter and contain only alphanumeric characters."
+      },
+      "DBPRDSEndpoint":{  
+         "Default":"RDS.FQDN.domain",
+         "Description":"FQDN or IP of RDS Endpoint",
+         "Type":"String",
+         "MinLength":"1",
+         "MaxLength":"64"
+      },
+      "DSMSG":{  
+         "Type":"AWS::EC2::SecurityGroup::Id"
+      },
+      "DBPEngine":{  
+         "Default":"Embedded",
+         "Type":"String",
+         "AllowedValues":[  
+            "Embedded",
+            "Oracle",
+            "SQL"
+         ]
+      },
+      "DSISubnetID":{  
+         "Description":"Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
+         "Type":"AWS::EC2::Subnet::Id",
+         "MinLength":"1",
+         "MaxLength":"255",
+         "AllowedPattern":"[-_a-zA-Z0-9]*",
+         "ConstraintDescription":"Subnet ID must exist in the chosen VPC"
+      },
+      "DSMPMNode":{  
+         "Description":"Select whether this is an additional node to be added to an existing Deep Security Manager Infrastructure",
+         "Type":"String",
+         "AllowedValues":[  
+            "Yes",
+            "No"
+         ],
+         "Default":"No"
+      },
+      "DSIPLicense":{  
+         "Description":"Choose License Model. If choosing BYOL you may enter the license below",
+         "Type":"String",
+         "AllowedValues":[  
+            "PerHost",
+            "BYOL",
+            "25",
+            "50",
+            "100",
+            "200"
+         ]
+      },
+      "CreateEIP":{  
+         "Description":"Allocate an EIP and associate it with this Deep Security Manager Instance. Recommend set to true unless deploying behind an ELB",
+         "Type":"String",
+         "AllowedValues":[  
+            "True",
+            "False"
+         ],
+         "Default":"True"
+      },
+      "DSIELB":{  
+         "Type":"String",
+         "Default":""
+      },
+      "DSIELBFQDN":{  
+         "Type":"String",
+         "Default":""
+      },
+      "DSM1CompleteWaitHandle":{  
+         "Type":"String",
+         "Default":""
+      },
+      "PrivateDSIELBFQDN":{  
+         "Type":"String",
+         "Default":""
+      },
+      "PrivateDSIELB":{  
+         "Type":"String",
+         "Default":""
+      },
+      "DSELBPosture":{  
+         "Description":"Use internal or external ELB",
+         "Type":"String",
+         "AllowedValues":[  
+            "External",
+            "Internal"
+         ],
+         "Default":"External"
+      },
+      "CfnUrlPrefix":{  
+         "Type":"String",
+         "Default":"https://s3.amazonaws.com/trend-micro-quick-start/v4.0/"
+      },
+      "DSCLicenseType":{  
+         "Type":"String",
+         "Default":"Enterprise",
+         "AllowedValues":[  
+            "Enterprise",
+            "Network"
+         ]
+      }
+   },
+   "Mappings":{  
+      "DSMAMI":{  
+         "us-east-1":{  
+            "PerHost":"ami-096e7463",
+            "BYOL":"ami-5eff3933"
+         },
+         "us-east-2":{
+            "PerHost":"ami-8ec9eceb",
+            "BYOL":"ami-5c6d3639"
+         },
+         "us-west-1":{  
+            "PerHost":"ami-820779e2",
+            "BYOL":"ami-a8bffac8"
+         },
+         "us-west-2":{  
+            "PerHost":"ami-27a95947",
+            "BYOL":"ami-2e37f24e"
+         },
+         "ca-central-1":{
+            "PerHost":"ami-c7922fa3",
+            "BYOL":"ami-cfc974ab"
+         },
+         "ap-south-1":{ 
+            "PerHost":"ami-e6e09189",
+            "BYOL":"ami-f8a9c397"
+         },
+         "ap-northeast-2":{
+            "PerHost":"ami-0edb0b60",
+            "BYOL":"ami-c62ee5a8"
+         },
+         "ap-southeast-1":{ 
+            "PerHost":"ami-9dc87efe",
+            "BYOL":"ami-6218cb01"
+         },
+         "ap-southeast-2":{  
+            "PerHost":"ami-cbefc2a8",
+            "BYOL":"ami-8a8ca5e9"
+         },
+         "ap-northeast-1":{
+            "PerHost":"ami-7fa8e718",
+            "BYOL":"ami-d854beb9"
+         },
+         "eu-central-1":{
+            "PerHost":"ami-a913f0c6",
+            "BYOL":"ami-c14fa6ae"
+         },
+         "eu-west-1":{  
+            "PerHost":"ami-0329a670",
+            "BYOL":"ami-48a6383b"
+         },
+         "eu-west-2":{
+            "PerHost":"ami-6e35200a",
+            "BYOL":"ami-ae5b4eca"
+         },
+         "sa-east-1":{
+            "PerHost":"ami-d194f3bd",
+            "BYOL":"ami-c250daae"
+         }
+      },
+      "DSMSIZE":{  
+         "us-east-1":{  
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "us-east-2":{
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "us-west-1":{  
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "us-west-2":{  
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "ca-central-1":{
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "ap-south-1":{ 
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "ap-northeast-2":{
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "ap-southeast-1":{ 
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "ap-southeast-2":{  
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "ap-northeast-1":{
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "eu-central-1":{
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "eu-west-1":{  
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "eu-west-2":{
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "sa-east-1":{
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         }
+      },
+      "TrendRegionMap":{  
+         "us-east-1":{  
+            "regionkey":"amazon.cloud.region.key.1"
+         },
+         "us-west-2":{  
+            "regionkey":"amazon.cloud.region.key.2"
+         },
+         "us-west-1":{  
+            "regionkey":"amazon.cloud.region.key.3"
+         },
+         "eu-west-1":{  
+            "regionkey":"amazon.cloud.region.key.4"
+         },
+         "ap-southeast-1":{  
+            "regionkey":"amazon.cloud.region.key.5"
+         },
+         "ap-northeast-1":{  
+            "regionkey":"amazon.cloud.region.key.6"
+         },
+         "sa-east-1":{  
+            "regionkey":"amazon.cloud.region.key.7"
+         },
+         "ap-southeast-2":{  
+            "regionkey":"amazon.cloud.region.key.8"
+         },
+         "eu-central-1":{  
+            "regionkey":"amazon.cloud.region.key.9"
+         },
+         "ap-northeast-2":{  
+            "regionkey":"amazon.cloud.region.key.12"
+         }
+      },
+      "DSMDBMap":{  
+         "SQL":{  
+            "DbTypeString":"Microsoft SQL Server"
+         },
+         "Oracle":{  
+            "DbTypeString":"Oracle"
+         },
+         "Embedded":{  
+            "DbTypeString":"Embedded"
+         }
+      }
+   },
+   "Resources":{  
+      "DSIAMUser":{  
+         "Type":"AWS::IAM::User",
+         "Properties":{  
+
+         }
+      },
+      "DSIAMGroup":{  
+         "Type":"AWS::IAM::Group"
+      },
+      "Users":{  
+         "Type":"AWS::IAM::UserToGroupAddition",
+         "Properties":{  
+            "GroupName":{  
+               "Ref":"DSIAMGroup"
+            },
+            "Users":[  
+               {  
+                  "Ref":"DSIAMUser"
+               }
             ]
-        },
-        "DBICAdminName"     : {
-            "Default" : "dsadmin",
-            "NoEcho"  : false,
-            "Description" : "Admin account username to be used for the database instance",
-            "Type"        : "String",
-            "MinLength"   : 1,
-            "MaxLength"   : 16,
-            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
-            "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
-        },
-        "DBICAdminPassword" : {
-            "NoEcho" : true,
-            "Description" : "Password to be used for the database admin account",
-            "Type"        : "String",
-            "MinLength"   : 8,
-            "MaxLength"   : 41,
-            "AllowedPattern" : "[a-zA-Z0-9!^*\\-_+]*",
-            "ConstraintDescription" : "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
-        },
-        "DBPName"           : {
-            "Default" : "dsm",
-            "Description" : "Name to be assigned to the database",
-            "Type"        : "String",
-            "MinLength"   : 1,
-            "MaxLength"   : 64,
-            "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
-            "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
-        },
-        "DBPRDSEndpoint"    : {
-            "Default" : "RDS.FQDN.domain",
-            "Description" : "FQDN or IP of RDS Endpoint",
-            "Type"        : "String",
-            "MinLength"   : "1",
-            "MaxLength"   : "64"
-        },
-        "DSMSG"             : {
-            "Type" : "AWS::EC2::SecurityGroup::Id"
-        },
-        "DBPEngine"         : {
-            "Default" : "Embedded",
-            "Type"    : "String",
-            "AllowedValues" : [
-                "Embedded",
-                "Oracle",
-                "SQL"
+         }
+      },
+      "DSMUserPolicies":{  
+         "Type":"AWS::IAM::Policy",
+         "Properties":{  
+            "PolicyName":"DSMUsers",
+            "PolicyDocument":{  
+               "Statement":[  
+                  {  
+                     "Effect":"Allow",
+                     "Action":[  
+                        "ec2:DescribeImages",
+                        "ec2:DescribeInstances",
+                        "ec2:DescribeRegions",
+                        "ec2:DescribeSubnets",
+                        "ec2:DescribeTags",
+                        "ec2:DescribeVpcs",
+                        "iam:ListAccountAliases",
+                        "sts:AssumeRole"
+                     ],
+                     "Resource":"*"
+                  }
+               ]
+            },
+            "Groups":[  
+               {  
+                  "Ref":"DSIAMGroup"
+               }
             ]
-        },
-        "DSISubnetID"       : {
-            "Description" : "Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
-            "Type"        : "AWS::EC2::Subnet::Id",
-            "MinLength"   : "1",
-            "MaxLength"   : "255",
-            "AllowedPattern" : "[-_a-zA-Z0-9]*",
-            "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
-        },
-        "DSMPMNode"         : {
-            "Description" : "Select whether this is an additional node to be added to an existing Deep Security Manager Infrastructure",
-            "Type"        : "String",
-            "AllowedValues" : [
-                "Yes",
-                "No"
+         }
+      },
+      "AccessKeys":{  
+         "Type":"AWS::IAM::AccessKey",
+         "Properties":{  
+            "UserName":{  
+               "Ref":"DSIAMUser"
+            }
+         }
+      },
+      "DSMRole":{  
+         "Type":"AWS::IAM::Role",
+         "Properties":{  
+            "AssumeRolePolicyDocument":{  
+               "Statement":[  
+                  {  
+                     "Effect":"Allow",
+                     "Principal":{  
+                        "Service":[  
+                           "ec2.amazonaws.com"
+                        ]
+                     },
+                     "Action":[  
+                        "sts:AssumeRole"
+                     ]
+                  }
+               ]
+            },
+            "ManagedPolicyArns":{  
+               "Fn::If":[  
+                  "UsePerHost",
+                  [  
+                     "arn:aws:iam::aws:policy/AWSMarketplaceMeteringFullAccess"
+                  ],
+                  {  
+                     "Ref":"AWS::NoValue"
+                  }
+               ]
+            },
+            "Path":"/",
+            "Policies":[  
+               {  
+                  "Fn::If":[  
+                     "AddToELB",
+                     {  
+                        "PolicyName":"PlaceholderPolicy",
+                        "PolicyDocument":{  
+                           "Statement":[  
+                              {  
+                                 "Effect":"Allow",
+                                 "Action":[  
+                                    "ec2:DescribeLicenses"
+                                 ],
+                                 "Resource":"*"
+                              },
+                              {  
+                                 "Effect":"Allow",
+                                 "Action":[  
+                                    "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
+                                    "elasticloadbalancing:CreateLoadBalancerListeners",
+                                    "elasticloadbalancing:CreateLoadBalancerPolicy",
+                                    "elasticloadbalancing:SetLoadBalancerPoliciesOfListener"
+                                 ],
+                                 "Resource":{  
+                                    "Fn::Join":[  
+                                       "",
+                                       [  
+                                          "arn:aws:elasticloadbalancing:",
+                                          {  
+                                             "Ref":"AWS::Region"
+                                          },
+                                          ":",
+                                          {  
+                                             "Ref":"AWS::AccountId"
+                                          },
+                                          ":loadbalancer/",
+                                          {  
+                                             "Ref":"DSIELB"
+                                          }
+                                       ]
+                                    ]
+                                 }
+                              },
+                              {  
+                                 "Effect":"Allow",
+                                 "Action":[  
+                                    "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
+                                    "elasticloadbalancing:CreateLoadBalancerListeners",
+                                    "elasticloadbalancing:CreateLoadBalancerPolicy",
+                                    "elasticloadbalancing:SetLoadBalancerPoliciesOfListener"
+                                 ],
+                                 "Resource":{  
+                                    "Fn::Join":[  
+                                       "",
+                                       [  
+                                          "arn:aws:elasticloadbalancing:",
+                                          {  
+                                             "Ref":"AWS::Region"
+                                          },
+                                          ":",
+                                          {  
+                                             "Ref":"AWS::AccountId"
+                                          },
+                                          ":loadbalancer/",
+                                          {  
+                                             "Ref":"PrivateDSIELB"
+                                          }
+                                       ]
+                                    ]
+                                 }
+                              },
+                              {  
+                                 "Effect":"Allow",
+                                 "Action":[  
+                                    "iam:UploadServerCertificate",
+                                    "iam:GetServerCertificate"
+                                 ],
+                                 "Resource":{  
+                                    "Fn::Join":[  
+                                       "",
+                                       [  
+                                          "arn:aws:iam::",
+                                          {  
+                                             "Ref":"AWS::AccountId"
+                                          },
+                                          ":server-certificate/DeepSecurityElbCertificate-",
+                                          {  
+                                             "Ref":"AWS::StackName"
+                                          }
+                                       ]
+                                    ]
+                                 }
+                              },
+                              {  
+                                 "Effect":"Allow",
+                                 "Action":[  
+                                    "elasticloadbalancing:DescribeLoadBalancers"
+                                 ],
+                                 "Resource":"*"
+                              }
+                           ]
+                        }
+                     },
+                     {  
+                        "PolicyName":"PlaceholderPolicy",
+                        "PolicyDocument":{  
+                           "Statement":[  
+                              {  
+                                 "Effect":"Allow",
+                                 "Action":[  
+                                    "ec2:DescribeLicenses",
+                                    "ec2:DescribeImages",
+                                    "ec2:DescribeInstances",
+                                    "ec2:DescribeRegions",
+                                    "ec2:DescribeSubnets",
+                                    "ec2:DescribeTags",
+                                    "ec2:DescribeVpcs",
+                                    "iam:ListAccountAliases",
+                                    "sts:AssumeRole"
+                                 ],
+                                 "Resource":"*"
+                              }
+                           ]
+                        }
+                     }
+                  ]
+               }
+            ]
+         }
+      },
+      "DSMProfile":{  
+         "Type":"AWS::IAM::InstanceProfile",
+         "Properties":{  
+            "Path":"/",
+            "Roles":[  
+               {  
+                  "Ref":"DSMRole"
+               }
+            ]
+         }
+      },
+      "DSM":{  
+         "Type":"AWS::EC2::Instance",
+         "Metadata":{  
+            "AWS::CloudFormation::Init":{  
+               "configSets":{  
+                  "default":[  
+                     "setup",
+                     "prepDSMInstall",
+                     "installDSM",
+                     "addCloudAccount",
+                     "fixManagerHostObject"
+                  ],
+                  "doSqlSetup":[  
+                     "sqlSetup"
+                  ],
+                  "fixManagerLbSettings":[  
+                     "fixManagerLoadBalancerSettings"
+                  ],
+                  "fixManagerLocalLbAddress":[  
+                     "fixManagerLocalLoadBalancerHostsFile"
+                  ],
+                  "fixManagerHostObject":[  
+                     "fixManagerHostObject"
+                  ],
+                  "addDsmNode":[  
+                     "setup",
+                     "prepDSMInstall",
+                     "installDSM",
+                     "fixManagerHostObject"
+                  ],
+                  "setupLocalELB":[  
+                     "addToELB",
+                     "fixManagerLocalLoadBalancerHostsFile"
+                  ],
+                  "setupGlobalELB":[  
+                     "fixManagerLoadBalancerSettings"
+                  ]
+               },
+               "setup":{  
+                  "files":{  
+                     "/etc/cfn/cfn-hup.conf":{  
+                        "content":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "[main]\n",
+                                 "stack=",
+                                 {  
+                                    "Ref":"AWS::StackId"
+                                 },
+                                 "\n",
+                                 "region=",
+                                 {  
+                                    "Ref":"AWS::Region"
+                                 },
+                                 "\n"
+                              ]
+                           ]
+                        },
+                        "mode":"000400",
+                        "owner":"root",
+                        "group":"root"
+                     },
+                     "/etc/cfn/hooks.d/cfn-auto-reloader.conf":{  
+                        "content":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "[cfn-auto-reloader-hook]\n",
+                                 "triggers=post.update\n",
+                                 "path=Resources.DSM.Metadata.AWS::CloudFormation::Init\n",
+                                 "action=/opt/aws/bin/cfn-init -v -c updateDSM --stack ",
+                                 {  
+                                    "Ref":"AWS::StackId"
+                                 },
+                                 " --resource DSM1",
+                                 " --region ",
+                                 {  
+                                    "Ref":"AWS::Region"
+                                 },
+                                 " runas=root\n"
+                              ]
+                           ]
+                        }
+                     }
+                  },
+                  "services":{  
+                     "sysvinit":{  
+                        "cfn-hup":{  
+                           "enabled":"true",
+                           "ensureRunning":"true",
+                           "files":[  
+                              "/etc/cfn/cfn-hup.conf",
+                              "/etc/cfn/hooks.d/cfn-auto-reloader.conf"
+                           ]
+                        }
+                     }
+                  }
+               },
+               "prepDSMInstall":{  
+                  "files":{  
+                     "/opt/trend/packages/dsm/default/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip":{  
+                        "source":"http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip",
+                        "owner":"root",
+                        "mode":"000600"
+                     },
+                     "/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL6-9.6.2-5324.x86_64.zip":{  
+                        "source":"http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.2-5324.x86_64.zip",
+                        "owner":"root",
+                        "mode":"000600"
+                     },
+                     "/opt/trend/packages/dsm/default/Agent-RedHat_EL6-9.6.2-6400.x86_64.zip":{  
+                        "source":"http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.2-6400.x86_64.zip",
+                        "owner":"root",
+                        "mode":"000600"
+                     },
+                     "/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL6-9.6.2-7547.x86_64.zip":{  
+                        "source":"http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.2-7547.x86_64.zip",
+                        "owner":"root",
+                        "mode":"000600"
+                     },
+                     "/opt/trend/packages/dsm/default/Agent-RedHat_EL7-9.6.2-5027.x86_64.zip":{  
+                        "source":"http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL7-9.6.2-5027.x86_64.zip",
+                        "owner":"root",
+                        "mode":"000600"
+                     },
+                     "/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL7-9.6.2-5280.x86_64.zip":{  
+                        "source":"http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL7-9.6.2-5280.x86_64.zip",
+                        "owner":"root",
+                        "mode":"000600"
+                     },
+                     "/opt/trend/packages/dsm/default/Agent-Windows-9.6.2-5029.x86_64.zip":{  
+                        "source":"http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-Windows-9.6.2-5029.x86_64.zip",
+                        "owner":"root",
+                        "mode":"000600"
+                     },
+                     "/etc/cfn/dsmConfiguration.properties":{  
+                        "content":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 {  
+                                    "Fn::If":[  
+                                       "AddAcAnswer",
+                                       {  
+                                          "Fn::If":[  
+                                             "NetworkOnlyLicense",
+                                             {  
+                                                "Fn::Join":[  
+                                                   "",
+                                                   [  
+                                                      "LicenseScreen.License.1=",
+                                                      {  
+                                                         "Ref":"DSIPLicenseKey"
+                                                      }
+                                                   ]
+                                                ]
+                                             },
+                                             {  
+                                                "Fn::Join":[  
+                                                   "",
+                                                   [  
+                                                      "LicenseScreen.License.-1=",
+                                                      {  
+                                                         "Ref":"DSIPLicenseKey"
+                                                      }
+                                                   ]
+                                                ]
+                                             }
+                                          ]
+                                       },
+                                       "\n"
+                                    ]
+                                 },
+                                 "\n",
+                                 "CredentialsScreen.Administrator.Username=",
+                                 {  
+                                    "Ref":"DSCAdminName"
+                                 },
+                                 "\n",
+                                 "CredentialsScreen.Administrator.Password=",
+                                 {  
+                                    "Ref":"DSCAdminPassword"
+                                 },
+                                 "\n",
+                                 "CredentialsScreen.UseStrongPasswords=False\n",
+                                 "Dinstall4j.language=en\n",
+                                 "DatabaseScreen.DatabaseType=",
+                                 {  
+                                    "Fn::FindInMap":[  
+                                       "DSMDBMap",
+                                       {  
+                                          "Ref":"DBPEngine"
+                                       },
+                                       "DbTypeString"
+                                    ]
+                                 },
+                                 "\n",
+                                 "DatabaseScreen.Hostname=",
+                                 {  
+                                    "Ref":"DBPRDSEndpoint"
+                                 },
+                                 "\n",
+                                 "DatabaseScreen.DatabaseName=",
+                                 {  
+                                    "Ref":"DBPName"
+                                 },
+                                 "\n",
+                                 "DatabaseScreen.Transport=TCP\n",
+                                 "DatabaseScreen.Username=",
+                                 {  
+                                    "Ref":"DBICAdminName"
+                                 },
+                                 "\n",
+                                 "DatabaseScreen.Password=",
+                                 {  
+                                    "Ref":"DBICAdminPassword"
+                                 },
+                                 "\n",
+                                 "AddressAndPortsScreen.ManagerPort=",
+                                 {  
+                                    "Ref":"DSIPGUIPort"
+                                 },
+                                 "\n",
+                                 "AddressAndPortsScreen.HeartbeatPort=",
+                                 {  
+                                    "Ref":"DSIPHeartbeatPort"
+                                 },
+                                 "\n",
+                                 {  
+                                    "Fn::If":[  
+                                       "IsFirstNode",
+                                       "AddressAndPortsScreen.NewNode=false\n",
+                                       "AddressAndPortsScreen.NewNode=true\nUpgradeVerificationScreen.Overwrite=False\n"
+                                    ]
+                                 },
+                                 "SecurityUpdateScreen.UpdateComponents=true\n",
+                                 "SecurityUpdateScreen.UpdateSoftware=true\n",
+                                 "SmartProtectionNetworkScreen.EnableFeedback=false\n",
+                                 "SmartProtectionNetworkScreen.IndustryType=blank\n",
+                                 "RelayScreen.Install=True\n",
+                                 "RelayScreen.ProxyType=None\n",
+                                 "RelayScreen.ProxyPort=None\n",
+                                 "RelayScreen.Proxy=False\n",
+                                 "RelayScreen.AntiMalware=True\n",
+                                 "RelayScreen.ProxyAuthentication=False\n"
+                              ]
+                           ]
+                        },
+                        "owner":"root",
+                        "mode":"000600"
+                     }
+                  }
+               },
+               "installDSM":{  
+                  "commands":{  
+                     "0-sethostnameinprops":{  
+                        "command":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "echo ",
+                                 "\"AddressAndPortsScreen.ManagerAddress=$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)\" >> /etc/cfn/dsmConfiguration.properties"
+                              ]
+                           ]
+                        },
+                        "ignoreErrors":"false"
+                     },
+                     "1-install-DSM":{  
+                        "command":"cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/ManagerAWS.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
+                        "ignoreErrors":"false"
+                     },
+                     "6-install-xml_grep":{  
+                        "command":"yum -y install perl-XML-Twig"
+                     }
+                  }
+               },
+               "addCloudAccount":{  
+                  "files":{  
+                     "/etc/cfn/set-aiaSettings":{  
+                        "source":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 {  
+                                    "Ref":"CfnUrlPrefix"
+                                 },
+                                 "Common/Scripts/set-aiaSettings"
+                              ]
+                           ]
+                        },
+                        "owner":"root",
+                        "mode":"000700"
+                     },
+                     "/etc/cfn/createCloudAccount":{  
+                        "source":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 {  
+                                    "Ref":"CfnUrlPrefix"
+                                 },
+                                 "Common/Scripts/createCloudAccount2"
+                              ]
+                           ]
+                        },
+                        "owner":"root",
+                        "mode":"000700"
+                     },
+                     "/etc/cfn/wait-for-relay-and-stop-manager":{  
+                        "source":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 {  
+                                    "Ref":"CfnUrlPrefix"
+                                 },
+                                 "Common/Scripts/wait-for-relay-and-stop-manager"
+                              ]
+                           ]
+                        },
+                        "owner":"root",
+                        "mode":"000700"
+                     },
+                     "/etc/cfn/kill-mp-web-installer":{  
+                        "source":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 {  
+                                    "Ref":"CfnUrlPrefix"
+                                 },
+                                 "Common/Scripts/kill-mp-web-installer"
+                              ]
+                           ]
+                        },
+                        "owner":"root",
+                        "mode":"000700"
+                     }
+                  },
+                  "commands":{  
+                     "0-stop-service":{  
+                        "command":"/etc/cfn/wait-for-relay-and-stop-manager >> /tmp/0-stop-service"
+                     },
+                     "1-enableRestApi":{  
+                        "command":"/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
+                     },
+                     "2-enableSoapApi":{  
+                        "command":"/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
+                     },
+                     "3-setAicDefaultComm":{  
+                        "command":"/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentCommunications -value 1"
+                     },
+                     "4-start-service":{  
+                        "command":"service dsm_s start"
+                     },
+                     "5-check-service":{  
+                        "command":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "until curl -vk https://127.0.0.1:",
+                                 {  
+                                    "Ref":"DSIPGUIPort"
+                                 },
+                                 "/rest/status/manager/current/ping; do echo \"manager not started yet\" >> /tmp/4-check-service; service dsm_s start >> /tmp/4-check-service; sleep 30; done"
+                              ]
+                           ]
+                        }
+                     },
+                     "7-set-aia-settings":{  
+                        "command":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "/etc/cfn/set-aiaSettings ",
+                                 {  
+                                    "Ref":"DSCAdminName"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"DSCAdminPassword"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"PrivateDSIELBFQDN"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"DSIPGUIPort"
+                                 },
+                                 " >> /tmp/set-aiaSettings.log"
+                              ]
+                           ]
+                        }
+                     },
+                     "8-addCloudAccount":{  
+                        "command":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "/etc/cfn/createCloudAccount ",
+                                 {  
+                                    "Ref":"DSCAdminName"
+                                 },
+                                 " \"",
+                                 {  
+                                    "Ref":"DSCAdminPassword"
+                                 },
+                                 "\" ",
+                                 {  
+                                    "Ref":"AWS::AccountId"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"DSIPGUIPort"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"AccessKeys"
+                                 },
+                                 " ",
+                                 {  
+                                    "Fn::GetAtt":[  
+                                       "AccessKeys",
+                                       "SecretAccessKey"
+                                    ]
+                                 }
+                              ]
+                           ]
+                        },
+                        "ignoreErrors":"False"
+                     },
+                     "10-killWebInstaller":{  
+                        "command":"/etc/cfn/kill-mp-web-installer"
+                     }
+                  }
+               },
+               "sqlSetup":{  
+                  "commands":{  
+                     "1-get-create-script":{  
+                        "command":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "cd /etc/cfn/rhel-scripts; curl -O ",
+                                 {  
+                                    "Ref":"CfnUrlPrefix"
+                                 },
+                                 "Common/Scripts/create-DSM-SqlDB.py; chmod 755 create-DSM-SqlDB.py"
+                              ]
+                           ]
+                        },
+                        "ignoreErrors":"false"
+                     },
+                     "2-create-db":{  
+                        "command":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "cd /etc/cfn/rhel-scripts; python create-DSM-SqlDB.py --user ",
+                                 {  
+                                    "Ref":"DBICAdminName"
+                                 },
+                                 " --pass ",
+                                 {  
+                                    "Ref":"DBICAdminPassword"
+                                 },
+                                 " --endpoint ",
+                                 {  
+                                    "Ref":"DBPRDSEndpoint"
+                                 },
+                                 " --dbname ",
+                                 {  
+                                    "Ref":"DBPName"
+                                 }
+                              ]
+                           ]
+                        },
+                        "ignoreErrors":"false"
+                     }
+                  }
+               },
+               "addToELB":{  
+                  "commands":{  
+                     "0-add-instance-to-elb":{  
+                        "command":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "aws elb register-instances-with-load-balancer --load-balancer ",
+                                 {  
+                                    "Ref":"DSIELB"
+                                 },
+                                 " --instances $(curl http://169.254.169.254/latest/meta-data/instance-id/) --region ",
+                                 {  
+                                    "Ref":"AWS::Region"
+                                 }
+                              ]
+                           ]
+                        },
+                        "ignoreErrors":"false"
+                     },
+                     "1-add-instance-to-internal-elb":{  
+                        "command":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "aws elb register-instances-with-load-balancer --load-balancer ",
+                                 {  
+                                    "Ref":"PrivateDSIELB"
+                                 },
+                                 " --instances $(curl http://169.254.169.254/latest/meta-data/instance-id/) --region ",
+                                 {  
+                                    "Ref":"AWS::Region"
+                                 }
+                              ]
+                           ]
+                        },
+                        "ignoreErrors":"false"
+                     }
+                  }
+               },
+               "fixManagerLoadBalancerSettings":{  
+                  "files":{  
+                     "/etc/cfn/create-console-listener":{  
+                        "source":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 {  
+                                    "Ref":"CfnUrlPrefix"
+                                 },
+                                 "Common/Scripts/create-console-listener"
+                              ]
+                           ]
+                        },
+                        "owner":"root",
+                        "mode":"000700"
+                     },
+                     "/etc/cfn/set-lbSettings":{  
+                        "source":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 {  
+                                    "Ref":"CfnUrlPrefix"
+                                 },
+                                 "Common/Scripts/set-lbSettings"
+                              ]
+                           ]
+                        },
+                        "owner":"root",
+                        "mode":"000700"
+                     }
+                  },
+                  "commands":{  
+                     "0-setup-internal-elb-listener":{  
+                        "command":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "/etc/cfn/create-console-listener ",
+                                 {  
+                                    "Ref":"PrivateDSIELB"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"PrivateDSIELBFQDN"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"DSIPGUIPort"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"AWS::StackName"
+                                 },
+                                 " ",
+                                 "1 ",
+                                 {  
+                                    "Ref":"AWS::Region"
+                                 },
+                                 " >> /tmp/internallistener.log"
+                              ]
+                           ]
+                        }
+                     },
+                     "1-setup-external-elb-listener":{  
+                        "command":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "/etc/cfn/create-console-listener ",
+                                 {  
+                                    "Ref":"DSIELB"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"DSIELBFQDN"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"DSIPGUIPort"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"AWS::StackName"
+                                 },
+                                 " ",
+                                 "0 ",
+                                 {  
+                                    "Ref":"AWS::Region"
+                                 },
+                                 " >> /tmp/internallistener.log"
+                              ]
+                           ]
+                        }
+                     },
+                     "4-set-load-balancer-settings":{  
+                        "command":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "/etc/cfn/set-lbSettings ",
+                                 {  
+                                    "Ref":"DSCAdminName"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"DSCAdminPassword"
+                                 },
+                                 " ",
+                                 {  
+                                    "Fn::If":[  
+                                       "InternetFacingELB",
+                                       {  
+                                          "Ref":"DSIELBFQDN"
+                                       },
+                                       {  
+                                          "Ref":"PrivateDSIELBFQDN"
+                                       }
+                                    ]
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"DSIPGUIPort"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"DSIPHeartbeatPort"
+                                 },
+                                 " >> /tmp/set-lbSettings.log"
+                              ]
+                           ]
+                        }
+                     }
+                  }
+               },
+               "fixManagerLocalLoadBalancerHostsFile":{  
+                  "commands":{  
+                     "0-setHostsFilePrivateELB":{  
+                        "command":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "echo \"",
+                                 "$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
+                                 " ",
+                                 {  
+                                    "Ref":"PrivateDSIELBFQDN"
+                                 },
+                                 "\" >> /etc/hosts"
+                              ]
+                           ]
+                        }
+                     },
+                     "1-setHostsFilePublicELB":{  
+                        "command":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "echo \"",
+                                 "$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
+                                 " ",
+                                 {  
+                                    "Ref":"DSIELBFQDN"
+                                 },
+                                 "\" >> /etc/hosts"
+                              ]
+                           ]
+                        }
+                     }
+                  }
+               },
+               "fixManagerHostObject":{  
+                  "files":{  
+                     "/etc/cfn/reactivate-manager":{  
+                        "source":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 {  
+                                    "Ref":"CfnUrlPrefix"
+                                 },
+                                 "Common/Scripts/reactivate-manager"
+                              ]
+                           ]
+                        },
+                        "owner":"root",
+                        "mode":"000700"
+                     }
+                  },
+                  "commands":{  
+                     "1-reactivate-manager":{  
+                        "command":{  
+                           "Fn::Join":[  
+                              "",
+                              [  
+                                 "/etc/cfn/reactivate-manager >> /etc/cfn/reactivate-manager.log ",
+                                 {  
+                                    "Ref":"DSCAdminName"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"DSCAdminPassword"
+                                 },
+                                 " ",
+                                 {  
+                                    "Ref":"DSIPGUIPort"
+                                 }
+                              ]
+                           ]
+                        }
+                     }
+                  }
+               }
+            }
+         },
+         "Properties":{  
+            "IamInstanceProfile":{  
+               "Ref":"DSMProfile"
+            },
+            "ImageId":{  
+               "Fn::FindInMap":[  
+                  "DSMAMI",
+                  {  
+                     "Ref":"AWS::Region"
+                  },
+                  {  
+                     "Ref":"DSIPLicense"
+                  }
+               ]
+            },
+            "InstanceType":{  
+               "Fn::If":[  
+                  "PPUNotSelected",
+                  {  
+                     "Ref":"DSIPInstanceType"
+                  },
+                  {  
+                     "Fn::FindInMap":[  
+                        "DSMSIZE",
+                        {  
+                           "Ref":"AWS::Region"
+                        },
+                        {  
+                           "Ref":"DSIPLicense"
+                        }
+                     ]
+                  }
+               ]
+            },
+            "NetworkInterfaces":[  
+               {  
+                  "DeviceIndex":"0",
+                  "SubnetId":{  
+                     "Ref":"DSISubnetID"
+                  },
+                  "AssociatePublicIpAddress":"true",
+                  "GroupSet":[  
+                     {  
+                        "Ref":"DSMSG"
+                     }
+                  ]
+               }
             ],
-            "Default"       : "No"
-        },
-        "DSIPLicense"       : {
-            "Description" : "Choose License Model. If choosing BYOL you may enter the license below",
-            "Type"        : "String",
-            "AllowedValues" : [
-                "PerHost",
-				"BYOL",
-                "25",
-                "50",
-                "100",
-                "200"
-            ]
-        },
-        "CreateEIP"         : {
-            "Description" : "Allocate an EIP and associate it with this Deep Security Manager Instance. Recommend set to true unless deploying behind an ELB",
-            "Type"        : "String",
-            "AllowedValues" : [
-                "True",
-                "False"
+            "Tags":[  
+               {  
+                  "Key":"Name",
+                  "Value":"Deep Security Manager"
+               }
             ],
-            "Default"       : "True"
-        },
-        "DSIELB"            : {
-            "Type" : "String",
-            "Default" : ""
-        },
-        "DSIELBFQDN"        : {
-            "Type" : "String",
-            "Default" : ""
-        },
-        "DSM1CompleteWaitHandle" : {
-            "Type" : "String",
-            "Default" : ""
-        },
-        "PrivateDSIELBFQDN"      : {
-            "Type" : "String",
-            "Default" : ""
-        },
-        "PrivateDSIELB"          : {
-            "Type" : "String",
-            "Default" : ""
-        },
-		"DSELBPosture" : {
-			"Description" : "Use internal or external ELB",
-			"Type" : "String",
-			"AllowedValues" : [
-				"External",
-				"Internal"
-				],
-			"Default" : "External"
-			},
-		"CfnUrlPrefix" : {
-			"Type" : "String",
-			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v4.0/"
-        },
-        "DSCLicenseType" : {
-            "Type" : "String",
-            "Default" : "Enterprise",
-            "AllowedValues" : [
-                "Enterprise",
-                "Network"
-            ]
-        }
-    },
-    "Mappings"                 : {
-        "DSMAMI" : {
-			"us-east-1" : {
-                "PerHost" : "ami-096e7463",
-                "BYOL" : "ami-5eff3933",
-                "25"   : "ami-a1f036cc",
-                "50"   : "ami-a1f036cc",
-                "100"  : "ami-a1f036cc",
-                "200"  : "ami-a1f036cc"
+            "KeyName":{  
+               "Ref":"AWSIKeyPairName"
             },
-            "us-west-1" : {
-              "PerHost"  : "ami-820779e2",
-                "BYOL" : "ami-a8bffac8",
-                "25"   : "ami-99b9fcf9",
-                "50"   : "ami-99b9fcf9",
-                "100"  : "ami-99b9fcf9",
-                "200"  : "ami-99b9fcf9"
-            },
-            "us-west-2" : {
-                "PerHost"  : "ami-27a95947",
-                "BYOL" : "ami-2e37f24e",
-                "25"   : "ami-8333f6e3",
-                "50"   : "ami-8333f6e3",
-                "100"  : "ami-8333f6e3",
-                "200"  : "ami-8333f6e3"
-            },
-            "eu-west-1" : {
-                "PerHost" : "ami-0329a670",
-                "BYOL" : "ami-48a6383b",
-                "25"   : "ami-c3a638b0",
-                "50"   : "ami-c3a638b0",
-                "100"  : "ami-c3a638b0",
-                "200"  : "ami-c3a638b0"
-            },
-            "eu-central-1" : {
-                "BYOL" : "ami-c14fa6ae",
-                "25"   : "ami-f44ea79b",
-                "50"   : "ami-f44ea79b",
-                "100"  : "ami-f44ea79b",
-                "200"  : "ami-f44ea79b"
-            },
-            "ap-south-1" : {
-                "BYOL" : "ami-f8a9c397",
-                "25"   : "ami-cca8c2a3",
-                "50"   : "ami-cca8c2a3",
-                "100"  : "ami-cca8c2a3",
-                "200"  : "ami-cca8c2a3"
-            },
-            "ap-southeast-1" : {
-                "BYOL" : "ami-6218cb01",
-                "25"   : "ami-6d18cb0e",
-                "50"   : "ami-6d18cb0e",
-                "100"  : "ami-6d18cb0e",
-                "200"  : "ami-6d18cb0e"
-            },
-            "ap-northeast-1" : {
-                "BYOL" : "ami-d854beb9",
-                "25"   : "ami-d754beb6",
-                "50"   : "ami-d754beb6",
-                "100"  : "ami-d754beb6",
-                "200"  : "ami-d754beb6"
-            },
-            "ap-southeast-2" : {
-                "PerHost" : "ami-cbefc2a8",
-                "BYOL" : "ami-8a8ca5e9",
-                "25"   : "ami-898ca5ea",
-                "50"   : "ami-898ca5ea",
-                "100"  : "ami-898ca5ea",
-                "200"  : "ami-898ca5ea"
-            },
-            "sa-east-1"      : {
-                "BYOL" : "ami-c250daae",
-                "25"   : "ami-6456dc08",
-                "50"   : "ami-6456dc08",
-                "100"  : "ami-6456dc08",
-                "200"  : "ami-6456dc08"
-            },
-			"ap-northeast-2"      : {
-                "BYOL" : "ami-c62ee5a8",
-                "25"   : "ami-3922e957",
-                "50"   : "ami-3922e957",
-                "100"  : "ami-3922e957",
-                "200"  : "ami-3922e957"
-            }
-        },
-        "DSMSIZE" : {
-			"us-east-1"      : {
-				"PerHost" : "c3.xlarge",
-				"BYOL" : "c3.xlarge",
-                "25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
-            },
-			"us-west-1"      : {
-				"PerHost" : "c3.xlarge",
-				"BYOL" : "c3.xlarge",
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
-            },
-            "us-west-2"      : {
-				"PerHost" : "c3.xlarge",
-				"BYOL" : "c3.xlarge",
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
-            },
-			"eu-west-1"      : {
-				"PerHost" : "c3.xlarge",
-				"BYOL" : "c3.xlarge",
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
-            },
-			"eu-central-1" : {
-				"PerHost" : "c3.xlarge",
-				"BYOL" : "c3.xlarge",
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
-            },
-            "sa-east-1"    : {
-				"PerHost" : "c3.xlarge",
-				"BYOL" : "c3.xlarge",
-				"25" : "m3.large",
-				"50" : "m3.xlarge",
-				"100": "m3.2xlarge",
-				"200": "c3.4xlarge"
-            },
-            "ap-northeast-1" : {
-				"PerHost" : "c3.xlarge",
-				"BYOL" : "c3.xlarge",
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
-            },
-            "ap-southeast-1" : {
-				"PerHost" : "c3.xlarge",
-				"BYOL" : "c3.xlarge",
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
-            },
-            "ap-southeast-2" : {
-				"PerHost" : "c3.xlarge",
-				"BYOL" : "c3.xlarge",
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
-            },
-			"ap-northeast-2" : {
-				"PerHost" : "c3.xlarge",
-				"BYOL" : "m4.xlarge",
-				"25" : "m4.large",
-				"50" : "m4.xlarge",
-				"100": "m4.2xlarge",
-				"200": "c4.4xlarge"
-            }
-        },
-        "TrendRegionMap" : {
-            "us-east-1" : {
-                "regionkey" : "amazon.cloud.region.key.1"
-            },
-            "us-west-2" : {
-                "regionkey" : "amazon.cloud.region.key.2"
-            },
-            "us-west-1" : {
-                "regionkey" : "amazon.cloud.region.key.3"
-            },
-            "eu-west-1" : {
-                "regionkey" : "amazon.cloud.region.key.4"
-            },
-            "ap-southeast-1" : {
-                "regionkey" : "amazon.cloud.region.key.5"
-            },
-            "ap-northeast-1" : {
-                "regionkey" : "amazon.cloud.region.key.6"
-            },
-            "sa-east-1"      : {
-                "regionkey" : "amazon.cloud.region.key.7"
-            },
-			"ap-southeast-2"      : {
-                "regionkey" : "amazon.cloud.region.key.8"
-            },
-			"eu-central-1"      : {
-                "regionkey" : "amazon.cloud.region.key.9"
-            },
-			"ap-northeast-2"      : {
-                "regionkey" : "amazon.cloud.region.key.12"
-            }
-        },
-        "DSMDBMap"       : {
-            "SQL" : {
-                "DbTypeString" : "Microsoft SQL Server"
-            },
-            "Oracle" : {
-                "DbTypeString" : "Oracle"
-            },
-            "Embedded" : {
-                "DbTypeString" : "Embedded"
-            }
-        }
-    },
-    "Resources"                : {
-        "DSIAMUser" : {
-            "Type" : "AWS::IAM::User",
-            "Properties" : {
-            }
-        },
-        "DSIAMGroup" : {
-            "Type" : "AWS::IAM::Group"
-        },
-        "Users"      : {
-            "Type" : "AWS::IAM::UserToGroupAddition",
-            "Properties" : {
-                "GroupName" : {
-                    "Ref" : "DSIAMGroup"
-                },
-                "Users"     : [
-                    {
-                        "Ref" : "DSIAMUser"
-                    }
-                ]
-            }
-        },
-        "DSMUserPolicies" : {
-            "Type" : "AWS::IAM::Policy",
-            "Properties" : {
-                "PolicyName" : "DSMUsers",
-                "PolicyDocument" : {
-                    "Statement" : [
-                        {
-                            "Effect" : "Allow",
-                            "Action" : [
-                                "ec2:DescribeImages",
-                                "ec2:DescribeInstances",
-                                "ec2:DescribeRegions",
-                                "ec2:DescribeSubnets",
-                                "ec2:DescribeTags",
-                                "ec2:DescribeVpcs",
-                                "iam:ListAccountAliases",
-                                "sts:AssumeRole"
-                            ],
-                            "Resource" : "*"
-                        }
-                    ]
-                },
-                "Groups"         : [
-                    {
-                        "Ref" : "DSIAMGroup"
-                    }
-                ]
-            }
-        },
-        "AccessKeys"      : {
-            "Type" : "AWS::IAM::AccessKey",
-            "Properties" : {
-                "UserName" : {
-                    "Ref" : "DSIAMUser"
-                }
-            }
-        },
-        "DSMRole"         : {
-            "Type" : "AWS::IAM::Role",
-            "Properties" : {
-                "AssumeRolePolicyDocument" : {
-                    "Statement" : [
-                        {
-                            "Effect" : "Allow",
-                            "Principal" : {
-                                "Service" : [
-                                    "ec2.amazonaws.com"
-                                ]
-                            },
-                            "Action"    : [
-                                "sts:AssumeRole"
-                            ]
-                        }
-                    ]
-                },
-				"ManagedPolicyArns": {
-					"Fn::If" : [
-						"UsePerHost",
-						[ "arn:aws:iam::aws:policy/AWSMarketplaceMeteringFullAccess" ],
-						{ "Ref" : "AWS::NoValue" }
-					]
-				},
-                "Path"                     : "/",
-                "Policies"                 : [
-                    {
-                        "Fn::If" : [
-                            "AddToELB",
-                            {
-                                "PolicyName" : "PlaceholderPolicy",
-                                "PolicyDocument" : {
-                                    "Statement" : [
-                                        {
-                                            "Effect" : "Allow",
-                                            "Action" : [
-                                                "ec2:DescribeLicenses"
-                                            ],
-                                            "Resource" : "*"
-                                        },
-                                        {
-                                            "Effect" : "Allow",
-                                            "Action" : [
-                                                "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
-												"elasticloadbalancing:CreateLoadBalancerListeners",
-												"elasticloadbalancing:CreateLoadBalancerPolicy",
-												"elasticloadbalancing:SetLoadBalancerPoliciesOfListener"
-                                            ],
-                                            "Resource" : {
-                                                "Fn::Join" : [
-                                                    "",
-                                                    [
-                                                        "arn:aws:elasticloadbalancing:",
-                                                        {
-                                                            "Ref" : "AWS::Region"
-                                                        },
-                                                        ":",
-                                                        {
-                                                            "Ref" : "AWS::AccountId"
-                                                        },
-                                                        ":loadbalancer/",
-                                                        {
-                                                            "Ref" : "DSIELB"
-                                                        }
-                                                    ]
-                                                ]
-                                            }
-                                        },
-                                        {
-                                            "Effect" : "Allow",
-                                            "Action" : [
-                                                "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
-												"elasticloadbalancing:CreateLoadBalancerListeners",
-												"elasticloadbalancing:CreateLoadBalancerPolicy",
-												"elasticloadbalancing:SetLoadBalancerPoliciesOfListener"
-                                            ],
-                                            "Resource" : {
-                                                "Fn::Join" : [
-                                                    "",
-                                                    [
-                                                        "arn:aws:elasticloadbalancing:",
-                                                        {
-                                                            "Ref" : "AWS::Region"
-                                                        },
-                                                        ":",
-                                                        {
-                                                            "Ref" : "AWS::AccountId"
-                                                        },
-                                                        ":loadbalancer/",
-                                                        {
-                                                            "Ref" : "PrivateDSIELB"
-                                                        }
-                                                    ]
-                                                ]
-                                            }
-                                        },
-										{
-                                            "Effect" : "Allow",
-                                            "Action" : [
-                                                "iam:UploadServerCertificate",
-												"iam:GetServerCertificate"
-                                            ],
-                                            "Resource" : {
-                                                "Fn::Join" : [
-                                                    "",
-                                                    [
-                                                        "arn:aws:iam::",
-                                                        {
-                                                            "Ref" : "AWS::AccountId"
-                                                        },
-                                                        ":server-certificate/DeepSecurityElbCertificate-",
-														{
-															"Ref" : "AWS::StackName"
-														}
-                                                    ]
-                                                ]
-                                            }
-                                        },
-										{
-                                            "Effect" : "Allow",
-                                            "Action" : [
-                                                "elasticloadbalancing:DescribeLoadBalancers"
-                                            ],
-                                            "Resource" : "*"
-			                            }
-                                    ]
-                                }
-                            },
-                            {
-                                "PolicyName" : "PlaceholderPolicy",
-                                "PolicyDocument" : {
-                                    "Statement" : [
-                                        {
-                                            "Effect" : "Allow",
-                                            "Action" : [
-                                                "ec2:DescribeLicenses",
-                                                "ec2:DescribeImages",
-                                                "ec2:DescribeInstances",
-                                                "ec2:DescribeRegions",
-                                                "ec2:DescribeSubnets",
-                                                "ec2:DescribeTags",
-                                                "ec2:DescribeVpcs",
-                                                "iam:ListAccountAliases",
-                                                "sts:AssumeRole"
-                                            ],
-                                            "Resource" : "*"
-                                        }
-                                    ]
-                                }
-                            }
-                        ]
-                    }
-                ]
-            }
-        },
-        "DSMProfile"      : {
-            "Type" : "AWS::IAM::InstanceProfile",
-            "Properties" : {
-                "Path" : "/",
-                "Roles" : [
-                    {
-                        "Ref" : "DSMRole"
-                    }
-                ]
-            }
-        },
-        "DSM"             : {
-            "Type" : "AWS::EC2::Instance",
-            "Metadata" : {
-                "AWS::CloudFormation::Init" : {
-                    "configSets" : {
-                        "default" : [
-                            "setup",
-                            "prepDSMInstall",
-                            "installDSM",
-                            "addCloudAccount",
-                            "fixManagerHostObject"
-                        ],
-                        "doSqlSetup" : [
-                            "sqlSetup"
-                        ],
-                        "fixManagerLbSettings" : [
-                            "fixManagerLoadBalancerSettings"
-                        ],
-                        "fixManagerLocalLbAddress" : [
-                            "fixManagerLocalLoadBalancerHostsFile"
-                        ],
-                        "fixManagerHostObject"     : [
-                            "fixManagerHostObject"
-                        ],
-                        "addDsmNode"               : [
-                            "setup",
-                            "prepDSMInstall",
-                            "installDSM",
-                            "fixManagerHostObject"
-                        ],
-                        "setupLocalELB"            : [
-                            "addToELB",
-                            "fixManagerLocalLoadBalancerHostsFile"
-                        ],
-                        "setupGlobalELB"           : [
-                            "fixManagerLoadBalancerSettings"
-                        ]
-                    },
-                    "setup"      : {
-                        "files" : {
-                            "/etc/cfn/cfn-hup.conf" : {
-                                "content" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "[main]\n",
-                                            "stack=",
-                                            {
-                                                "Ref" : "AWS::StackId"
-                                            },
-                                            "\n",
-                                            "region=",
-                                            {
-                                                "Ref" : "AWS::Region"
-                                            },
-                                            "\n"
-                                        ]
-                                    ]
-                                },
-                                "mode"    : "000400",
-                                "owner"   : "root",
-                                "group"   : "root"
-                            },
-                            "/etc/cfn/hooks.d/cfn-auto-reloader.conf" : {
-                                "content" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "[cfn-auto-reloader-hook]\n",
-                                            "triggers=post.update\n",
-                                            "path=Resources.DSM.Metadata.AWS::CloudFormation::Init\n",
-                                            "action=/opt/aws/bin/cfn-init -v -c updateDSM --stack ",
-                                            {
-                                                "Ref" : "AWS::StackId"
-                                            },
-                                            " --resource DSM1",
-                                            " --region ",
-                                            {
-                                                "Ref" : "AWS::Region"
-                                            },
-                                            " runas=root\n"
-                                        ]
-                                    ]
-                                }
-                            }
+            "UserData":{  
+               "Fn::Base64":{  
+                  "Fn::Join":[  
+                     "",
+                     [  
+                        "#!/bin/bash -xe\n",
+                        "# cloud-init\n",
+                        "/opt/aws/bin/cfn-init -v ",
+                        " --stack ",
+                        {  
+                           "Ref":"AWS::StackName"
                         },
-                        "services" : {
-                            "sysvinit" : {
-                                "cfn-hup" : {
-                                    "enabled" : "true",
-                                    "ensureRunning" : "true",
-                                    "files"         : [
-                                        "/etc/cfn/cfn-hup.conf",
-                                        "/etc/cfn/hooks.d/cfn-auto-reloader.conf"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "prepDSMInstall" : {
-                        "files" : {
-                            "/opt/trend/packages/dsm/default/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip"    : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip",
-                                "owner"  : "root",
-                                "mode"   : "000600"
-                            },
-                            "/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL6-9.6.2-5324.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.2-5324.x86_64.zip",
-                                "owner"  : "root",
-                                "mode"   : "000600"
-                            },
-                            "/opt/trend/packages/dsm/default/Agent-RedHat_EL6-9.6.2-6400.x86_64.zip"    : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.2-6400.x86_64.zip",
-                                "owner"  : "root",
-                                "mode"   : "000600"
-                            },
-                            "/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL6-9.6.2-7547.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.2-7547.x86_64.zip",
-                                "owner"  : "root",
-                                "mode"   : "000600"
-                            },
-							"/opt/trend/packages/dsm/default/Agent-RedHat_EL7-9.6.2-5027.x86_64.zip" : {
-								"source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL7-9.6.2-5027.x86_64.zip",
-								"owner"  : "root",
-								"mode"   : "000600"
-								},
-							"/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL7-9.6.2-5280.x86_64.zip" : {
-								"source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL7-9.6.2-5280.x86_64.zip",
-								"owner"  : "root",
-								"mode"   : "000600"
-								},
-							"/opt/trend/packages/dsm/default/Agent-Windows-9.6.2-5029.x86_64.zip" : {
-								"source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-Windows-9.6.2-5029.x86_64.zip",
-								"owner"  : "root",
-								"mode"   : "000600"
-								},
-                            "/etc/cfn/dsmConfiguration.properties"                                           : {
-                                "content" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            {
-                                                "Fn::If" : [
-                                                    "AddAcAnswer",
-                                                    {
-                                                        "Fn::If" : [
-                                                            "NetworkOnlyLicense",
-                                                            {
-                                                                "Fn::Join": [
-                                                                    "",
-                                                                    [
-                                                                        "LicenseScreen.License.1=",
-                                                                        {
-                                                                            "Ref": "DSIPLicenseKey"
-                                                                        }
-                                                                    ]
-                                                                ]
-                                                            },
-                                                            {
-                                                                "Fn::Join" : [
-                                                                    "",
-                                                                    [
-                                                                        "LicenseScreen.License.-1=",
-                                                                        {
-                                                                            "Ref" : "DSIPLicenseKey"
-                                                                        }
-                                                                    ]
-                                                                ]
-                                                            }
-                                                        ]
-                                                    },
-                                                    "\n"
-                                                ]
-                                            },
-                                            "\n",
-                                            "CredentialsScreen.Administrator.Username=",
-                                            {
-                                                "Ref" : "DSCAdminName"
-                                            },
-                                            "\n",
-                                            "CredentialsScreen.Administrator.Password=",
-                                            {
-                                                "Ref" : "DSCAdminPassword"
-                                            },
-                                            "\n",
-                                            "CredentialsScreen.UseStrongPasswords=False\n",
-                                            "Dinstall4j.language=en\n",
-                                            "DatabaseScreen.DatabaseType=",
-                                            {
-                                                "Fn::FindInMap" : [
-                                                    "DSMDBMap",
-                                                    {
-                                                        "Ref" : "DBPEngine"
-                                                    },
-                                                    "DbTypeString"
-                                                ]
-                                            },
-                                            "\n",
-                                            "DatabaseScreen.Hostname=",
-                                            {
-                                                "Ref" : "DBPRDSEndpoint"
-                                            },
-                                            "\n",
-                                            "DatabaseScreen.DatabaseName=",
-                                            {
-                                                "Ref" : "DBPName"
-                                            },
-                                            "\n",
-                                            "DatabaseScreen.Transport=TCP\n",
-                                            "DatabaseScreen.Username=",
-                                            {
-                                                "Ref" : "DBICAdminName"
-                                            },
-                                            "\n",
-                                            "DatabaseScreen.Password=",
-                                            {
-                                                "Ref" : "DBICAdminPassword"
-                                            },
-                                            "\n",
-                                            "AddressAndPortsScreen.ManagerPort=",
-                                            {
-                                                "Ref" : "DSIPGUIPort"
-                                            },
-                                            "\n",
-                                            "AddressAndPortsScreen.HeartbeatPort=",
-                                            {
-                                                "Ref" : "DSIPHeartbeatPort"
-                                            },
-                                            "\n",
-                                            {
-                                                "Fn::If" : [
-                                                    "IsFirstNode",
-                                                    "AddressAndPortsScreen.NewNode=false\n",
-                                                    "AddressAndPortsScreen.NewNode=true\nUpgradeVerificationScreen.Overwrite=False\n"
-                                                ]
-                                            },
-                                            "SecurityUpdateScreen.UpdateComponents=true\n",
-                                            "SecurityUpdateScreen.UpdateSoftware=true\n",
-                                            "SmartProtectionNetworkScreen.EnableFeedback=false\n",
-                                            "SmartProtectionNetworkScreen.IndustryType=blank\n",
-                                            "RelayScreen.Install=True\n",
-                                            "RelayScreen.ProxyType=None\n",
-                                            "RelayScreen.ProxyPort=None\n",
-                                            "RelayScreen.Proxy=False\n",
-                                            "RelayScreen.AntiMalware=True\n",
-                                            "RelayScreen.ProxyAuthentication=False\n"
-                                        ]
-                                    ]
-                                },
-                                "owner"   : "root",
-                                "mode"    : "000600"
-                            }
-                        }
-                    },
-                    "installDSM"     : {
-                        "commands" : {
-                            "0-sethostnameinprops" : {
-                                "command" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "echo ",
-                                            "\"AddressAndPortsScreen.ManagerAddress=$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)\" >> /etc/cfn/dsmConfiguration.properties"
-                                        ]
-                                    ]
-                                },
-                                "ignoreErrors" : "false"
-                            },
-                            "1-install-DSM"        : {
-                                "command" : "cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/ManagerAWS.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
-                                "ignoreErrors" : "false"
-                            },
-							"6-install-xml_grep" : {
-                                "command" : "yum -y install perl-XML-Twig"
-                            }
-                        }
-                    },
-                    "addCloudAccount" : {
-						"files" : {
-							"/etc/cfn/set-aiaSettings" : {
-								"source" : {
-									"Fn::Join" : [
-										"",
-										[
-											{ "Ref" : "CfnUrlPrefix" },
-											"Common/Scripts/set-aiaSettings"
-										]
-									]
-								},
-								"owner" : "root",
-								"mode" : "000700"
-							},
-							"/etc/cfn/createCloudAccount" : {
-								"source" : {
-									"Fn::Join" : [
-										"",
-										[
-											{ "Ref" : "CfnUrlPrefix" },
-											"Common/Scripts/createCloudAccount"
-										]
-									]
-								},
-								"owner" : "root",
-								"mode" : "000700"
-							},
-							"/etc/cfn/wait-for-relay-and-stop-manager" : {
-								"source" : {
-									"Fn::Join" : [
-										"",
-										[
-											{ "Ref" : "CfnUrlPrefix" },
-											"Common/Scripts/wait-for-relay-and-stop-manager"
-										]
-									]
-								},
-								"owner" : "root",
-								"mode" : "000700"
- 							},
-							"/etc/cfn/kill-mp-web-installer" : {
-								"source" : {
-									"Fn::Join" : [
-										"",
-										[
-											{ "Ref" : "CfnUrlPrefix" },
-											"Common/Scripts/kill-mp-web-installer"
-										]
-									]
-								},
-								"owner" : "root",
-								"mode" : "000700"
-							}
-						},
-                        "commands" : {
-                            "0-stop-service" : {
-                                "command" : "/etc/cfn/wait-for-relay-and-stop-manager >> /tmp/0-stop-service"
-                            },
-                            "1-enableRestApi" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
-                            },
-                            "2-enableSoapApi" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
-                            },
-							"3-setAicDefaultComm" : {
-								"command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentCommunications -value 1"
-							},
-                            "4-start-service"                              : {
-                                "command" : "service dsm_s start"
-                            },
-                            "5-check-service"                      : {
-                                "command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"until curl -vk https://127.0.0.1:",
-											{ "Ref" : "DSIPGUIPort" },
-											"/rest/status/manager/current/ping; do echo \"manager not started yet\" >> /tmp/4-check-service; service dsm_s start >> /tmp/4-check-service; sleep 30; done"
-										]
-									]
-								}
-                            },
-							"7-set-aia-settings": {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"/etc/cfn/set-aiaSettings ",
-											{
-												"Ref" : "DSCAdminName"
-											},
-											" ",
-											{ "Ref" : "DSCAdminPassword" },
-											" ",
-											{ "Ref" : "PrivateDSIELBFQDN" },
-											" ",
-											{ "Ref" : "DSIPGUIPort" },
-											" >> /tmp/set-aiaSettings.log"
-										]
-									]
-								}
-							},
-                            "8-addCloudAccount"                    : {
-                                "command" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "/etc/cfn/createCloudAccount ",
-                                            {
-                                                "Ref" : "DSCAdminName"
-                                            },
-											" \"",
-                                            {
-                                                "Ref" : "DSCAdminPassword"
-                                            },
-											"\" ",
-											{
-												"Ref" : "AWS::AccountId"
-											},
-											" ",
-                                            {
-                                                "Ref" : "DSIPGUIPort"
-                                            },
-											" ",
-                                            {
-                                                "Ref" : "AccessKeys"
-                                            },
-											" ",
-                                            {
-                                                "Fn::GetAtt" : [
-                                                    "AccessKeys",
-                                                    "SecretAccessKey"
-                                                ]
-                                            }
-                                        ]
-                                    ]
-                                },
-                                "ignoreErrors" : "False"
-                            },
-							"10-killWebInstaller" : {
-								"command" : "/etc/cfn/kill-mp-web-installer"
-							}
-                        }
-                    },
-                    "sqlSetup"        : {
-                        "commands" : {
-                            "1-get-create-script" : {
-                                "command" : {
-									"Fn::Join" : [
-										"",
-										[	"cd /etc/cfn/rhel-scripts; curl -O ", 
-											{ "Ref" : "CfnUrlPrefix" },
-											"Common/Scripts/create-DSM-SqlDB.py; chmod 755 create-DSM-SqlDB.py"
-										]
-									]
-								},
-                                "ignoreErrors" : "false"
-                            },
-                            "2-create-db"         : {
-                                "command" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "cd /etc/cfn/rhel-scripts; python create-DSM-SqlDB.py --user ",
-                                            {
-                                                "Ref" : "DBICAdminName"
-                                            },
-                                            " --pass ",
-                                            {
-                                                "Ref" : "DBICAdminPassword"
-                                            },
-                                            " --endpoint ",
-                                            {
-                                                "Ref" : "DBPRDSEndpoint"
-                                            },
-                                            " --dbname ",
-                                            {
-                                                "Ref" : "DBPName"
-                                            }
-                                        ]
-                                    ]
-                                },
-                                "ignoreErrors" : "false"
-                            }
-                        }
-                    },
-                    "addToELB"        : {
-                        "commands" : {
-                            "0-add-instance-to-elb" : {
-                                "command" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "aws elb register-instances-with-load-balancer --load-balancer ",
-                                            {
-                                                "Ref" : "DSIELB"
-                                            },
-                                            " --instances $(curl http://169.254.169.254/latest/meta-data/instance-id/) --region ",
-                                            {
-                                                "Ref" : "AWS::Region"
-                                            }
-                                        ]
-                                    ]
-                                },
-                                "ignoreErrors" : "false"
-                            },
-                            "1-add-instance-to-internal-elb" : {
-                                "command" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "aws elb register-instances-with-load-balancer --load-balancer ",
-                                            {
-                                                "Ref" : "PrivateDSIELB"
-                                            },
-                                            " --instances $(curl http://169.254.169.254/latest/meta-data/instance-id/) --region ",
-                                            {
-                                                "Ref" : "AWS::Region"
-                                            }
-                                        ]
-                                    ]
-                                },
-                                "ignoreErrors" : "false"
-                            }
-                        }
-                    },
-                    "fixManagerLoadBalancerSettings" : {
-							"files" : {
-								"/etc/cfn/create-console-listener" : {
-									"source" : {
-										"Fn::Join" : [
-											"",
-											[
-												{ "Ref" : "CfnUrlPrefix" },
-												"Common/Scripts/create-console-listener"
-											]
-										]
-									},
-									"owner" : "root",
-									"mode" : "000700"
-								},
-								"/etc/cfn/set-lbSettings" : {
-									"source" : {
-										"Fn::Join" : [
-											"",
-											[
-												{ "Ref" : "CfnUrlPrefix" },
-												"Common/Scripts/set-lbSettings"
-											]
-										]
-									},
-									"owner" : "root",
-									"mode" : "000700"
-								}
-							},
-                        "commands" : {
-							"0-setup-internal-elb-listener" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"/etc/cfn/create-console-listener ",
-											{
-												"Ref" : "PrivateDSIELB"
-											},
-											" ",
-											{
-												"Ref" : "PrivateDSIELBFQDN"
-											},
-											" ",
-											{
-												"Ref" : "DSIPGUIPort"
-											},
-											" ",
-											{ "Ref" : "AWS::StackName" },
-											" ",
-											"1 ",
-											{ "Ref" : "AWS::Region" },
-											" >> /tmp/internallistener.log"
-										]
-									]
-								}
-							},
-							"1-setup-external-elb-listener" : {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"/etc/cfn/create-console-listener ",
-											{
-												"Ref" : "DSIELB"
-											},
-											" ",
-											{
-												"Ref" : "DSIELBFQDN"
-											},
-											" ",
-											{
-												"Ref" : "DSIPGUIPort"
-											},
-											" ",
-											{ "Ref" : "AWS::StackName" },
-											" ",
-											"0 ",
-											{ "Ref" : "AWS::Region" },
-											" >> /tmp/internallistener.log"
-										]
-									]
-								}
-							},
-							"4-set-load-balancer-settings": {
-								"command" : {
-									"Fn::Join" : [
-										"",
-										[
-											"/etc/cfn/set-lbSettings ",
-											{
-												"Ref" : "DSCAdminName"
-											},
-											" ",
-											{ "Ref" : "DSCAdminPassword" },
-											" ",
-											{
-												"Fn::If" : [
-													"InternetFacingELB",
-													{ "Ref" : "DSIELBFQDN" },
-													{ "Ref" : "PrivateDSIELBFQDN" }
-												]
-											},
-											" ",
-											{ "Ref" : "DSIPGUIPort" },
-											" ",
-											{ "Ref" : "DSIPHeartbeatPort" },
-											" >> /tmp/set-lbSettings.log"
-										]
-									]
-								}
-							}
-                        }
-                    },
-                    "fixManagerLocalLoadBalancerHostsFile" : {
-                        "commands" : {
-                            "0-setHostsFilePrivateELB" : {
-                                "command" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "echo \"",
-                                            "$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
-                                            " ",
-                                            {
-                                                "Ref" : "PrivateDSIELBFQDN"
-                                            },
-                                            "\" >> /etc/hosts"
-                                        ]
-                                    ]
-                                }
-                            },
-							"1-setHostsFilePublicELB" : {
-                                "command" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "echo \"",
-                                            "$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
-                                            " ",
-                                            {
-                                                "Ref" : "DSIELBFQDN"
-                                            },
-                                            "\" >> /etc/hosts"
-                                        ]
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "fixManagerHostObject"                 : {
-                        "files" : {
-                            "/etc/cfn/reactivate-manager" : {
-                                "source" : {
-									"Fn::Join" : [
-										"",
-										[
-											{ "Ref" : "CfnUrlPrefix" },
-											"Common/Scripts/reactivate-manager"
-										]
-									]
-								},
-                                "owner"  : "root",
-                                "mode"   : "000700"
-                            }
+                        " --resource DSM",
+                        " --region ",
+                        {  
+                           "Ref":"AWS::Region"
                         },
-                        "commands" : {
-                            "1-reactivate-manager" : {
-                                "command" : {
-                                    "Fn::Join" : [
-                                        "",
-                                        [
-                                            "/etc/cfn/reactivate-manager >> /etc/cfn/reactivate-manager.log ",
-                                            {
-                                                "Ref" : "DSCAdminName"
-                                            },
-                                            " ",
-                                            {
-                                                "Ref" : "DSCAdminPassword"
-                                            },
-                                            " ",
-                                            {
-                                                "Ref" : "DSIPGUIPort"
-                                            }
-                                        ]
+                        {  
+                           "Fn::If":[  
+                              "SQLplusELB",
+                              " -c doSqlSetup,default,setupLocalELB,setupGlobalELB",
+                              {  
+                                 "Fn::If":[  
+                                    "DoSQLSetup",
+                                    " -c doSqlSetup,default",
+                                    {  
+                                       "Fn::If":[  
+                                          "IsFirstNodePlusELB",
+                                          " -c default,setupLocalELB,setupGlobalELB",
+                                          ""
+                                       ]
+                                    }
+                                 ]
+                              }
+                           ]
+                        },
+                        {  
+                           "Fn::If":[  
+                              "AddNodePlusELB",
+                              " -c fixManagerLocalLbAddress,addDsmNode,setupLocalELB",
+                              {  
+                                 "Fn::If":[  
+                                    "IsFirstNode",
+                                    "",
+                                    " -c addDsmNode"
+                                 ]
+                              }
+                           ]
+                        },
+                        "\n",
+                        {  
+                           "Fn::If":[  
+                              "WaitNotProvided",
+                              "/opt/aws/bin/cfn-signal -e $?  -r \"Complete\" ''",
+                              {  
+                                 "Fn::Join":[  
+                                    "",
+                                    [  
+                                       "/opt/aws/bin/cfn-signal -e $? -r \"DSM Node configuration complete\" ",
+                                       {  
+                                          "Fn::Base64":{  
+                                             "Ref":"DSM1CompleteWaitHandle"
+                                          }
+                                       }
                                     ]
-                                }
-                            }
-                        }
-                    }
-                }
+                                 ]
+                              }
+                           ]
+                        },
+                        "\n"
+                     ]
+                  ]
+               }
+            }
+         }
+      }
+   },
+   "Conditions":{  
+      "DBTypeIsOracle":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"DBPEngine"
             },
-            "Properties" : {
-                "IamInstanceProfile" : {
-                    "Ref" : "DSMProfile"
-                },
-                "ImageId"            : {
-                    "Fn::FindInMap" : [
-                        "DSMAMI",
-                        {
-                            "Ref" : "AWS::Region"
-                        },
-                        {
-                            "Ref" : "DSIPLicense"
-                        }
-                    ]
-                },
-                "InstanceType"       : {
-                    "Fn::If" : [
-                        "PPUNotSelected",
-                        {
-                            "Ref" : "DSIPInstanceType"
-                        },
-                        {
-                            "Fn::FindInMap" : [
-                                "DSMSIZE",
-                                {
-									"Ref" : "AWS::Region"
-								},
-								{
-                                    "Ref" : "DSIPLicense"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "NetworkInterfaces"  : [
-                    {
-                        "DeviceIndex" : "0",
-                        "SubnetId"    : {
-                            "Ref" : "DSISubnetID"
-                        },
-                        "AssociatePublicIpAddress" : "true",
-                        "GroupSet"                 : [
-                            {
-                                "Ref" : "DSMSG"
-                            }
-                        ]
-                    }
-                ],
-                "Tags"               : [
-                    {
-                        "Key" : "Name",
-                        "Value" : "Deep Security Manager"
-                    }
-                ],
-                "KeyName"            : {
-                    "Ref" : "AWSIKeyPairName"
-                },
-                "UserData"           : {
-                    "Fn::Base64" : {
-                        "Fn::Join" : [
-                            "",
-                            [
-                                "#!/bin/bash -xe\n",
-                                "# cloud-init\n",
-                                "/opt/aws/bin/cfn-init -v ",
-                                " --stack ",
-                                {
-                                    "Ref" : "AWS::StackName"
-                                },
-                                " --resource DSM",
-                                " --region ",
-                                {
-                                    "Ref" : "AWS::Region"
-                                },
-                                {
-                                    "Fn::If" : [
-                                        "SQLplusELB",
-                                        " -c doSqlSetup,default,setupLocalELB,setupGlobalELB",
-                                        {
-                                            "Fn::If" : [
-                                                "DoSQLSetup",
-                                                " -c doSqlSetup,default",
-                                                {
-                                                    "Fn::If" : [
-                                                        "IsFirstNodePlusELB",
-                                                        " -c default,setupLocalELB,setupGlobalELB",
-                                                        ""
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                },
-                                {
-                                    "Fn::If" : [
-                                        "AddNodePlusELB",
-                                        " -c fixManagerLocalLbAddress,addDsmNode,setupLocalELB",
-                                        {
-                                            "Fn::If" : [
-                                                "IsFirstNode",
-                                                "",
-                                                " -c addDsmNode"
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "\n",
-                                {
-                                    "Fn::If" : [
-                                        "WaitNotProvided",
-                                        "/opt/aws/bin/cfn-signal -e $?  -r \"Complete\" ''",
-                                        {
-                                            "Fn::Join" : [
-                                                "",
-                                                [
-                                                    "/opt/aws/bin/cfn-signal -e $? -r \"DSM Node configuration complete\" ",
-                                                    {
-                                                        "Fn::Base64" : {
-                                                            "Ref" : "DSM1CompleteWaitHandle"
-                                                        }
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                },
-                                "\n"
-                            ]
-                        ]
-                    }
-                }
+            "Oracle"
+         ]
+      },
+      "DBTypeIsSQL":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"DBPEngine"
+            },
+            "SQL"
+         ]
+      },
+      "DBTypeIsEmbedded":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"DBPEngine"
+            },
+            "Embedded"
+         ]
+      },
+      "IsFirstNode":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"DSMPMNode"
+            },
+            "No"
+         ]
+      },
+      "DoSQLSetup":{  
+         "Fn::And":[  
+            {  
+               "Condition":"DBTypeIsSQL"
+            },
+            {  
+               "Condition":"IsFirstNode"
             }
-        }
-    },
-    "Conditions"               : {
-        "DBTypeIsOracle" : {
-            "Fn::Equals" : [
-                {
-                    "Ref" : "DBPEngine"
-                },
-                "Oracle"
-            ]
-        },
-        "DBTypeIsSQL"    : {
-            "Fn::Equals" : [
-                {
-                    "Ref" : "DBPEngine"
-                },
-                "SQL"
-            ]
-        },
-        "DBTypeIsEmbedded" : {
-            "Fn::Equals" : [
-                {
-                    "Ref" : "DBPEngine"
-                },
-                "Embedded"
-            ]
-        },
-        "IsFirstNode"      : {
-            "Fn::Equals" : [
-                {
-                    "Ref" : "DSMPMNode"
-                },
-                "No"
-            ]
-        },
-        "DoSQLSetup"       : {
-            "Fn::And" : [
-                {
-                    "Condition" : "DBTypeIsSQL"
-                },
-                {
-                    "Condition" : "IsFirstNode"
-                }
-            ]
-        },
-        "UseBYOL"          : {
-            "Fn::Equals" : [
-                {
-                    "Ref" : "DSIPLicense"
-                },
-                "BYOL"
-            ]
-        },
-		"UsePerHost"		: {
-			"Fn::Equals" : [
-				{
-					"Ref" : "DSIPLicense"
-				},
-				"PerHost"
-			]
-		},
-		"PPUNotSelected"          : {
-            "Fn::Or" : [
-				{ "Condition" : "UsePerHost" },
-				{ "Condition" : "UseBYOL" }
-            ]
-        },
-        "AddToELB"         : {
-            "Fn::Not" : [
-                {
-                    "Fn::Equals" : [
-                        {
-                            "Ref" : "DSIELB"
-                        },
-                        ""
-                    ]
-                }
-            ]
-        },
-        "WaitNotProvided"  : {
-            "Fn::Equals" : [
-                "DSM1CompleteWaitHandle",
-                ""
-            ]
-        },
-        "SQLplusELB"       : {
-            "Fn::And" : [
-                {
-                    "Condition" : "AddToELB"
-                },
-                {
-                    "Condition" : "DoSQLSetup"
-                }
-            ]
-        },
-        "AddNodePlusELB"   : {
-            "Fn::And" : [
-                {
-                    "Fn::Not" : [
-                        {
-                            "Condition" : "IsFirstNode"
-                        }
-                    ]
-                },
-                {
-                    "Condition" : "AddToELB"
-                }
-            ]
-        },
-        "KeyProvided"      : {
-            "Fn::Not" : [
-                {
-                    "Fn::Equals" : [
-                        {
-                            "Ref" : "DSIPLicenseKey"
-                        },
-                        "XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
-                    ]
-                }
-            ]
-        },
-        "IsFirstNodePlusELB" : {
-            "Fn::And" : [
-                {
-                    "Condition" : "IsFirstNode"
-                },
-                {
-                    "Condition" : "AddToELB"
-                }
-            ]
-        },
-        "AddAcAnswer"        : {
-            "Fn::And" : [
-                {
-                    "Condition" : "KeyProvided"
-                },
-                {
-                    "Condition" : "PPUNotSelected"
-                }
-            ]
-        },
-		"InternetFacingELB" : {
-            "Fn::Equals" : [
-                {
-                    "Ref" : "DSELBPosture"
-                },
-                "External"
-            ]
-        },
-        "NetworkOnlyLicense" : {
-            "Fn::Equals" : [
-                {
-                    "Ref" : "DSCLicenseType"
-                },
-                "Network"
-            ]
-        }
-    },
-    "Outputs"                  : {
-        "DSMFQDN" : {
-            "Value" : {
-                "Fn::GetAtt" : [
-                    "DSM",
-                    "PublicDnsName"
-                ]
+         ]
+      },
+      "UseBYOL":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"DSIPLicense"
+            },
+            "BYOL"
+         ]
+      },
+      "UsePerHost":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"DSIPLicense"
+            },
+            "PerHost"
+         ]
+      },
+      "PPUNotSelected":{  
+         "Fn::Or":[  
+            {  
+               "Condition":"UsePerHost"
+            },
+            {  
+               "Condition":"UseBYOL"
             }
-        },
-        "DSMURL"  : {
-            "Value" : {
-                "Fn::Join" : [
-                    "",
-                    [
-                        "https://",
-                        {
-                            "Fn::GetAtt" : [
-                                "DSM",
-                                "PublicDnsName"
-                            ]
-                        },
-                        ":",
-                        {
-                            "Ref" : "DSIPGUIPort"
-                        }
-                    ]
-                ]
+         ]
+      },
+      "AddToELB":{  
+         "Fn::Not":[  
+            {  
+               "Fn::Equals":[  
+                  {  
+                     "Ref":"DSIELB"
+                  },
+                  ""
+               ]
             }
-        },
-        "DSMInstanceId" : {
-            "Value" : {
-                "Ref" : "DSM"
+         ]
+      },
+      "WaitNotProvided":{  
+         "Fn::Equals":[  
+            "DSM1CompleteWaitHandle",
+            ""
+         ]
+      },
+      "SQLplusELB":{  
+         "Fn::And":[  
+            {  
+               "Condition":"AddToELB"
+            },
+            {  
+               "Condition":"DoSQLSetup"
             }
-        }
-    }
+         ]
+      },
+      "AddNodePlusELB":{  
+         "Fn::And":[  
+            {  
+               "Fn::Not":[  
+                  {  
+                     "Condition":"IsFirstNode"
+                  }
+               ]
+            },
+            {  
+               "Condition":"AddToELB"
+            }
+         ]
+      },
+      "KeyProvided":{  
+         "Fn::Not":[  
+            {  
+               "Fn::Equals":[  
+                  {  
+                     "Ref":"DSIPLicenseKey"
+                  },
+                  "XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
+               ]
+            }
+         ]
+      },
+      "IsFirstNodePlusELB":{  
+         "Fn::And":[  
+            {  
+               "Condition":"IsFirstNode"
+            },
+            {  
+               "Condition":"AddToELB"
+            }
+         ]
+      },
+      "AddAcAnswer":{  
+         "Fn::And":[  
+            {  
+               "Condition":"KeyProvided"
+            },
+            {  
+               "Condition":"PPUNotSelected"
+            }
+         ]
+      },
+      "InternetFacingELB":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"DSELBPosture"
+            },
+            "External"
+         ]
+      },
+      "NetworkOnlyLicense":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"DSCLicenseType"
+            },
+            "Network"
+         ]
+      }
+   },
+   "Outputs":{  
+      "DSMFQDN":{  
+         "Value":{  
+            "Fn::GetAtt":[  
+               "DSM",
+               "PublicDnsName"
+            ]
+         }
+      },
+      "DSMURL":{  
+         "Value":{  
+            "Fn::Join":[  
+               "",
+               [  
+                  "https://",
+                  {  
+                     "Fn::GetAtt":[  
+                        "DSM",
+                        "PublicDnsName"
+                     ]
+                  },
+                  ":",
+                  {  
+                     "Ref":"DSIPGUIPort"
+                  }
+               ]
+            ]
+         }
+      },
+      "DSMInstanceId":{  
+         "Value":{  
+            "Ref":"DSM"
+         }
+      }
+   }
 }
