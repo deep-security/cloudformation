@@ -1,6 +1,6 @@
 {  
    "AWSTemplateFormatVersion":"2010-09-09",
-   "Description":"v4.0 Quick Start that deploys Trend Micro Deep Security into an existing VPC with a Multi-AZ Oracle RDS instance  **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
+   "Description":"v4.1 Quick Start that deploys Trend Micro Deep Security into an existing VPC with a Multi-AZ Oracle RDS instance  **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
    "Metadata":{  
       "AWS::CloudFormation::Interface":{  
          "ParameterGroups":[  
@@ -327,7 +327,7 @@
       },
       "Parameters":{  
          "CfnUrlPrefix":{  
-            "Prefix":"https://s3.amazonaws.com/trend-qs-dev/v4.1/"
+            "Prefix":"https://s3.amazonaws.com/trend-micro-quick-start/v4.1/"
          }
       }
    },
