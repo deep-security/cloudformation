@@ -2189,7 +2189,7 @@
                "prepDSMInstall":{  
                   "files":{  
                      "/tmp/Manager-Linux-10.0.3176.x64.sh":{  
-                        "source":"https://s3.amazonaws.com/trend-qs-dev/v5/Manager-Linux-10.0.3176.x64.sh",
+                        "source":"https://s3.amazonaws.com/trend-micro-quick-start/v5/Manager-Linux-10.0.3176.x64.sh",
                         "owner":"root",
                         "mode":"000700"
                      },
