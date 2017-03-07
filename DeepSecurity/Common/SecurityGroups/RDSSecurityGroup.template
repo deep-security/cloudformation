@@ -1,7 +1,7 @@
 {
 	"AWSTemplateFormatVersion" : "2010-09-09",
 
-	"Description" : "v2016-01-08: This template creates the security group to allow communication from Deep Security Mangaers to their RDS Instance.",
+	"Description" : "v5.0: This template creates the security group to allow communication from Deep Security Mangaers to their RDS Instance.",
 
 	"Parameters" : {
 		"AWSIVPC" : {

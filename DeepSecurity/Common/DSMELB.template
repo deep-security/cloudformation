@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "v2016-01-08: Deploys Elastic Load Balancers and Security Groups for Deep Security Manager.",
+    "Description"              : "v5.0: Deploys Elastic Load Balancers and Security Groups for Deep Security Manager.",
     "Parameters"               : {
         "AWSIVPC" : {
             "Description" : "Existing VPC to deploy Deep Security Manager",
@@ -26,7 +26,7 @@
             "ConstraintDescription" : "Must be a valid TCP port."
         },
         "DSISubnetID"       : {
-            "Description" : "Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
+            "Description" : "Existing Subnet for Deep Security Manager. Must be a public subnet contained the in VPC chosen above.",
             "Type"        : "String",
             "MinLength"   : "1",
             "MaxLength"   : "255",
@@ -35,7 +35,7 @@
         },
 		"CfnUrlPrefix" : {
 			"Type" : "String",
-			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.7/"
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v5.0:/"
 		}
     },
     "Resources"                : {
@@ -231,6 +231,12 @@
                     "SourceSecurityGroup.OwnerAlias"
                 ]
             }
+        },
+        "PublicELBCanonicalHostedZoneNameID" : {
+            "Value" : { "Fn::GetAtt" : [ "DSMELB" , "CanonicalHostedZoneNameID" ] }
+        },
+        "PublicELBDNSName" : {
+            "Value" : { "Fn::GetAtt" : [ "DSMELB" , "DNSName" ] }
         }
 
 

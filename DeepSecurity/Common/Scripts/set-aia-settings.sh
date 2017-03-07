@@ -1,5 +1,5 @@
 #!/bin/bash
-## set-aiaSettings <user> <pass> <elbfqdn> <consoleport>
+## set-aia-settings <user> <pass> <elbfqdn> <consoleport>
 user=$1
 pass=$2
 managerfqdn=$3
@@ -23,6 +23,9 @@ curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "systemSett
 '<urn:settingKey>CONFIGURATION_AGENTINITIATEDACTIVATIONACTIVEHOST</urn:settingKey>'\
 '<urn:settingUnit>NONE</urn:settingUnit>'\
 '<urn:settingValue>2</urn:settingValue>'\
+'<urn:settingKey>CONFIGURATION_AGENTCOMMUNICATIONS</urn:settingKey>'\
+'<urn:settingUnit>NONE</urn:settingUnit>'\
+'<urn:settingValue>1</urn:settingValue>'\
 '</urn:editableSettings>'\
 '<urn:sID>'${SID}'</urn:sID>'\
 '</urn:systemSettingSet>'\

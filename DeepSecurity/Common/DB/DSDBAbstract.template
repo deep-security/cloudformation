@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "v2016-01-08: This template is an abstraction layer for choosing Oracle or MSSQL when deploying Deep Security Manager",
+    "Description"              : "v5.0: This template is an abstraction layer for choosing Oracle or MSSQL when deploying Deep Security Manager",
     "Parameters"               : {
         "DBIRDSInstanceSize" : {
             "Default" : "db.m3.large",
@@ -114,7 +114,7 @@
         },
 		"CfnUrlPrefix" : {
 			"Type" : "String",
-			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v3.7/"
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v5.0:/"
 		}
     },
     "Resources"                : {

@@ -1,16 +1,16 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "Trend Micro Deep Security Marketplace master template. For more information see http://aws.trendmicro.com",
+    "Description"              : "v5.0: Trend Micro Deep Security AWS RHEL master template.",
 	"Metadata" : {
 		"AWS::CloudFormation::Interface" : {
 			"ParameterGroups" : [
 				{
 					"Label" : { "default" : "Deep Security Manager Configuration" },
-					"Parameters" : [ "DSCAdminName", "DSCAdminPassword", "DSIPInstanceType", "AWSIKeyPairName", "DSIPLicense", "DSIMultiNode", "DSIPLicenseKey", "DSIPGUIPort", "DSIPHeartbeatPort", "DSCLicenseType" ]
+					"Parameters" : [ "DSCAdminName", "DSCAdminPassword", "DSIPInstanceType", "AWSIKeyPairName", "DSIMultiNode", "DSIPLicenseKey", "DSIPGUIPort", "DSIPHeartbeatPort" ]
 				},
 				{
 					"Label" : { "default" : "Network Configuration" },
-					"Parameters" : [ "AWSIVPC", "DSISubnetID", "DBISubnet1", "DBISubnet2" ]
+					"Parameters" : [ "AWSIVPC", "DSISubnetID", "DBISubnet1", "DBISubnet2", "DSELBPosture" ]
 				},
 				{
 					"Label" : { "default" : "Database Configuration" },
@@ -40,9 +40,8 @@
 				"DSIPInstanceType" : { "default" : "EC2 Instance Type for Deep Security Manager" },
 				"DBISubnet1" : { "default" : "Primary private subnet for RDS" },
 				"DBISubnet2" : { "default" : "Secondary private subnet for RDS" },
-				"DSIPLicense" : { "default" : "Deep Security License Type" },
 				"DBPMultiAZ" : { "default" : "Single- or Multi- AZ RDS instance" },
-                "DSCLicenseType" : { "default" : "Select Enterprise or Network License Key Type"}
+				"DSELBPosture" : { "default" : "Use internal or external ELB" }
 			}
 		}
 	},
@@ -62,7 +61,7 @@
             "AllowedPattern" : "[-_a-zA-Z0-9]*"
         },
         "DSISubnetID"     : {
-            "Description" : "Choose a public subnet for Deep Seucurity Manager. Must be in same AZ as primary RDS subnet.",
+            "Description" : "Choose a public subnet for Deep Security Manager. Must be in same AZ as primary RDS subnet.",
             "Type"        : "AWS::EC2::Subnet::Id",
             "MinLength"   : "1",
             "MaxLength"   : "255",
@@ -115,9 +114,9 @@
         "DBPCreateDbInstance"  : {
             "Description" : "Choose whether or not to create an RDS instance for the Deep Security Manager Deployment",
             "Type"        : "String",
-            "Default"     : "Yes",
             "AllowedValues" : [
-                "Yes"
+                "Yes",
+                "No"
             ]
         },
         "DBICAdminName"        : {
@@ -145,7 +144,8 @@
             "Default"     : "SQL",
             "AllowedValues" : [
                 "SQL",
-                "Oracle"
+                "Oracle",
+                "Embedded"
             ]
         },
         "DBPEndpoint"          : {
@@ -190,7 +190,7 @@
             ]
         },
         "DSIPLicenseKey"       : {
-            "Description" : "Deep Security License key including dashes. Only required for BYOL license type. (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
+            "Description" : "Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)",
             "Type"        : "String",
             "MinLength"   : 37,
             "MaxLength"   : 37,
@@ -215,7 +215,7 @@
             "ConstraintDescription" : "Must be a valid TCP port."
         },
         "DSIPInstanceType"     : {
-            "Description" : "Amazon EC2 instance type for BYOL Deep Security Manager Node Instances (ignored for other license types)",
+            "Description" : "Amazon EC2 instance type for the Deep Security Manager Node Instances",
             "Type"        : "String",
             "Default"     : "m3.xlarge",
             "AllowedValues" : [
@@ -255,18 +255,6 @@
             "Type"        : "AWS::EC2::Subnet::Id",
             "ConstraintDescription" : "RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template"
         },
-        "DSIPLicense"           : {
-            "Description" : "Choose License Model. If choosing BYOL you may enter the license below",
-            "Type"        : "String",
-            "AllowedValues" : [
-				"PerHost",
-                "BYOL",
-                "25",
-                "50",
-                "100",
-                "200"
-            ]
-        },
         "DBPMultiAZ": {
             "Description": "Use Multi-AZ or SQL Mirroring Option Group for RDS Instance",
             "Type" : "String",
@@ -287,35 +275,11 @@
 			},
 		"CfnUrlPrefix" : {
 			"Type" : "String",
-			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v4.1/"
-		    },
-        "DSCLicenseType" : {
-            "Type" : "String",
-            "Default" : "Enterprise",
-            "AllowedValues" : [
-                "Enterprise",
-                "Network"
-            ]
-        }
-    },
-    "Mappings"                 : {
-        "DSMNodeDependency" : {
-            "Node1DB" : {
-                "String" : "DSDatabaseAbstract"
-            },
-            "Node2DB" : {
-                "String" : "DSM95Node1"
-            },
-            "Node1NoDB" : {
-                "String" : "DSISecurityGroups"
-            },
-            "Node2NoDB" : {
-                "String" : "DSM95Node2NoDB"
-            }
-        }
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v5.0:/"
+		}
     },
     "Resources"                : {
-        "DSM96Node1" : {
+        "DSMNode1" : {
             "Type" : "AWS::CloudFormation::Stack",
             "DependsOn" : [
                 "DSDatabaseAbstract",
@@ -328,7 +292,7 @@
 						"",
 						[
 							{ "Ref" : "CfnUrlPrefix" },
-							"Marketplace/DSM96MP.template"
+							"RHEL/DSMRH.template"
 						]
 					]
 				},
@@ -338,9 +302,6 @@
                     },
                     "AWSIVPC"         : {
                         "Ref" : "AWSIVPC"
-                    },
-                    "DSIPLicense"     : {
-                        "Ref" : "DSIPLicense"
                     },
                     "DSIPLicenseKey"  : {
                         "Ref" : "DSIPLicenseKey"
@@ -419,25 +380,24 @@
 					"DSELBPosture" : {
 						"Ref" : "DSELBPosture"
 					},
-					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" },
-                    "DSCLicenseType" : { "Ref" : "DSCLicenseType"}
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
         },
-        "DSM96Node2" : {
+        "DSMNode2" : {
             "Type" : "AWS::CloudFormation::Stack",
             "DependsOn" : [
                 "DSIDSMSecurityGroup",
                 "DSM1CompleteWaitCondition"
             ],
-            "Condition" : "DSM96Node2DB",
+            "Condition" : "DSMNode2DB",
             "Properties" : {
                 "TemplateURL" : {
 					"Fn::Join" : [
 						"",
 						[
 							{ "Ref" : "CfnUrlPrefix" },
-							"Marketplace/DSM96MP.template"
+							"RHEL/DSMRH.template"
 						]
 					]
 				},
@@ -447,9 +407,6 @@
                     },
                     "AWSIVPC"         : {
                         "Ref" : "AWSIVPC"
-                    },
-                    "DSIPLicense"     : {
-                        "Ref" : "DSIPLicense"
                     },
                     "DSIPLicenseKey"  : {
                         "Ref" : "DSIPLicenseKey"
@@ -520,7 +477,7 @@
                 }
             }
         },
-        "DSM96Node1NoDB" : {
+        "DSMNode1NoDB" : {
             "Type" : "AWS::CloudFormation::Stack",
             "DependsOn" : [
                 "DSIDSMSecurityGroup"
@@ -532,7 +489,7 @@
 						"",
 						[
 							{ "Ref" : "CfnUrlPrefix" },
-							"Marketplace/DSM96MP.template"
+							"RHEL/DSMRH.template"
 						]
 					]
 				},
@@ -542,9 +499,6 @@
                     },
                     "AWSIVPC"         : {
                         "Ref" : "AWSIVPC"
-                    },
-                    "DSIPLicense"     : {
-                        "Ref" : "DSIPLicense"
                     },
                     "DSIPLicenseKey"  : {
                         "Ref" : "DSIPLicenseKey"
@@ -590,14 +544,14 @@
                         "Ref" : "DSIPInstanceType"
                     },
                     "CreateEIP"         : "False",
-                    "DSM1NoDBCompleteWaitHandle" : {
-                        "Ref" : "DSM1NoDBCompleteWaitHandle"
-                    },
                     "DSIELB"            : {
                         "Fn::GetAtt" : [
                             "DSIELB",
                             "Outputs.DSIELB"
                         ]
+                    },
+                    "DSM1CompleteWaitHandle" : {
+                        "Ref" : "DSM1NoDBCompleteWaitHandle"
                     },
                     "DSIELBFQDN"             : {
                         "Fn::GetAtt" : [
@@ -624,17 +578,17 @@
                 }
             }
         },
-        "DSM96Node2NoDB" : {
+        "DSMNode2NoDB" : {
             "Type" : "AWS::CloudFormation::Stack",
             "DependsOn" : "DSM1NoDBCompleteWaitCondition",
-            "Condition" : "DSM96Node2NoDB",
+            "Condition" : "DSMNode2NoDB",
             "Properties" : {
                 "TemplateURL" : {
 					"Fn::Join" : [
 						"",
 						[
 							{ "Ref" : "CfnUrlPrefix" },
-							"Marketplace/DSM96MP.template"
+							"RHEL/DSMRH.template"
 						]
 					]
 				},
@@ -644,9 +598,6 @@
                     },
                     "AWSIVPC"         : {
                         "Ref" : "AWSIVPC"
-                    },
-                    "DSIPLicense"     : {
-                        "Ref" : "DSIPLicense"
                     },
                     "DSIPLicenseKey"  : {
                         "Ref" : "DSIPLicenseKey"
@@ -830,7 +781,7 @@
 						"",
 						[
 							{ "Ref" : "CfnUrlPrefix" },
-							"Common/DSM96ELB.template"
+							"Common/DSMELB.template"
 						]
 					]
 				},
@@ -893,13 +844,13 @@
             "Condition" : "LaunchRDSInstance",
             "Type"      : "AWS::CloudFormation::WaitCondition",
             "DependsOn" : [
-                "DSM96Node1"
+                "DSMNode1"
             ],
             "Properties" : {
                 "Handle" : {
                     "Ref" : "DSM1CompleteWaitHandle"
                 },
-                "Timeout" : "1800"
+                "Timeout" : "1500"
             }
         },
         "DSM1NoDBCompleteWaitHandle"      : {
@@ -910,7 +861,7 @@
             "Condition" : "DoNotLaunchRDSInstance",
             "Type"      : "AWS::CloudFormation::WaitCondition",
             "DependsOn" : [
-                "DSM96Node1NoDB"
+                "DSMNode1NoDB"
             ],
             "Properties" : {
                 "Handle" : {
@@ -945,7 +896,7 @@
                 "No"
             ]
         },
-        "DSM96Node2DB"           : {
+        "DSMNode2DB"           : {
             "Fn::And" : [
                 {
                     "Condition" : "DSIsMultiNode"
@@ -955,7 +906,7 @@
                 }
             ]
         },
-        "DSM96Node2NoDB"         : {
+        "DSMNode2NoDB"         : {
             "Fn::And" : [
                 {
                     "Condition" : "DSIsMultiNode"
@@ -995,6 +946,38 @@
                 ]
             }
         },
+		"DeepSecurityAgentDownload" : {
+			"Value" : {
+				"Fn::Join" : [
+					"",
+					[
+					"https://",
+						{ 
+							"Fn::If" : [
+								"InternetFacingELB",
+									{
+										"Fn::GetAtt" : [
+										"DSIELB",
+										"Outputs.ELBFQDN"
+										]
+									},
+									{
+										"Fn::GetAtt" : [
+										"DSIELB",
+										"Outputs.PrivateELBFQDN"
+										]
+									}
+								]
+						},
+						":",
+						{
+							"Ref" : "DSIPGUIPort"
+						},
+						"/"
+					]
+				]
+			}
+		},
 		"DeepSecurityHeartbeat" : {
 			"Value" : {
 				"Fn::Join" : [
@@ -1024,8 +1007,14 @@
 						},
 						"/"
 					]
-				]
-			}
-		}
+                ]
+            }
+        },
+        "PublicELBCanonicalHostedZoneNameID" : {
+          "Value" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.PublicELBCanonicalHostedZoneNameID" ] }
+        },
+        "PublicELBDNSName" : {
+          "Value" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.PublicELBDNSName" ] }
+        }
     }
 }

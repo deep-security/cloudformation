@@ -1,6 +1,6 @@
 {  
    "AWSTemplateFormatVersion":"2010-09-09",
-   "Description":"v4.1 Quick Start that deploys Trend Micro Deep Security into an existing VPC with a Multi-AZ Oracle RDS instance  **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
+   "Description":"v5.0: Quick Start that deploys Trend Micro Deep Security into an existing VPC with a Multi-AZ Oracle RDS instance  **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
    "Metadata":{  
       "AWS::CloudFormation::Interface":{  
          "ParameterGroups":[  
@@ -129,7 +129,7 @@
          "ConstraintDescription":"Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
       },
       "DeepSecuritySubnet":{  
-         "Description":"Select an existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
+         "Description":"Select an existing Subnet for Deep Security Manager. Must be a public subnet contained the in VPC chosen above.",
          "Type":"AWS::EC2::Subnet::Id",
          "MinLength":"1",
          "MaxLength":"255",
@@ -156,7 +156,7 @@
          "ConstraintDescription":"Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
       },
       "LicenseKey":{  
-         "Description":"If you have a Deep Security license key, enter it here. Including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG).",
+         "Description":"If you have a Deep Security Enterprise license key, enter it here. Including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG). If you did not purchase all modules please leave blank and enter your key in the console after launch.",
          "Type":"String",
          "MinLength":0,
          "MaxLength":37,
@@ -165,11 +165,11 @@
       }
    },
    "Mappings":{  
-      "DSMSIZE":{
+      "DSMSIZE":{  
          "us-east-1":{  
             "BYOL":"m4.xlarge"
          },
-         "us-east-2":{
+         "us-east-2":{  
             "BYOL":"m4.xlarge"
          },
          "us-west-1":{  
@@ -178,43 +178,43 @@
          "us-west-2":{  
             "BYOL":"m4.xlarge"
          },
-         "ca-central-1":{
+         "ca-central-1":{  
             "BYOL":"m4.xlarge"
          },
-         "ap-south-1":{ 
+         "ap-south-1":{  
             "BYOL":"m4.xlarge"
          },
-         "ap-northeast-2":{
+         "ap-northeast-2":{  
             "BYOL":"m4.xlarge"
          },
-         "ap-southeast-1":{ 
+         "ap-southeast-1":{  
             "BYOL":"m4.xlarge"
          },
          "ap-southeast-2":{  
             "BYOL":"m4.xlarge"
          },
-         "ap-northeast-1":{
+         "ap-northeast-1":{  
             "BYOL":"m4.xlarge"
          },
-         "eu-central-1":{
+         "eu-central-1":{  
             "BYOL":"m4.xlarge"
          },
          "eu-west-1":{  
             "BYOL":"m4.xlarge"
          },
-         "eu-west-2":{
+         "eu-west-2":{  
             "BYOL":"m4.xlarge"
          },
-         "sa-east-1":{
+         "sa-east-1":{  
             "BYOL":"m4.xlarge"
-         }      
+         }
       },
       "RDSInstanceSize":{  
          "us-east-1":{  
             "Oracle":"db.m4.xlarge",
             "MSSQL":"db.m4.xlarge"
          },
-         "us-east-2":{
+         "us-east-2":{  
             "Oracle":"db.m4.xlarge",
             "MSSQL":"db.m4.xlarge"
          },
@@ -226,19 +226,19 @@
             "Oracle":"db.m4.xlarge",
             "MSSQL":"db.m4.xlarge"
          },
-         "ca-central-1":{
+         "ca-central-1":{  
             "Oracle":"db.m4.xlarge",
             "MSSQL":"db.m4.xlarge"
          },
-         "ap-south-1":{ 
+         "ap-south-1":{  
             "Oracle":"db.m4.xlarge",
             "MSSQL":"db.m4.xlarge"
          },
-         "ap-northeast-2":{
+         "ap-northeast-2":{  
             "Oracle":"db.m4.xlarge",
             "MSSQL":"db.m4.xlarge"
          },
-         "ap-southeast-1":{ 
+         "ap-southeast-1":{  
             "Oracle":"db.m4.xlarge",
             "MSSQL":"db.m4.xlarge"
          },
@@ -246,11 +246,11 @@
             "Oracle":"db.m4.xlarge",
             "MSSQL":"db.m4.xlarge"
          },
-         "ap-northeast-1":{
+         "ap-northeast-1":{  
             "Oracle":"db.m4.xlarge",
             "MSSQL":"db.m4.xlarge"
          },
-         "eu-central-1":{
+         "eu-central-1":{  
             "Oracle":"db.m4.xlarge",
             "MSSQL":"db.m4.xlarge"
          },
@@ -258,21 +258,21 @@
             "Oracle":"db.m4.xlarge",
             "MSSQL":"db.m4.xlarge"
          },
-         "eu-west-2":{
+         "eu-west-2":{  
             "Oracle":"db.m4.xlarge",
             "MSSQL":"db.m4.xlarge"
          },
-         "sa-east-1":{
+         "sa-east-1":{  
             "Oracle":"db.m3.xlarge",
             "MSSQL":"db.m3.xlarge"
-         } 
+         }
       },
       "RDSMultiAZ":{  
          "us-east-1":{  
             "Oracle":"true",
             "MSSQL":"true"
          },
-         "us-east-2":{
+         "us-east-2":{  
             "Oracle":"true",
             "MSSQL":"true"
          },
@@ -284,19 +284,19 @@
             "Oracle":"true",
             "MSSQL":"true"
          },
-         "ca-central-1":{
+         "ca-central-1":{  
             "Oracle":"true",
             "MSSQL":"true"
          },
-         "ap-south-1":{ 
+         "ap-south-1":{  
             "Oracle":"true",
             "MSSQL":"true"
          },
-         "ap-northeast-2":{
+         "ap-northeast-2":{  
             "Oracle":"true",
             "MSSQL":"true"
          },
-         "ap-southeast-1":{ 
+         "ap-southeast-1":{  
             "Oracle":"true",
             "MSSQL":"false"
          },
@@ -304,11 +304,11 @@
             "Oracle":"true",
             "MSSQL":"true"
          },
-         "ap-northeast-1":{
+         "ap-northeast-1":{  
             "Oracle":"true",
             "MSSQL":"true"
          },
-         "eu-central-1":{
+         "eu-central-1":{  
             "Oracle":"true",
             "MSSQL":"false"
          },
@@ -316,23 +316,23 @@
             "Oracle":"true",
             "MSSQL":"true"
          },
-         "eu-west-2":{
+         "eu-west-2":{  
             "Oracle":"true",
             "MSSQL":"true"
          },
-         "sa-east-1":{
+         "sa-east-1":{  
             "Oracle":"true",
-            "MSSQL":"true"
+            "MSSQL":"false"
          }
       },
       "Parameters":{  
          "CfnUrlPrefix":{  
-            "Prefix":"https://s3.amazonaws.com/trend-micro-quick-start/v4.1/"
+            "Prefix":"https://s3.amazonaws.com/trend-micro-quick-start/v5/"
          }
       }
    },
    "Resources":{  
-      "MasterMP96":{  
+      "MasterMP":{  
          "Type":"AWS::CloudFormation::Stack",
          "Properties":{  
             "TemplateURL":{  
@@ -346,7 +346,7 @@
                            "Prefix"
                         ]
                      },
-                     "Marketplace/MasterMP96.template"
+                     "Marketplace/MasterMP.template"
                   ]
                ]
             },
@@ -469,7 +469,7 @@
       "DeepSecurityConsole":{  
          "Value":{  
             "Fn::GetAtt":[  
-               "MasterMP96",
+               "MasterMP",
                "Outputs.DeepSecurityConsole"
             ]
          }

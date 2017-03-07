@@ -7,6 +7,6 @@ yum -y install gcc-c++
 yum -y install python-devel
 yum -y install freetds-devel
 pip install  pymssql
-curl -O https://s3.amazonaws.com/trend-micro-quick-start/v3.7/Common/Scripts/create-DSM-SqlDB.py
-chmod 755 create-DSM-SqlDB.py
+curl -O https://s3.amazonaws.com/trend-micro-quick-start/v3.7/Common/Scripts/create-dsm-db.py
+chmod 755 create-dsm-db.py
 

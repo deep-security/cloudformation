@@ -1,6 +1,6 @@
 {  
    "AWSTemplateFormatVersion":"2010-09-09",
-   "Description":"v3.7 Quick Start that deploys Trend Micro Deep Security into an existing VPC with a Multi-AZ Oracle RDS instance  **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
+   "Description":"v5.0: Quick Start that deploys Trend Micro Deep Security into an existing VPC with a Multi-AZ Oracle RDS instance  **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
    "Metadata":{  
       "AWS::CloudFormation::Interface":{  
          "ParameterGroups":[  
@@ -81,7 +81,7 @@
          "ConstraintDescription":"RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones within the specified VPC for deploying this template"
       },
       "DeepSecuritySubnet":{  
-         "Description":"Select an existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
+         "Description":"Select an existing Subnet for Deep Security Manager. Must be a public subnet contained the in VPC chosen above.",
          "Type":"AWS::EC2::Subnet::Id",
          "MinLength":"1",
          "MaxLength":"255",
@@ -126,12 +126,6 @@
             "3":"m4.xlarge",
             "4":"m4.xlarge"
          },
-         "us-east-2":{
-            "1":"m4.large",
-            "2":"m4.large",
-            "3":"m4.xlarge",
-            "4":"m4.xlarge"
-         },
          "us-west-1":{  
             "1":"m4.large",
             "2":"m4.large",
@@ -144,25 +138,31 @@
             "3":"m4.xlarge",
             "4":"m4.xlarge"
          },
-         "ca-central-1":{
+         "eu-west-1":{  
             "1":"m4.large",
             "2":"m4.large",
             "3":"m4.xlarge",
             "4":"m4.xlarge"
          },
-         "ap-south-1":{ 
+         "eu-central-1":{  
             "1":"m4.large",
             "2":"m4.large",
             "3":"m4.xlarge",
             "4":"m4.xlarge"
          },
-         "ap-northeast-2":{
+         "sa-east-1":{  
             "1":"m4.large",
             "2":"m4.large",
             "3":"m4.xlarge",
             "4":"m4.xlarge"
          },
-         "ap-southeast-1":{ 
+         "ap-northeast-1":{  
+            "1":"m4.large",
+            "2":"m4.large",
+            "3":"m4.xlarge",
+            "4":"m4.xlarge"
+         },
+         "ap-southeast-1":{  
             "1":"m4.large",
             "2":"m4.large",
             "3":"m4.xlarge",
@@ -174,31 +174,31 @@
             "3":"m4.xlarge",
             "4":"m4.xlarge"
          },
-         "ap-northeast-1":{
+         "ap-northeast-2":{  
             "1":"m4.large",
             "2":"m4.large",
             "3":"m4.xlarge",
             "4":"m4.xlarge"
          },
-         "eu-central-1":{
+         "us-east-2":{  
             "1":"m4.large",
             "2":"m4.large",
             "3":"m4.xlarge",
             "4":"m4.xlarge"
          },
-         "eu-west-1":{  
+         "ca-central-1":{  
             "1":"m4.large",
             "2":"m4.large",
             "3":"m4.xlarge",
             "4":"m4.xlarge"
          },
-         "eu-west-2":{
+         "ap-south-1":{  
             "1":"m4.large",
             "2":"m4.large",
             "3":"m4.xlarge",
             "4":"m4.xlarge"
          },
-         "sa-east-1":{
+         "eu-west-2":{  
             "1":"m4.large",
             "2":"m4.large",
             "3":"m4.xlarge",
@@ -226,7 +226,7 @@
             "3":"db.m4.xlarge",
             "4":"db.m4.xlarge"
          },
-         "us-east-2":{
+         "us-east-2":{  
             "1":"db.m4.large",
             "2":"db.m4.large",
             "3":"db.m4.xlarge",
@@ -244,25 +244,25 @@
             "3":"db.m4.xlarge",
             "4":"db.m4.xlarge"
          },
-         "ca-central-1":{
+         "ca-central-1":{  
             "1":"db.m4.large",
             "2":"db.m4.large",
             "3":"db.m4.xlarge",
             "4":"db.m4.xlarge"
          },
-         "ap-south-1":{ 
+         "ap-south-1":{  
             "1":"db.m4.large",
             "2":"db.m4.large",
             "3":"db.m4.xlarge",
             "4":"db.m4.xlarge"
          },
-         "ap-northeast-2":{
+         "ap-northeast-2":{  
             "1":"db.m4.large",
             "2":"db.m4.large",
             "3":"db.m4.xlarge",
             "4":"db.m4.xlarge"
          },
-         "ap-southeast-1":{ 
+         "ap-southeast-1":{  
             "1":"db.m4.large",
             "2":"db.m4.large",
             "3":"db.m4.xlarge",
@@ -274,13 +274,13 @@
             "3":"db.m4.xlarge",
             "4":"db.m4.xlarge"
          },
-         "ap-northeast-1":{
+         "ap-northeast-1":{  
             "1":"db.m4.large",
             "2":"db.m4.large",
             "3":"db.m4.xlarge",
             "4":"db.m4.xlarge"
          },
-         "eu-central-1":{
+         "eu-central-1":{  
             "1":"db.m4.large",
             "2":"db.m4.large",
             "3":"db.m4.xlarge",
@@ -292,13 +292,13 @@
             "3":"db.m4.xlarge",
             "4":"db.m4.xlarge"
          },
-         "eu-west-2":{
+         "eu-west-2":{  
             "1":"db.m4.large",
             "2":"db.m4.large",
             "3":"db.m4.xlarge",
             "4":"db.m4.xlarge"
          },
-         "sa-east-1":{
+         "sa-east-1":{  
             "1":"db.m3.large",
             "2":"db.m3.large",
             "3":"db.m3.xlarge",
@@ -321,13 +321,14 @@
       },
       "Parameters":{  
          "CfnUrlPrefix":{  
-            "Prefix":"https://s3.amazonaws.com/trend-micro-quick-start/v4.1/"
+            "Prefix":"https://s3.amazonaws.com/trend-micro-quick-start/v5/"
          }
       }
    },
    "Resources":{  
-      "MasterMP96":{  
+      "MasterMP":{  
          "Type":"AWS::CloudFormation::Stack",
+         "Condition":"PerHostSupportedRegion",
          "Properties":{  
             "TemplateURL":{  
                "Fn::Join":[  
@@ -340,7 +341,7 @@
                            "Prefix"
                         ]
                      },
-                     "Marketplace/MasterMP96.template"
+                     "Marketplace/MasterMP.template"
                   ]
                ]
             },
@@ -435,11 +436,118 @@
          }
       }
    },
+   "Conditions":{  
+      "RegionIsEast1":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"AWS::Region"
+            },
+            "us-east-1"
+         ]
+      },
+      "RegionIsWest2":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"AWS::Region"
+            },
+            "us-west-2"
+         ]
+      },
+      "RegionIsEuWest1":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"AWS::Region"
+            },
+            "eu-west-1"
+         ]
+      },
+      "RegionIsApSoutheast2":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"AWS::Region"
+            },
+            "ap-southeast-2"
+         ]
+      },
+      "RegionIsUSEast2":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"AWS::Region"
+            },
+            "us-east-2"
+         ]
+      },
+      "RegionIsCACentral1":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"AWS::Region"
+            },
+            "ca-central-1"
+         ]
+      },
+      "RegionIsAPSouth1":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"AWS::Region"
+            },
+            "ap-south-1"
+         ]
+      },
+      "RegionIsAPNortheast2":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"AWS::Region"
+            },
+            "ap-northeast-2"
+         ]
+      },
+      "RegionIsAPSoutheast1":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"AWS::Region"
+            },
+            "ap-southeast-1"
+         ]
+      },
+      "RegionIsAPNortheast1":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"AWS::Region"
+            },
+            "ap-northeast-1"
+         ]
+      },
+      "RegionIsEUWest2":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"AWS::Region"
+            },
+            "eu-west-2"
+         ]
+      },
+      "RegionIsSAEast1":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"AWS::Region"
+            },
+            "sa-east-1"
+         ]
+      },
+      "AllRegionSupported":{  
+         "Fn::Equals":[  
+            "true",
+            "true"
+         ]
+      },
+      "PerHostSupportedRegion":{  
+         "Condition":"AllRegionSupported"
+      }
+   },
    "Outputs":{  
       "DeepSecurityConsole":{  
          "Value":{  
             "Fn::GetAtt":[  
-               "MasterMP96",
+               "MasterMP",
                "Outputs.DeepSecurityConsole"
             ]
          }

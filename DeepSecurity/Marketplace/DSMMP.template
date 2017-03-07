@@ -1,6 +1,6 @@
 {  
    "AWSTemplateFormatVersion":"2010-09-09",
-   "Description":"v2016-01-08: Deploys Deep Security Manager to AWS. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
+   "Description":"v5.0: Deploys Deep Security Manager to AWS. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
    "Parameters":{  
       "AWSIKeyPairName":{  
          "Description":"Existing key pair to use for connecting to your Deep Security Manager Instance",
@@ -139,7 +139,7 @@
          ]
       },
       "DSISubnetID":{  
-         "Description":"Existing Subnet for Deep Seucurity Manager. Must be a public subnet contained the in VPC chosen above.",
+         "Description":"Existing Subnet for Deep Security Manager. Must be a public subnet contained the in VPC chosen above.",
          "Type":"AWS::EC2::Subnet::Id",
          "MinLength":"1",
          "MaxLength":"255",
@@ -160,11 +160,7 @@
          "Type":"String",
          "AllowedValues":[  
             "PerHost",
-            "BYOL",
-            "25",
-            "50",
-            "100",
-            "200"
+            "BYOL"
          ]
       },
       "CreateEIP":{  
@@ -207,7 +203,7 @@
       },
       "CfnUrlPrefix":{  
          "Type":"String",
-         "Default":"https://s3.amazonaws.com/trend-micro-quick-start/v4.1/"
+         "Default":"https://s3.amazonaws.com/trend-micro-quick-start/v5.0:/"
       },
       "DSCLicenseType":{  
          "Type":"String",
@@ -221,60 +217,60 @@
    "Mappings":{  
       "DSMAMI":{  
          "us-east-1":{  
-            "PerHost":"ami-096e7463",
-            "BYOL":"ami-5eff3933"
+            "PerHost":"ami-d88126ce",
+            "BYOL":"ami-2d9c3b3b"
          },
-         "us-east-2":{
-            "PerHost":"ami-8ec9eceb",
-            "BYOL":"ami-5c6d3639"
+         "us-east-2":{  
+            "PerHost":"ami-3c604459",
+            "BYOL":"ami-3f67435a"
          },
          "us-west-1":{  
-            "PerHost":"ami-820779e2",
-            "BYOL":"ami-a8bffac8"
+            "PerHost":"ami-7f247d1f",
+            "BYOL":"ami-ca5a03aa"
          },
          "us-west-2":{  
-            "PerHost":"ami-27a95947",
-            "BYOL":"ami-2e37f24e"
+            "PerHost":"ami-7a95191a",
+            "BYOL":"ami-10ad2170"
          },
-         "ca-central-1":{
-            "PerHost":"ami-c7922fa3",
-            "BYOL":"ami-cfc974ab"
+         "ca-central-1":{  
+            "PerHost":"ami-cd5de0a9",
+            "BYOL":"ami-a659e4c2"
          },
-         "ap-south-1":{ 
-            "PerHost":"ami-e6e09189",
-            "BYOL":"ami-f8a9c397"
+         "ap-south-1":{  
+            "PerHost":"ami-7545351a",
+            "BYOL":"ami-9c4636f3"
          },
-         "ap-northeast-2":{
-            "PerHost":"ami-0edb0b60",
-            "BYOL":"ami-c62ee5a8"
+         "ap-northeast-2":{  
+            "PerHost":"ami-6961b107",
+            "BYOL":"ami-ee61b180"
          },
-         "ap-southeast-1":{ 
-            "PerHost":"ami-9dc87efe",
-            "BYOL":"ami-6218cb01"
+         "ap-southeast-1":{  
+            "PerHost":"ami-73f04310",
+            "BYOL":"ami-c8f043ab"
          },
          "ap-southeast-2":{  
-            "PerHost":"ami-cbefc2a8",
-            "BYOL":"ami-8a8ca5e9"
+            "PerHost":"ami-f81d1f9b",
+            "BYOL":"ami-af2725cc"
          },
-         "ap-northeast-1":{
-            "PerHost":"ami-7fa8e718",
-            "BYOL":"ami-d854beb9"
+         "ap-northeast-1":{  
+            "PerHost":"ami-57075630",
+            "BYOL":"ami-4f0d5c28"
          },
-         "eu-central-1":{
-            "PerHost":"ami-a913f0c6",
-            "BYOL":"ami-c14fa6ae"
+         "eu-central-1":{  
+            "PerHost":"ami-1bfc2874",
+            "BYOL":"ami-82fa2eed"
          },
          "eu-west-1":{  
-            "PerHost":"ami-0329a670",
-            "BYOL":"ami-48a6383b"
+            "PerHost":"ami-60321906",
+            "BYOL":"ami-c40e25a2"
          },
-         "eu-west-2":{
-            "PerHost":"ami-6e35200a",
-            "BYOL":"ami-ae5b4eca"
+         "eu-west-2":{  
+            "PerHost":"ami-b2e0f5d6",
+            "BYOL":"ami-68e0f50c"
          },
-         "sa-east-1":{
-            "PerHost":"ami-d194f3bd",
-            "BYOL":"ami-c250daae"
+         "sa-east-1":{  
+            "PerHost":"ami-0a056466",
+            "BYOL":"ami-45137229"
          }
       },
       "DSMSIZE":{  
@@ -282,7 +278,7 @@
             "PerHost":"m4.xlarge",
             "BYOL":"m4.xlarge"
          },
-         "us-east-2":{
+         "us-east-2":{  
             "PerHost":"m4.xlarge",
             "BYOL":"m4.xlarge"
          },
@@ -294,77 +290,45 @@
             "PerHost":"m4.xlarge",
             "BYOL":"m4.xlarge"
          },
-         "ca-central-1":{
+         "ca-central-1":{  
             "PerHost":"m4.xlarge",
             "BYOL":"m4.xlarge"
          },
-         "ap-south-1":{ 
+         "ap-south-1":{  
             "PerHost":"m4.xlarge",
             "BYOL":"m4.xlarge"
-         },
-         "ap-northeast-2":{
-            "PerHost":"m4.xlarge",
-            "BYOL":"m4.xlarge"
-         },
-         "ap-southeast-1":{ 
-            "PerHost":"m4.xlarge",
-            "BYOL":"m4.xlarge"
-         },
-         "ap-southeast-2":{  
-            "PerHost":"m4.xlarge",
-            "BYOL":"m4.xlarge"
-         },
-         "ap-northeast-1":{
-            "PerHost":"m4.xlarge",
-            "BYOL":"m4.xlarge"
-         },
-         "eu-central-1":{
-            "PerHost":"m4.xlarge",
-            "BYOL":"m4.xlarge"
-         },
-         "eu-west-1":{  
-            "PerHost":"m4.xlarge",
-            "BYOL":"m4.xlarge"
-         },
-         "eu-west-2":{
-            "PerHost":"m4.xlarge",
-            "BYOL":"m4.xlarge"
-         },
-         "sa-east-1":{
-            "PerHost":"m4.xlarge",
-            "BYOL":"m4.xlarge"
-         }
-      },
-      "TrendRegionMap":{  
-         "us-east-1":{  
-            "regionkey":"amazon.cloud.region.key.1"
-         },
-         "us-west-2":{  
-            "regionkey":"amazon.cloud.region.key.2"
-         },
-         "us-west-1":{  
-            "regionkey":"amazon.cloud.region.key.3"
-         },
-         "eu-west-1":{  
-            "regionkey":"amazon.cloud.region.key.4"
-         },
-         "ap-southeast-1":{  
-            "regionkey":"amazon.cloud.region.key.5"
-         },
-         "ap-northeast-1":{  
-            "regionkey":"amazon.cloud.region.key.6"
-         },
-         "sa-east-1":{  
-            "regionkey":"amazon.cloud.region.key.7"
-         },
-         "ap-southeast-2":{  
-            "regionkey":"amazon.cloud.region.key.8"
-         },
-         "eu-central-1":{  
-            "regionkey":"amazon.cloud.region.key.9"
          },
          "ap-northeast-2":{  
-            "regionkey":"amazon.cloud.region.key.12"
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "ap-southeast-1":{  
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "ap-southeast-2":{  
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "ap-northeast-1":{  
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "eu-central-1":{  
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "eu-west-1":{  
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "eu-west-2":{  
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
+         },
+         "sa-east-1":{  
+            "PerHost":"m4.xlarge",
+            "BYOL":"m4.xlarge"
          }
       },
       "DSMDBMap":{  
@@ -380,65 +344,6 @@
       }
    },
    "Resources":{  
-      "DSIAMUser":{  
-         "Type":"AWS::IAM::User",
-         "Properties":{  
-
-         }
-      },
-      "DSIAMGroup":{  
-         "Type":"AWS::IAM::Group"
-      },
-      "Users":{  
-         "Type":"AWS::IAM::UserToGroupAddition",
-         "Properties":{  
-            "GroupName":{  
-               "Ref":"DSIAMGroup"
-            },
-            "Users":[  
-               {  
-                  "Ref":"DSIAMUser"
-               }
-            ]
-         }
-      },
-      "DSMUserPolicies":{  
-         "Type":"AWS::IAM::Policy",
-         "Properties":{  
-            "PolicyName":"DSMUsers",
-            "PolicyDocument":{  
-               "Statement":[  
-                  {  
-                     "Effect":"Allow",
-                     "Action":[  
-                        "ec2:DescribeImages",
-                        "ec2:DescribeInstances",
-                        "ec2:DescribeRegions",
-                        "ec2:DescribeSubnets",
-                        "ec2:DescribeTags",
-                        "ec2:DescribeVpcs",
-                        "iam:ListAccountAliases",
-                        "sts:AssumeRole"
-                     ],
-                     "Resource":"*"
-                  }
-               ]
-            },
-            "Groups":[  
-               {  
-                  "Ref":"DSIAMGroup"
-               }
-            ]
-         }
-      },
-      "AccessKeys":{  
-         "Type":"AWS::IAM::AccessKey",
-         "Properties":{  
-            "UserName":{  
-               "Ref":"DSIAMUser"
-            }
-         }
-      },
       "DSMRole":{  
          "Type":"AWS::IAM::Role",
          "Properties":{  
@@ -474,13 +379,22 @@
                   "Fn::If":[  
                      "AddToELB",
                      {  
-                        "PolicyName":"PlaceholderPolicy",
+                        "PolicyName":"DeepSecurityManagerInstancePolicy",
                         "PolicyDocument":{  
                            "Statement":[  
                               {  
                                  "Effect":"Allow",
                                  "Action":[  
-                                    "ec2:DescribeLicenses"
+                                    "ec2:DescribeLicenses",
+                                    "ec2:DescribeInstances",
+                                    "ec2:DescribeImages",
+                                    "ec2:DescribeRegions",
+                                    "ec2:DescribeVpcs",
+                                    "ec2:DescribeSubnets",
+                                    "ec2:DescribeTags",
+                                    "ec2:DescribeAvailabilityZones",
+                                    "ec2:DescribeSecurityGroups",
+                                    "iam:ListAccountAliases"
                                  ],
                                  "Resource":"*"
                               },
@@ -573,7 +487,7 @@
                         }
                      },
                      {  
-                        "PolicyName":"PlaceholderPolicy",
+                        "PolicyName":"DeepSecurityManagerInstancePolicy",
                         "PolicyDocument":{  
                            "Statement":[  
                               {  
@@ -587,7 +501,10 @@
                                     "ec2:DescribeTags",
                                     "ec2:DescribeVpcs",
                                     "iam:ListAccountAliases",
-                                    "sts:AssumeRole"
+                                    "sts:AssumeRole",
+                                    "ec2:DescribeAvailabilityZones",
+                                    "ec2:DescribeSecurityGroups",
+                                    "iam:ListAccountAliases"
                                  ],
                                  "Resource":"*"
                               }
@@ -711,41 +628,6 @@
                },
                "prepDSMInstall":{  
                   "files":{  
-                     "/opt/trend/packages/dsm/default/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip":{  
-                        "source":"http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.2-5028.x86_64.zip",
-                        "owner":"root",
-                        "mode":"000600"
-                     },
-                     "/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL6-9.6.2-5324.x86_64.zip":{  
-                        "source":"http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.2-5324.x86_64.zip",
-                        "owner":"root",
-                        "mode":"000600"
-                     },
-                     "/opt/trend/packages/dsm/default/Agent-RedHat_EL6-9.6.2-6400.x86_64.zip":{  
-                        "source":"http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.2-6400.x86_64.zip",
-                        "owner":"root",
-                        "mode":"000600"
-                     },
-                     "/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL6-9.6.2-7547.x86_64.zip":{  
-                        "source":"http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.2-7547.x86_64.zip",
-                        "owner":"root",
-                        "mode":"000600"
-                     },
-                     "/opt/trend/packages/dsm/default/Agent-RedHat_EL7-9.6.2-5027.x86_64.zip":{  
-                        "source":"http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL7-9.6.2-5027.x86_64.zip",
-                        "owner":"root",
-                        "mode":"000600"
-                     },
-                     "/opt/trend/packages/dsm/default/KernelSupport-RedHat_EL7-9.6.2-5280.x86_64.zip":{  
-                        "source":"http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL7-9.6.2-5280.x86_64.zip",
-                        "owner":"root",
-                        "mode":"000600"
-                     },
-                     "/opt/trend/packages/dsm/default/Agent-Windows-9.6.2-5029.x86_64.zip":{  
-                        "source":"http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-Windows-9.6.2-5029.x86_64.zip",
-                        "owner":"root",
-                        "mode":"000600"
-                     },
                      "/etc/cfn/dsmConfiguration.properties":{  
                         "content":{  
                            "Fn::Join":[  
@@ -855,7 +737,8 @@
                                  "RelayScreen.ProxyPort=None\n",
                                  "RelayScreen.Proxy=False\n",
                                  "RelayScreen.AntiMalware=True\n",
-                                 "RelayScreen.ProxyAuthentication=False\n"
+                                 "RelayScreen.ProxyAuthentication=False\n",
+                                 "Override.Automation=True\n"
                               ]
                            ]
                         },
@@ -889,7 +772,7 @@
                },
                "addCloudAccount":{  
                   "files":{  
-                     "/etc/cfn/set-aiaSettings":{  
+                     "/etc/cfn/set-aia-settings.sh":{  
                         "source":{  
                            "Fn::Join":[  
                               "",
@@ -897,14 +780,14 @@
                                  {  
                                     "Ref":"CfnUrlPrefix"
                                  },
-                                 "Common/Scripts/set-aiaSettings"
+                                 "Common/Scripts/set-aia-settings.sh"
                               ]
                            ]
                         },
                         "owner":"root",
                         "mode":"000700"
                      },
-                     "/etc/cfn/createCloudAccount":{  
+                     "/etc/cfn/kill-mp-web-installer.sh":{  
                         "source":{  
                            "Fn::Join":[  
                               "",
@@ -912,14 +795,14 @@
                                  {  
                                     "Ref":"CfnUrlPrefix"
                                  },
-                                 "Common/Scripts/createCloudAccount2"
+                                 "Common/Scripts/kill-mp-web-installer.sh"
                               ]
                            ]
                         },
                         "owner":"root",
                         "mode":"000700"
                      },
-                     "/etc/cfn/wait-for-relay-and-stop-manager":{  
+                     "/etc/cfn/add-aws-account-with-instance-role.sh":{  
                         "source":{  
                            "Fn::Join":[  
                               "",
@@ -927,22 +810,7 @@
                                  {  
                                     "Ref":"CfnUrlPrefix"
                                  },
-                                 "Common/Scripts/wait-for-relay-and-stop-manager"
-                              ]
-                           ]
-                        },
-                        "owner":"root",
-                        "mode":"000700"
-                     },
-                     "/etc/cfn/kill-mp-web-installer":{  
-                        "source":{  
-                           "Fn::Join":[  
-                              "",
-                              [  
-                                 {  
-                                    "Ref":"CfnUrlPrefix"
-                                 },
-                                 "Common/Scripts/kill-mp-web-installer"
+                                 "Common/Scripts/add-aws-account-with-instance-role.sh"
                               ]
                            ]
                         },
@@ -951,21 +819,6 @@
                      }
                   },
                   "commands":{  
-                     "0-stop-service":{  
-                        "command":"/etc/cfn/wait-for-relay-and-stop-manager >> /tmp/0-stop-service"
-                     },
-                     "1-enableRestApi":{  
-                        "command":"/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
-                     },
-                     "2-enableSoapApi":{  
-                        "command":"/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
-                     },
-                     "3-setAicDefaultComm":{  
-                        "command":"/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentCommunications -value 1"
-                     },
-                     "4-start-service":{  
-                        "command":"service dsm_s start"
-                     },
                      "5-check-service":{  
                         "command":{  
                            "Fn::Join":[  
@@ -985,7 +838,7 @@
                            "Fn::Join":[  
                               "",
                               [  
-                                 "/etc/cfn/set-aiaSettings ",
+                                 "/etc/cfn/set-aia-settings.sh ",
                                  {  
                                     "Ref":"DSCAdminName"
                                  },
@@ -1001,7 +854,7 @@
                                  {  
                                     "Ref":"DSIPGUIPort"
                                  },
-                                 " >> /tmp/set-aiaSettings.log"
+                                 " >> /tmp/set-aia-settings.log"
                               ]
                            ]
                         }
@@ -1011,32 +864,17 @@
                            "Fn::Join":[  
                               "",
                               [  
-                                 "/etc/cfn/createCloudAccount ",
+                                 "/etc/cfn/add-aws-account-with-instance-role.sh ",
                                  {  
                                     "Ref":"DSCAdminName"
                                  },
-                                 " \"",
+                                 " ",
                                  {  
                                     "Ref":"DSCAdminPassword"
                                  },
-                                 "\" ",
-                                 {  
-                                    "Ref":"AWS::AccountId"
-                                 },
-                                 " ",
+                                 " localhost ",
                                  {  
                                     "Ref":"DSIPGUIPort"
-                                 },
-                                 " ",
-                                 {  
-                                    "Ref":"AccessKeys"
-                                 },
-                                 " ",
-                                 {  
-                                    "Fn::GetAtt":[  
-                                       "AccessKeys",
-                                       "SecretAccessKey"
-                                    ]
                                  }
                               ]
                            ]
@@ -1044,7 +882,7 @@
                         "ignoreErrors":"False"
                      },
                      "10-killWebInstaller":{  
-                        "command":"/etc/cfn/kill-mp-web-installer"
+                        "command":"/etc/cfn/kill-mp-web-installer.sh"
                      }
                   }
                },
@@ -1059,7 +897,7 @@
                                  {  
                                     "Ref":"CfnUrlPrefix"
                                  },
-                                 "Common/Scripts/create-DSM-SqlDB.py; chmod 755 create-DSM-SqlDB.py"
+                                 "Common/Scripts/create-dsm-db.py; chmod 755 create-dsm-db.py"
                               ]
                            ]
                         },
@@ -1070,7 +908,7 @@
                            "Fn::Join":[  
                               "",
                               [  
-                                 "cd /etc/cfn/rhel-scripts; python create-DSM-SqlDB.py --user ",
+                                 "cd /etc/cfn/rhel-scripts; python create-dsm-db.py --user ",
                                  {  
                                     "Ref":"DBICAdminName"
                                  },
@@ -1135,7 +973,7 @@
                },
                "fixManagerLoadBalancerSettings":{  
                   "files":{  
-                     "/etc/cfn/create-console-listener":{  
+                     "/etc/cfn/create-console-listener.sh":{  
                         "source":{  
                            "Fn::Join":[  
                               "",
@@ -1143,14 +981,14 @@
                                  {  
                                     "Ref":"CfnUrlPrefix"
                                  },
-                                 "Common/Scripts/create-console-listener"
+                                 "Common/Scripts/create-console-listener.sh"
                               ]
                            ]
                         },
                         "owner":"root",
                         "mode":"000700"
                      },
-                     "/etc/cfn/set-lbSettings":{  
+                     "/etc/cfn/set-lb-settings.sh":{  
                         "source":{  
                            "Fn::Join":[  
                               "",
@@ -1158,7 +996,7 @@
                                  {  
                                     "Ref":"CfnUrlPrefix"
                                  },
-                                 "Common/Scripts/set-lbSettings"
+                                 "Common/Scripts/set-lb-settings.sh"
                               ]
                            ]
                         },
@@ -1172,7 +1010,7 @@
                            "Fn::Join":[  
                               "",
                               [  
-                                 "/etc/cfn/create-console-listener ",
+                                 "/etc/cfn/create-console-listener.sh ",
                                  {  
                                     "Ref":"PrivateDSIELB"
                                  },
@@ -1203,7 +1041,7 @@
                            "Fn::Join":[  
                               "",
                               [  
-                                 "/etc/cfn/create-console-listener ",
+                                 "/etc/cfn/create-console-listener.sh ",
                                  {  
                                     "Ref":"DSIELB"
                                  },
@@ -1234,7 +1072,7 @@
                            "Fn::Join":[  
                               "",
                               [  
-                                 "/etc/cfn/set-lbSettings ",
+                                 "/etc/cfn/set-lb-settings.sh ",
                                  {  
                                     "Ref":"DSCAdminName"
                                  },
@@ -1262,7 +1100,7 @@
                                  {  
                                     "Ref":"DSIPHeartbeatPort"
                                  },
-                                 " >> /tmp/set-lbSettings.log"
+                                 " >> /tmp/set-lb-settings.log"
                               ]
                            ]
                         }
@@ -1307,7 +1145,7 @@
                },
                "fixManagerHostObject":{  
                   "files":{  
-                     "/etc/cfn/reactivate-manager":{  
+                     "/etc/cfn/reactivate-manager.sh":{  
                         "source":{  
                            "Fn::Join":[  
                               "",
@@ -1315,7 +1153,7 @@
                                  {  
                                     "Ref":"CfnUrlPrefix"
                                  },
-                                 "Common/Scripts/reactivate-manager"
+                                 "Common/Scripts/reactivate-manager.sh"
                               ]
                            ]
                         },
@@ -1324,12 +1162,12 @@
                      }
                   },
                   "commands":{  
-                     "1-reactivate-manager":{  
+                     "1-reactivate-manager.sh":{  
                         "command":{  
                            "Fn::Join":[  
                               "",
                               [  
-                                 "/etc/cfn/reactivate-manager >> /etc/cfn/reactivate-manager.log ",
+                                 "/etc/cfn/reactivate-manager.sh >> /etc/cfn/reactivate-manager.log ",
                                  {  
                                     "Ref":"DSCAdminName"
                                  },

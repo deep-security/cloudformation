@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "v2016-01-08: This template deploys an Oracle RDS instance for Deep Security Manager",
+    "Description"              : "v5.0: This template deploys an Oracle RDS instance for Deep Security Manager",
     "Parameters"               : {
         "DBIRDSInstanceSize" : {
             "Default" : "db.m3.large",
@@ -149,6 +149,12 @@
             "Fn::Equals" : [
                 { "Ref" : "AWS::Region" },
                 "us-gov-west-1"
+            ]
+        },
+        "MultiAZ" : {
+            "Fn::Equals" : [
+                { "Ref": "MultiAZ" },
+                "true"
             ]
         }
     },

@@ -1,5 +1,5 @@
 #!/bin/bash
-##set-lbSettings <dsmuser> <dsmpass> <managerfqdn> <consoleport> <hbport>
+##set-lb-settings <dsmuser> <dsmpass> <managerfqdn> <consoleport> <hbport>
 user=$1
 pass=$2
 managerfqdn=$3

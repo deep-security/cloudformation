@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "v2016-01-08: This template creates the security group to allow inbound communication to Deep Security Manager",
+    "Description"              : "v5.0: This template creates the security group to allow inbound communication to Deep Security Manager",
     "Parameters"               : {
         "AWSIVPC" : {
             "Description" : "Existing VPC to deploy Deep Security Manager",
