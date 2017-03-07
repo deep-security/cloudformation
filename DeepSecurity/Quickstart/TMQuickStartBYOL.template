@@ -322,7 +322,7 @@
          },
          "sa-east-1":{  
             "Oracle":"true",
-            "MSSQL":"true"
+            "MSSQL":"false"
          }
       },
       "Parameters":{  

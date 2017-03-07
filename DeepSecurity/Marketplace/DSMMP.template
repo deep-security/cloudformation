@@ -221,7 +221,7 @@
             "BYOL":"ami-2d9c3b3b"
          },
          "us-east-2":{  
-            "PerHost":"ami-d88126ce",
+            "PerHost":"ami-3c604459",
             "BYOL":"ami-3f67435a"
          },
          "us-west-1":{  
@@ -242,7 +242,7 @@
          },
          "ap-northeast-2":{  
             "PerHost":"ami-6961b107",
-            "BYOL":"ami-9c4636f3"
+            "BYOL":"ami-ee61b180"
          },
          "ap-southeast-1":{  
             "PerHost":"ami-73f04310",
