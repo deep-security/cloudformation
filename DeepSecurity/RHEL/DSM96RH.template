@@ -629,90 +629,65 @@
                     },
                     "prepDSMInstall" : {
                         "files" : {
-                            "/tmp/Manager-Linux-10.0.3064.x64.sh" : {
-                                "source" : "https://s3.amazonaws.com/trendctf/DS10/Manager-Linux-10.0.3064.x64.sh",
-                                "owner" : "root",
-                                "mode" : "000700"
+                            "/tmp/Manager-Linux-10.0.3259.x64.sh":{
+                                "source":"http://files.trendmicro.com/products/deepsecurity/en/10.0/Manager-Linux-10.0.3259.x64.sh",
+                                "owner":"root",
+                                "mode":"000700"
                             },
-                            "/tmp/Agent-RedHat_EL6-10.0.0-2032.x86_64.zip" : {
-                                "source" : "https://s3.amazonaws.com/trendctf/DS10/Agent-RedHat_EL6-10.0.0-2032.x86_64.zip",
-                                "owner" : "root",
-                                "mode" : "000600"
+                            "/tmp/Agent-RedHat_EL6-10.0.0-2094.x86_64.zip":{
+                                "source":"http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-RedHat_EL6-10.0.0-2094.x86_64.zip",
+                                "owner":"root",
+                                "mode":"000600"
                             },
-                            "/tmp/KernelSupport-RedHat_EL6-10.0.0-2032.x86_64.zip" : {
-                                "source" : "https://s3.amazonaws.com/trendctf/DS10/KernelSupport-RedHat_EL6-10.0.0-2032.x86_64.zip",
-                                "owner" : "root",
-                                "mode" : "000600"
+                            "/tmp/KernelSupport-RedHat_EL6-10.0.0-2106.x86_64.zip":{
+                                "source":"http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-RedHat_EL6-10.0.0-2106.x86_64.zip",
+                                "owner":"root",
+                                "mode":"000600"
                             },
-                            "/tmp/Agent-RedHat_EL7-10.0.0-2032.x86_64.zip" : {
-                                "source" : "https://s3.amazonaws.com/trendctf/DS10/Agent-RedHat_EL7-10.0.0-2032.x86_64.zip",
-                                "owner" : "root",
-                                "mode" : "000600"
+                            "/tmp/Agent-RedHat_EL7-10.0.0-2094.x86_64.zip":{
+                                "source":"http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-RedHat_EL7-10.0.0-2094.x86_64.zip",
+                                "owner":"root",
+                                "mode":"000600"
                             },
-                            "/tmp/KernelSupport-RedHat_EL7-10.0.0-2032.x86_64.zip" : {
-                                "source" : "https://s3.amazonaws.com/trendctf/DS10/KernelSupport-RedHat_EL7-10.0.0-2032.x86_64.zip",
-                                "owner" : "root",
-                                "mode" : "000600"
+                            "/tmp/KernelSupport-RedHat_EL7-10.0.0-2105.x86_64.zip":{
+                                "source":"http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-RedHat_EL7-10.0.0-2105.x86_64.zip",
+                                "owner":"root",
+                                "mode":"000600"
                             },
-                            "/tmp/KernelSupport-Ubuntu_16.04-9.6.2-7643.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-Ubuntu_16.04-9.6.2-7643.x86_64.zip",
-                                "owner" : "root",
-                                "mode" : "000600"
+                            "/tmp/Agent-Ubuntu_16.04-10.0.0-2094.x86_64.zip":{
+                                "source":"http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-Ubuntu_16.04-10.0.0-2094.x86_64.zip",
+                                "owner":"root",
+                                "mode":"000600"
                             },
-                            "/tmp/Agent-Ubuntu_16.04-9.6.2-7599.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-Ubuntu_16.04-9.6.2-7599.x86_64.zip",
-                                "owner" : "root",
-                                "mode" : "000600"
+                            "/tmp/KernelSupport-Ubuntu_16.04-10.0.0-2115.x86_64.zip":{
+                                "source":"http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-Ubuntu_16.04-10.0.0-2115.x86_64.zip",
+                                "owner":"root",
+                                "mode":"000600"
                             },
-                            "/tmp/KernelSupport-Ubuntu_14.04-9.6.2-7652.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-Ubuntu_14.04-9.6.2-7652.x86_64.zip",
-                                "owner" : "root",
-                                "mode" : "000600"
+                            "/tmp/Agent-Ubuntu_14.04-10.0.0-2094.x86_64.zip":{
+                                "source":"http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-Ubuntu_14.04-10.0.0-2094.x86_64.zip",
+                                "owner":"root",
+                                "mode":"000600"
                             },
-                            "/tmp/Agent-Ubuntu_14.04-9.6.2-7599.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-Ubuntu_14.04-9.6.2-7599.x86_64.zip",
-                                "owner" : "root",
-                                "mode" : "000600"
+                            "/tmp/KernelSupport-Ubuntu_14.04-10.0.0-2114.x86_64.zip":{
+                                "source":"http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-Ubuntu_14.04-10.0.0-2114.x86_64.zip",
+                                "owner":"root",
+                                "mode":"000600"
                             },
-                            "/tmp/Manager-Linux-9.6.4000.x64.sh" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/9.6_ServicePack1/Manager-Linux-9.6.4000.x64.sh",
-                                "owner"  : "root",
-                                "mode"   : "000700"
+                            "/tmp/Agent-amzn1-10.0.0-2094.x86_64.zip":{
+                                "source":"http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-amzn1-10.0.0-2094.x86_64.zip",
+                                "owner":"root",
+                                "mode":"000600"
                             },
-                            "/tmp/Agent-amzn1-9.6.2-6400.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-amzn1-9.6.2-6400.x86_64.zip",
-                                "owner"  : "root",
-                                "mode"   : "000600"
+                            "/tmp/KernelSupport-amzn1-10.0.0-2111.x86_64.zip":{
+                                "source":"http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-amzn1-10.0.0-2111.x86_64.zip",
+                                "owner":"root",
+                                "mode":"000600"
                             },
-                            "/tmp/KernelSupport-amzn1-9.6.2-6621.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-amzn1-9.6.2-6621.x86_64.zip",
-                                "owner"  : "root",
-                                "mode"   : "000600"
-                            },
-                            "/tmp/Agent-RedHat_EL6-9.6.2-6400.x86_64.zip"    : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL6-9.6.2-6400.x86_64.zip",
-                                "owner"  : "root",
-                                "mode"   : "000600"
-                            },
-                            "/tmp/KernelSupport-RedHat_EL6-9.6.2-6604.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL6-9.6.2-6604.x86_64.zip",
-                                "owner"  : "root",
-                                "mode"   : "000600"
-                            },
-                            "/tmp/Agent-RedHat_EL7-9.6.2-6400.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-RedHat_EL7-9.6.2-6400.x86_64.zip",
-                                "owner"  : "root",
-                                "mode"   : "000600"
-                            },
-                            "/tmp/KernelSupport-RedHat_EL7-9.6.2-6522.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/KernelSupport-RedHat_EL7-9.6.2-6522.x86_64.zip",
-                                "owner"  : "root",
-                                "mode"   : "000600"
-                            },
-                            "/tmp/Agent-Windows-9.6.2-6400.x86_64.zip" : {
-                                "source" : "http://files.trendmicro.com/products/deepsecurity/en/9.6/Agent-Windows-9.6.2-6400.x86_64.zip",
-                                "owner"  : "root",
-                                "mode"   : "000600"
+                            "/tmp/Agent-Windows-10.0.0-2094.x86_64.zip":{
+                                "source":"http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-Windows-10.0.0-2094.x86_64.zip",
+                                "owner":"root",
+                                "mode":"000600"
                             },
                             "/etc/cfn/dsmConfiguration.properties"                : {
                                 "content" : {
@@ -807,7 +782,8 @@
                                             "RelayScreen.ProxyPort=None\n",
                                             "RelayScreen.Proxy=False\n",
                                             "RelayScreen.AntiMalware=True\n",
-                                            "RelayScreen.ProxyAuthentication=False\n"
+                                            "RelayScreen.ProxyAuthentication=False\n",
+                                            "Override.Automation=True\n"
                                         ]
                                     ]
                                 },
@@ -921,22 +897,7 @@
                             }
 						},
                         "commands" : {
-							"0-sleep" : {
-                                "command" : "/etc/cfn/wait-for-relay-and-stop-manager >> /tmp/0-stop-service"
-                            },
-                            "1-enableRestApi" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.statusMonitoringAPIEnabled -value true"
-                            },
-                            "2-enableSoapApi" : {
-                                "command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.webserviceAPIEnabled -value true"
-                            },
-							"3-setAicDefaultComm" : {
-								"command" : "/opt/dsm/dsm_c -action changesetting -name settings.configuration.agentCommunications -value 1"
-							},
-                            "4-start-service"                              : {
-                                "command" : "service dsm_s start"
-                            },
-                            "5-check-service"                      : {
+							"5-check-service"                      : {
                                 "command" : {
 									"Fn::Join" : [
 										"",

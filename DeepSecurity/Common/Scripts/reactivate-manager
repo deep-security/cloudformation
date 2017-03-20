@@ -17,21 +17,21 @@ if [ -z $public_hostname ]
 fi
 
 ## delete host object matching local-hostname metadata
-curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostdelete"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostDelete><urn:ids>'$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$(curl http://169.254.169.254/latest/meta-data/local-hostname)'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostDelete></soapenv:Body></soapenv:Envelope>'>>mgract.log
-echo -e "\n" >> mgract.log
+#curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostdelete"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostDelete><urn:ids>'$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$(curl http://169.254.169.254/latest/meta-data/local-hostname)'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostDelete></soapenv:Body></soapenv:Envelope>'>>mgract.log
+#echo -e "\n" >> mgract.log
 ## delete host object matching local hostname from hostname command just to be thorough
-curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostdelete"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostDelete><urn:ids>'$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'${hostname}'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostDelete></soapenv:Body></soapenv:Envelope>'>>mgract.log
-echo -e "\n" >> mgract.log
+#curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostdelete"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostDelete><urn:ids>'$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'${hostname}'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostDelete></soapenv:Body></soapenv:Envelope>'>>mgract.log
+#echo -e "\n" >> mgract.log
 ## delete host object matching local hostname from hostname command just to be thorough
-curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostdelete"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostDelete><urn:ids>'$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$(curl http://169.254.169.254/latest/meta-data/local-ipv4)'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostDelete></soapenv:Body></soapenv:Envelope>'>>mgract.log
-echo -e "\n" >> mgract.log
+#curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostdelete"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostDelete><urn:ids>'$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$(curl http://169.254.169.254/latest/meta-data/local-ipv4)'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostDelete></soapenv:Body></soapenv:Envelope>'>>mgract.log
+#echo -e "\n" >> mgract.log
 ## get Deep Security Manager policyId
 policyid=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:securityProfileRetrieveByName><urn:name>Deep Security Manager</urn:name><urn:sID>'$SID'</urn:sID></urn:securityProfileRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)
 
 echo -e "policyid for Deep Security Manager Policy is $policyid\n" >> mgract.log
 
 ## If the Manager node is launched into a VPC with dns names turned off, we'll need to use AIA to get the Manager nodes activated
-case $dnsHostnamesOn in    
+case $dnsHostnamesOn in
   false)
     echo -e "public hostname returned from meta-data endpoint was zero length; using AIA\n" >> mgract.log
 
@@ -53,26 +53,26 @@ case $dnsHostnamesOn in
 '</soapenv:Envelope>'
 
 ## AIA for manager node
-    /opt/ds_agent/dsa_control -r
-    /opt/ds_agent/dsa_control -a dsm://localhost:4120/ "policyid:${policyid}"
+#    /opt/ds_agent/dsa_control -r
+#    /opt/ds_agent/dsa_control -a dsm://localhost:4120/ "policyid:${policyid}"
 ## get hostid for this manager
-    publicip_hostId=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$(curl http://169.254.169.254/latest/meta-data/public-ipv4)'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)
+#    publicip_hostId=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$(curl http://169.254.169.254/latest/meta-data/public-ipv4)'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)
 ## enable relay for this agent
-curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostSettingSet"' "https://localhost:$3/webservice/Manager" -d \
-'<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
-'<soapenv:Header/>'\
-'<soapenv:Body>'\
-'<urn:hostSettingSet>'\
-'<urn:hostID>'$publicip_hostId'</urn:hostID>'\
-'<urn:editableSettings>'\
-'<urn:settingKey>CONFIGURATION_RELAYSTATE</urn:settingKey>'\
-'<urn:settingUnit>NONE</urn:settingUnit>'\
-'<urn:settingValue>true</urn:settingValue>'\
-'</urn:editableSettings>'\
-'<urn:sID>'${SID}'</urn:sID>'\
-'</urn:hostSettingSet>'\
-'</soapenv:Body>'\
-'</soapenv:Envelope>'
+#curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostSettingSet"' "https://localhost:$3/webservice/Manager" -d \
+#'<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
+#'<soapenv:Header/>'\
+#'<soapenv:Body>'\
+#'<urn:hostSettingSet>'\
+#'<urn:hostID>'$publicip_hostId'</urn:hostID>'\
+#'<urn:editableSettings>'\
+#'<urn:settingKey>CONFIGURATION_RELAYSTATE</urn:settingKey>'\
+#'<urn:settingUnit>NONE</urn:settingUnit>'\
+#'<urn:settingValue>true</urn:settingValue>'\
+#'</urn:editableSettings>'\
+#'<urn:sID>'${SID}'</urn:sID>'\
+#'</urn:hostSettingSet>'\
+#'</soapenv:Body>'\
+#'</soapenv:Envelope>'
 
     ;;
   true)
@@ -99,32 +99,32 @@ curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostSettin
 '</soapenv:Envelope>'
 
 ## assign Deep Security Manager Policy to that hostId
-    curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileAssignToHost"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:securityProfileAssignToHost><urn:securityProfileID>'$policyid'</urn:securityProfileID><urn:hostIDs>'$public_hostId'</urn:hostIDs><urn:sID>'$SID'</urn:sID></urn:securityProfileAssignToHost></soapenv:Body></soapenv:Envelope>'>>mgract.log
+#    curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileAssignToHost"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:securityProfileAssignToHost><urn:securityProfileID>'$policyid'</urn:securityProfileID><urn:hostIDs>'$public_hostId'</urn:hostIDs><urn:sID>'$SID'</urn:sID></urn:securityProfileAssignToHost></soapenv:Body></soapenv:Envelope>'>>mgract.log
 
 ## reset agent because current securityProfile is AIC
-    /opt/ds_agent/dsa_control -r
+#    /opt/ds_agent/dsa_control -r
 
 ## activate that hostId
-    curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostAgentActivate"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostAgentActivate><urn:ids>'$public_hostId'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostAgentActivate></soapenv:Body></soapenv:Envelope>'>>mgract.log
-    echo -e "\n" >> mgract.log
-    echo -e "enable relay" >> mgract.log
-    echo -e "\n" >> mgract.log
+#    curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostAgentActivate"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostAgentActivate><urn:ids>'$public_hostId'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostAgentActivate></soapenv:Body></soapenv:Envelope>'>>mgract.log
+#    echo -e "\n" >> mgract.log
+#    echo -e "enable relay" >> mgract.log
+#    echo -e "\n" >> mgract.log
 ## enable relay for this agent
-    curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostSettingSet"' "https://localhost:$3/webservice/Manager" -d \
-'<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
-'<soapenv:Header/>'\
-'<soapenv:Body>'\
-'<urn:hostSettingSet>'\
-'<urn:hostID>'$public_hostId'</urn:hostID>'\
-'<urn:editableSettings>'\
-'<urn:settingKey>CONFIGURATION_RELAYSTATE</urn:settingKey>'\
-'<urn:settingUnit>NONE</urn:settingUnit>'\
-'<urn:settingValue>true</urn:settingValue>'\
-'</urn:editableSettings>'\
-'<urn:sID>'${SID}'</urn:sID>'\
-'</urn:hostSettingSet>'\
-'</soapenv:Body>'\
-'</soapenv:Envelope>' >>mgract.log
+#    curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostSettingSet"' "https://localhost:$3/webservice/Manager" -d \
+#'<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
+#'<soapenv:Header/>'\
+#'<soapenv:Body>'\
+#'<urn:hostSettingSet>'\
+#'<urn:hostID>'$public_hostId'</urn:hostID>'\
+#'<urn:editableSettings>'\
+#'<urn:settingKey>CONFIGURATION_RELAYSTATE</urn:settingKey>'\
+#'<urn:settingUnit>NONE</urn:settingUnit>'\
+#'<urn:settingValue>true</urn:settingValue>'\
+#'</urn:editableSettings>'\
+#'<urn:sID>'${SID}'</urn:sID>'\
+#'</urn:hostSettingSet>'\
+#'</soapenv:Body>'\
+#'</soapenv:Envelope>' >>mgract.log
 
 esac
 
