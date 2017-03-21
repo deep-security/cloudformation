@@ -822,7 +822,7 @@
                                 "ignoreErrors" : "false"
                             },
                             "1-install-DSM" : {
-                                "command" : "cd /tmp; sh Manager-Linux-10.0.3064.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
+                                "command" : "cd /tmp; sh Manager-Linux-10.0.3259.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog",
                                 "ignoreErrors" : "false"
                             },
 							"2-fix-for-systemd" : {
