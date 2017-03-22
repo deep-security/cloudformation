@@ -6,8 +6,7 @@
          "Default":"db.m3.large",
          "Description":"Trend Micro Deep Security Database instance class",
          "Type":"String",
-         "AllowedValues":[  
-            "db.m4.medium",
+         "AllowedValues":[
             "db.m4.large",
             "db.m4.xlarge",
             "db.m4.2xlarge",
@@ -15,19 +14,11 @@
             "db.m3.large",
             "db.m3.xlarge",
             "db.m3.2xlarge",
-            "db.m2.xlarge",
             "db.r3.large",
             "db.r3.xlarge",
             "db.r3.2xlarge",
             "db.r3.4xlarge",
-            "db.r3.8xlarge",
-            "db.m2.2xlarge",
-            "db.m2.4xlarge",
-            "db.m1.medium",
-            "db.m1.large",
-            "db.m1.xlarge",
-            "db.m4.large",
-            "db.m4.xlarge"
+            "db.r3.8xlarge"
          ],
          "ConstraintDescription":"must select a valid database instance type."
       },
@@ -134,6 +125,7 @@
             "StorageType":{  
                "Ref":"StorageType"
             },
+            "StorageEncrypted" : true,
             "Tags":[  
                {  
                   "Key":"Application",
