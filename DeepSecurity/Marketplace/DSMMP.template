@@ -193,13 +193,13 @@
          "Default":""
       },
       "DSELBPosture":{  
-         "Description":"Use internal or external ELB",
+         "Description":"Use internal or internet-facing ELB",
          "Type":"String",
          "AllowedValues":[  
-            "External",
+            "Internet-facing",
             "Internal"
          ],
-         "Default":"External"
+         "Default":"Internet-facing"
       },
       "CfnUrlPrefix":{  
          "Type":"String",
@@ -1469,7 +1469,7 @@
             {  
                "Ref":"DSELBPosture"
             },
-            "External"
+            "Internet-facing"
          ]
       },
       "NetworkOnlyLicense":{  
