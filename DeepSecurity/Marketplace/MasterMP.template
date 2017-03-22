@@ -10,7 +10,7 @@
 				},
 				{
 					"Label" : { "default" : "Network Configuration" },
-					"Parameters" : [ "AWSIVPC", "DSISubnetID", "DBISubnet1", "DBISubnet2" ]
+					"Parameters" : [ "AWSIVPC", "DSISubnetID", "DBISubnet1", "DBISubnet2", "DSELBPosture" ]
 				},
 				{
 					"Label" : { "default" : "Database Configuration" },
@@ -42,7 +42,8 @@
 				"DBISubnet2" : { "default" : "Secondary private subnet for RDS" },
 				"DSIPLicense" : { "default" : "Deep Security License Type" },
 				"DBPMultiAZ" : { "default" : "Single- or Multi- AZ RDS instance" },
-                "DSCLicenseType" : { "default" : "Select Enterprise or Network License Key Type"}
+                "DSCLicenseType" : { "default" : "Select Enterprise or Network License Key Type"},
+                "DSELBPosture" : { "default" : "Use internal or internet-facing ELB" }
 			}
 		}
 	},
