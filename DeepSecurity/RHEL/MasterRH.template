@@ -21,7 +21,7 @@
 			"ParameterLabels" : {
 				"AWSIKeyPairName" : { "default" : "EC2 Key Pair for SSH access" },
 				"AWSIVPC" : { "default" : "VPC for Deep Security Components" },
-				"DSISubnetID" : { "default" : "Public Subnet for Deep Security Managers" },
+				"DSISubnetID" : { "default" : "Subnet for Deep Security Managers. Must be public subnet if deploying Internet-facing infrastructure, else must be private." },
 				"DBIRDSInstanceSize" : { "default" : "RDS Instance Type" },
 				"DBIStorageAllocation" : { "default" : "RDS Storage Size" },
 				"DBPBackupDays" : { "default" : "Backup Retention" },
