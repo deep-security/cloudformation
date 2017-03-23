@@ -398,18 +398,6 @@
                             "Outputs.ELBFQDN"
                         ]
                     },
-					"PrivateDSIELB" : {
-						"Fn::GetAtt" : [
-							"DSIELB",
-							"Outputs.PrivateDSIELB"
-							]
-						},
-					"PrivateDSIELBFQDN" : {
-						"Fn::GetAtt" : [
-							"DSIELB",
-							"Outputs.PrivateELBFQDN"
-							]
-					},
 					"DSELBPosture" : {
 						"Ref" : "DSELBPosture"
 					},
@@ -498,18 +486,6 @@
                             "Outputs.DSIELB"
                         ]
                     },
-					"PrivateDSIELB" : {
-						"Fn::GetAtt" : [
-							"DSIELB",
-							"Outputs.PrivateDSIELB"
-							]
-						},
-					"PrivateDSIELBFQDN" : {
-						"Fn::GetAtt" : [
-							"DSIELB",
-							"Outputs.PrivateELBFQDN"
-							]
-					},
 					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
@@ -599,18 +575,6 @@
                             "Outputs.ELBFQDN"
                         ]
                     },
-					"PrivateDSIELB" : {
-						"Fn::GetAtt" : [
-							"DSIELB",
-							"Outputs.PrivateDSIELB"
-							]
-						},
-					"PrivateDSIELBFQDN" : {
-						"Fn::GetAtt" : [
-							"DSIELB",
-							"Outputs.PrivateELBFQDN"
-							]
-					},
 					"DSELBPosture" : {
 						"Ref" : "DSELBPosture"
 					},
@@ -692,18 +656,6 @@
                             "Outputs.DSIELB"
                         ]
                     },
-					"PrivateDSIELB" : {
-						"Fn::GetAtt" : [
-							"DSIELB",
-							"Outputs.PrivateDSIELB"
-							]
-						},
-					"PrivateDSIELBFQDN" : {
-						"Fn::GetAtt" : [
-							"DSIELB",
-							"Outputs.PrivateELBFQDN"
-							]
-					},
 					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
@@ -840,6 +792,9 @@
                     },
                     "DSISubnetID"       : {
                         "Ref" : "DSISubnetID"
+                    },
+                    "DSELBPosture" : {
+                        "Ref" : "DSELBPosture"
                     },
 					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
@@ -994,24 +949,8 @@
 				"Fn::Join" : [
 					"",
 					[
-					"dsm://",
-						{ 
-							"Fn::If" : [
-								"InternetFacingELB",
-									{
-										"Fn::GetAtt" : [
-										"DSIELB",
-										"Outputs.ELBFQDN"
-										]
-									},
-									{
-										"Fn::GetAtt" : [
-										"DSIELB",
-										"Outputs.PrivateELBFQDN"
-										]
-									}
-								]
-						},
+					    "dsm://",
+                        { "Fn::GetAtt" : [ "DSIELB", "Outputs.ELBFQDN" ] },
 						":",
 						{
 							"Ref" : "DSIPHeartbeatPort"
@@ -1021,11 +960,11 @@
 				]
 			}
 		},
-        "PublicELBCanonicalHostedZoneNameID" : {
-            "Value" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.PublicELBCanonicalHostedZoneNameID" ] }
+        "ELBCanonicalHostedZoneNameID" : {
+            "Value" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.ELBCanonicalHostedZoneNameID" ] }
         },
-        "PublicELBDNSName" : {
-            "Value" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.PublicELBDNSName" ] }
+        "ELBDNSName" : {
+            "Value" : { "Fn::GetAtt" : [ "DSIELB", "Outputs.ELBDNSName" ] }
         }
     }
 }

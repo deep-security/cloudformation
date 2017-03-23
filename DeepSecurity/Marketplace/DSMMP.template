@@ -184,14 +184,6 @@
          "Type":"String",
          "Default":""
       },
-      "PrivateDSIELBFQDN":{  
-         "Type":"String",
-         "Default":""
-      },
-      "PrivateDSIELB":{  
-         "Type":"String",
-         "Default":""
-      },
       "DSELBPosture":{  
          "Description":"Use internal or internet-facing ELB",
          "Type":"String",
@@ -421,34 +413,6 @@
                                           ":loadbalancer/",
                                           {  
                                              "Ref":"DSIELB"
-                                          }
-                                       ]
-                                    ]
-                                 }
-                              },
-                              {  
-                                 "Effect":"Allow",
-                                 "Action":[  
-                                    "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
-                                    "elasticloadbalancing:CreateLoadBalancerListeners",
-                                    "elasticloadbalancing:CreateLoadBalancerPolicy",
-                                    "elasticloadbalancing:SetLoadBalancerPoliciesOfListener"
-                                 ],
-                                 "Resource":{  
-                                    "Fn::Join":[  
-                                       "",
-                                       [  
-                                          "arn:aws:elasticloadbalancing:",
-                                          {  
-                                             "Ref":"AWS::Region"
-                                          },
-                                          ":",
-                                          {  
-                                             "Ref":"AWS::AccountId"
-                                          },
-                                          ":loadbalancer/",
-                                          {  
-                                             "Ref":"PrivateDSIELB"
                                           }
                                        ]
                                     ]
@@ -846,12 +810,8 @@
                                  {  
                                     "Ref":"DSCAdminPassword"
                                  },
-                                 " ",
-                                 {  
-                                    "Ref":"PrivateDSIELBFQDN"
-                                 },
-                                 " ",
-                                 {  
+                                 " - ",
+                                 {
                                     "Ref":"DSIPGUIPort"
                                  },
                                  " >> /tmp/set-aia-settings.log"
@@ -950,24 +910,6 @@
                            ]
                         },
                         "ignoreErrors":"false"
-                     },
-                     "1-add-instance-to-internal-elb":{  
-                        "command":{  
-                           "Fn::Join":[  
-                              "",
-                              [  
-                                 "aws elb register-instances-with-load-balancer --load-balancer ",
-                                 {  
-                                    "Ref":"PrivateDSIELB"
-                                 },
-                                 " --instances $(curl http://169.254.169.254/latest/meta-data/instance-id/) --region ",
-                                 {  
-                                    "Ref":"AWS::Region"
-                                 }
-                              ]
-                           ]
-                        },
-                        "ignoreErrors":"false"
                      }
                   }
                },
@@ -1005,38 +947,7 @@
                      }
                   },
                   "commands":{  
-                     "0-setup-internal-elb-listener":{  
-                        "command":{  
-                           "Fn::Join":[  
-                              "",
-                              [  
-                                 "/etc/cfn/create-console-listener.sh ",
-                                 {  
-                                    "Ref":"PrivateDSIELB"
-                                 },
-                                 " ",
-                                 {  
-                                    "Ref":"PrivateDSIELBFQDN"
-                                 },
-                                 " ",
-                                 {  
-                                    "Ref":"DSIPGUIPort"
-                                 },
-                                 " ",
-                                 {  
-                                    "Ref":"AWS::StackName"
-                                 },
-                                 " ",
-                                 "1 ",
-                                 {  
-                                    "Ref":"AWS::Region"
-                                 },
-                                 " >> /tmp/internallistener.log"
-                              ]
-                           ]
-                        }
-                     },
-                     "1-setup-external-elb-listener":{  
+                     "1-setup-elb-listener":{
                         "command":{  
                            "Fn::Join":[  
                               "",
@@ -1058,11 +969,11 @@
                                     "Ref":"AWS::StackName"
                                  },
                                  " ",
-                                 "0 ",
+                                 "1 ",
                                  {  
                                     "Ref":"AWS::Region"
                                  },
-                                 " >> /tmp/internallistener.log"
+                                 " >> /tmp/listener.log"
                               ]
                            ]
                         }
@@ -1081,17 +992,7 @@
                                     "Ref":"DSCAdminPassword"
                                  },
                                  " ",
-                                 {  
-                                    "Fn::If":[  
-                                       "InternetFacingELB",
-                                       {  
-                                          "Ref":"DSIELBFQDN"
-                                       },
-                                       {  
-                                          "Ref":"PrivateDSIELBFQDN"
-                                       }
-                                    ]
-                                 },
+                                 { "Ref":"DSIELBFQDN" },
                                  " ",
                                  {  
                                     "Ref":"DSIPGUIPort"
@@ -1109,23 +1010,7 @@
                },
                "fixManagerLocalLoadBalancerHostsFile":{  
                   "commands":{  
-                     "0-setHostsFilePrivateELB":{  
-                        "command":{  
-                           "Fn::Join":[  
-                              "",
-                              [  
-                                 "echo \"",
-                                 "$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)",
-                                 " ",
-                                 {  
-                                    "Ref":"PrivateDSIELBFQDN"
-                                 },
-                                 "\" >> /etc/hosts"
-                              ]
-                           ]
-                        }
-                     },
-                     "1-setHostsFilePublicELB":{  
+                     "1-setHostsFileELB":{
                         "command":{  
                            "Fn::Join":[  
                               "",

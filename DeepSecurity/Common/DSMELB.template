@@ -33,6 +33,15 @@
             "AllowedPattern" : "[-_a-zA-Z0-9]*",
             "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
         },
+        "DSELBPosture" : {
+            "Description" : "Use internal or internet-facing ELB",
+            "Type" : "String",
+            "AllowedValues" : [
+                "Internet-facing",
+                "Internal"
+            ],
+            "Default" : "Internet-facing"
+        },
 		"CfnUrlPrefix" : {
 			"Type" : "String",
 			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v5/"
@@ -81,64 +90,13 @@
                         ]
                     }
                 ],
-                "Scheme"         : "internet-facing",
-                "Listeners"      : [
-                    {
-                        "LoadBalancerPort" : {
-                            "Ref" : "DSIPHeartbeatPort"
-                        },
-                        "InstancePort"     : {
-                            "Ref" : "DSIPHeartbeatPort"
-                        },
-                        "Protocol"         : "TCP"
-                    },
-                    {
-                        "LoadBalancerPort" : "4122",
-                        "InstancePort"     : "4122",
-                        "Protocol"         : "TCP"
-                    }
-                ],
-                "HealthCheck"    : {
-                    "Target" : {
-                        "Fn::Join" : [
-                            "",
-                            [
-                                "HTTPS:",
-                                {
-                                    "Ref" : "DSIPGUIPort"
-                                },
-                                "/rest/status/manager/ping"
-                            ]
-                        ]
-                    },
-                    "HealthyThreshold" : "3",
-                    "UnhealthyThreshold" : "5",
-                    "Interval"           : "30",
-                    "Timeout"            : "5"
+                "Scheme"         : {
+                    "Fn::If" : [
+                        "InternetFacingELB",
+                        "internet-facing",
+                        "internal"
+                    ]
                 },
-                "ConnectionSettings" : {
-                    "IdleTimeout" : 600
-                }
-            }
-        },
-		"PrivateDSMELB" : {
-            "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
-            "DependsOn" : "ELBSG",
-            "Properties" : {
-                "Subnets" : [
-                    {
-                        "Ref" : "DSISubnetID"
-                    }
-                ],
-                "SecurityGroups" : [
-                    {
-                        "Fn::GetAtt" : [
-                            "ELBSG",
-                            "Outputs.ELBSG"
-                        ]
-                    }
-                ],
-                "Scheme"         : "internal",
                 "Listeners"      : [
                     {
                         "LoadBalancerPort" : {
@@ -179,6 +137,16 @@
             }
         }
     },
+    "Conditions" : {
+        "InternetFacingELB" : {
+            "Fn::Equals" : [
+                {
+                    "Ref" : "DSELBPosture"
+                },
+                "Internet-facing"
+            ]
+        }
+    },
     "Outputs"                  : {
         "ELBFQDN" : {
             "Value" : {
@@ -206,36 +174,10 @@
 		"DSIELB" : {
 			"Value" : { "Ref" : "DSMELB" }
 		},
-		"PrivateDSIELB" : {
-			"Value" : { "Ref" : "PrivateDSMELB" }
-			},
-		"PrivateELBFQDN" : {
-            "Value" : {
-                "Fn::GetAtt" : [
-                    "PrivateDSMELB",
-                    "DNSName"
-                ]
-            }
-        },
-        "PrivateELBSourceSecurityGroup" : {
-            "Value" : {
-                "Fn::GetAtt" : [
-					"ELBSG", "Outputs.ELBSG"
-					]
-            }
-        },
-        "PrivateELSBSourceSecurityGroupOnwerID" : {
-            "Value" : {
-                "Fn::GetAtt" : [
-                    "PrivateDSMELB",
-                    "SourceSecurityGroup.OwnerAlias"
-                ]
-            }
-        },
-        "PublicELBCanonicalHostedZoneNameID" : {
+        "ELBCanonicalHostedZoneNameID" : {
             "Value" : { "Fn::GetAtt" : [ "DSMELB" , "CanonicalHostedZoneNameID" ] }
         },
-        "PublicELBDNSName" : {
+        "ELBDNSName" : {
             "Value" : { "Fn::GetAtt" : [ "DSMELB" , "DNSName" ] }
         }
 
