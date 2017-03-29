@@ -1095,7 +1095,13 @@
                   "SubnetId":{  
                      "Ref":"DSISubnetID"
                   },
-                  "AssociatePublicIpAddress":"true",
+                  "AssociatePublicIpAddress":{
+                     "Fn::If" : [
+                        "InternetFacingELB",
+                        true,
+                        false
+                     ]
+                  },
                   "GroupSet":[  
                      {  
                         "Ref":"DSMSG"

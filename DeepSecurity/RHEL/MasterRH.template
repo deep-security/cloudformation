@@ -442,6 +442,9 @@
                             "Outputs.DSIELB"
                         ]
                     },
+                    "DSELBPosture" : {
+                        "Ref" : "DSELBPosture"
+                    },
 					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
             }
@@ -605,6 +608,9 @@
                             "DSIELB",
                             "Outputs.DSIELB"
                         ]
+                    },
+                    "DSELBPosture" : {
+                        "Ref" : "DSELBPosture"
                     },
 					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
                 }
