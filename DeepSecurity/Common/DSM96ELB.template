@@ -103,11 +103,10 @@
                         "Fn::Join" : [
                             "",
                             [
-                                "HTTPS:",
+                                "TCP:",
                                 {
                                     "Ref" : "DSIPGUIPort"
-                                },
-                                "/rest/status/manager/ping"
+                                }
                             ]
                         ]
                     },
@@ -160,11 +159,10 @@
                         "Fn::Join" : [
                             "",
                             [
-                                "HTTPS:",
+                                "TCP:",
                                 {
                                     "Ref" : "DSIPGUIPort"
-                                },
-                                "/rest/status/manager/ping"
+                                }
                             ]
                         ]
                     },
