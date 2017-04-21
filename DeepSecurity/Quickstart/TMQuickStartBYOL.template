@@ -327,7 +327,7 @@
       },
       "Parameters":{  
          "CfnUrlPrefix":{  
-            "Prefix":"https://s3.amazonaws.com/trend-micro-quick-start/v-nf/"
+            "Prefix":"https://s3.amazonaws.com/trend-micro-quick-start/v5.1/"
          }
       }
    },

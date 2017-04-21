@@ -334,8 +334,8 @@
       },
       "Parameters":{  
          "CfnUrlPrefix":{  
-            "CommericalPrefix":"https://s3.amazonaws.com/trend-micro-quick-start/v5/",
-            "GovCloudPrefix":"https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v5.0:/"
+            "CommericalPrefix":"https://s3.amazonaws.com/trend-micro-quick-start/v5.1/",
+            "GovCloudPrefix":"https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v5.1/"
          }
       }
    },
