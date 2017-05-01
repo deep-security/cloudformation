@@ -91,12 +91,13 @@
          "AllowedPattern":"[-_a-zA-Z0-9]*"
       },
       "DatabaseEngine":{  
-         "Description":"Choose Oracle or Microsoft SQL  for Deep Security database engine.",
+         "Description":"Choose PostgreSQL, Microsoft SQL or Oracle for Deep Security database engine.",
          "Type":"String",
-         "Default":"Oracle",
+         "Default":"PostgreSQL",
          "AllowedValues":[  
             "Oracle",
-            "MSSQL"
+            "MSSQL",
+            "PostgreSQL"
          ]
       },
       "DatabaseSubnet1":{  
@@ -212,117 +213,145 @@
       "RDSInstanceSize":{  
          "us-east-1":{  
             "Oracle":"db.m4.xlarge",
-            "MSSQL":"db.m4.xlarge"
+            "MSSQL":"db.m4.xlarge",
+            "PostgreSQL":"db.m4.xlarge"
          },
          "us-east-2":{  
             "Oracle":"db.m4.xlarge",
-            "MSSQL":"db.m4.xlarge"
+            "MSSQL":"db.m4.xlarge",
+            "PostgreSQL":"db.m4.xlarge"
          },
          "us-west-1":{  
             "Oracle":"db.m4.xlarge",
-            "MSSQL":"db.m4.xlarge"
+            "MSSQL":"db.m4.xlarge",
+            "PostgreSQL":"db.m4.xlarge"
          },
          "us-west-2":{  
             "Oracle":"db.m4.xlarge",
-            "MSSQL":"db.m4.xlarge"
+            "MSSQL":"db.m4.xlarge",
+            "PostgreSQL":"db.m4.xlarge"
          },
          "ca-central-1":{  
             "Oracle":"db.m4.xlarge",
-            "MSSQL":"db.m4.xlarge"
+            "MSSQL":"db.m4.xlarge",
+            "PostgreSQL":"db.m4.xlarge"
          },
          "ap-south-1":{  
             "Oracle":"db.m4.xlarge",
-            "MSSQL":"db.m4.xlarge"
+            "MSSQL":"db.m4.xlarge",
+            "PostgreSQL":"db.m4.xlarge"
          },
          "ap-northeast-2":{  
             "Oracle":"db.m4.xlarge",
-            "MSSQL":"db.m4.xlarge"
+            "MSSQL":"db.m4.xlarge",
+            "PostgreSQL":"db.m4.xlarge"
          },
          "ap-southeast-1":{  
             "Oracle":"db.m4.xlarge",
-            "MSSQL":"db.m4.xlarge"
+            "MSSQL":"db.m4.xlarge",
+            "PostgreSQL":"db.m4.xlarge"
          },
          "ap-southeast-2":{  
             "Oracle":"db.m4.xlarge",
-            "MSSQL":"db.m4.xlarge"
+            "MSSQL":"db.m4.xlarge",
+            "PostgreSQL":"db.m4.xlarge"
          },
          "ap-northeast-1":{  
             "Oracle":"db.m4.xlarge",
-            "MSSQL":"db.m4.xlarge"
+            "MSSQL":"db.m4.xlarge",
+            "PostgreSQL":"db.m4.xlarge"
          },
          "eu-central-1":{  
             "Oracle":"db.m4.xlarge",
-            "MSSQL":"db.m4.xlarge"
+            "MSSQL":"db.m4.xlarge",
+            "PostgreSQL":"db.m4.xlarge"
          },
          "eu-west-1":{  
             "Oracle":"db.m4.xlarge",
-            "MSSQL":"db.m4.xlarge"
+            "MSSQL":"db.m4.xlarge",
+            "PostgreSQL":"db.m4.xlarge"
          },
          "eu-west-2":{  
             "Oracle":"db.m4.xlarge",
-            "MSSQL":"db.m4.xlarge"
+            "MSSQL":"db.m4.xlarge",
+            "PostgreSQL":"db.m4.xlarge"
          },
          "sa-east-1":{  
             "Oracle":"db.m3.xlarge",
-            "MSSQL":"db.m3.xlarge"
+            "MSSQL":"db.m3.xlarge",
+            "PostgreSQL":"db.m3.xlarge"
          }
       },
       "RDSMultiAZ":{  
          "us-east-1":{  
             "Oracle":"true",
-            "MSSQL":"true"
+            "MSSQL":"true",
+            "PostgreSQL":"true"
          },
          "us-east-2":{  
             "Oracle":"true",
-            "MSSQL":"true"
+            "MSSQL":"true",
+            "PostgreSQL":"true"
          },
          "us-west-1":{  
             "Oracle":"true",
-            "MSSQL":"false"
+            "MSSQL":"false",
+            "PostgreSQL":"true"
          },
          "us-west-2":{  
             "Oracle":"true",
-            "MSSQL":"true"
+            "MSSQL":"true",
+            "PostgreSQL":"true"
          },
          "ca-central-1":{  
             "Oracle":"true",
-            "MSSQL":"true"
+            "MSSQL":"true",
+            "PostgreSQL":"true"
          },
          "ap-south-1":{  
             "Oracle":"true",
-            "MSSQL":"true"
+            "MSSQL":"true",
+            "PostgreSQL":"true"
          },
          "ap-northeast-2":{  
             "Oracle":"true",
-            "MSSQL":"true"
+            "MSSQL":"true",
+            "PostgreSQL":"true"
          },
          "ap-southeast-1":{  
             "Oracle":"true",
-            "MSSQL":"false"
+            "MSSQL":"false",
+            "PostgreSQL":"true"
          },
          "ap-southeast-2":{  
             "Oracle":"true",
-            "MSSQL":"true"
+            "MSSQL":"true",
+            "PostgreSQL":"true"
          },
          "ap-northeast-1":{  
             "Oracle":"true",
-            "MSSQL":"true"
+            "MSSQL":"true",
+            "PostgreSQL":"true"
          },
          "eu-central-1":{  
             "Oracle":"true",
-            "MSSQL":"false"
+            "MSSQL":"false",
+            "PostgreSQL":"true"
          },
          "eu-west-1":{  
             "Oracle":"true",
-            "MSSQL":"true"
+            "MSSQL":"true",
+            "PostgreSQL":"true"
          },
          "eu-west-2":{  
             "Oracle":"true",
-            "MSSQL":"true"
+            "MSSQL":"true",
+            "PostgreSQL":"true"
          },
          "sa-east-1":{  
             "Oracle":"true",
-            "MSSQL":"false"
+            "MSSQL":"false",
+            "PostgreSQL":"true"
          }
       },
       "Parameters":{  

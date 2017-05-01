@@ -1,7 +1,7 @@
 {
 	"AWSTemplateFormatVersion" : "2010-09-09",
 
-	"Description" : "v5.0: This template creates the security group to allow communication from Deep Security Mangaers to their RDS Instance.",
+	"Description" : "v5.0: This template creates the security group to allow communication from Deep Security Managers to their RDS Instance.",
 
 	"Parameters" : {
 		"AWSIVPC" : {
@@ -11,15 +11,16 @@
             "MaxLength"   : "255",
             "AllowedPattern" : "[-_a-zA-Z0-9]*"
         },
-		"DBPEngine"         : {
-            "Description" : "Choose SQL or Oracle for DSM database Engine",
-            "Type"        : "String",
-            "Default"     : "SQL",
-            "AllowedValues" : [
-                "SQL",
-                "Oracle"
-            ]
-        },
+    "DBPEngine":{  
+         "Description":"Choose PostgreSQL, MSSQL or Oracle for DSM database Engine",
+         "Type":"String",
+         "Default":"PostgreSQL",
+         "AllowedValues":[  
+            "SQL",
+            "Oracle",
+            "PostgreSQL"
+         ]
+      },
 		"DSMSG" : {
 			"Type" : "AWS::EC2::SecurityGroup::Id"
 			}
@@ -33,27 +34,39 @@
                 "VpcId"            : {
                     "Ref" : "AWSIVPC"
                 },
-                "SecurityGroupIngress" : [
-                    {
-                        "IpProtocol" : "tcp",
-                        "FromPort"   : {
-                            "Fn::If" : [
-                                "DBTypeIsOracle",
-                                "1521",
-                                "1433"
-                            ]
-                        },
-                        "ToPort"     : {
-                            "Fn::If" : [
-                                "DBTypeIsOracle",
-                                "1521",
-                                "1433"
-                            ]
-                        },
-                        "SourceSecurityGroupId" : {
-                            "Ref" : "DSMSG"
-                        }
-                    }
+                "SecurityGroupIngress":[  
+                   {  
+                      "IpProtocol":"tcp",
+                      "FromPort":{  
+                         "Fn::If":[  
+                            "DBTypeIsOracle",
+                            "1521",
+                            {  
+                               "Fn::If":[  
+                                  "DBTypeIsPostgreSQL",
+                                  "5432",
+                                  "1433"
+                               ]
+                            }
+                         ]
+                      },
+                      "ToPort":{  
+                         "Fn::If":[  
+                            "DBTypeIsOracle",
+                            "1521",
+                            {  
+                               "Fn::If":[  
+                                  "DBTypeIsPostgreSQL",
+                                  "5432",
+                                  "1433"
+                               ]
+                            }
+                         ]
+                      },
+                      "SourceSecurityGroupId":{  
+                         "Ref":"DSMSG"
+                      }
+                   }
                 ],
                 "SecurityGroupEgress"  : [
                     {
@@ -86,6 +99,14 @@
                 },
                 "SQL"
             ]
+        },
+        "DBTypeIsPostgreSQL":{  
+           "Fn::Equals":[  
+              {  
+                 "Ref":"DBPEngine"
+              },
+              "PostgreSQL"
+           ]
         }
     },
 

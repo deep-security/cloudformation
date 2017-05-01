@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "v5.0: This template is an abstraction layer for choosing Oracle or MSSQL when deploying Deep Security Manager",
+    "Description"              : "v5.0: This template is an abstraction layer for choosing PostgreSQL, Oracle or MSSQL when deploying Deep Security Manager",
     "Parameters"               : {
         "DBIRDSInstanceSize" : {
             "Default" : "db.m3.large",
@@ -73,14 +73,15 @@
         "RDSSG"               : {
             "Type" : "AWS::EC2::SecurityGroup::Id"
         },
-        "DBPEngine"           : {
-            "Description" : "Choose SQL or Oracle for DSM database Engine",
-            "Type"        : "String",
-            "Default"     : "SQL",
-            "AllowedValues" : [
-                "SQL",
-                "Oracle"
-            ]
+        "DBPEngine":{  
+           "Description":"Choose PostgreSQL, MSSSQL or Oracle for DSM database Engine",
+           "Type":"String",
+           "Default":"PostgreSQL",
+           "AllowedValues":[  
+              "SQL",
+              "Oracle",
+              "PostgreSQL"
+           ]
         },
 		"MultiAZ": {
 			"Description": "Use Multi-AZ or SQL Mirroring Option Group for RDS Instance",
@@ -193,6 +194,53 @@
                 }
             }
         },
+        "DSPostgreSQLRDS":{  
+         "Type":"AWS::CloudFormation::Stack",
+         "Condition":"DBTypeIsPostgreSQL",
+         "Properties":{  
+            "TemplateURL":{  
+               "Fn::Join":[  
+                  "",
+                  [  
+                     {  
+                        "Ref":"CfnUrlPrefix"
+                     },
+                     "Common/DB/DSDBPostgreSQL.template"
+                  ]
+               ]
+            },
+            "TimeoutInMinutes":"10",
+            "Parameters":{  
+               "DBIRDSInstanceSize":{  
+                  "Ref":"DBIRDSInstanceSize"
+               },
+               "DBIStorageAllocation":{  
+                  "Ref":"DBIStorageAllocation"
+               },
+               "DBPBackupDays":{  
+                  "Ref":"DBPBackupDays"
+               },
+               "DBICAdminName":{  
+                  "Ref":"DBICAdminName"
+               },
+               "DBICAdminPassword":{  
+                  "Ref":"DBICAdminPassword"
+               },
+               "DBPName":{  
+                  "Ref":"DBPName"
+               },
+               "RDSSG":{  
+                  "Ref":"RDSSG"
+               },
+               "DBISubnetGroupName":{  
+                  "Ref":"DBISubnetGroup"
+               },
+               "MultiAZ":{  
+                  "Ref":"MultiAZ"
+               }
+            }
+         }
+      },
 		"DBISubnetGroup"     : {
             "Type" : "AWS::RDS::DBSubnetGroup",
 			"Properties" : {
@@ -217,47 +265,77 @@
                 },
                 "SQL"
             ]
-        }
+        },
+        "DBTypeIsPostgreSQL":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"DBPEngine"
+            },
+            "PostgreSQL"
+         ]
+      }
 
     },
-    "Outputs"                  : {
-        "DSDBEndpoint" : {
-            "Value" : {
-                "Fn::If" : [
-                    "DBTypeIsOracle",
-                    {
-                        "Fn::GetAtt" : [
-                            "DSOracleRDS",
-                            "Outputs.DSDBEndpoint"
+   "Outputs":{  
+      "DSDBEndpoint":{  
+         "Value":{  
+            "Fn::If":[  
+               "DBTypeIsOracle",
+               {  
+                  "Fn::GetAtt":[  
+                     "DSOracleRDS",
+                     "Outputs.DSDBEndpoint"
+                  ]
+               },
+               {  
+                  "Fn::If":[  
+                     "DBTypeIsPostgreSQL",
+                     {  
+                        "Fn::GetAtt":[  
+                           "DSPostgreSQLRDS",
+                           "Outputs.DSDBEndpoint"
                         ]
-                    },
-                    {
-                        "Fn::GetAtt" : [
-                            "DSSQLRDS",
-                            "Outputs.DSDBEndpoint"
+                     },
+                     {  
+                        "Fn::GetAtt":[  
+                           "DSSQLRDS",
+                           "Outputs.DSDBEndpoint"
                         ]
-                    }
-                ]
-            }
-        },
-        "DSDBPort"     : {
-            "Value" : {
-                "Fn::If" : [
-                    "DBTypeIsOracle",
-                    {
-                        "Fn::GetAtt" : [
-                            "DSOracleRDS",
-                            "Outputs.DSDBPort"
+                     }
+                  ]
+               }
+            ]
+         }
+      },
+      "DSDBPort":{  
+         "Value":{  
+            "Fn::If":[  
+               "DBTypeIsOracle",
+               {  
+                  "Fn::GetAtt":[  
+                     "DSOracleRDS",
+                     "Outputs.DSDBPort"
+                  ]
+               },
+               {  
+                  "Fn::If":[  
+                     "DBTypeIsPostgreSQL",
+                     {  
+                        "Fn::GetAtt":[  
+                           "DSPostgreSQLRDS",
+                           "Outputs.DSDBPort"
                         ]
-                    },
-                    {
-                        "Fn::GetAtt" : [
-                            "DSSQLRDS",
-                            "Outputs.DSDBPort"
+                     },
+                     {  
+                        "Fn::GetAtt":[  
+                           "DSSQLRDS",
+                           "Outputs.DSDBPort"
                         ]
-                    }
-                ]
-            }
-        }
-    }
+                     }
+                  ]
+               }
+            ]
+         }
+      }
+   }
 }

@@ -135,7 +135,8 @@
          "AllowedValues":[  
             "Embedded",
             "Oracle",
-            "SQL"
+            "SQL",
+            "PostgreSQL"
          ]
       },
       "DSISubnetID":{  
@@ -336,6 +337,9 @@
          },
          "Embedded":{  
             "DbTypeString":"Embedded"
+         },
+         "PostgreSQL":{  
+            "DbTypeString":"PostgreSQL"
          }
       }
    },
@@ -1269,6 +1273,14 @@
                "Ref":"DBPEngine"
             },
             "Embedded"
+         ]
+      },
+      "DBTypeIsPostgreSQL":{  
+         "Fn::Equals":[  
+            {  
+               "Ref":"DBPEngine"
+            },
+            "PostgreSQL"
          ]
       },
       "IsFirstNode":{  

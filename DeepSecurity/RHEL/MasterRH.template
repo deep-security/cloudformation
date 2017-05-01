@@ -28,7 +28,7 @@
 				"DBPCreateDbInstance" : { "default" : "Create new DB Instance?" },
 				"DBICAdminName" : { "default" : "Admin username for Database" },
 				"DBICAdminPassword" : { "default" : "Admin password for Database" },
-				"DBPEngine" : { "default" : "Choose SQL or Oracle Engine" },
+				"DBPEngine" : { "default" : "Choose PostgreSQL, MSSQL or Oracle Engine" },
 				"DBPEndpoint" : { "default" : "Existing Database Endpoint if not creating new" },
 				"DBPName" : { "default" : "Name of database" },
 				"DSCAdminName" : { "default" : "Admin username for Deep Security" },
@@ -132,15 +132,15 @@
             "AllowedPattern" : "[a-zA-Z0-9!^*\\-_+]*",
             "ConstraintDescription" : "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
         },
-        "DBPEngine"            : {
-            "Description" : "Choose SQL or Oracle for DSM database Engine",
-            "Type"        : "String",
-            "Default"     : "SQL",
-            "AllowedValues" : [
-                "SQL",
-                "Oracle",
-                "Embedded"
-            ]
+        "DBPEngine":{  
+           "Description":"Choose PostgreSQL, Microsoft SQL or Oracle for DSM database Engine",
+           "Type":"String",
+           "Default":"PostgreSQL",
+           "AllowedValues":[  
+              "SQL",
+              "Oracle",
+              "PostgreSQL"
+           ]
         },
         "DBPEndpoint"          : {
             "Type" : "String",

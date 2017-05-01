@@ -1,6 +1,6 @@
 {  
    "AWSTemplateFormatVersion":"2010-09-09",
-   "Description":"v5.0: Quick Start that deploys Trend Micro Deep Security into an existing VPC with a Multi-AZ Oracle RDS instance  **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
+   "Description":"v5.0: Quick Start that deploys Trend Micro Deep Security into an existing VPC with a Multi-AZ PostgreSQL RDS instance  **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template.",
    "Metadata":{  
       "AWS::CloudFormation::Interface":{  
          "ParameterGroups":[  
@@ -387,7 +387,7 @@
                "DBICAdminPassword":{  
                   "Ref":"DeepSecurityAdminPass"
                },
-               "DBPEngine":"Oracle",
+               "DBPEngine":"PostgreSQL",
                "DBPEndpoint":"",
                "DBPName":"dsm",
                "DSCAdminName":{  
