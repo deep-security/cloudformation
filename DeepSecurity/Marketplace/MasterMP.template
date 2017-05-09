@@ -10,7 +10,7 @@
 				},
 				{
 					"Label" : { "default" : "Network Configuration" },
-					"Parameters" : [ "AWSIVPC", "DSISubnetID", "DBISubnet1", "DBISubnet2", "DSELBPosture" ]
+					"Parameters" : [ "AWSIVPC", "DSISubnetID", "DBISubnet1", "DBISubnet2", "DSELBPosture", "DSProxyUrl" ]
 				},
 				{
 					"Label" : { "default" : "Database Configuration" },
@@ -43,8 +43,9 @@
 				"DSIPLicense" : { "default" : "Deep Security License Type" },
 				"DBPMultiAZ" : { "default" : "Single- or Multi- AZ RDS instance" },
                 "DSCLicenseType" : { "default" : "Select Enterprise or Network License Key Type"},
-                "DSELBPosture" : { "default" : "Use internal or internet-facing ELB" }
-			}
+                "DSELBPosture" : { "default" : "Use internal or internet-facing ELB" },
+                "DSProxyUrl" : { "default" : "Url for a proxy server for internet traffic in the format of host:port. Leave blank if not required" }
+            }
 		}
 	},
     "Parameters"               : {
@@ -290,6 +291,10 @@
                 "Enterprise",
                 "Network"
             ]
+        },
+        "DSProxyUrl" : {
+            "Type" : "String",
+            "Default" : ""
         }
     },
     "Mappings"                 : {
@@ -402,7 +407,8 @@
 						"Ref" : "DSELBPosture"
 					},
 					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" },
-                    "DSCLicenseType" : { "Ref" : "DSCLicenseType"}
+                    "DSCLicenseType" : { "Ref" : "DSCLicenseType"},
+                    "DSProxyUrl" : { "Ref" : "DSProxyUrl"}
                 }
             }
         },
@@ -489,7 +495,8 @@
                     "DSELBPosture" : {
                         "Ref" : "DSELBPosture"
                     },
-					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" },
+                    "DSProxyUrl" : { "Ref" : "DSProxyUrl"}
                 }
             }
         },
@@ -581,7 +588,8 @@
 					"DSELBPosture" : {
 						"Ref" : "DSELBPosture"
 					},
-					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" },
+                    "DSProxyUrl" : { "Ref" : "DSProxyUrl"}
                 }
             }
         },
@@ -662,7 +670,8 @@
                     "DSELBPosture" : {
                         "Ref" : "DSELBPosture"
                     },
-					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" },
+                    "DSProxyUrl" : { "Ref" : "DSProxyUrl"}
                 }
             }
         },

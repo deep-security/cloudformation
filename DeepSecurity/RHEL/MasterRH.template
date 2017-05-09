@@ -10,7 +10,7 @@
 				},
 				{
 					"Label" : { "default" : "Network Configuration" },
-					"Parameters" : [ "AWSIVPC", "DSISubnetID", "DBISubnet1", "DBISubnet2", "DSELBPosture" ]
+					"Parameters" : [ "AWSIVPC", "DSISubnetID", "DBISubnet1", "DBISubnet2", "DSELBPosture", "DSProxyUrl" ]
 				},
 				{
 					"Label" : { "default" : "Database Configuration" },
@@ -41,7 +41,8 @@
 				"DBISubnet1" : { "default" : "Primary private subnet for RDS" },
 				"DBISubnet2" : { "default" : "Secondary private subnet for RDS" },
 				"DBPMultiAZ" : { "default" : "Single- or Multi- AZ RDS instance" },
-				"DSELBPosture" : { "default" : "Use internal or internet-facing ELB" }
+				"DSELBPosture" : { "default" : "Use internal or internet-facing ELB" },
+                "DSProxyUrl" : { "default" : "Url for a proxy server for internet traffic in the format of host:port. Leave blank if not required" }
 			}
 		}
 	},
@@ -269,7 +270,11 @@
 		"CfnUrlPrefix" : {
 			"Type" : "String",
 			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v5.1/"
-		}
+		},
+        "DSProxyUrl" : {
+            "Type" : "String",
+            "Default" : ""
+        }
     },
     "Resources"                : {
         "DSMNode1" : {
@@ -361,7 +366,8 @@
 					"DSELBPosture" : {
 						"Ref" : "DSELBPosture"
 					},
-					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" },
+                    "DSProxyUrl" : { "Ref" : "DSProxyUrl"}
                 }
             }
         },
@@ -445,7 +451,8 @@
                     "DSELBPosture" : {
                         "Ref" : "DSELBPosture"
                     },
-					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" },
+                    "DSProxyUrl" : { "Ref" : "DSProxyUrl"}
                 }
             }
         },
@@ -534,7 +541,8 @@
 					"DSELBPosture" : {
 						"Ref" : "DSELBPosture"
 					},
-					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" },
+                    "DSProxyUrl" : { "Ref" : "DSProxyUrl"}
                 }
             }
         },
@@ -612,7 +620,8 @@
                     "DSELBPosture" : {
                         "Ref" : "DSELBPosture"
                     },
-					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" }
+					"CfnUrlPrefix" : { "Ref" : "CfnUrlPrefix" },
+                    "DSProxyUrl" : { "Ref" : "DSProxyUrl"}
                 }
             }
         },

@@ -188,6 +188,10 @@
       "CfnUrlPrefix":{  
          "Type":"String",
          "Default":"https://s3.amazonaws.com/trend-micro-quick-start/v5.1/"
+      },
+      "DSProxyUrl" : {
+         "Type" : "String",
+         "Default" : ""
       }
    },
    "Mappings":{  
@@ -1173,6 +1177,13 @@
                               }
                            ]
                         },
+                        {
+                           "Fn::If":[
+                              "UseProxy",
+                              { "Fn::Sub" : [ " --https-proxy https://${proxyUrl}", { "proxyUrl": { "Ref":"DSProxyUrl" } } ] },
+                              ""
+                           ]
+                        },
                         "\n",
                         {  
                            "Fn::If":[  
@@ -1190,6 +1201,13 @@
                                     ]
                                  ]
                               },
+                              ""
+                           ]
+                        },
+                        {
+                           "Fn::If":[
+                              "UseProxy",
+                              { "Fn::Sub" : [ " --https-proxy https://${proxyUrl}", { "proxyUrl": { "Ref":"DSProxyUrl" } } ] },
                               ""
                            ]
                         },
@@ -1322,6 +1340,18 @@
                "Ref":"AWS::Region"
             },
             "us-gov-west-1"
+         ]
+      },
+      "UseProxy":{
+         "Fn::Not": [
+            {
+               "Fn::Equals": [
+                  {
+                     "Ref": "DSProxyUrl"
+                  },
+                  ""
+               ]
+            }
          ]
       }
    },

@@ -204,6 +204,10 @@
             "Enterprise",
             "Network"
          ]
+      },
+      "DSProxyUrl" : {
+         "Type" : "String",
+         "Default" : ""
       }
    },
    "Mappings":{  
@@ -1184,6 +1188,13 @@
                               }
                            ]
                         },
+                        {
+                           "Fn::If":[
+                              "UseProxy",
+                              { "Fn::Sub" : [ " --https-proxy https://${proxyUrl}", { "proxyUrl": { "Ref":"DSProxyUrl" } } ] },
+                              ""
+                           ]
+                        },
                         "\n",
                         {  
                            "Fn::If":[  
@@ -1202,6 +1213,13 @@
                                     ]
                                  ]
                               }
+                           ]
+                        },
+                        {
+                           "Fn::If":[
+                              "UseProxy",
+                              { "Fn::Sub" : [ " --https-proxy https://${proxyUrl}", { "proxyUrl": { "Ref":"DSProxyUrl" } } ] },
+                              ""
                            ]
                         },
                         "\n"
@@ -1369,6 +1387,18 @@
                "Ref":"DSCLicenseType"
             },
             "Network"
+         ]
+      },
+      "UseProxy":{
+         "Fn::Not": [
+            {
+               "Fn::Equals": [
+                  {
+                     "Ref": "DSProxyUrl"
+                  },
+                  ""
+               ]
+            }
          ]
       }
    },
