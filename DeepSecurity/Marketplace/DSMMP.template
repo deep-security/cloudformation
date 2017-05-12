@@ -1,6 +1,6 @@
 {  
    "AWSTemplateFormatVersion":"2010-09-09",
-   "Description":"v5.0: Deploys Deep Security Manager to AWS. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
+   "Description":"v5.2: Deploys Deep Security Manager to AWS. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
    "Parameters":{  
       "AWSIKeyPairName":{  
          "Description":"Existing key pair to use for connecting to your Deep Security Manager Instance",
@@ -195,7 +195,7 @@
       },
       "CfnUrlPrefix":{  
          "Type":"String",
-         "Default":"https://s3.amazonaws.com/trend-micro-quick-start/v5.1/"
+         "Default":"https://s3.amazonaws.com/trend-micro-quick-start/v5.2/"
       },
       "DSCLicenseType":{  
          "Type":"String",

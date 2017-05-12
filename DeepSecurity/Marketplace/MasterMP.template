@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "v5.0: Trend Micro Deep Security Marketplace master template. For more information see http://aws.trendmicro.com",
+    "Description"              : "v5.2: Trend Micro Deep Security Marketplace master template. For more information see http://aws.trendmicro.com",
 	"Metadata" : {
 		"AWS::CloudFormation::Interface" : {
 			"ParameterGroups" : [
@@ -282,7 +282,7 @@
 			},
 		"CfnUrlPrefix" : {
 			"Type" : "String",
-			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v5.1/"
+			"Default" : "https://s3.amazonaws.com/trend-micro-quick-start/v5.2/"
 		    },
         "DSCLicenseType" : {
             "Type" : "String",
