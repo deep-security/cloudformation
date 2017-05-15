@@ -1,139 +1,146 @@
-{
-  "AWSTemplateFormatVersion" : "2010-09-09",
-   "Description" : "Template for testing the Quick Start, Creates the VPCs and subnets needed for deployment",
-  "Parameters" : {
-		"EnableDNSHostNames" : {
-            "Description" : "Enable DNS Host Names",
-			"Type" : "String",
-            "AllowedValues" : [
-                "true",
-                "false"
-                ],
-            "Default" : "true"
-            }
-   },
-   
- "Resources" : {
-   	"VPC" : {
-      "Type" : "AWS::EC2::VPC",
-      "Properties" : {
-        "CidrBlock" : "10.0.0.0/16",
-		"EnableDnsSupport": "true",
-		"EnableDnsHostnames": { "Ref": "EnableDNSHostNames" },
-        "Tags" : [
-			{
-				"Key" : "Application",
-				"Value" : {"Ref" : "AWS::StackName"}
-			}, 
-			{
-				"Key" : "Name",
-				"Value" : {"Fn::Join" : [ "-", [{"Ref" : "AWS::StackName"}]]}
-			}
-		]
-      }
-    },
-    "PrivateSubnet1" : {
-      "Type" : "AWS::EC2::Subnet",
-      "Properties" : {       
-        "VpcId" : {"Ref" : "VPC"},
-        "CidrBlock" : "10.0.3.0/24",
-        "AvailabilityZone" : {"Fn::Select" : [0,{"Fn::GetAZs" : ""}]},
-        "Tags" : [{"Key" : "Application","Value" : "Private Subnet 1"},{"Key" : "Application","Value" : {"Ref" : "AWS::StackName"}},{"Key" : "Network","Value" : "Private"}, 			{
-				"Key" : "Name",
-				"Value" : {"Fn::Join" : [ "-", ["Priv1", {"Ref" : "AWS::StackName"}]]}
-			}]
-        }
-   },
-    "PrivateSubnet2" : {
-      "Type" : "AWS::EC2::Subnet",
-      "Properties" : {       
-        "VpcId" : {"Ref" : "VPC"},
-        "CidrBlock" : "10.0.4.0/24",
-        "AvailabilityZone" : {"Fn::Select" : [1,{"Fn::GetAZs" : ""}]},
-        "Tags" : [{"Key" : "Application","Value" : "Private Subnet 2"},{"Key" : "Application","Value" : {"Ref" : "AWS::StackName"}},{"Key" : "Network","Value" : "Private"}, {
-				"Key" : "Name",
-				"Value" : {"Fn::Join" : [ "-", ["Priv2", {"Ref" : "AWS::StackName"}]]}
-			}]
-        }
-   },
-    "PublicSubnet1" : {
-      "Type" : "AWS::EC2::Subnet",
-      "Properties" : {       
-        "VpcId" : {"Ref" : "VPC"},
-        "CidrBlock" : "10.0.1.0/24",
-        "AvailabilityZone" : {"Fn::Select" : [0,{"Fn::GetAZs" : ""}]},
-        "Tags" : [{"Key" : "Application","Value" : "Public Subnet 1"},{"Key" : "Application","Value" : {"Ref" : "AWS::StackName"}},{"Key" : "Network","Value" : "Public"}, {
-				"Key" : "Name",
-				"Value" : {"Fn::Join" : [ "-", ["Pub", {"Ref" : "AWS::StackName"}]]}
-			}]
-        }
-   },
-
-
-  "IGW" : {        
-    "Type" : "AWS::EC2::InternetGateway",
-	"Properties" : {
-	"Tags" : [{"Key" : "Application","Value" : {"Ref" : "AWS::StackName"}}]
- 	}
-  },
-
-  "AttachGateway" : {
-	"Type" : "AWS::EC2::VPCGatewayAttachment",
-	"Properties" : {
-	"VpcId" : {"Ref" : "VPC"},
-	"InternetGatewayId" : {"Ref" : "IGW"}
- 	}
-  },
-
-  "PublicRouteTable" : {
-	"Type" : "AWS::EC2::RouteTable",
-	"Properties" : {
-	"VpcId" : {"Ref" : "VPC"},
-	"Tags"  : [{"Key" : "Application","Value" : {"Ref" : "AWS::StackName"}},{"Key" : "Network","Value" : "Public"}]
-	}
- },
-
-  "PublicRoute" : {        
-    "Type" : "AWS::EC2::Route",
-    "DependsOn" : [
-      "AttachGateway"
-    ],
-	"Properties" : {
-	"RouteTableId" : {"Ref" : "PublicRouteTable"},
-	"DestinationCidrBlock" : "0.0.0.0/0",
-	"GatewayId" : {"Ref" : "IGW"}
- 	}      
-  },
-
-  "PublicSubnet1RouteAssociation" : {
-	"Type" : "AWS::EC2::SubnetRouteTableAssociation",
-	"Properties" : {
-	"SubnetId" : {"Ref" : "PublicSubnet1"},
-	"RouteTableId" : {"Ref" : "PublicRouteTable"}
-	}
- },
-
-  "PrivateRouteTable1" : {
-	"Type" : "AWS::EC2::RouteTable",
-	"Properties" : {
-	"VpcId" : {"Ref" : "VPC"},
-	"Tags"  : [{"Key" : "Application","Value" : {"Ref" : "AWS::StackName"}},{"Key" : "Network","Value" : "Private"}]
-	}
- },
-
-  "PrivateRouteTable2" : {
-	"Type" : "AWS::EC2::RouteTable",
-	"Properties" : {
-	"VpcId" : {"Ref" : "VPC"},
-	"Tags"  : [{"Key" : "Application","Value" : {"Ref" : "AWS::StackName"}},{"Key" : "Network","Value" : "Private"}]
-	}
- }  
-   
- }, 
-  "Outputs" : {
-    "VPCID" : { "Value" : {"Ref" : "VPC"}},
-    "PrivateSubnet1" : {"Value" : {"Ref" : "PrivateSubnet1"}},
-    "PrivateSubnet2" : {"Value" : {"Ref" : "PrivateSubnet2"}},
-    "PublicSubnet" : {"Value" : {"Ref" : "PublicSubnet1"}}
-    }
-} 
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Template for testing the Quick Start, Creates the VPCs and subnets needed for
+  deployment
+Parameters:
+  EnableDNSHostNames:
+    Description: Enable DNS Host Names
+    Type: String
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'true'
+Resources:
+  VPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: !Ref EnableDNSHostNames
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackName'
+        - Key: Name
+          Value: !Join 
+            - '-'
+            - - !Ref 'AWS::StackName'
+  PrivateSubnet1:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.3.0/24
+      AvailabilityZone: !Select 
+        - 0
+        - !GetAZs ''
+      Tags:
+        - Key: Application
+          Value: Private Subnet 1
+        - Key: Application
+          Value: !Ref 'AWS::StackName'
+        - Key: Network
+          Value: Private
+        - Key: Name
+          Value: !Join 
+            - '-'
+            - - Priv1
+              - !Ref 'AWS::StackName'
+  PrivateSubnet2:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.4.0/24
+      AvailabilityZone: !Select 
+        - 1
+        - !GetAZs ''
+      Tags:
+        - Key: Application
+          Value: Private Subnet 2
+        - Key: Application
+          Value: !Ref 'AWS::StackName'
+        - Key: Network
+          Value: Private
+        - Key: Name
+          Value: !Join 
+            - '-'
+            - - Priv2
+              - !Ref 'AWS::StackName'
+  PublicSubnet1:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: !Select 
+        - 0
+        - !GetAZs ''
+      Tags:
+        - Key: Application
+          Value: Public Subnet 1
+        - Key: Application
+          Value: !Ref 'AWS::StackName'
+        - Key: Network
+          Value: Public
+        - Key: Name
+          Value: !Join 
+            - '-'
+            - - Pub
+              - !Ref 'AWS::StackName'
+  IGW:
+    Type: 'AWS::EC2::InternetGateway'
+    Properties:
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackName'
+  AttachGateway:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref IGW
+  PublicRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackName'
+        - Key: Network
+          Value: Public
+  PublicRoute:
+    Type: 'AWS::EC2::Route'
+    DependsOn:
+      - AttachGateway
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref IGW
+  PublicSubnet1RouteAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRouteTable
+  PrivateRouteTable1:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackName'
+        - Key: Network
+          Value: Private
+  PrivateRouteTable2:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackName'
+        - Key: Network
+          Value: Private
+Outputs:
+  VPCID:
+    Value: !Ref VPC
+  PrivateSubnet1:
+    Value: !Ref PrivateSubnet1
+  PrivateSubnet2:
+    Value: !Ref PrivateSubnet2
+  PublicSubnet:
+    Value: !Ref PublicSubnet1
