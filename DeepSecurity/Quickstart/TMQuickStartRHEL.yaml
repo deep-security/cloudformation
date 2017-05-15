@@ -82,7 +82,6 @@ Parameters:
     ConstraintDescription: Subnet ID must exist in the chosen VPC
   DeepSecurityAdminName:
     Default: MasterAdmin
-    NoEcho: false
     Description: The Deep Security Manager administrator username for Web Console Access.
     Type: String
     MinLength: 1

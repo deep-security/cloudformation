@@ -159,7 +159,6 @@ Parameters:
       - 'No'
   DBICAdminName:
     Default: dsadmin
-    NoEcho: false
     Description: Admin account username to be used for the database instance
     Type: String
     MinLength: 1
@@ -202,7 +201,6 @@ Parameters:
     ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
   DSCAdminName:
     Default: MasterAdmin
-    NoEcho: false
     Description: >-
       The Deep Security Manager administrator account username for Web Console
       Access

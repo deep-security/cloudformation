@@ -22,7 +22,6 @@ Parameters:
     AllowedPattern: '[-_a-zA-Z0-9]*'
   DSCAdminName:
     Default: MasterAdmin
-    NoEcho: false
     Description: >-
       The Deep Security Manager administrator account username for Web Console
       Access
@@ -99,7 +98,6 @@ Parameters:
       - g2.2xlarge
   DBICAdminName:
     Default: dsadmin
-    NoEcho: false
     Description: Admin account username to be used for the database instance
     Type: String
     MinLength: 1

@@ -97,7 +97,6 @@ Parameters:
       zones within the specified VPC for deploying this template
   DatabaseAdminName:
     Default: dsadmin
-    NoEcho: false
     Description: >-
       The RDS Database administrator username to be used for the database
       instance.
@@ -132,7 +131,6 @@ Parameters:
     ConstraintDescription: Subnet ID must exist in the chosen VPC
   DeepSecurityAdminName:
     Default: MasterAdmin
-    NoEcho: false
     Description: The Deep Security Manager administrator username for Web Console Access.
     Type: String
     MinLength: 1

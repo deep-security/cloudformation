@@ -35,7 +35,6 @@ Parameters:
     ConstraintDescription: Select an existing EC2 Key Pair.
   DeepSecurityAdminName:
     Default: MasterAdmin
-    NoEcho: false
     Description: The Deep Security Manager administrator username for Web Console Access.
     Type: String
     MinLength: 1

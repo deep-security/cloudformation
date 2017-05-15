@@ -176,4 +176,3 @@ Resources:
       FromPort: '53'
       ToPort: '53'
       CidrIp: 192.168.0.0/16
-Outputs: {}
