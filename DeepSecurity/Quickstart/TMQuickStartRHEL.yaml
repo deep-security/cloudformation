@@ -47,6 +47,7 @@ Parameters:
     Type: 'AWS::EC2::KeyPair::KeyName'
     MinLength: '1'
     MaxLength: '255'
+    AllowedPattern: '[-_a-zA-Z0-9]*'
     ConstraintDescription: Select an existing EC2 Key Pair.
   AWSVPC:
     Description: Select an existing VPC to deploy Deep Security Manager.
@@ -183,6 +184,11 @@ Mappings:
       '2': m4.large
       '3': m4.xlarge
       '4': m4.xlarge
+    us-gov-west-1:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
   RDSStorageSize:
     1-100:
       Size: '50'
@@ -198,11 +204,6 @@ Mappings:
       '2': db.m4.large
       '3': db.m4.xlarge
       '4': db.m4.xlarge
-    us-east-2:
-      '1': db.m4.large
-      '2': db.m4.large
-      '3': db.m4.xlarge
-      '4': db.m4.xlarge
     us-west-1:
       '1': db.m4.large
       '2': db.m4.large
@@ -213,17 +214,22 @@ Mappings:
       '2': db.m4.large
       '3': db.m4.xlarge
       '4': db.m4.xlarge
-    ca-central-1:
+    eu-west-1:
       '1': db.m4.large
       '2': db.m4.large
       '3': db.m4.xlarge
       '4': db.m4.xlarge
-    ap-south-1:
+    eu-central-1:
       '1': db.m4.large
       '2': db.m4.large
       '3': db.m4.xlarge
       '4': db.m4.xlarge
-    ap-northeast-2:
+    sa-east-1:
+      '1': db.m3.large
+      '2': db.m3.large
+      '3': db.m3.xlarge
+      '4': db.m3.xlarge
+    ap-northeast-1:
       '1': db.m4.large
       '2': db.m4.large
       '3': db.m4.xlarge
@@ -238,17 +244,22 @@ Mappings:
       '2': db.m4.large
       '3': db.m4.xlarge
       '4': db.m4.xlarge
-    ap-northeast-1:
+    ap-northeast-2:
       '1': db.m4.large
       '2': db.m4.large
       '3': db.m4.xlarge
       '4': db.m4.xlarge
-    eu-central-1:
+    us-east-2:
       '1': db.m4.large
       '2': db.m4.large
       '3': db.m4.xlarge
       '4': db.m4.xlarge
-    eu-west-1:
+    ca-central-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-south-1:
       '1': db.m4.large
       '2': db.m4.large
       '3': db.m4.xlarge
@@ -258,7 +269,7 @@ Mappings:
       '2': db.m4.large
       '3': db.m4.xlarge
       '4': db.m4.xlarge
-    sa-east-1:
+    us-gov-west-1:
       '1': db.m3.large
       '2': db.m3.large
       '3': db.m3.xlarge
@@ -274,19 +285,25 @@ Mappings:
       Size: '4'
   Parameters:
     CfnUrlPrefix:
-      Prefix: 'https://s3.amazonaws.com/trend-micro-quick-start/v5.2/'
+      CommericalPrefix: 'https://s3.amazonaws.com/trend-micro-quick-start/v5.2/'
+      GovCloudPrefix: 'https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v5.2/'
 Resources:
-  MasterMP:
+  MasterRH:
     Type: 'AWS::CloudFormation::Stack'
-    Condition: PerHostSupportedRegion
     Properties:
       TemplateURL: !Join 
         - ''
-        - - !FindInMap 
-            - Parameters
-            - CfnUrlPrefix
-            - Prefix
-          - Marketplace/MasterMP.template
+        - - !If 
+            - RegionIsUsGovWest1
+            - !FindInMap 
+              - Parameters
+              - CfnUrlPrefix
+              - GovCloudPrefix
+            - !FindInMap 
+              - Parameters
+              - CfnUrlPrefix
+              - CommericalPrefix
+          - RHEL/MasterRH.yaml
       Parameters:
         AWSIKeyPairName: !Ref AWSKeyPairName
         AWSIVPC: !Ref AWSVPC
@@ -324,55 +341,23 @@ Resources:
             - Size
         DBISubnet1: !Ref DatabaseSubnet1
         DBISubnet2: !Ref DatabaseSubnet2
-        DSIPLicense: PerHost
         DBPMultiAZ: 'true'
-        CfnUrlPrefix: !FindInMap 
-          - Parameters
-          - CfnUrlPrefix
-          - Prefix
+        CfnUrlPrefix: !If 
+          - RegionIsUsGovWest1
+          - !FindInMap 
+            - Parameters
+            - CfnUrlPrefix
+            - GovCloudPrefix
+          - !FindInMap 
+            - Parameters
+            - CfnUrlPrefix
+            - CommericalPrefix
 Conditions:
-  RegionIsEast1: !Equals 
+  RegionIsUsGovWest1: !Equals 
     - !Ref 'AWS::Region'
-    - us-east-1
-  RegionIsWest2: !Equals 
-    - !Ref 'AWS::Region'
-    - us-west-2
-  RegionIsEuWest1: !Equals 
-    - !Ref 'AWS::Region'
-    - eu-west-1
-  RegionIsApSoutheast2: !Equals 
-    - !Ref 'AWS::Region'
-    - ap-southeast-2
-  RegionIsUSEast2: !Equals 
-    - !Ref 'AWS::Region'
-    - us-east-2
-  RegionIsCACentral1: !Equals 
-    - !Ref 'AWS::Region'
-    - ca-central-1
-  RegionIsAPSouth1: !Equals 
-    - !Ref 'AWS::Region'
-    - ap-south-1
-  RegionIsAPNortheast2: !Equals 
-    - !Ref 'AWS::Region'
-    - ap-northeast-2
-  RegionIsAPSoutheast1: !Equals 
-    - !Ref 'AWS::Region'
-    - ap-southeast-1
-  RegionIsAPNortheast1: !Equals 
-    - !Ref 'AWS::Region'
-    - ap-northeast-1
-  RegionIsEUWest2: !Equals 
-    - !Ref 'AWS::Region'
-    - eu-west-2
-  RegionIsSAEast1: !Equals 
-    - !Ref 'AWS::Region'
-    - sa-east-1
-  AllRegionSupported: !Equals 
-    - 'true'
-    - 'true'
-  PerHostSupportedRegion: !Condition AllRegionSupported
+    - us-gov-west-1
 Outputs:
   DeepSecurityConsole:
     Value: !GetAtt 
-      - MasterMP
+      - MasterRH
       - Outputs.DeepSecurityConsole

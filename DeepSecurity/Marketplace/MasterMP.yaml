@@ -1,5 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.0: Trend Micro Deep Security AWS RHEL master template.'
+Description: >-
+  v5.2: Trend Micro Deep Security Marketplace master template. For more
+  information see http://aws.trendmicro.com
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
@@ -10,10 +12,12 @@ Metadata:
           - DSCAdminPassword
           - DSIPInstanceType
           - AWSIKeyPairName
+          - DSIPLicense
           - DSIMultiNode
           - DSIPLicenseKey
           - DSIPGUIPort
           - DSIPHeartbeatPort
+          - DSCLicenseType
       - Label:
           default: Network Configuration
         Parameters:
@@ -81,8 +85,12 @@ Metadata:
         default: Primary private subnet for RDS
       DBISubnet2:
         default: Secondary private subnet for RDS
+      DSIPLicense:
+        default: Deep Security License Type
       DBPMultiAZ:
         default: Single- or Multi- AZ RDS instance
+      DSCLicenseType:
+        default: Select Enterprise or Network License Key Type
       DSELBPosture:
         default: Use internal or internet-facing ELB
       DSProxyUrl:
@@ -154,9 +162,9 @@ Parameters:
       Choose whether or not to create an RDS instance for the Deep Security
       Manager Deployment
     Type: String
+    Default: 'Yes'
     AllowedValues:
       - 'Yes'
-      - 'No'
   DBICAdminName:
     Default: dsadmin
     NoEcho: false
@@ -229,8 +237,8 @@ Parameters:
       - '2'
   DSIPLicenseKey:
     Description: >-
-      Deep Security License key including dashes (e.g.
-      AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)
+      Deep Security License key including dashes. Only required for BYOL license
+      type. (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)
     Type: String
     MinLength: 37
     MaxLength: 37
@@ -255,7 +263,9 @@ Parameters:
     Default: '443'
     ConstraintDescription: Must be a valid TCP port.
   DSIPInstanceType:
-    Description: Amazon EC2 instance type for the Deep Security Manager Node Instances
+    Description: >-
+      Amazon EC2 instance type for BYOL Deep Security Manager Node Instances
+      (ignored for other license types)
     Type: String
     Default: m3.xlarge
     AllowedValues:
@@ -299,6 +309,16 @@ Parameters:
     ConstraintDescription: >-
       RDS Subnet Groups must be comprised of 2 subnets in seperate availability
       zones with the specified VPC for deploying this template
+  DSIPLicense:
+    Description: Choose License Model. If choosing BYOL you may enter the license below
+    Type: String
+    AllowedValues:
+      - PerHost
+      - BYOL
+      - '25'
+      - '50'
+      - '100'
+      - '200'
   DBPMultiAZ:
     Description: Use Multi-AZ or SQL Mirroring Option Group for RDS Instance
     Type: String
@@ -316,9 +336,25 @@ Parameters:
   CfnUrlPrefix:
     Type: String
     Default: 'https://s3.amazonaws.com/trend-micro-quick-start/v5.2/'
+  DSCLicenseType:
+    Type: String
+    Default: Enterprise
+    AllowedValues:
+      - Enterprise
+      - Network
   DSProxyUrl:
     Type: String
     Default: ''
+Mappings:
+  DSMNodeDependency:
+    Node1DB:
+      String: DSDatabaseAbstract
+    Node2DB:
+      String: DSM95Node1
+    Node1NoDB:
+      String: DSISecurityGroups
+    Node2NoDB:
+      String: DSM95Node2NoDB
 Resources:
   DSMNode1:
     Type: 'AWS::CloudFormation::Stack'
@@ -330,10 +366,11 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - RHEL/DSMRH.template
+          - Marketplace/DSMMP.yaml
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
+        DSIPLicense: !Ref DSIPLicense
         DSIPLicenseKey: !Ref DSIPLicenseKey
         DSCAdminName: !Ref DSCAdminName
         DSCAdminPassword: !Ref DSCAdminPassword
@@ -362,6 +399,7 @@ Resources:
           - Outputs.ELBFQDN
         DSELBPosture: !Ref DSELBPosture
         CfnUrlPrefix: !Ref CfnUrlPrefix
+        DSCLicenseType: !Ref DSCLicenseType
         DSProxyUrl: !Ref DSProxyUrl
   DSMNode2:
     Type: 'AWS::CloudFormation::Stack'
@@ -373,10 +411,11 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - RHEL/DSMRH.template
+          - Marketplace/DSMMP.yaml
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
+        DSIPLicense: !Ref DSIPLicense
         DSIPLicenseKey: !Ref DSIPLicenseKey
         DSCAdminName: !Ref DSCAdminName
         DSCAdminPassword: !Ref DSCAdminPassword
@@ -411,10 +450,11 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - RHEL/DSMRH.template
+          - Marketplace/DSMMP.yaml
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
+        DSIPLicense: !Ref DSIPLicense
         DSIPLicenseKey: !Ref DSIPLicenseKey
         DSCAdminName: !Ref DSCAdminName
         DSCAdminPassword: !Ref DSCAdminPassword
@@ -432,10 +472,10 @@ Resources:
         DBPEngine: !Ref DBPEngine
         DSIPInstanceType: !Ref DSIPInstanceType
         CreateEIP: 'False'
+        DSM1NoDBCompleteWaitHandle: !Ref DSM1NoDBCompleteWaitHandle
         DSIELB: !GetAtt 
           - DSIELB
           - Outputs.DSIELB
-        DSM1CompleteWaitHandle: !Ref DSM1NoDBCompleteWaitHandle
         DSIELBFQDN: !GetAtt 
           - DSIELB
           - Outputs.ELBFQDN
@@ -450,10 +490,11 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - RHEL/DSMRH.template
+          - Marketplace/DSMMP.yaml
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
+        DSIPLicense: !Ref DSIPLicense
         DSIPLicenseKey: !Ref DSIPLicenseKey
         DSCAdminName: !Ref DSCAdminName
         DSCAdminPassword: !Ref DSCAdminPassword
@@ -485,7 +526,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - Common/DB/DSDBAbstract.template
+          - Common/DB/DSDBAbstract.yaml
       Parameters:
         DBPName: !Ref DBPName
         DBIStorageAllocation: !Ref DBIStorageAllocation
@@ -509,7 +550,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - Common/SecurityGroups/RDSSecurityGroup.template
+          - Common/SecurityGroups/RDSSecurityGroup.yaml
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DBPEngine: !Ref DBPEngine
@@ -522,7 +563,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - Common/SecurityGroups/DSMSecurityGroup.template
+          - Common/SecurityGroups/DSMSecurityGroup.yaml
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DSIPGUIPort: !Ref DSIPGUIPort
@@ -533,7 +574,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - Common/DSMELB.template
+          - Common/DSMELB.yaml
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DSIPHeartbeatPort: !Ref DSIPHeartbeatPort
@@ -547,7 +588,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - Common/SecurityGroups/DSMSGIngressRules.template
+          - Common/SecurityGroups/DSMSGIngressRules.yaml
       Parameters:
         DSMSG: !GetAtt 
           - DSIDSMSecurityGroup
@@ -567,7 +608,7 @@ Resources:
       - DSMNode1
     Properties:
       Handle: !Ref DSM1CompleteWaitHandle
-      Timeout: '1500'
+      Timeout: '1800'
   DSM1NoDBCompleteWaitHandle:
     Condition: DoNotLaunchRDSInstance
     Type: 'AWS::CloudFormation::WaitConditionHandle'
@@ -608,16 +649,6 @@ Outputs:
           - Outputs.ELBFQDN
         - ':'
         - !Ref DSIPGUIPort
-  DeepSecurityAgentDownload:
-    Value: !Join 
-      - ''
-      - - 'https://'
-        - !GetAtt 
-          - DSIELB
-          - Outputs.ELBFQDN
-        - ':'
-        - !Ref DSIPGUIPort
-        - /
   DeepSecurityHeartbeat:
     Value: !Join 
       - ''

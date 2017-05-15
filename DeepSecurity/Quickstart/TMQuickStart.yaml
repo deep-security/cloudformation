@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
   v5.0: Quick Start that deploys Trend Micro Deep Security into an existing VPC
-  with a Multi-AZ Oracle RDS instance  **WARNING** This template uses images
+  with a Multi-AZ PostgreSQL RDS instance  **WARNING** This template uses images
   from the AWS Marketplace and an active subscription is required - Please see
   the Quick Start documentation for more details. You will be billed for the AWS
   resources used if you create a stack from this template.
@@ -108,80 +108,177 @@ Parameters:
     Type: String
     AllowedValues:
       - 1-100
-      - 101-250
-      - 251-500
+      - 101-500
+      - 501-1000
+      - 1001-2000
 Mappings:
   DSMSIZE:
     us-east-1:
-      MMS: m4.xlarge
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
     us-west-1:
-      MMS: m4.xlarge
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
     us-west-2:
-      MMS: m4.xlarge
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
     eu-west-1:
-      MMS: m4.xlarge
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
     eu-central-1:
-      MMS: m4.xlarge
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
     sa-east-1:
-      MMS: m4.xlarge
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
     ap-northeast-1:
-      MMS: m4.xlarge
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
     ap-southeast-1:
-      MMS: m4.xlarge
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
     ap-southeast-2:
-      MMS: m4.xlarge
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
     ap-northeast-2:
-      MMS: m4.xlarge
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
     us-east-2:
-      MMS: m4.xlarge
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
     ca-central-1:
-      MMS: m4.xlarge
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
     ap-south-1:
-      MMS: m4.xlarge
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
     eu-west-2:
-      MMS: m4.xlarge
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
   RDSStorageSize:
     1-100:
-      Size: '75'
-    101-250:
+      Size: '50'
+    101-500:
       Size: '150'
-    251-500:
-      Size: '250'
+    501-1000:
+      Size: '200'
+    1001-2000:
+      Size: '300'
   RDSInstanceSize:
     us-east-1:
-      Oracle: db.m4.large
-    us-west-1:
-      Oracle: db.m4.large
-    us-west-2:
-      Oracle: db.m4.large
-    eu-west-1:
-      Oracle: db.m4.large
-    eu-central-1:
-      Oracle: db.m4.large
-    sa-east-1:
-      Oracle: db.m3.large
-    ap-northeast-1:
-      Oracle: db.m4.large
-    ap-southeast-1:
-      Oracle: db.m4.large
-    ap-southeast-2:
-      Oracle: db.m4.large
-    ap-northeast-2:
-      Oracle: db.m4.large
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
     us-east-2:
-      Oracle: db.m4.large
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    us-west-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    us-west-2:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
     ca-central-1:
-      Oracle: db.m4.large
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
     ap-south-1:
-      Oracle: db.m4.large
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-northeast-2:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-southeast-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-southeast-2:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-northeast-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    eu-central-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    eu-west-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
     eu-west-2:
-      Oracle: db.m4.large
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    sa-east-1:
+      '1': db.m3.large
+      '2': db.m3.large
+      '3': db.m3.xlarge
+      '4': db.m3.xlarge
+  DeploymentSize:
+    1-100:
+      Size: '1'
+    101-500:
+      Size: '2'
+    501-1000:
+      Size: '3'
+    1001-2000:
+      Size: '4'
   Parameters:
     CfnUrlPrefix:
       Prefix: 'https://s3.amazonaws.com/trend-micro-quick-start/v5.2/'
 Resources:
   MasterMP:
     Type: 'AWS::CloudFormation::Stack'
+    Condition: PerHostSupportedRegion
     Properties:
       TemplateURL: !Join 
         - ''
@@ -189,7 +286,7 @@ Resources:
             - Parameters
             - CfnUrlPrefix
             - Prefix
-          - Marketplace/MasterMP.template
+          - Marketplace/MasterMP.yaml
       Parameters:
         AWSIKeyPairName: !Ref AWSKeyPairName
         AWSIVPC: !Ref AWSVPC
@@ -197,7 +294,10 @@ Resources:
         DBIRDSInstanceSize: !FindInMap 
           - RDSInstanceSize
           - !Ref 'AWS::Region'
-          - Oracle
+          - !FindInMap 
+            - DeploymentSize
+            - !Ref ProtectedInstances
+            - Size
         DBIStorageAllocation: !FindInMap 
           - RDSStorageSize
           - !Ref ProtectedInstances
@@ -206,27 +306,71 @@ Resources:
         DBPCreateDbInstance: 'Yes'
         DBICAdminName: dsmadmin
         DBICAdminPassword: !Ref DeepSecurityAdminPass
-        DBPEngine: Oracle
+        DBPEngine: PostgreSQL
         DBPEndpoint: ''
         DBPName: dsm
         DSCAdminName: !Ref DeepSecurityAdminName
         DSCAdminPassword: !Ref DeepSecurityAdminPass
-        DSIMultiNode: '1'
+        DSIMultiNode: '2'
         DSIPLicenseKey: XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
         DSIPHeartbeatPort: '4120'
         DSIPGUIPort: '443'
         DSIPInstanceType: !FindInMap 
           - DSMSIZE
           - !Ref 'AWS::Region'
-          - MMS
+          - !FindInMap 
+            - DeploymentSize
+            - !Ref ProtectedInstances
+            - Size
         DBISubnet1: !Ref DatabaseSubnet1
         DBISubnet2: !Ref DatabaseSubnet2
-        DSIPLicense: MMS
+        DSIPLicense: PerHost
         DBPMultiAZ: 'true'
         CfnUrlPrefix: !FindInMap 
           - Parameters
           - CfnUrlPrefix
           - Prefix
+Conditions:
+  RegionIsEast1: !Equals 
+    - !Ref 'AWS::Region'
+    - us-east-1
+  RegionIsWest2: !Equals 
+    - !Ref 'AWS::Region'
+    - us-west-2
+  RegionIsEuWest1: !Equals 
+    - !Ref 'AWS::Region'
+    - eu-west-1
+  RegionIsApSoutheast2: !Equals 
+    - !Ref 'AWS::Region'
+    - ap-southeast-2
+  RegionIsUSEast2: !Equals 
+    - !Ref 'AWS::Region'
+    - us-east-2
+  RegionIsCACentral1: !Equals 
+    - !Ref 'AWS::Region'
+    - ca-central-1
+  RegionIsAPSouth1: !Equals 
+    - !Ref 'AWS::Region'
+    - ap-south-1
+  RegionIsAPNortheast2: !Equals 
+    - !Ref 'AWS::Region'
+    - ap-northeast-2
+  RegionIsAPSoutheast1: !Equals 
+    - !Ref 'AWS::Region'
+    - ap-southeast-1
+  RegionIsAPNortheast1: !Equals 
+    - !Ref 'AWS::Region'
+    - ap-northeast-1
+  RegionIsEUWest2: !Equals 
+    - !Ref 'AWS::Region'
+    - eu-west-2
+  RegionIsSAEast1: !Equals 
+    - !Ref 'AWS::Region'
+    - sa-east-1
+  AllRegionSupported: !Equals 
+    - 'true'
+    - 'true'
+  PerHostSupportedRegion: !Condition AllRegionSupported
 Outputs:
   DeepSecurityConsole:
     Value: !GetAtt 

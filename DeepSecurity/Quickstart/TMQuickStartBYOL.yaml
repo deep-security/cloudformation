@@ -323,7 +323,7 @@ Resources:
             - Parameters
             - CfnUrlPrefix
             - Prefix
-          - Marketplace/MasterMP.template
+          - Marketplace/MasterMP.yaml
       Parameters:
         AWSIKeyPairName: !Ref AWSKeyPairName
         AWSIVPC: !Ref AWSVPC

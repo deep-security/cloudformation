@@ -241,7 +241,7 @@ Resources:
             - Parameters
             - CfnUrlPrefix
             - Prefix
-          - Quickstart/Infrastructure.template
+          - Quickstart/Infrastructure.yaml
   MasterMP:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
@@ -251,7 +251,7 @@ Resources:
             - Parameters
             - CfnUrlPrefix
             - Prefix
-          - Marketplace/MasterMP.template
+          - Marketplace/MasterMP.yaml
       Parameters:
         AWSIKeyPairName: !Ref AWSKeyPairName
         AWSIVPC: !GetAtt 
