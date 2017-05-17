@@ -15,6 +15,11 @@ Metadata:
           - DeepSecurityAdminPass
           - AWSKeyPairName
           - DeepSecurityLicenseKey
+      - Label:
+          default: AWS Quick Start Configuration
+        Parameters:
+          - QSS3BucketName
+          - QSS3KeyPrefix
     ParameterLabels:
       AWSKeyPairName:
         default: EC2 Key Pair for SSH access
@@ -24,6 +29,10 @@ Metadata:
         default: Administrator password for Deep Security
       DeepSecurityLicenseKey:
         default: Activation Code for Deep Security IPS
+      QSS3BucketName:
+        default: Quick Start S3 Bucket Name
+      QSS3KeyPrefix:
+        default: Quick Start S3 Key Prefix
 Parameters:
   AWSKeyPairName:
     Description: >-
@@ -66,7 +75,74 @@ Parameters:
     AllowedPattern: >-
       (?:[A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5})?
     ConstraintDescription: Key can only contain ASCII characters.
+  QSS3BucketName:
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-.]*[0-9a-zA-Z])*$
+    ConstraintDescription: Quick Start bucket name can include numbers, lowercase
+      letters, uppercase letters, periods (.), and hyphens (-). It cannot start or
+      end with a hyphen (-).
+    Default: trend-micro-quick-start
+    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
+      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
+      It cannot start or end with a hyphen (-).
+    Type: String
+  QSS3KeyPrefix:
+    AllowedPattern: ^[0-9a-zA-Z-]+(/[0-9a-zA-Z-]+)*$
+    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
+      uppercase letters, hyphens (-), and forward slash (/). It cannot start or end
+      with forward slash (/) because they are automatically appended.
+    Default: latest
+    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
+      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
+      forward slash (/). It cannot start or end with forward slash (/) because they
+      are automatically appended.
+    Type: String
 Mappings:
+  AWSInfoRegionMap:
+    ap-northeast-1:
+      Partition: aws
+      QuickStartS3URL: https://s3.amazonaws.com
+    ap-northeast-2:
+      Partition: aws
+      QuickStartS3URL: https://s3.amazonaws.com
+    ap-south-1:
+      Partition: aws
+      QuickStartS3URL: https://s3.amazonaws.com
+    ap-southeast-1:
+      Partition: aws
+      QuickStartS3URL: https://s3.amazonaws.com
+    ap-southeast-2:
+      Partition: aws
+      QuickStartS3URL: https://s3.amazonaws.com
+    ca-central-1:
+      Partition: aws
+      QuickStartS3URL: https://s3.amazonaws.com
+    eu-central-1:
+      Partition: aws
+      QuickStartS3URL: https://s3.amazonaws.com
+    eu-west-1:
+      Partition: aws
+      QuickStartS3URL: https://s3.amazonaws.com
+    eu-west-2:
+      Partition: aws
+      QuickStartS3URL: https://s3.amazonaws.com
+    sa-east-1:
+      Partition: aws
+      QuickStartS3URL: https://s3.amazonaws.com
+    us-east-1:
+      Partition: aws
+      QuickStartS3URL: https://s3.amazonaws.com
+    us-east-2:
+      Partition: aws
+      QuickStartS3URL: https://s3.amazonaws.com
+    us-gov-west-1:
+      Partition: aws-us-gov
+      QuickStartS3URL: https://s3-us-gov-west-1.amazonaws.com
+    us-west-1:
+      Partition: aws
+      QuickStartS3URL: https://s3.amazonaws.com
+    us-west-2:
+      Partition: aws
+      QuickStartS3URL: https://s3.amazonaws.com
   DSMSIZE:
     us-east-1:
       '1': m4.large
@@ -235,22 +311,24 @@ Resources:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL: !Join 
-        - ''
-        - - !FindInMap 
-            - Parameters
-            - CfnUrlPrefix
-            - Prefix
-          - Quickstart/Infrastructure.yaml
+        !Sub
+        - ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/Marketplace/Infrastructure.yaml
+        - QuickStartS3URL:
+          !FindInMap
+          - AWSInfoRegionMap
+          - !Ref AWS::Region
+          - QuickStartS3URL
   MasterMP:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL: !Join 
-        - ''
-        - - !FindInMap 
-            - Parameters
-            - CfnUrlPrefix
-            - Prefix
-          - Marketplace/MasterMP.yaml
+        !Sub
+        - ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/Marketplace/MasterMP.yaml
+        - QuickStartS3URL:
+          !FindInMap
+          - AWSInfoRegionMap
+          - !Ref AWS::Region
+          - QuickStartS3URL
       Parameters:
         AWSIKeyPairName: !Ref AWSKeyPairName
         AWSIVPC: !GetAtt 
@@ -301,10 +379,14 @@ Resources:
           - Outputs.PrivateSubnet2
         DSIPLicense: BYOL
         DBPMultiAZ: 'true'
-        CfnUrlPrefix: !FindInMap 
-          - Parameters
-          - CfnUrlPrefix
-          - Prefix
+        CfnUrlPrefix:
+          !Sub
+          - ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/
+          - QuickStartS3URL:
+              !FindInMap
+              - AWSInfoRegionMap
+              - !Ref AWS::Region
+              - QuickStartS3URL
         DSCLicenseType: Network
 Conditions:
   NoLicenseKey: !Equals 

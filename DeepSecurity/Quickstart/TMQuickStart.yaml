@@ -22,6 +22,11 @@ Metadata:
           - DeepSecuritySubnet
           - DatabaseSubnet1
           - DatabaseSubnet2
+     - Label:
+          default: AWS Quick Start Configuration
+        Parameters:
+        - QSS3BucketName
+        - QSS3KeyPrefix
     ParameterLabels:
       AWSKeyPairName:
         default: EC2 Key Pair for SSH access
@@ -39,6 +44,10 @@ Metadata:
         default: Secondary private subnet for RDS
       ProtectedInstances:
         default: Number of instances you expect to protect with Deep Security Agents
+      QSS3BucketName:
+        default: Quick Start S3 Bucket Name
+      QSS3KeyPrefix:
+        default: Quick Start S3 Key Prefix
 Parameters:
   AWSKeyPairName:
     Description: >-
@@ -110,7 +119,74 @@ Parameters:
       - 101-500
       - 501-1000
       - 1001-2000
+  QSS3BucketName:
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-.]*[0-9a-zA-Z])*$
+    ConstraintDescription: Quick Start bucket name can include numbers, lowercase
+      letters, uppercase letters, periods (.), and hyphens (-). It cannot start or
+      end with a hyphen (-).
+    Default: trend-micro-quick-start
+    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
+      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
+      It cannot start or end with a hyphen (-).
+    Type: String
+  QSS3KeyPrefix:
+    AllowedPattern: ^[0-9a-zA-Z-]+(/[0-9a-zA-Z-]+)*$
+    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
+      uppercase letters, hyphens (-), and forward slash (/). It cannot start or end
+      with forward slash (/) because they are automatically appended.
+    Default: trendmicro/deepsecurity/latest
+    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
+      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
+      forward slash (/). It cannot start or end with forward slash (/) because they
+      are automatically appended.
+    Type: String
 Mappings:
+  AWSInfoRegionMap:
+      ap-northeast-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      ap-northeast-2:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      ap-south-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      ap-southeast-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      ap-southeast-2:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      ca-central-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      eu-central-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      eu-west-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      eu-west-2:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      sa-east-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      us-east-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      us-east-2:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      us-gov-west-1:
+        Partition: aws-us-gov
+        QuickStartS3URL: https://s3-us-gov-west-1.amazonaws.com
+      us-west-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      us-west-2:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
   DSMSIZE:
     us-east-1:
       '1': m4.large
@@ -279,13 +355,14 @@ Resources:
     Type: 'AWS::CloudFormation::Stack'
     Condition: PerHostSupportedRegion
     Properties:
-      TemplateURL: !Join 
-        - ''
-        - - !FindInMap 
-            - Parameters
-            - CfnUrlPrefix
-            - Prefix
-          - Marketplace/MasterMP.yaml
+      TemplateURL:
+        !Sub
+        - ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/Marketplace/MasterMP.yaml
+        - QuickStartS3URL:
+          !FindInMap
+          - AWSInfoRegionMap
+          - !Ref AWS::Region
+          - QuickStartS3URL
       Parameters:
         AWSIKeyPairName: !Ref AWSKeyPairName
         AWSIVPC: !Ref AWSVPC
@@ -325,51 +402,22 @@ Resources:
         DBISubnet2: !Ref DatabaseSubnet2
         DSIPLicense: PerHost
         DBPMultiAZ: 'true'
-        CfnUrlPrefix: !FindInMap 
-          - Parameters
-          - CfnUrlPrefix
-          - Prefix
+        CfnUrlPrefix:
+          !Sub
+          - ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/
+          - QuickStartS3URL:
+              !FindInMap
+              - AWSInfoRegionMap
+              - !Ref AWS::Region
+              - QuickStartS3URL
 Conditions:
-  RegionIsEast1: !Equals 
+  RegionIsGovCloud: !Equals
     - !Ref 'AWS::Region'
-    - us-east-1
-  RegionIsWest2: !Equals 
-    - !Ref 'AWS::Region'
-    - us-west-2
-  RegionIsEuWest1: !Equals 
-    - !Ref 'AWS::Region'
-    - eu-west-1
-  RegionIsApSoutheast2: !Equals 
-    - !Ref 'AWS::Region'
-    - ap-southeast-2
-  RegionIsUSEast2: !Equals 
-    - !Ref 'AWS::Region'
-    - us-east-2
-  RegionIsCACentral1: !Equals 
-    - !Ref 'AWS::Region'
-    - ca-central-1
-  RegionIsAPSouth1: !Equals 
-    - !Ref 'AWS::Region'
-    - ap-south-1
-  RegionIsAPNortheast2: !Equals 
-    - !Ref 'AWS::Region'
-    - ap-northeast-2
-  RegionIsAPSoutheast1: !Equals 
-    - !Ref 'AWS::Region'
-    - ap-southeast-1
-  RegionIsAPNortheast1: !Equals 
-    - !Ref 'AWS::Region'
-    - ap-northeast-1
-  RegionIsEUWest2: !Equals 
-    - !Ref 'AWS::Region'
-    - eu-west-2
-  RegionIsSAEast1: !Equals 
-    - !Ref 'AWS::Region'
-    - sa-east-1
+    - us-gov-west-1
   AllRegionSupported: !Equals 
     - 'true'
     - 'true'
-  PerHostSupportedRegion: !Condition AllRegionSupported
+  PerHostSupportedRegion: !Not RegionIsGovCloud
 Outputs:
   DeepSecurityConsole:
     Value: !GetAtt 
