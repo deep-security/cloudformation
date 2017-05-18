@@ -358,10 +358,6 @@ Mappings:
       Size: '3'
     1001-2000:
       Size: '4'
-  Parameters:
-    CfnUrlPrefix:
-      CommericalPrefix: 'https://s3.amazonaws.com/trend-micro-quick-start/v5.2/'
-      GovCloudPrefix: 'https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/v5.2/'
 Resources:
   MasterRH:
     Type: 'AWS::CloudFormation::Stack'

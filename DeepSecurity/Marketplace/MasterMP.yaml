@@ -333,7 +333,7 @@ Parameters:
     Default: Internet-facing
   CfnUrlPrefix:
     Type: String
-    Default: 'https://s3.amazonaws.com/trend-micro-quick-start/v5.2/'
+    Default: 'https://s3.amazonaws.com/trend-micro-quick-start/latest/'
   DSCLicenseType:
     Type: String
     Default: Enterprise

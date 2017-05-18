@@ -251,9 +251,6 @@ Mappings:
       Oracle: db.m4.large
     eu-west-2:
       Oracle: db.m4.large
-  Parameters:
-    CfnUrlPrefix:
-      Prefix: 'https://s3.amazonaws.com/trend-micro-quick-start/v5.2/'
 Resources:
   MasterMP:
     Type: 'AWS::CloudFormation::Stack'
