@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.0: This template deploys an Oracle RDS instance for Deep Security Manager'
+Description: 'v5.3: This template deploys an Oracle RDS instance for Deep Security Manager'
 Parameters:
   DBIRDSInstanceSize:
     Default: db.m3.large

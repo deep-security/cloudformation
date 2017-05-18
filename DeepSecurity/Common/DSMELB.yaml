@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  v5.0: Deploys Elastic Load Balancers and Security Groups for Deep Security
+  v5.3: Deploys Elastic Load Balancers and Security Groups for Deep Security
   Manager.
 Parameters:
   AWSIVPC:

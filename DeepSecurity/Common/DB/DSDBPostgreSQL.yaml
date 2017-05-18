@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  v5.0: This template deploys a PostgreSQL RDS instance for Deep Security
+  v5.3: This template deploys a PostgreSQL RDS instance for Deep Security
   Manager
 Parameters:
   DBIRDSInstanceSize:
