@@ -259,10 +259,10 @@ Resources:
         !Sub
         - ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/Marketplace/MasterMP.yaml
         - QuickStartS3URL:
-          !FindInMap
-          - AWSInfoRegionMap
-          - !Ref AWS::Region
-          - QuickStartS3URL
+            !FindInMap
+            - AWSInfoRegionMap
+            - !Ref AWS::Region
+            - QuickStartS3URL
       Parameters:
         AWSIKeyPairName: !Ref AWSKeyPairName
         AWSIVPC: !Ref AWSVPC

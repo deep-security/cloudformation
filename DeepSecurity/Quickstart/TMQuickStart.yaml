@@ -22,11 +22,11 @@ Metadata:
           - DeepSecuritySubnet
           - DatabaseSubnet1
           - DatabaseSubnet2
-     - Label:
+      - Label:
           default: AWS Quick Start Configuration
         Parameters:
-        - QSS3BucketName
-        - QSS3KeyPrefix
+         - QSS3BucketName
+         - QSS3KeyPrefix
     ParameterLabels:
       AWSKeyPairName:
         default: EC2 Key Pair for SSH access
@@ -356,10 +356,10 @@ Resources:
         !Sub
         - ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/Marketplace/MasterMP.yaml
         - QuickStartS3URL:
-          !FindInMap
-          - AWSInfoRegionMap
-          - !Ref AWS::Region
-          - QuickStartS3URL
+            !FindInMap
+            - AWSInfoRegionMap
+            - !Ref AWS::Region
+            - QuickStartS3URL
       Parameters:
         AWSIKeyPairName: !Ref AWSKeyPairName
         AWSIVPC: !Ref AWSVPC
