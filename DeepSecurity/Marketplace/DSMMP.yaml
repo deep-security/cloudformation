@@ -783,6 +783,12 @@ Resources:
                     - proxyUrl: !Ref DSProxyUrl
                   - |
                     export NO_PROXY="169.254.169.254,localhost,127.0.0.1"
+                  - !Sub
+                    - |
+                      echo -e "proxy=http://${proxyUrl}" >> /etc/yum.conf
+                    - proxyUrl: !Ref DSProxyUrl
+                  - |
+                    curl -ko /opt/trend/packages/dsm/default/Agent-amzn1-10.0.0-2240.x86_64.zip https://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-amzn1-10.0.0-2240.x86_64.zip
               - ''
             - '/opt/aws/bin/cfn-init -v '
             - ' --stack '
