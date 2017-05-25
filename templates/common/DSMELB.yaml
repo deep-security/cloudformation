@@ -51,7 +51,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - Common/SecurityGroups/DSELBSG.yaml
+          - templates/common/security-groups/DSELBSG.yaml
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DSIPGUIPort: !Ref DSIPGUIPort

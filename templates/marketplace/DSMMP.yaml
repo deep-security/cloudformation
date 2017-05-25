@@ -70,7 +70,7 @@ Parameters:
   DSIPInstanceType:
     Description: Amazon EC2 instance type for the Deep Security Manager Node Instances
     Type: String
-    Default: m4.large
+    Default: m3.large
     AllowedValues:
       - m3.large
       - m3.xlarge
@@ -156,6 +156,12 @@ Parameters:
       - 'Yes'
       - 'No'
     Default: 'No'
+  DSIPLicense:
+    Description: Choose License Model. If choosing BYOL you may enter the license below
+    Type: String
+    AllowedValues:
+      - PerHost
+      - BYOL
   CreateEIP:
     Description: >-
       Allocate an EIP and associate it with this Deep Security Manager Instance.
@@ -164,7 +170,7 @@ Parameters:
     AllowedValues:
       - 'True'
       - 'False'
-    Default: 'False'
+    Default: 'True'
   DSIELB:
     Type: String
     Default: ''
@@ -184,62 +190,102 @@ Parameters:
   CfnUrlPrefix:
     Type: String
     Default: 'https://s3.amazonaws.com/trend-micro-quick-start/latest/'
+  DSCLicenseType:
+    Type: String
+    Default: Enterprise
+    AllowedValues:
+      - Enterprise
+      - Network
   DSProxyUrl:
     Type: String
     Default: ''
 Mappings:
-  AWSRegionArch2AMI:
-    eu-central-1:
-      '64': ami-e4c63e8b
-    sa-east-1:
-      '64': ami-7de77b11
-    ap-northeast-1:
-      '64': ami-5de0433c
-    ap-northeast-2:
-      '64': ami-6447930a
-    ap-south-1:
-      '64': ami-7c9bef13
-    eu-west-1:
-      '64': ami-02ace471
-    eu-west-2:
-      '64': ami-9c363cf8
-    ca-central-1:
-      '64': ami-9062d0f4
+  DSMAMI:
     us-east-1:
-      '64': ami-b63769a1
+      PerHost: ami-d88126ce
+      BYOL: ami-2d9c3b3b
     us-east-2:
-      '64': ami-0932686c
+      PerHost: ami-3c604459
+      BYOL: ami-3f67435a
     us-west-1:
-      '64': ami-2cade64c
+      PerHost: ami-7f247d1f
+      BYOL: ami-ca5a03aa
     us-west-2:
-      '64': ami-6f68cf0f
-    ap-southeast-2:
-      '64': ami-39ac915a
-    ap-southeast-1:
-      '64': ami-2c95344f
-    us-gov-west-1:
-      '64': ami-299e2248
-  TrendRegionMap:
-    us-east-1:
-      regionkey: amazon.cloud.region.key.1
-    us-west-2:
-      regionkey: amazon.cloud.region.key.2
-    us-west-1:
-      regionkey: amazon.cloud.region.key.3
-    eu-west-1:
-      regionkey: amazon.cloud.region.key.4
-    ap-southeast-1:
-      regionkey: amazon.cloud.region.key.5
-    ap-northeast-1:
-      regionkey: amazon.cloud.region.key.6
-    sa-east-1:
-      regionkey: amazon.cloud.region.key.7
-    ap-southeast-2:
-      regionkey: amazon.cloud.region.key.8
-    eu-central-1:
-      regionkey: amazon.cloud.region.key.9
+      PerHost: ami-7a95191a
+      BYOL: ami-10ad2170
+    ca-central-1:
+      PerHost: ami-cd5de0a9
+      BYOL: ami-a659e4c2
+    ap-south-1:
+      PerHost: ami-7545351a
+      BYOL: ami-9c4636f3
     ap-northeast-2:
-      regionkey: amazon.cloud.region.key.12
+      PerHost: ami-6961b107
+      BYOL: ami-ee61b180
+    ap-southeast-1:
+      PerHost: ami-73f04310
+      BYOL: ami-c8f043ab
+    ap-southeast-2:
+      PerHost: ami-f81d1f9b
+      BYOL: ami-af2725cc
+    ap-northeast-1:
+      PerHost: ami-57075630
+      BYOL: ami-4f0d5c28
+    eu-central-1:
+      PerHost: ami-1bfc2874
+      BYOL: ami-82fa2eed
+    eu-west-1:
+      PerHost: ami-60321906
+      BYOL: ami-c40e25a2
+    eu-west-2:
+      PerHost: ami-b2e0f5d6
+      BYOL: ami-68e0f50c
+    sa-east-1:
+      PerHost: ami-0a056466
+      BYOL: ami-45137229
+  DSMSIZE:
+    us-east-1:
+      PerHost: m4.xlarge
+      BYOL: m4.xlarge
+    us-east-2:
+      PerHost: m4.xlarge
+      BYOL: m4.xlarge
+    us-west-1:
+      PerHost: m4.xlarge
+      BYOL: m4.xlarge
+    us-west-2:
+      PerHost: m4.xlarge
+      BYOL: m4.xlarge
+    ca-central-1:
+      PerHost: m4.xlarge
+      BYOL: m4.xlarge
+    ap-south-1:
+      PerHost: m4.xlarge
+      BYOL: m4.xlarge
+    ap-northeast-2:
+      PerHost: m4.xlarge
+      BYOL: m4.xlarge
+    ap-southeast-1:
+      PerHost: m4.xlarge
+      BYOL: m4.xlarge
+    ap-southeast-2:
+      PerHost: m4.xlarge
+      BYOL: m4.xlarge
+    ap-northeast-1:
+      PerHost: m4.xlarge
+      BYOL: m4.xlarge
+    eu-central-1:
+      PerHost: m4.xlarge
+      BYOL: m4.xlarge
+    eu-west-1:
+      PerHost: m4.xlarge
+      BYOL: m4.xlarge
+    eu-west-2:
+      PerHost: m4.xlarge
+      BYOL: m4.xlarge
+    sa-east-1:
+      PerHost: m4.xlarge
+      BYOL: m4.xlarge
   DSMDBMap:
     SQL:
       DbTypeString: Microsoft SQL Server
@@ -261,6 +307,10 @@ Resources:
                 - ec2.amazonaws.com
             Action:
               - 'sts:AssumeRole'
+      ManagedPolicyArns: !If 
+        - UsePerHost
+        - - 'arn:aws:iam::aws:policy/AWSMarketplaceMeteringFullAccess'
+        - !Ref 'AWS::NoValue'
       Path: /
       Policies:
         - !If 
@@ -289,10 +339,7 @@ Resources:
                     - 'elasticloadbalancing:SetLoadBalancerPoliciesOfListener'
                   Resource: !Join 
                     - ''
-                    - - !If 
-                        - RegionIsUsGovWest1
-                        - 'arn:aws-us-gov:elasticloadbalancing:'
-                        - 'arn:aws:elasticloadbalancing:'
+                    - - 'arn:aws:elasticloadbalancing:'
                       - !Ref 'AWS::Region'
                       - ':'
                       - !Ref 'AWS::AccountId'
@@ -304,10 +351,7 @@ Resources:
                     - 'iam:GetServerCertificate'
                   Resource: !Join 
                     - ''
-                    - - !If 
-                        - RegionIsUsGovWest1
-                        - 'arn:aws-us-gov:iam::'
-                        - 'arn:aws:iam::'
+                    - - 'arn:aws:iam::'
                       - !Ref 'AWS::AccountId'
                       - ':server-certificate/DeepSecurityElbCertificate-'
                       - !Ref 'AWS::StackName'
@@ -321,12 +365,14 @@ Resources:
                 - Effect: Allow
                   Action:
                     - 'ec2:DescribeLicenses'
-                    - 'ec2:DescribeInstances'
                     - 'ec2:DescribeImages'
+                    - 'ec2:DescribeInstances'
                     - 'ec2:DescribeRegions'
-                    - 'ec2:DescribeVpcs'
                     - 'ec2:DescribeSubnets'
                     - 'ec2:DescribeTags'
+                    - 'ec2:DescribeVpcs'
+                    - 'iam:ListAccountAliases'
+                    - 'sts:AssumeRole'
                     - 'ec2:DescribeAvailabilityZones'
                     - 'ec2:DescribeSecurityGroups'
                     - 'iam:ListAccountAliases'
@@ -393,7 +439,7 @@ Resources:
                     triggers=post.update
                   - |
                     path=Resources.DSM.Metadata.AWS::CloudFormation::Init
-                  - 'action=/opt/aws/bin/cfn-init -v --stack '
+                  - 'action=/opt/aws/bin/cfn-init -v -c updateDSM --stack '
                   - !Ref 'AWS::StackId'
                   - ' --resource DSM1'
                   - ' --region '
@@ -408,80 +454,23 @@ Resources:
                 files:
                   - /etc/cfn/cfn-hup.conf
                   - /etc/cfn/hooks.d/cfn-auto-reloader.conf
-          commands:
-            0-set-vmoptions:
-              command: mkdir /opt/dsm/; echo -Xmx12g >> /opt/dsm/dsm_s.vmoptions
         prepDSMInstall:
           files:
-            /tmp/Manager-Linux-10.0.3259.x64.sh:
-              source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/Manager-Linux-10.0.3259.x64.sh
-              owner: root
-              mode: '000700'
-            /tmp/Agent-RedHat_EL6-10.0.0-2094.x86_64.zip:
-              source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-RedHat_EL6-10.0.0-2094.x86_64.zip
-              owner: root
-              mode: '000600'
-            /tmp/KernelSupport-RedHat_EL6-10.0.0-2106.x86_64.zip:
-              source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-RedHat_EL6-10.0.0-2106.x86_64.zip
-              owner: root
-              mode: '000600'
-            /tmp/Agent-RedHat_EL7-10.0.0-2094.x86_64.zip:
-              source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-RedHat_EL7-10.0.0-2094.x86_64.zip
-              owner: root
-              mode: '000600'
-            /tmp/KernelSupport-RedHat_EL7-10.0.0-2105.x86_64.zip:
-              source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-RedHat_EL7-10.0.0-2105.x86_64.zip
-              owner: root
-              mode: '000600'
-            /tmp/Agent-Ubuntu_16.04-10.0.0-2094.x86_64.zip:
-              source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-Ubuntu_16.04-10.0.0-2094.x86_64.zip
-              owner: root
-              mode: '000600'
-            /tmp/KernelSupport-Ubuntu_16.04-10.0.0-2115.x86_64.zip:
-              source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-Ubuntu_16.04-10.0.0-2115.x86_64.zip
-              owner: root
-              mode: '000600'
-            /tmp/Agent-Ubuntu_14.04-10.0.0-2094.x86_64.zip:
-              source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-Ubuntu_14.04-10.0.0-2094.x86_64.zip
-              owner: root
-              mode: '000600'
-            /tmp/KernelSupport-Ubuntu_14.04-10.0.0-2114.x86_64.zip:
-              source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-Ubuntu_14.04-10.0.0-2114.x86_64.zip
-              owner: root
-              mode: '000600'
-            /tmp/Agent-amzn1-10.0.0-2094.x86_64.zip:
-              source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-amzn1-10.0.0-2094.x86_64.zip
-              owner: root
-              mode: '000600'
-            /tmp/KernelSupport-amzn1-10.0.0-2111.x86_64.zip:
-              source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-amzn1-10.0.0-2111.x86_64.zip
-              owner: root
-              mode: '000600'
-            /tmp/Agent-Windows-10.0.0-2094.x86_64.zip:
-              source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-Windows-10.0.0-2094.x86_64.zip
-              owner: root
-              mode: '000600'
             /etc/cfn/dsmConfiguration.properties:
               content: !Join 
                 - ''
                 - - !If 
-                    - KeyProvided
-                    - !Join 
-                      - ''
-                      - - LicenseScreen.License.-1=
-                        - !Ref DSIPLicenseKey
+                    - AddAcAnswer
+                    - !If 
+                      - NetworkOnlyLicense
+                      - !Join 
+                        - ''
+                        - - LicenseScreen.License.1=
+                          - !Ref DSIPLicenseKey
+                      - !Join 
+                        - ''
+                        - - LicenseScreen.License.-1=
+                          - !Ref DSIPLicenseKey
                     - |+
 
                   - |+
@@ -563,14 +552,6 @@ Resources:
               owner: root
               mode: '000600'
         installDSM:
-          files:
-            /etc/systemd/system/dsm_s.service:
-              source: !Join 
-                - ''
-                - - !Ref CfnUrlPrefix
-                  - Common/Scripts/dsm_s.service
-              owner: root
-              mode: '00755'
           commands:
             0-sethostnameinprops:
               command: !Join 
@@ -583,11 +564,11 @@ Resources:
               ignoreErrors: 'false'
             1-install-DSM:
               command: >-
-                cd /tmp; sh Manager-Linux-10.0.3259.x64.sh -q -console -varfile
-                /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog
+                cd /opt/trend/packages/dsm/default/; sh
+                /opt/trend/packages/dsm/default/ManagerAWS.sh -q -console
+                -varfile /etc/cfn/dsmConfiguration.properties >>
+                /tmp/dsmInstallLog
               ignoreErrors: 'false'
-            2-fix-for-systemd:
-              command: systemctl daemon-reload; systemctl enable dsm_s
             6-install-xml_grep:
               command: yum -y install perl-XML-Twig
         addCloudAccount:
@@ -596,14 +577,21 @@ Resources:
               source: !Join 
                 - ''
                 - - !Ref CfnUrlPrefix
-                  - Common/Scripts/set-aia-settings.sh
+                  - scripts/set-aia-settings.sh
+              owner: root
+              mode: '000700'
+            /etc/cfn/kill-mp-web-installer.sh:
+              source: !Join 
+                - ''
+                - - !Ref CfnUrlPrefix
+                  - scripts/kill-mp-web-installer.sh
               owner: root
               mode: '000700'
             /etc/cfn/add-aws-account-with-instance-role.sh:
               source: !Join 
                 - ''
                 - - !Ref CfnUrlPrefix
-                  - Common/Scripts/add-aws-account-with-instance-role.sh
+                  - scripts/add-aws-account-with-instance-role.sh
               owner: root
               mode: '000700'
           commands:
@@ -636,19 +624,18 @@ Resources:
                   - ' localhost '
                   - !Ref DSIPGUIPort
               ignoreErrors: 'False'
+            10-killWebInstaller:
+              command: /etc/cfn/kill-mp-web-installer.sh
         sqlSetup:
           commands:
-            1-get-sql-helper:
+            1-get-create-script:
               command: !Join 
                 - ''
                 - - 'cd /etc/cfn/rhel-scripts; curl -O '
                   - !Ref CfnUrlPrefix
-                  - Common/Scripts/cfn-rh-sql.sh; chmod 775 cfn-rh-sql.sh
+                  - scripts/create-dsm-db.py; chmod 755 create-dsm-db.py
               ignoreErrors: 'false'
-            2-run-helper:
-              command: cd /etc/cfn/rhel-scripts; sh cfn-rh-sql.sh
-              ignoreErrors: 'false'
-            3-create-db:
+            2-create-db:
               command: !Join 
                 - ''
                 - - 'cd /etc/cfn/rhel-scripts; python create-dsm-db.py --user '
@@ -678,14 +665,14 @@ Resources:
               source: !Join 
                 - ''
                 - - !Ref CfnUrlPrefix
-                  - Common/Scripts/create-console-listener.sh
+                  - scripts/create-console-listener.sh
               owner: root
               mode: '000700'
             /etc/cfn/set-lb-settings.sh:
               source: !Join 
                 - ''
                 - - !Ref CfnUrlPrefix
-                  - Common/Scripts/set-lb-settings.sh
+                  - scripts/set-lb-settings.sh
               owner: root
               mode: '000700'
           commands:
@@ -734,14 +721,16 @@ Resources:
               source: !Join 
                 - ''
                 - - !Ref CfnUrlPrefix
-                  - Common/Scripts/reactivate-manager.sh
+                  - scripts/reactivate-manager.sh
               owner: root
               mode: '000700'
           commands:
-            1-reactivate-manager:
+            1-reactivate-manager.sh:
               command: !Join 
                 - ''
-                - - '/etc/cfn/reactivate-manager.sh '
+                - - >-
+                    /etc/cfn/reactivate-manager.sh >>
+                    /etc/cfn/reactivate-manager.log 
                   - !Ref DSCAdminName
                   - ' '
                   - !Ref DSCAdminPassword
@@ -750,10 +739,16 @@ Resources:
     Properties:
       IamInstanceProfile: !Ref DSMProfile
       ImageId: !FindInMap 
-        - AWSRegionArch2AMI
+        - DSMAMI
         - !Ref 'AWS::Region'
-        - '64'
-      InstanceType: !Ref DSIPInstanceType
+        - !Ref DSIPLicense
+      InstanceType: !If 
+        - PPUNotSelected
+        - !Ref DSIPInstanceType
+        - !FindInMap 
+          - DSMSIZE
+          - !Ref 'AWS::Region'
+          - !Ref DSIPLicense
       NetworkInterfaces:
         - DeviceIndex: '0'
           SubnetId: !Ref DSISubnetID
@@ -765,7 +760,7 @@ Resources:
             - !Ref DSMSG
       Tags:
         - Key: Name
-          Value: DSM
+          Value: Deep Security Manager
       KeyName: !Ref AWSIKeyPairName
       UserData: !Base64 
         'Fn::Join':
@@ -792,14 +787,10 @@ Resources:
                     - |
                       echo -e "proxy=http://${proxyUrl}" >> /etc/yum.conf
                     - proxyUrl: !Ref DSProxyUrl
+                  - |
+                    curl -ko /opt/trend/packages/dsm/default/Agent-amzn1-10.0.0-2240.x86_64.zip https://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-amzn1-10.0.0-2240.x86_64.zip
               - ''
-            - 'curl -O '
-            - !Ref CfnUrlPrefix
-            - |
-              Common/Scripts/cfn-rh-helper.sh
-            - |
-              sh cfn-rh-helper.sh >> cfn-rh-helper.log
-            - 'cfn-init -v '
+            - '/opt/aws/bin/cfn-init -v '
             - ' --stack '
             - !Ref 'AWS::StackName'
             - ' --resource DSM'
@@ -831,13 +822,15 @@ Resources:
             - |+
 
             - !If 
-              - IsFirstNode
+              - WaitNotProvided
+              - /opt/aws/bin/cfn-signal -e $?  -r "Complete" ''
               - !Join 
                 - ''
-                - - 'cfn-signal -e $? -r "DSM Node configuration complete" '
+                - - >-
+                    /opt/aws/bin/cfn-signal -e $? -r "DSM Node configuration
+                    complete" 
                   - !Base64 
                     Ref: DSM1CompleteWaitHandle
-              - ''
             - !If 
               - UseProxy
               - !Sub 
@@ -865,10 +858,15 @@ Conditions:
   DoSQLSetup: !And 
     - !Condition DBTypeIsSQL
     - !Condition IsFirstNode
-  KeyProvided: !Not 
-    - !Equals 
-      - !Ref DSIPLicenseKey
-      - XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
+  UseBYOL: !Equals 
+    - !Ref DSIPLicense
+    - BYOL
+  UsePerHost: !Equals 
+    - !Ref DSIPLicense
+    - PerHost
+  PPUNotSelected: !Or 
+    - !Condition UsePerHost
+    - !Condition UseBYOL
   AddToELB: !Not 
     - !Equals 
       - !Ref DSIELB
@@ -883,15 +881,22 @@ Conditions:
     - !Not 
       - !Condition IsFirstNode
     - !Condition AddToELB
+  KeyProvided: !Not 
+    - !Equals 
+      - !Ref DSIPLicenseKey
+      - XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
   IsFirstNodePlusELB: !And 
     - !Condition IsFirstNode
     - !Condition AddToELB
+  AddAcAnswer: !And 
+    - !Condition KeyProvided
+    - !Condition PPUNotSelected
   InternetFacingELB: !Equals 
     - !Ref DSELBPosture
     - Internet-facing
-  RegionIsUsGovWest1: !Equals 
-    - !Ref 'AWS::Region'
-    - us-gov-west-1
+  NetworkOnlyLicense: !Equals 
+    - !Ref DSCLicenseType
+    - Network
   UseProxy: !Not 
     - !Equals 
       - !Ref DSProxyUrl

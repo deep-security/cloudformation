@@ -111,7 +111,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - Common/DB/DSDBOracleRDS.yaml
+          - templates/common/db/DSDBOracleRDS.yaml
       TimeoutInMinutes: '10'
       Parameters:
         DBIRDSInstanceSize: !Ref DBIRDSInstanceSize
@@ -130,7 +130,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - Common/DB/DSDBSQLRDS.yaml
+          - templates/common/db/DSDBSQLRDS.yaml
       TimeoutInMinutes: '10'
       Parameters:
         DBIRDSInstanceSize: !Ref DBIRDSInstanceSize
@@ -149,7 +149,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - Common/DB/DSDBPostgreSQL.yaml
+          - templates/common/db/DSDBPostgreSQL.yaml
       TimeoutInMinutes: '10'
       Parameters:
         DBIRDSInstanceSize: !Ref DBIRDSInstanceSize

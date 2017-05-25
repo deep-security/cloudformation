@@ -387,7 +387,7 @@ Resources:
     Properties:
       TemplateURL:
         !Sub
-        - ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/Marketplace/MasterMP.yaml
+        - ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/templates/marketplace/MasterMP.yaml
         - QuickStartS3URL:
             !FindInMap
             - AWSInfoRegionMap
