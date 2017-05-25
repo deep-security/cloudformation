@@ -416,7 +416,6 @@ Resources:
               - AWSInfoRegionMap
               - !Ref AWS::Region
               - QuickStartS3URL
-Conditions:
 Outputs:
   DeepSecurityConsole:
     Value: !GetAtt 

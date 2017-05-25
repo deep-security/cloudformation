@@ -339,7 +339,10 @@ Resources:
                     - 'elasticloadbalancing:SetLoadBalancerPoliciesOfListener'
                   Resource: !Join 
                     - ''
-                    - - 'arn:aws:elasticloadbalancing:'
+                    - - !If
+                        - RegionIsUsGovWest1
+                        - 'arn:aws-us-gov:elasticloadbalancing:'
+                        - 'arn:aws:elasticloadbalancing:'
                       - !Ref 'AWS::Region'
                       - ':'
                       - !Ref 'AWS::AccountId'
@@ -351,7 +354,10 @@ Resources:
                     - 'iam:GetServerCertificate'
                   Resource: !Join 
                     - ''
-                    - - 'arn:aws:iam::'
+                    - - !If
+                        - RegionIsUsGovWest1
+                        - 'arn:aws-us-gov:iam::'
+                        - 'arn:aws:iam::'
                       - !Ref 'AWS::AccountId'
                       - ':server-certificate/DeepSecurityElbCertificate-'
                       - !Ref 'AWS::StackName'
@@ -897,6 +903,9 @@ Conditions:
   NetworkOnlyLicense: !Equals 
     - !Ref DSCLicenseType
     - Network
+  RegionIsUsGovWest1: !Equals
+    - !Ref 'AWS::Region'
+    - us-gov-west-1
   UseProxy: !Not 
     - !Equals 
       - !Ref DSProxyUrl

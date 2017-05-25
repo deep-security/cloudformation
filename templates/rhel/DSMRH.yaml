@@ -645,10 +645,17 @@ Resources:
                   - !Ref CfnUrlPrefix
                   - scripts/cfn-rh-sql.sh; chmod 775 cfn-rh-sql.sh
               ignoreErrors: 'false'
-            2-run-helper:
+            2-get-create-script:
+              command: !Join
+                - ''
+                - - 'cd /etc/cfn/rhel-scripts; curl -O '
+                  - !Ref CfnUrlPrefix
+                  - scripts/create-dsm-db.py; chmod 755 create-dsm-db.py
+              ignoreErrors: 'false'
+            3-run-helper:
               command: cd /etc/cfn/rhel-scripts; sh cfn-rh-sql.sh
               ignoreErrors: 'false'
-            3-create-db:
+            4-create-db:
               command: !Join 
                 - ''
                 - - 'cd /etc/cfn/rhel-scripts; python create-dsm-db.py --user '
