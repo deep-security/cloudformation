@@ -635,6 +635,8 @@ Resources:
                   - !Ref DSCAdminPassword
                   - ' localhost '
                   - !Ref DSIPGUIPort
+                  - ' '
+                  - !Ref 'AWS::Region'
               ignoreErrors: 'False'
         sqlSetup:
           commands:

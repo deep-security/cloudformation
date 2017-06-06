@@ -1,3 +1,4 @@
+#!/bin/bash
 ##reactivate-manager <username> <password> <console-port>
 dnsHostNamesOn=
 ## get a token

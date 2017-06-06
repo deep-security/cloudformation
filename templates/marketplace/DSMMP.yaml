@@ -629,6 +629,8 @@ Resources:
                   - !Ref DSCAdminPassword
                   - ' localhost '
                   - !Ref DSIPGUIPort
+                  - ' '
+                  - !Ref 'AWS::Region'
               ignoreErrors: 'False'
             10-killWebInstaller:
               command: /etc/cfn/kill-mp-web-installer.sh
