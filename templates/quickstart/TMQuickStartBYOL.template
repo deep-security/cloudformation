@@ -14,14 +14,21 @@ Metadata:
           - DeepSecurityAdminName
           - DeepSecurityAdminPass
           - AWSKeyPairName
-          - ProtectedInstances
+          - LicenseKey
       - Label:
           default: Network Configuration
         Parameters:
           - AWSVPC
           - DeepSecuritySubnet
+          - DatabaseEngine
           - DatabaseSubnet1
           - DatabaseSubnet2
+      - Label:
+          default: RDS Configuration
+        Parameters:
+          - DatabaseEngine
+          - DatabaseAdminName
+          - DatabaseAdminPassword
       - Label:
           default: AWS Quick Start Configuration
         Parameters:
@@ -42,8 +49,16 @@ Metadata:
         default: Primary private subnet for RDS
       DatabaseSubnet2:
         default: Secondary private subnet for RDS
-      ProtectedInstances:
-        default: Number of instances you expect to protect with Deep Security Agents
+      DatabaseEngine:
+        default: Choose the backend database
+      DatabaseAdminName:
+        default: Administrator username for RDS Instance
+      DatabaseAdminPassword:
+        default: Administrator password for RDS Instance
+      LicenseKey:
+        default: >-
+          Deep Security License Key. May be left default to enter key after
+          deployment
       QSS3BucketName:
         default: Quick Start S3 Bucket Name
       QSS3KeyPrefix:
@@ -63,6 +78,16 @@ Parameters:
     MinLength: '1'
     MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
+  DatabaseEngine:
+    Description: >-
+      Choose PostgreSQL, Microsoft SQL or Oracle for Deep Security database
+      engine.
+    Type: String
+    Default: PostgreSQL
+    AllowedValues:
+      - Oracle
+      - MSSQL
+      - PostgreSQL
   DatabaseSubnet1:
     Description: >-
       Select a private subnet for the RDS database.  Must be a private subnet
@@ -79,6 +104,31 @@ Parameters:
     ConstraintDescription: >-
       RDS Subnet Groups must be comprised of 2 subnets in seperate availability
       zones within the specified VPC for deploying this template
+  DatabaseAdminName:
+    Default: dsadmin
+    Description: >-
+      The RDS Database administrator username to be used for the database
+      instance.
+    Type: String
+    MinLength: 1
+    MaxLength: 16
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: >-
+      Must begin with a letter and contain only alphanumeric characters. Min
+      length 1, max length 16
+  DatabaseAdminPassword:
+    NoEcho: true
+    Description: >-
+      The RDS Database administrator password. Must be 8-41 characters long and
+      can only contain alphanumeric characters or the following special
+      characters !^*-_+
+    Type: String
+    MinLength: 8
+    MaxLength: 41
+    AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
+    ConstraintDescription: >-
+      Can only contain alphanumeric characters or the following special
+      characters !^*-_+ Min length 8, max length 41
   DeepSecuritySubnet:
     Description: >-
       Select an existing Subnet for Deep Security Manager. Must be a public
@@ -111,13 +161,18 @@ Parameters:
     ConstraintDescription: >-
       Can only contain alphanumeric characters or the following special
       characters !^*-_+ Min length 8, max length 41
-  ProtectedInstances:
-    Description: Select how many instances would you like to protect.
+  LicenseKey:
+    Description: >-
+      If you have a Deep Security Enterprise license key, enter it here.
+      Including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG). If you did
+      not purchase all modules please leave blank and enter your key in the
+      console after launch.
     Type: String
-    AllowedValues:
-      - 1-100
-      - 101-250
-      - 251-500
+    MinLength: 0
+    MaxLength: 37
+    AllowedPattern: >-
+      (?:[A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5})?
+    ConstraintDescription: Key can only contain ASCII characters.
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-.]*[0-9a-zA-Z])*$
     ConstraintDescription: Quick Start bucket name can include numbers, lowercase
@@ -177,9 +232,6 @@ Mappings:
     us-east-2:
       Partition: aws
       QuickStartS3URL: https://s3.amazonaws.com
-    us-gov-west-1:
-      Partition: aws-us-gov
-      QuickStartS3URL: https://s3-us-gov-west-1.amazonaws.com
     us-west-1:
       Partition: aws
       QuickStartS3URL: https://s3.amazonaws.com
@@ -188,76 +240,154 @@ Mappings:
       QuickStartS3URL: https://s3.amazonaws.com
   DSMSIZE:
     us-east-1:
-      MMS: m4.xlarge
-    us-west-1:
-      MMS: m4.xlarge
-    us-west-2:
-      MMS: m4.xlarge
-    eu-west-1:
-      MMS: m4.xlarge
-    eu-central-1:
-      MMS: m4.xlarge
-    sa-east-1:
-      MMS: m4.xlarge
-    ap-northeast-1:
-      MMS: m4.xlarge
-    ap-southeast-1:
-      MMS: m4.xlarge
-    ap-southeast-2:
-      MMS: m4.xlarge
-    ap-northeast-2:
-      MMS: m4.xlarge
+      BYOL: m4.xlarge
     us-east-2:
-      MMS: m4.xlarge
+      BYOL: m4.xlarge
+    us-west-1:
+      BYOL: m4.xlarge
+    us-west-2:
+      BYOL: m4.xlarge
     ca-central-1:
-      MMS: m4.xlarge
+      BYOL: m4.xlarge
     ap-south-1:
-      MMS: m4.xlarge
+      BYOL: m4.xlarge
+    ap-northeast-2:
+      BYOL: m4.xlarge
+    ap-southeast-1:
+      BYOL: m4.xlarge
+    ap-southeast-2:
+      BYOL: m4.xlarge
+    ap-northeast-1:
+      BYOL: m4.xlarge
+    eu-central-1:
+      BYOL: m4.xlarge
+    eu-west-1:
+      BYOL: m4.xlarge
     eu-west-2:
-      MMS: m4.xlarge
-  RDSStorageSize:
-    1-100:
-      Size: '75'
-    101-250:
-      Size: '150'
-    251-500:
-      Size: '250'
+      BYOL: m4.xlarge
+    sa-east-1:
+      BYOL: m4.xlarge
   RDSInstanceSize:
     us-east-1:
-      Oracle: db.m4.large
-    us-west-1:
-      Oracle: db.m4.large
-    us-west-2:
-      Oracle: db.m4.large
-    eu-west-1:
-      Oracle: db.m4.large
-    eu-central-1:
-      Oracle: db.m4.large
-    sa-east-1:
-      Oracle: db.m3.large
-    ap-northeast-1:
-      Oracle: db.m4.large
-    ap-southeast-1:
-      Oracle: db.m4.large
-    ap-southeast-2:
-      Oracle: db.m4.large
-    ap-northeast-2:
-      Oracle: db.m4.large
+      Oracle: db.m4.xlarge
+      MSSQL: db.m4.xlarge
+      PostgreSQL: db.m4.xlarge
     us-east-2:
-      Oracle: db.m4.large
+      Oracle: db.m4.xlarge
+      MSSQL: db.m4.xlarge
+      PostgreSQL: db.m4.xlarge
+    us-west-1:
+      Oracle: db.m4.xlarge
+      MSSQL: db.m4.xlarge
+      PostgreSQL: db.m4.xlarge
+    us-west-2:
+      Oracle: db.m4.xlarge
+      MSSQL: db.m4.xlarge
+      PostgreSQL: db.m4.xlarge
     ca-central-1:
-      Oracle: db.m4.large
+      Oracle: db.m4.xlarge
+      MSSQL: db.m4.xlarge
+      PostgreSQL: db.m4.xlarge
     ap-south-1:
-      Oracle: db.m4.large
+      Oracle: db.m4.xlarge
+      MSSQL: db.m4.xlarge
+      PostgreSQL: db.m4.xlarge
+    ap-northeast-2:
+      Oracle: db.m4.xlarge
+      MSSQL: db.m4.xlarge
+      PostgreSQL: db.m4.xlarge
+    ap-southeast-1:
+      Oracle: db.m4.xlarge
+      MSSQL: db.m4.xlarge
+      PostgreSQL: db.m4.xlarge
+    ap-southeast-2:
+      Oracle: db.m4.xlarge
+      MSSQL: db.m4.xlarge
+      PostgreSQL: db.m4.xlarge
+    ap-northeast-1:
+      Oracle: db.m4.xlarge
+      MSSQL: db.m4.xlarge
+      PostgreSQL: db.m4.xlarge
+    eu-central-1:
+      Oracle: db.m4.xlarge
+      MSSQL: db.m4.xlarge
+      PostgreSQL: db.m4.xlarge
+    eu-west-1:
+      Oracle: db.m4.xlarge
+      MSSQL: db.m4.xlarge
+      PostgreSQL: db.m4.xlarge
     eu-west-2:
-      Oracle: db.m4.large
+      Oracle: db.m4.xlarge
+      MSSQL: db.m4.xlarge
+      PostgreSQL: db.m4.xlarge
+    sa-east-1:
+      Oracle: db.m3.xlarge
+      MSSQL: db.m3.xlarge
+      PostgreSQL: db.m3.xlarge
+  RDSMultiAZ:
+    us-east-1:
+      Oracle: 'true'
+      MSSQL: 'true'
+      PostgreSQL: 'true'
+    us-east-2:
+      Oracle: 'true'
+      MSSQL: 'true'
+      PostgreSQL: 'true'
+    us-west-1:
+      Oracle: 'true'
+      MSSQL: 'false'
+      PostgreSQL: 'true'
+    us-west-2:
+      Oracle: 'true'
+      MSSQL: 'true'
+      PostgreSQL: 'true'
+    ca-central-1:
+      Oracle: 'true'
+      MSSQL: 'true'
+      PostgreSQL: 'true'
+    ap-south-1:
+      Oracle: 'true'
+      MSSQL: 'true'
+      PostgreSQL: 'true'
+    ap-northeast-2:
+      Oracle: 'true'
+      MSSQL: 'true'
+      PostgreSQL: 'true'
+    ap-southeast-1:
+      Oracle: 'true'
+      MSSQL: 'false'
+      PostgreSQL: 'true'
+    ap-southeast-2:
+      Oracle: 'true'
+      MSSQL: 'true'
+      PostgreSQL: 'true'
+    ap-northeast-1:
+      Oracle: 'true'
+      MSSQL: 'true'
+      PostgreSQL: 'true'
+    eu-central-1:
+      Oracle: 'true'
+      MSSQL: 'false'
+      PostgreSQL: 'true'
+    eu-west-1:
+      Oracle: 'true'
+      MSSQL: 'true'
+      PostgreSQL: 'true'
+    eu-west-2:
+      Oracle: 'true'
+      MSSQL: 'true'
+      PostgreSQL: 'true'
+    sa-east-1:
+      Oracle: 'true'
+      MSSQL: 'false'
+      PostgreSQL: 'true'
 Resources:
   MasterMP:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL:
         !Sub
-        - ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/templates/marketplace/MasterMP.yaml
+        - ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/templates/marketplace/MasterMP.template
         - QuickStartS3URL:
             !FindInMap
             - AWSInfoRegionMap
@@ -270,32 +400,38 @@ Resources:
         DBIRDSInstanceSize: !FindInMap 
           - RDSInstanceSize
           - !Ref 'AWS::Region'
-          - Oracle
-        DBIStorageAllocation: !FindInMap 
-          - RDSStorageSize
-          - !Ref ProtectedInstances
-          - Size
+          - !Ref DatabaseEngine
+        DBIStorageAllocation: '250'
         DBPBackupDays: '5'
         DBPCreateDbInstance: 'Yes'
-        DBICAdminName: dsmadmin
-        DBICAdminPassword: !Ref DeepSecurityAdminPass
-        DBPEngine: Oracle
+        DBICAdminName: !Ref DatabaseAdminName
+        DBICAdminPassword: !Ref DatabaseAdminPassword
+        DBPEngine: !If 
+          - IsMSSQL
+          - SQL
+          - !Ref DatabaseEngine
         DBPEndpoint: ''
         DBPName: dsm
         DSCAdminName: !Ref DeepSecurityAdminName
         DSCAdminPassword: !Ref DeepSecurityAdminPass
-        DSIMultiNode: '1'
-        DSIPLicenseKey: XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
+        DSIMultiNode: '2'
+        DSIPLicenseKey: !If 
+          - NoLicenseKey
+          - XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
+          - !Ref LicenseKey
         DSIPHeartbeatPort: '4120'
         DSIPGUIPort: '443'
         DSIPInstanceType: !FindInMap 
           - DSMSIZE
           - !Ref 'AWS::Region'
-          - MMS
+          - BYOL
         DBISubnet1: !Ref DatabaseSubnet1
         DBISubnet2: !Ref DatabaseSubnet2
-        DSIPLicense: MMS
-        DBPMultiAZ: 'true'
+        DSIPLicense: BYOL
+        DBPMultiAZ: !FindInMap 
+          - RDSMultiAZ
+          - !Ref 'AWS::Region'
+          - !Ref DatabaseEngine
         CfnUrlPrefix:
           !Sub
           - ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/
@@ -304,6 +440,13 @@ Resources:
               - AWSInfoRegionMap
               - !Ref AWS::Region
               - QuickStartS3URL
+Conditions:
+  NoLicenseKey: !Equals 
+    - !Ref LicenseKey
+    - ''
+  IsMSSQL: !Equals 
+    - !Ref DatabaseEngine
+    - MSSQL
 Outputs:
   DeepSecurityConsole:
     Value: !GetAtt 

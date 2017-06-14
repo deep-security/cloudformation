@@ -25,8 +25,8 @@ Metadata:
       - Label:
           default: AWS Quick Start Configuration
         Parameters:
-          - QSS3BucketName
-          - QSS3KeyPrefix
+         - QSS3BucketName
+         - QSS3KeyPrefix
     ParameterLabels:
       AWSKeyPairName:
         default: EC2 Key Pair for SSH access
@@ -56,7 +56,6 @@ Parameters:
     Type: 'AWS::EC2::KeyPair::KeyName'
     MinLength: '1'
     MaxLength: '255'
-    AllowedPattern: '[-_a-zA-Z0-9]*'
     ConstraintDescription: Select an existing EC2 Key Pair.
   AWSVPC:
     Description: Select an existing VPC to deploy Deep Security Manager.
@@ -143,51 +142,51 @@ Parameters:
     Type: String
 Mappings:
   AWSInfoRegionMap:
-    ap-northeast-1:
-      Partition: aws
-      QuickStartS3URL: https://s3.amazonaws.com
-    ap-northeast-2:
-      Partition: aws
-      QuickStartS3URL: https://s3.amazonaws.com
-    ap-south-1:
-      Partition: aws
-      QuickStartS3URL: https://s3.amazonaws.com
-    ap-southeast-1:
-      Partition: aws
-      QuickStartS3URL: https://s3.amazonaws.com
-    ap-southeast-2:
-      Partition: aws
-      QuickStartS3URL: https://s3.amazonaws.com
-    ca-central-1:
-      Partition: aws
-      QuickStartS3URL: https://s3.amazonaws.com
-    eu-central-1:
-      Partition: aws
-      QuickStartS3URL: https://s3.amazonaws.com
-    eu-west-1:
-      Partition: aws
-      QuickStartS3URL: https://s3.amazonaws.com
-    eu-west-2:
-      Partition: aws
-      QuickStartS3URL: https://s3.amazonaws.com
-    sa-east-1:
-      Partition: aws
-      QuickStartS3URL: https://s3.amazonaws.com
-    us-east-1:
-      Partition: aws
-      QuickStartS3URL: https://s3.amazonaws.com
-    us-east-2:
-      Partition: aws
-      QuickStartS3URL: https://s3.amazonaws.com
-    us-gov-west-1:
-      Partition: aws-us-gov
-      QuickStartS3URL: https://s3-us-gov-west-1.amazonaws.com
-    us-west-1:
-      Partition: aws
-      QuickStartS3URL: https://s3.amazonaws.com
-    us-west-2:
-      Partition: aws
-      QuickStartS3URL: https://s3.amazonaws.com
+      ap-northeast-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      ap-northeast-2:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      ap-south-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      ap-southeast-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      ap-southeast-2:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      ca-central-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      eu-central-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      eu-west-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      eu-west-2:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      sa-east-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      us-east-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      us-east-2:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      us-gov-west-1:
+        Partition: aws-us-gov
+        QuickStartS3URL: https://s3-us-gov-west-1.amazonaws.com
+      us-west-1:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
+      us-west-2:
+        Partition: aws
+        QuickStartS3URL: https://s3.amazonaws.com
   DSMSIZE:
     us-east-1:
       '1': m4.large
@@ -259,11 +258,6 @@ Mappings:
       '2': m4.large
       '3': m4.xlarge
       '4': m4.xlarge
-    us-gov-west-1:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
   RDSStorageSize:
     1-100:
       Size: '50'
@@ -279,52 +273,17 @@ Mappings:
       '2': db.m4.large
       '3': db.m4.xlarge
       '4': db.m4.xlarge
+    us-east-2:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
     us-west-1:
       '1': db.m4.large
       '2': db.m4.large
       '3': db.m4.xlarge
       '4': db.m4.xlarge
     us-west-2:
-      '1': db.m4.large
-      '2': db.m4.large
-      '3': db.m4.xlarge
-      '4': db.m4.xlarge
-    eu-west-1:
-      '1': db.m4.large
-      '2': db.m4.large
-      '3': db.m4.xlarge
-      '4': db.m4.xlarge
-    eu-central-1:
-      '1': db.m4.large
-      '2': db.m4.large
-      '3': db.m4.xlarge
-      '4': db.m4.xlarge
-    sa-east-1:
-      '1': db.m3.large
-      '2': db.m3.large
-      '3': db.m3.xlarge
-      '4': db.m3.xlarge
-    ap-northeast-1:
-      '1': db.m4.large
-      '2': db.m4.large
-      '3': db.m4.xlarge
-      '4': db.m4.xlarge
-    ap-southeast-1:
-      '1': db.m4.large
-      '2': db.m4.large
-      '3': db.m4.xlarge
-      '4': db.m4.xlarge
-    ap-southeast-2:
-      '1': db.m4.large
-      '2': db.m4.large
-      '3': db.m4.xlarge
-      '4': db.m4.xlarge
-    ap-northeast-2:
-      '1': db.m4.large
-      '2': db.m4.large
-      '3': db.m4.xlarge
-      '4': db.m4.xlarge
-    us-east-2:
       '1': db.m4.large
       '2': db.m4.large
       '3': db.m4.xlarge
@@ -339,12 +298,42 @@ Mappings:
       '2': db.m4.large
       '3': db.m4.xlarge
       '4': db.m4.xlarge
+    ap-northeast-2:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-southeast-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-southeast-2:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-northeast-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    eu-central-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    eu-west-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
     eu-west-2:
       '1': db.m4.large
       '2': db.m4.large
       '3': db.m4.xlarge
       '4': db.m4.xlarge
-    us-gov-west-1:
+    sa-east-1:
       '1': db.m3.large
       '2': db.m3.large
       '3': db.m3.xlarge
@@ -359,12 +348,13 @@ Mappings:
     1001-2000:
       Size: '4'
 Resources:
-  MasterRH:
+  MasterMP:
     Type: 'AWS::CloudFormation::Stack'
+    Condition: PerHostSupportedRegion
     Properties:
       TemplateURL:
         !Sub
-        - ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/templates/rhel/MasterRH.yaml
+        - ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/templates/marketplace/MasterMP.template
         - QuickStartS3URL:
             !FindInMap
             - AWSInfoRegionMap
@@ -407,6 +397,7 @@ Resources:
             - Size
         DBISubnet1: !Ref DatabaseSubnet1
         DBISubnet2: !Ref DatabaseSubnet2
+        DSIPLicense: PerHost
         DBPMultiAZ: 'true'
         CfnUrlPrefix:
           !Sub
@@ -416,8 +407,13 @@ Resources:
               - AWSInfoRegionMap
               - !Ref AWS::Region
               - QuickStartS3URL
+Conditions:
+  PerHostSupportedRegion: !Not
+    - !Equals
+      - !Ref 'AWS::Region'
+      - us-gov-west-1
 Outputs:
   DeepSecurityConsole:
     Value: !GetAtt 
-      - MasterRH
+      - MasterMP
       - Outputs.DeepSecurityConsole

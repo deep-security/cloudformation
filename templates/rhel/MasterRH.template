@@ -328,7 +328,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - templates/rhel/DSMRH.yaml
+          - templates/rhel/DSMRH.template
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -371,7 +371,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - templates/rhel/DSMRH.yaml
+          - templates/rhel/DSMRH.template
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -409,7 +409,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - templates/rhel/DSMRH.yaml
+          - templates/rhel/DSMRH.template
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -448,7 +448,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - templates/rhel/DSMRH.yaml
+          - templates/rhel/DSMRH.template
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -483,7 +483,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - templates/common/db/DSDBAbstract.yaml
+          - templates/common/db/DSDBAbstract.template
       Parameters:
         DBPName: !Ref DBPName
         DBIStorageAllocation: !Ref DBIStorageAllocation
@@ -507,7 +507,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - templates/common/security-groups/RDSSecurityGroup.yaml
+          - templates/common/security-groups/RDSSecurityGroup.template
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DBPEngine: !Ref DBPEngine
@@ -520,7 +520,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - templates/common/security-groups/DSMSecurityGroup.yaml
+          - templates/common/security-groups/DSMSecurityGroup.template
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DSIPGUIPort: !Ref DSIPGUIPort
@@ -531,7 +531,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - templates/common/DSMELB.yaml
+          - templates/common/DSMELB.template
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DSIPHeartbeatPort: !Ref DSIPHeartbeatPort
@@ -545,7 +545,7 @@ Resources:
       TemplateURL: !Join 
         - ''
         - - !Ref CfnUrlPrefix
-          - templates/common/security-groups/DSMSGIngressRules.yaml
+          - templates/common/security-groups/DSMSGIngressRules.template
       Parameters:
         DSMSG: !GetAtt 
           - DSIDSMSecurityGroup
