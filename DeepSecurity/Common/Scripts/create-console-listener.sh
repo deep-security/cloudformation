@@ -33,4 +33,4 @@ done
 echo 'load balancer listener created'
 
 aws elb create-load-balancer-policy --load-balancer-name $1 --policy-name DSMConsoleStickySessions --policy-type-name LBCookieStickinessPolicyType --region $6 --policy-attributes AttributeName=CookieExpirationPeriod,AttributeValue=600
-aws elb set-load-balancer-policies-of-listener --load-balancer-name $1 --load-balancer-port 443 --policy-names DSMConsoleStickySessions --region $6
+aws elb set-load-balancer-policies-of-listener --load-balancer-name $1 --load-balancer-port $3 --policy-names DSMConsoleStickySessions --region $6
