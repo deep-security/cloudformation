@@ -78,5 +78,5 @@ echo -e "policyid for Deep Security Virtual Appliance Policy is $policyid\n" >> 
 
 
 ## log out
-curl -k -X DELETE https://localhost:$3/rest/authentication/logout?sID="$SID"
+curl -k -X DELETE https://localhost:$4/rest/authentication/logout?sID="$SID"
 exit 
