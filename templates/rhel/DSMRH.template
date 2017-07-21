@@ -423,9 +423,9 @@ Resources:
                 http://files.trendmicro.com/products/deepsecurity/en/10.1/Agent-RedHat_EL6-10.1.0-203.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/KernelSupport-RedHat_EL6-10.0.0-2106.x86_64.zip:
+            /tmp/KernelSupport-RedHat_EL6-10.1.0-224.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-RedHat_EL6-10.0.0-2106.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/10.1/KernelSupport-RedHat_EL6-10.1.0-224.x86_64.zip
               owner: root
               mode: '000600'
             /tmp/Agent-RedHat_EL7-10.1.0-203.x86_64.zip:
@@ -433,9 +433,9 @@ Resources:
                 http://files.trendmicro.com/products/deepsecurity/en/10.1/Agent-RedHat_EL7-10.1.0-203.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/KernelSupport-RedHat_EL7-10.0.0-2105.x86_64.zip:
+            /tmp/KernelSupport-RedHat_EL7-10.1.0-225.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-RedHat_EL7-10.0.0-2105.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/10.1/KernelSupport-RedHat_EL7-10.1.0-225.x86_64.zip
               owner: root
               mode: '000600'
             /tmp/Agent-Ubuntu_16.04-10.1.0-203.x86_64.zip:
@@ -443,9 +443,9 @@ Resources:
                 http://files.trendmicro.com/products/deepsecurity/en/10.1/Agent-Ubuntu_16.04-10.1.0-203.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/KernelSupport-Ubuntu_16.04-10.0.0-2115.x86_64.zip:
+            /tmp/KernelSupport-Ubuntu_16.04-10.0.0-2372.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-Ubuntu_16.04-10.0.0-2115.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-Ubuntu_16.04-10.0.0-2372.x86_64.zip
               owner: root
               mode: '000600'
             /tmp/Agent-Ubuntu_14.04-10.0.0-2094.x86_64.zip:
@@ -463,9 +463,9 @@ Resources:
                 http://files.trendmicro.com/products/deepsecurity/en/10.1/Agent-amzn1-10.1.0-203.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/KernelSupport-amzn1-10.0.0-2111.x86_64.zip:
+            /tmp/KernelSupport-amzn1-10.1.0-222.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-amzn1-10.0.0-2111.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/10.1/KernelSupport-amzn1-10.1.0-222.x86_64.zip
               owner: root
               mode: '000600'
             /tmp/Agent-Windows-10.1.0-205.x86_64.zip:
