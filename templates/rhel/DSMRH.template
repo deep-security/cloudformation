@@ -413,14 +413,14 @@ Resources:
               command: mkdir /opt/dsm/; echo -Xmx12g >> /opt/dsm/dsm_s.vmoptions
         prepDSMInstall:
           files:
-            /tmp/Manager-Linux-10.0.3259.x64.sh:
+            /tmp/Manager-Linux-10.1.406.x64.sh:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/Manager-Linux-10.0.3259.x64.sh
+                http://files.trendmicro.com/products/deepsecurity/en/10.1/Manager-Linux-10.1.406.x64.sh
               owner: root
               mode: '000700'
-            /tmp/Agent-RedHat_EL6-10.0.0-2094.x86_64.zip:
+            /tmp/Agent-RedHat_EL6-10.1.0-203.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-RedHat_EL6-10.0.0-2094.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/10.1/Agent-RedHat_EL6-10.1.0-203.x86_64.zip
               owner: root
               mode: '000600'
             /tmp/KernelSupport-RedHat_EL6-10.0.0-2106.x86_64.zip:
@@ -428,9 +428,9 @@ Resources:
                 http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-RedHat_EL6-10.0.0-2106.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/Agent-RedHat_EL7-10.0.0-2094.x86_64.zip:
+            /tmp/Agent-RedHat_EL7-10.1.0-203.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-RedHat_EL7-10.0.0-2094.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/10.1/Agent-RedHat_EL7-10.1.0-203.x86_64.zip
               owner: root
               mode: '000600'
             /tmp/KernelSupport-RedHat_EL7-10.0.0-2105.x86_64.zip:
@@ -438,9 +438,9 @@ Resources:
                 http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-RedHat_EL7-10.0.0-2105.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/Agent-Ubuntu_16.04-10.0.0-2094.x86_64.zip:
+            /tmp/Agent-Ubuntu_16.04-10.1.0-203.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-Ubuntu_16.04-10.0.0-2094.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/10.1/Agent-Ubuntu_16.04-10.1.0-203.x86_64.zip
               owner: root
               mode: '000600'
             /tmp/KernelSupport-Ubuntu_16.04-10.0.0-2115.x86_64.zip:
@@ -458,9 +458,9 @@ Resources:
                 http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-Ubuntu_14.04-10.0.0-2114.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/Agent-amzn1-10.0.0-2094.x86_64.zip:
+            /tmp/Agent-amzn1-10.1.0-203.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-amzn1-10.0.0-2094.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/10.1/Agent-amzn1-10.1.0-203.x86_64.zip
               owner: root
               mode: '000600'
             /tmp/KernelSupport-amzn1-10.0.0-2111.x86_64.zip:
@@ -468,9 +468,9 @@ Resources:
                 http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-amzn1-10.0.0-2111.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/Agent-Windows-10.0.0-2094.x86_64.zip:
+            /tmp/Agent-Windows-10.1.0-205.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-Windows-10.0.0-2094.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/10.1/Agent-Windows-10.1.0-205.x86_64.zip
               owner: root
               mode: '000600'
             /etc/cfn/dsmConfiguration.properties:
@@ -583,7 +583,7 @@ Resources:
               ignoreErrors: 'false'
             1-install-DSM:
               command: >-
-                cd /tmp; sh Manager-Linux-10.0.3259.x64.sh -q -console -varfile
+                cd /tmp; sh Manager-Linux-10.1.406.x64.sh -q -console -varfile
                 /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog
               ignoreErrors: 'false'
             2-fix-for-systemd:
