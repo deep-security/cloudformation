@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.3: Trend Micro Deep Security AWS RHEL master template.'
+Description: 'v5.4: Trend Micro Deep Security AWS RHEL master template.'
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
@@ -311,9 +311,24 @@ Parameters:
       - Internet-facing
       - Internal
     Default: Internet-facing
-  CfnUrlPrefix:
+  QSS3BucketName:
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    ConstraintDescription: Quick Start bucket name can include numbers, lowercase letters,
+      uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).
+    Default: trend-micro-quick-start
+    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
+      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
+      It cannot start or end with a hyphen (-).
     Type: String
-    Default: 'https://s3.amazonaws.com/trend-micro-quick-start/latest/'
+  QSS3KeyPrefix:
+    AllowedPattern: ^[0-9a-zA-Z-/]*$
+    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
+      uppercase letters, hyphens (-), and forward slash (/).",
+    Default: latest/
+    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix can
+      include numbers, lowercase letters, uppercase letters, hyphens (-), and forward
+      slash (/).
+    Type: String
   DSProxyUrl:
     Type: String
     Default: ''
@@ -325,10 +340,13 @@ Resources:
       - DSIDSMSecurityGroup
     Condition: LaunchRDSInstance
     Properties:
-      TemplateURL: !Join 
-        - ''
-        - - !Ref CfnUrlPrefix
-          - templates/rhel/DSMRH.template
+      TemplateURL: !Sub
+          - >-
+            https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/rhel/dsm-rhel.template
+          - QSS3Region: !If
+              - GovCloudCondition
+              - s3-us-gov-west-1
+              - s3
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -359,7 +377,8 @@ Resources:
           - DSIELB
           - Outputs.ELBFQDN
         DSELBPosture: !Ref DSELBPosture
-        CfnUrlPrefix: !Ref CfnUrlPrefix
+        QSS3BucketName: !Ref QSS3BucketName
+        QSS3KeyPrefix: !Ref QSS3KeyPrefix
         DSProxyUrl: !Ref DSProxyUrl
   DSMNode2:
     Type: 'AWS::CloudFormation::Stack'
@@ -368,10 +387,14 @@ Resources:
       - DSM1CompleteWaitCondition
     Condition: DSMNode2DB
     Properties:
-      TemplateURL: !Join 
-        - ''
-        - - !Ref CfnUrlPrefix
-          - templates/rhel/DSMRH.template
+      TemplateURL:
+        Fn::Sub:
+        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/rhel/dsm-rhel.template
+        - QSS3Region:
+            !If
+            - GovCloudCondition
+            - s3-us-gov-west-1
+            - s3
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -398,7 +421,8 @@ Resources:
           - DSIELB
           - Outputs.DSIELB
         DSELBPosture: !Ref DSELBPosture
-        CfnUrlPrefix: !Ref CfnUrlPrefix
+        QSS3BucketName: !Ref QSS3BucketName
+        QSS3KeyPrefix: !Ref QSS3KeyPrefix
         DSProxyUrl: !Ref DSProxyUrl
   DSMNode1NoDB:
     Type: 'AWS::CloudFormation::Stack'
@@ -406,10 +430,14 @@ Resources:
       - DSIDSMSecurityGroup
     Condition: DoNotLaunchRDSInstance
     Properties:
-      TemplateURL: !Join 
-        - ''
-        - - !Ref CfnUrlPrefix
-          - templates/rhel/DSMRH.template
+      TemplateURL:
+        Fn::Sub:
+        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/rhel/dsm-rhel.template
+        - QSS3Region:
+            !If
+            - GovCloudCondition
+            - s3-us-gov-west-1
+            - s3
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -438,17 +466,22 @@ Resources:
           - DSIELB
           - Outputs.ELBFQDN
         DSELBPosture: !Ref DSELBPosture
-        CfnUrlPrefix: !Ref CfnUrlPrefix
+        QSS3BucketName: !Ref QSS3BucketName
+        QSS3KeyPrefix: !Ref QSS3KeyPrefix
         DSProxyUrl: !Ref DSProxyUrl
   DSMNode2NoDB:
     Type: 'AWS::CloudFormation::Stack'
     DependsOn: DSM1NoDBCompleteWaitCondition
     Condition: DSMNode2NoDB
     Properties:
-      TemplateURL: !Join 
-        - ''
-        - - !Ref CfnUrlPrefix
-          - templates/rhel/DSMRH.template
+      TemplateURL:
+        Fn::Sub:
+        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/rhel/dsm-rhel.template
+        - QSS3Region:
+            !If
+            - GovCloudCondition
+            - s3-us-gov-west-1
+            - s3
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -473,17 +506,22 @@ Resources:
           - DSIELB
           - Outputs.DSIELB
         DSELBPosture: !Ref DSELBPosture
-        CfnUrlPrefix: !Ref CfnUrlPrefix
+        QSS3BucketName: !Ref QSS3BucketName
+        QSS3KeyPrefix: !Ref QSS3KeyPrefix
         DSProxyUrl: !Ref DSProxyUrl
   DSDatabaseAbstract:
     Type: 'AWS::CloudFormation::Stack'
     Condition: LaunchRDSInstance
     DependsOn: DSIRDSSecurityGroup
     Properties:
-      TemplateURL: !Join 
-        - ''
-        - - !Ref CfnUrlPrefix
-          - templates/common/db/DSDBAbstract.template
+      TemplateURL:
+        Fn::Sub:
+        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/common/db/ds-db-abstract.template
+        - QSS3Region:
+            !If
+            - GovCloudCondition
+            - s3-us-gov-west-1
+            - s3
       Parameters:
         DBPName: !Ref DBPName
         DBIStorageAllocation: !Ref DBIStorageAllocation
@@ -499,15 +537,20 @@ Resources:
         DBPBackupDays: !Ref DBPBackupDays
         DBISubnet1: !Ref DBISubnet1
         DBISubnet2: !Ref DBISubnet2
-        CfnUrlPrefix: !Ref CfnUrlPrefix
+        QSS3BucketName: !Ref QSS3BucketName
+        QSS3KeyPrefix: !Ref QSS3KeyPrefix
   DSIRDSSecurityGroup:
     Type: 'AWS::CloudFormation::Stack'
     Condition: LaunchRDSInstance
     Properties:
-      TemplateURL: !Join 
-        - ''
-        - - !Ref CfnUrlPrefix
-          - templates/common/security-groups/RDSSecurityGroup.template
+      TemplateURL:
+        Fn::Sub:
+        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/common/security-groups/rds-security-group.template
+        - QSS3Region:
+            !If
+            - GovCloudCondition
+            - s3-us-gov-west-1
+            - s3
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DBPEngine: !Ref DBPEngine
@@ -517,10 +560,14 @@ Resources:
   DSIDSMSecurityGroup:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
-      TemplateURL: !Join 
-        - ''
-        - - !Ref CfnUrlPrefix
-          - templates/common/security-groups/DSMSecurityGroup.template
+      TemplateURL:
+        Fn::Sub:
+        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/common/security-groups/dsm-security-group.template
+        - QSS3Region:
+            !If
+            - GovCloudCondition
+            - s3-us-gov-west-1
+            - s3
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DSIPGUIPort: !Ref DSIPGUIPort
@@ -528,24 +575,33 @@ Resources:
   DSIELB:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
-      TemplateURL: !Join 
-        - ''
-        - - !Ref CfnUrlPrefix
-          - templates/common/DSMELB.template
+      TemplateURL:
+        Fn::Sub:
+        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/common/dsm-elb.template
+        - QSS3Region:
+            !If
+            - GovCloudCondition
+            - s3-us-gov-west-1
+            - s3
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DSIPHeartbeatPort: !Ref DSIPHeartbeatPort
         DSIPGUIPort: !Ref DSIPGUIPort
         DSISubnetID: !Ref DSISubnetID
         DSELBPosture: !Ref DSELBPosture
-        CfnUrlPrefix: !Ref CfnUrlPrefix
+        QSS3BucketName: !Ref QSS3BucketName
+        QSS3KeyPrefix: !Ref QSS3KeyPrefix
   DSIDSMSecurityGroupIngressRules:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
-      TemplateURL: !Join 
-        - ''
-        - - !Ref CfnUrlPrefix
-          - templates/common/security-groups/DSMSGIngressRules.template
+      TemplateURL:
+        Fn::Sub:
+        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/common/security-groups/dsm-sg-ingress-rules.template
+        - QSS3Region:
+            !If
+            - GovCloudCondition
+            - s3-us-gov-west-1
+            - s3
       Parameters:
         DSMSG: !GetAtt 
           - DSIDSMSecurityGroup
@@ -596,6 +652,10 @@ Conditions:
   InternetFacingELB: !Equals 
     - !Ref DSELBPosture
     - Internet-facing
+  GovCloudCondition:
+    !Equals
+    - !Ref AWS::Region
+    - us-gov-west-1
 Outputs:
   DeepSecurityConsole:
     Value: !Join 
