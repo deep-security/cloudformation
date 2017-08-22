@@ -1,23 +1,25 @@
+---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.3: This template deploys an MSSQL RDS Instance for Deep Security Manager'
+Description: 'v5.4: This template deploys an MSSQL RDS Instance for Deep Security
+  Manager. (qs-1ngr590ij)'
 Parameters:
   DBIRDSInstanceSize:
     Default: db.m3.large
     Description: Trend Micro Deep Security Database instance class
     Type: String
     AllowedValues:
-      - db.m4.large
-      - db.m4.xlarge
-      - db.m4.2xlarge
-      - db.m3.medium
-      - db.m3.large
-      - db.m3.xlarge
-      - db.m3.2xlarge
-      - db.r3.large
-      - db.r3.xlarge
-      - db.r3.2xlarge
-      - db.r3.4xlarge
-      - db.r3.8xlarge
+    - db.m4.large
+    - db.m4.xlarge
+    - db.m4.2xlarge
+    - db.m3.medium
+    - db.m3.large
+    - db.m3.xlarge
+    - db.m3.2xlarge
+    - db.r3.large
+    - db.r3.xlarge
+    - db.r3.2xlarge
+    - db.r3.4xlarge
+    - db.r3.8xlarge
     ConstraintDescription: must select a valid database instance type.
   DBIStorageAllocation:
     Default: 10
@@ -40,7 +42,8 @@ Parameters:
     MinLength: 1
     MaxLength: 16
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
   DBICAdminPassword:
     NoEcho: true
     Description: Password to be used for the Oracle database admin account
@@ -48,9 +51,8 @@ Parameters:
     MinLength: 8
     MaxLength: 41
     AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
-    ConstraintDescription: >-
-      Can only contain alphanumeric characters or the following special
-      characters !^*-_+ Min length 8, max length 41
+    ConstraintDescription: Can only contain alphanumeric characters or the following
+      special characters !^*-_+ Min length 8, max length 41
   DBPName:
     Default: dsm
     Description: Name to be assigned to the database
@@ -58,26 +60,27 @@ Parameters:
     MinLength: 1
     MaxLength: 64
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
   StorageType:
     Default: gp2
     Type: String
     AllowedValues:
-      - gp2
+    - gp2
   RDSSG:
-    Type: 'AWS::EC2::SecurityGroup::Id'
+    Type: AWS::EC2::SecurityGroup::Id
   DBISubnetGroupName:
     Type: String
   MultiAZ:
     Description: Use Multi-AZ or SQL Mirroring Option Group for RDS Instance
     Type: String
     AllowedValues:
-      - 'true'
-      - 'false'
+    - 'true'
+    - 'false'
     Default: 'false'
 Resources:
   DSDatabase:
-    Type: 'AWS::RDS::DBInstance'
+    Type: AWS::RDS::DBInstance
     Properties:
       LicenseModel: license-included
       PubliclyAccessible: false
@@ -88,28 +91,26 @@ Resources:
       MasterUsername: !Ref DBICAdminName
       MasterUserPassword: !Ref DBICAdminPassword
       VPCSecurityGroups:
-        - !Ref RDSSG
+      - !Ref RDSSG
       MultiAZ: !Ref MultiAZ
       BackupRetentionPeriod: !Ref DBPBackupDays
       DBSubnetGroupName: !Ref DBISubnetGroupName
       StorageType: !Ref StorageType
       StorageEncrypted: true
       Tags:
-        - Key: Application
-          Value: Deep Security Manager
+      - Key: Application
+        Value: Deep Security Manager
 Conditions:
-  DBISubnetGroupNameSpecified: !Not 
-    - !Equals 
+  DBISubnetGroupNameSpecified:
+    !Not
+    - !Equals
       - !Ref DBISubnetGroupName
       - ''
 Outputs:
   DSDBEndpoint:
     Description: Endpoint to be passed to DSM installation properties file
-    Value: !GetAtt 
-      - DSDatabase
-      - Endpoint.Address
+    Value: !GetAtt DSDatabase.Endpoint.Address
   DSDBPort:
     Description: Port to be passed to DSM installation properties file
-    Value: !GetAtt 
-      - DSDatabase
-      - Endpoint.Port
+    Value: !GetAtt DSDatabase.Endpoint.Port
+...
