@@ -413,11 +413,21 @@ Resources:
               command: mkdir /opt/dsm/; echo -Xmx12g >> /opt/dsm/dsm_s.vmoptions
         prepDSMInstall:
           files:
-            /tmp/Manager-Linux-10.1.406.x64.sh:
+            /tmp/Manager-Linux-10.2.304.x64.sh:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/10.1/Manager-Linux-10.1.406.x64.sh
+                https://s3.amazonaws.com/424d57/ds10.2_RC3/Manager-Linux-10.2.304.x64.sh
               owner: root
               mode: '000700'
+            /tmp/Agent-RedHat_EL6-10.2.0-328.x86_64.zip:
+              source: >-
+                https://s3.amazonaws.com/424d57/ds10.2_RC3/Agent-RedHat_EL6-10.2.0-328.x86_64.zip
+              owner: root
+              mode: '000600'
+            /tmp/KernelSupport-RedHat_EL6-10.2.0-328.x86_64.zip:
+              source: >-
+                https://s3.amazonaws.com/424d57/ds10.2_RC3/KernelSupport-RedHat_EL6-10.2.0-328.x86_64.zip
+              owner: root
+              mode: '000600'
             /tmp/Agent-RedHat_EL6-10.1.0-203.x86_64.zip:
               source: >-
                 http://files.trendmicro.com/products/deepsecurity/en/10.1/Agent-RedHat_EL6-10.1.0-203.x86_64.zip
