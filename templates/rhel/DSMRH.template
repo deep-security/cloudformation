@@ -603,7 +603,7 @@ Resources:
               ignoreErrors: 'false'
             1-install-DSM:
               command: >-
-                cd /tmp; sh Manager-Linux-10.1.406.x64.sh -q -console -varfile
+                cd /tmp; sh Manager-Linux-10.2.304.x64.sh -q -console -varfile
                 /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog
               ignoreErrors: 'false'
             2-fix-for-systemd:
