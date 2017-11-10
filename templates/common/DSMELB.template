@@ -78,11 +78,10 @@ Resources:
           InstancePort: '4122'
           Protocol: TCP
       HealthCheck:
-        Target: !Join 
+        Target: !Join
           - ''
-          - - 'HTTPS:'
+          - - 'SSL:'
             - !Ref DSIPGUIPort
-            - /rest/status/manager/ping
         HealthyThreshold: '3'
         UnhealthyThreshold: '5'
         Interval: '30'
