@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  v5.4: Smart protection server template (qs-1ngr590jj).
+  v5.5: Smart protection server template (qs-1ngr590jj).
 Parameters:
   AWSIKeyPairName:
     Description: Existing key pair to use for connecting to your Smart Protection Server
@@ -74,6 +74,8 @@ Mappings:
       '64': ami-f2653f97
     ap-south-1:
       '64': ami-6e304701
+    eu-west-2:
+      '64': ami-a81804cc
 Resources:
   SPS:
     Type: 'AWS::EC2::Instance'
