@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.5: Deploys Deep Security Manager to AWS. This template is designed
+Description: 'v5.6: Deploys Deep Security Manager to AWS. This template is designed
   to be nested in a stack, and requires several passed parameters to launch. **WARNING**
   This template creates Amazon EC2 instances and related resources. You will be billed
   for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
@@ -89,6 +89,8 @@ Parameters:
     - i2.4xlarge
     - i2.8xlarge
     - g2.2xlarge
+    - r4.large
+    - r4.xlarge
   DBICAdminName:
     Default: dsadmin
     Description: Admin account username to be used for the database instance
@@ -210,49 +212,51 @@ Parameters:
 Mappings:
   DSMAMI:
     us-east-1:
-      PerHost: ami-453d3353
-      BYOL: ami-02414914
+      PerHost: ami-a394f0d9
+      BYOL: ami-c18befbb
     us-east-2:
-      PerHost: ami-34a78651
-      BYOL: ami-b5b796d0
+      PerHost: ami-07012862
+      BYOL: ami-560e2733
     us-west-1:
-      PerHost: ami-c3032da3
-      BYOL: ami-57e2cc37
+      PerHost: ami-12d9e372
+      BYOL: ami-fed8e29e
     us-west-2:
-      PerHost: ami-3b213d42
-      BYOL: ami-2aabb753
+      PerHost: ami-ed76ad95
+      BYOL: ami-9972a9e1
     ca-central-1:
-      PerHost: ami-1850ef7c
-      BYOL: ami-4b50ef2f
+      PerHost: ami-1c1aa178
+      BYOL: ami-cc269da8
     ap-south-1:
-      PerHost: ami-75add41a
-      BYOL: ami-8795ece8
+      PerHost: ami-26723b49
+      BYOL: ami-09743d66
     ap-northeast-2:
-      PerHost: ami-e517c98b
-      BYOL: ami-7d07d913
+      PerHost: ami-3ad17754
+      BYOL: ami-3ad17754
     ap-southeast-1:
-      PerHost: ami-e2a93e81
-      BYOL: ami-1f27b07c
+      PerHost: ami-ffebb79c
+      BYOL: ami-cbeab6a8
     ap-southeast-2:
-      PerHost: ami-2e95884d
-      BYOL: ami-40aeb323
+      PerHost: ami-dece3abc
+      BYOL: ami-ebcf3b89
     ap-northeast-1:
-      PerHost: ami-7b475d1c
-      BYOL: ami-db9a80bc
+      PerHost: ami-04f77362
+      BYOL: ami-0af5716c
     eu-central-1:
-      PerHost: ami-8d0cafe2
-      BYOL: ami-b0c466df
+      PerHost: ami-16af2179
+      BYOL: ami-c1911fae
     eu-west-1:
-      PerHost: ami-3e5ebc47
-      BYOL: ami-ebd13c92
+      PerHost: ami-f71ba48e
+      BYOL: ami-611aa518
     eu-west-2:
-      PerHost: ami-9e8492fa
-      BYOL: ami-7a8d9b1e
+      PerHost: ami-222f3146
+      BYOL: ami-8e2f31ea
+    eu-west-3:
+      BYOL: ami-1364d36e
     sa-east-1:
-      PerHost: ami-1f275373
-      BYOL: ami-3d057151
+      PerHost: ami-f02d6a9c
+      BYOL: ami-f02d6a9c
     us-gov-west-1:
-      BYOL: ami-f5de5e94
+      BYOL: ami-5bc8463a
   DSMSIZE:
     us-east-1:
       PerHost: m4.xlarge
@@ -293,11 +297,12 @@ Mappings:
     eu-west-2:
       PerHost: m4.xlarge
       BYOL: m4.xlarge
+    eu-west-3:
+      BYOL: r4.xlarge
     sa-east-1:
       PerHost: m4.xlarge
       BYOL: m4.xlarge
     us-gov-west-1:
-      PerHost: m4.xlarge
       BYOL: m4.xlarge
   DSMDBMap:
     SQL:

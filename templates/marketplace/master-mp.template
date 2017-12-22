@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.5: Trend Micro Deep Security Marketplace master template. For more
+Description: 'v5.6: Trend Micro Deep Security Marketplace master template. For more
   information see http://aws.trendmicro.com. (qs-1ngr590jt)'
 Metadata:
   AWS::CloudFormation::Interface:
@@ -135,6 +135,8 @@ Parameters:
     - db.r3.2xlarge
     - db.r3.4xlarge
     - db.r3.8xlarge
+    - db.r4.large
+    - db.r4.xlarge
     ConstraintDescription: must select a valid database instance type.
   DBIStorageAllocation:
     Default: 100
@@ -278,6 +280,8 @@ Parameters:
     - i2.4xlarge
     - i2.8xlarge
     - g2.2xlarge
+    - r4.large
+    - r4.xlarge
   DBISubnet1:
     Description: Choose a primary private subnet for RDS instance. Must be in same
       AZ as Deep Security Manager
@@ -297,10 +301,6 @@ Parameters:
     AllowedValues:
     - PerHost
     - BYOL
-    - '25'
-    - '50'
-    - '100'
-    - '200'
   DBPMultiAZ:
     Description: Use Multi-AZ or SQL Mirroring Option Group for RDS Instance
     Type: String
