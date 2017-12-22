@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.5: This template deploys an Oracle RDS instance for Deep Security
+Description: 'v5.6: This template deploys an Oracle RDS instance for Deep Security
   Manager. (qs-1ngr590i9)'
 Parameters:
   DBIRDSInstanceSize:
@@ -20,6 +20,8 @@ Parameters:
     - db.r3.2xlarge
     - db.r3.4xlarge
     - db.r3.8xlarge
+    - db.r4.large
+    - db.r4.xlarge
     ConstraintDescription: must select a valid database instance type.
   DBIStorageAllocation:
     Default: 10
