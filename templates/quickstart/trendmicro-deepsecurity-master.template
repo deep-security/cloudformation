@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'QS(0011) - v5.5: Quick Start that deploys Trend Micro Deep Security
+Description: 'QS(0011) - v5.6: Quick Start that deploys Trend Micro Deep Security
   into an existing VPC with a Multi-AZ PostgreSQL RDS instance  **WARNING** This template
   uses images from the AWS Marketplace and an active subscription is required - Please
   see the Quick Start documentation for more details. You will be billed for the AWS
@@ -350,14 +350,15 @@ Resources:
         QSS3KeyPrefix: !Ref QSS3KeyPrefix
 Conditions:
   PerHostSupportedRegion:
-    !Not
-    - !Equals
-      - !Ref AWS::Region
-      - us-gov-west-1
+    !Not [!Or [Condition: GovCloudCondition, Condition: ParisCondition]]
   GovCloudCondition:
     !Equals
     - !Ref AWS::Region
     - us-gov-west-1
+  ParisCondition:
+      !Equals
+      - !Ref AWS::Region
+      - eu-west-3
 Outputs:
   DeepSecurityConsole:
     Value: !GetAtt MasterMP.Outputs.DeepSecurityConsole

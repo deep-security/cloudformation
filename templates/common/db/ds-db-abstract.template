@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.5: This template is an abstraction layer for choosing PostgreSQL,
+Description: 'v5.6: This template is an abstraction layer for choosing PostgreSQL,
   Oracle or MSSQL when deploying Deep Security Manager. (qs-1ngr590i4)'
 Parameters:
   DBIRDSInstanceSize:
@@ -20,6 +20,8 @@ Parameters:
     - db.r3.2xlarge
     - db.r3.4xlarge
     - db.r3.8xlarge
+    - db.r4.large
+    - db.r4.xlarge
     ConstraintDescription: must select a valid database instance type.
   DBIStorageAllocation:
     Default: 10
