@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.6: Deploys Deep Security Manager to AWS. This template is designed
+Description: 'v5.7: Deploys Deep Security Manager to AWS. This template is designed
   to be nested in a stack, and requires several passed parameters to launch. **WARNING**
   This template creates Amazon EC2 instances and related resources. You will be billed
   for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
@@ -211,52 +211,54 @@ Parameters:
     Default: ''
 Mappings:
   DSMAMI:
-    us-east-1:
-      PerHost: ami-a394f0d9
-      BYOL: ami-c18befbb
-    us-east-2:
-      PerHost: ami-07012862
-      BYOL: ami-560e2733
-    us-west-1:
-      PerHost: ami-12d9e372
-      BYOL: ami-fed8e29e
-    us-west-2:
-      PerHost: ami-ed76ad95
-      BYOL: ami-9972a9e1
-    ca-central-1:
-      PerHost: ami-1c1aa178
-      BYOL: ami-cc269da8
     ap-south-1:
-      PerHost: ami-26723b49
-      BYOL: ami-09743d66
-    ap-northeast-2:
-      PerHost: ami-3ad17754
-      BYOL: ami-3ad17754
-    ap-southeast-1:
-      PerHost: ami-ffebb79c
-      BYOL: ami-cbeab6a8
-    ap-southeast-2:
-      PerHost: ami-dece3abc
-      BYOL: ami-ebcf3b89
+      PerHost: ami-dc8ed8b3
+      BYOL: ami-839bcbec
+    us-east-1:
+      PerHost: ami-e9f1df93
+      BYOL: ami-b5dde7cf
+    us-east-2:
+      PerHost: ami-13e6cc76
+      BYOL: ami-55192c30
     ap-northeast-1:
-      PerHost: ami-04f77362
-      BYOL: ami-0af5716c
-    eu-central-1:
-      PerHost: ami-16af2179
-      BYOL: ami-c1911fae
-    eu-west-1:
-      PerHost: ami-f71ba48e
-      BYOL: ami-611aa518
-    eu-west-2:
-      PerHost: ami-222f3146
-      BYOL: ami-8e2f31ea
-    eu-west-3:
-      BYOL: ami-1364d36e
+      PerHost: ami-1a3e5f7c
+      BYOL: ami-9a6800fc
     sa-east-1:
-      PerHost: ami-f02d6a9c
-      BYOL: ami-f02d6a9c
+      PerHost: ami-7585c819
+      BYOL: ami-d8145bb4
+    ap-northeast-2:
+      PerHost: ami-c3e546ad
+      BYOL: ami-c1298aaf
+    ap-southeast-1:
+      PerHost: ami-54ef9028
+      BYOL: ami-d0b4f1ac
+    ca-central-1:
+      PerHost: ami-fc61e498
+      BYOL: ami-21d25645
+    ap-southeast-2:
+      PerHost: ami-95d926f7
+      BYOL: ami-e1659c83
+    us-west-2:
+      PerHost: ami-f0f44688
+      BYOL: ami-4374cc3b
+    us-west-1:
+      PerHost: ami-1fe7e57f
+      BYOL: ami-33fbf753
+    eu-central-1:
+      PerHost: ami-9666f9f9
+      BYOL: ami-49158e26
+    eu-west-1:
+      PerHost: ami-c066feb9
+      BYOL: ami-93197bea
+    eu-west-2:
+      PerHost: ami-06f3e862
+      BYOL: ami-24ddc740
+    eu-west-3:
+      PerHost: ami-65eb5d18
+      BYOL: ami-4eb40233
     us-gov-west-1:
       BYOL: ami-5bc8463a
+      PerHost: ami-efaa238e
   DSMSIZE:
     us-east-1:
       PerHost: m4.xlarge
@@ -298,11 +300,13 @@ Mappings:
       PerHost: m4.xlarge
       BYOL: m4.xlarge
     eu-west-3:
+      PerHost: r4.xlarge
       BYOL: r4.xlarge
     sa-east-1:
       PerHost: m4.xlarge
       BYOL: m4.xlarge
     us-gov-west-1:
+      PerHost: m4.xlarge
       BYOL: m4.xlarge
   DSMDBMap:
     SQL:
@@ -338,7 +342,7 @@ Resources:
           Statement:
           - Effect: Allow
             Action:
-              - s3:GetObject
+            - s3:GetObject
             Resource:
               Fn::Sub:
               - arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*

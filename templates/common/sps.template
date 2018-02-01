@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  v5.6: Smart protection server template (qs-1ngr590jj).
+  v5.7: Smart protection server template (qs-1ngr590jj).
 Parameters:
   AWSIKeyPairName:
     Description: Existing key pair to use for connecting to your Smart Protection Server

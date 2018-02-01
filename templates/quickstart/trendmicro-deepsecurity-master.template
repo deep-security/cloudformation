@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'QS(0011) - v5.6: Quick Start that deploys Trend Micro Deep Security
+Description: 'QS(0011) - v5.7: Quick Start that deploys Trend Micro Deep Security
   into an existing VPC with a Multi-AZ PostgreSQL RDS instance  **WARNING** This template
   uses images from the AWS Marketplace and an active subscription is required - Please
   see the Quick Start documentation for more details. You will be billed for the AWS
@@ -202,6 +202,16 @@ Mappings:
       '2': m4.large
       '3': m4.xlarge
       '4': m4.xlarge
+    eu-west-3:
+      '1': r4.large
+      '2': r4.large
+      '3': r4.xlarge
+      '4': r4.xlarge
+    us-gov-west-1:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
   RDSStorageSize:
     1-100:
       Size: '50'
@@ -282,6 +292,16 @@ Mappings:
       '2': db.m3.large
       '3': db.m3.xlarge
       '4': db.m3.xlarge
+    eu-west-3:
+      '1': db.r4.large
+      '2': db.r4.large
+      '3': db.r4.xlarge
+      '4': db.r4.xlarge
+    us-gov-west-1:
+      '1': db.m3.large
+      '2': db.m3.large
+      '3': db.m3.xlarge
+      '4': db.m3.xlarge
   DeploymentSize:
     1-100:
       Size: '1'
@@ -350,15 +370,14 @@ Resources:
         QSS3KeyPrefix: !Ref QSS3KeyPrefix
 Conditions:
   PerHostSupportedRegion:
-    !Not [!Or [Condition: GovCloudCondition, Condition: ParisCondition]]
+    !Not
+    - !Equals
+      - !Ref AWS::Region
+      - match-all-regions
   GovCloudCondition:
-    !Equals
-    - !Ref AWS::Region
-    - us-gov-west-1
-  ParisCondition:
       !Equals
       - !Ref AWS::Region
-      - eu-west-3
+      - us-gov-west-1
 Outputs:
   DeepSecurityConsole:
     Value: !GetAtt MasterMP.Outputs.DeepSecurityConsole
