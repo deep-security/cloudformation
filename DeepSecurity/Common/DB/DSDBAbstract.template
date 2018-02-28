@@ -131,7 +131,7 @@
 						]
 					]
 				},
-                "TimeoutInMinutes" : "10",
+                "TimeoutInMinutes" : "45",
                 "Parameters"       : {
                     "DBIRDSInstanceSize" : {
                         "Ref" : "DBIRDSInstanceSize"
@@ -172,7 +172,7 @@
 						]
 					]
 				},
-                "TimeoutInMinutes" : "10",
+                "TimeoutInMinutes" : "45",
                 "Parameters"       : {
                     "DBIRDSInstanceSize" : {
                         "Ref" : "DBIRDSInstanceSize"
