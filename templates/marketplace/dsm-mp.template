@@ -368,6 +368,7 @@ Resources:
               - ec2:DescribeAvailabilityZones
               - ec2:DescribeSecurityGroups
               - iam:ListAccountAliases
+              - sts:AssumeRole
               Resource: '*'
             - Effect: Allow
               Action:
