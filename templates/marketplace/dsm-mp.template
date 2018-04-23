@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.10: Deploys Deep Security Manager to AWS. This template is designed
+Description: 'v5.11: Deploys Deep Security Manager to AWS. This template is designed
   to be nested in a stack, and requires several passed parameters to launch. **WARNING**
   This template creates Amazon EC2 instances and related resources. You will be billed
   for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
@@ -194,7 +194,7 @@ Parameters:
   QSS3KeyPrefix:
     AllowedPattern: ^[0-9a-zA-Z-/]*$
     ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
-      uppercase letters, hyphens (-), and forward slash (/).",
+      uppercase letters, hyphens (-), and forward slash (/).
     Default: latest/
     Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
       can include numbers, lowercase letters, uppercase letters, hyphens (-), and
@@ -212,52 +212,52 @@ Parameters:
 Mappings:
   DSMAMI:
     ap-south-1:
-      PerHost: ami-5b95cb34
+      PerHost: ami-7160461e
       BYOL: ami-7397c91c
     us-east-1:
-      PerHost: ami-6d877810
+      PerHost: ami-85e845fa
       BYOL: ami-e18a759c
     us-east-2:
-      PerHost: ami-b46650d1
+      PerHost: ami-b4d0e3d1
       BYOL: ami-2f794f4a
     ap-northeast-1:
-      PerHost: ami-a44a06c2
+      PerHost: ami-bf9981c3
       BYOL: ami-e6440880
     sa-east-1:
-      PerHost: ami-012b616d
+      PerHost: ami-3f7b2b53
       BYOL: ami-76155f1a
     ap-northeast-2:
-      PerHost: ami-5c1eb332
+      PerHost: ami-e078d68e
       BYOL: ami-e81fb286
     ap-southeast-1:
-      PerHost: ami-0584d079
+      PerHost: ami-9f6c4ee3
       BYOL: ami-0a84d076
     ca-central-1:
-      PerHost: ami-4e4ccb2a
+      PerHost: ami-7bef6e1f
       BYOL: ami-9c4bccf8
     ap-southeast-2:
-      PerHost: ami-686eaf0a
+      PerHost: ami-25e92247
       BYOL: ami-1d70b17f
     us-west-2:
-      PerHost: ami-11b72369
+      PerHost: ami-2bf09c53
       BYOL: ami-578b1f2f
     us-gov-west-1:
-      PerHost: ami-7326ad12
+      PerHost: ami-4d64f02c
       BYOL: ami-7d26ad1c
     us-west-1:
-      PerHost: ami-a3a1abc3
+      PerHost: ami-43fbe923
       BYOL: ami-12a0aa72
     eu-central-1:
-      PerHost: ami-ea107e85
+      PerHost: ami-395a7fd2
       BYOL: ami-fd117f92
     eu-west-1:
-      PerHost: ami-0ba1e272
+      PerHost: ami-bec6e7c7
       BYOL: ami-32a3e04b
     eu-west-2:
-      PerHost: ami-bbe90edc
+      PerHost: ami-d1bf5cb6
       BYOL: ami-38ea0d5f
     eu-west-3:
-      PerHost: ami-aa54e2d7
+      PerHost: ami-d2d667af
       BYOL: ami-ad54e2d0
   DSMSIZE:
     us-east-1:
