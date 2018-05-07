@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  v5.11: Smart protection server template (qs-1ngr590jj).
+  v5.12: Smart protection server template (qs-1ngr590jj).
 Parameters:
   AWSIKeyPairName:
     Description: Existing key pair to use for connecting to your Smart Protection Server
@@ -51,31 +51,36 @@ Parameters:
 Mappings:
   RegionToAMI:
     us-east-1:
-      '64': ami-c092d4aa
-    us-west-1:
-      '64': ami-42650c22
-    us-west-2:
-      '64': ami-294d5e48
-    eu-west-1:
-      '64': ami-591fba2a
-    eu-central-1:
-      '64': ami-918d9ffd
-    sa-east-1:
-      '64': ami-0a830666
-    ap-northeast-1:
-      '64': ami-0e426f60
-    ap-southeast-1:
-      '64': ami-9c16d7ff
-    ap-southeast-2:
-      '64': ami-fea1f89d
-    ap-northeast-2:
-      '64': ami-2b5c9445
+      '64': ami-9db11de2
     us-east-2:
-      '64': ami-f2653f97
-    ap-south-1:
-      '64': ami-6e304701
+      '64': ami-5edcef3b
+    us-west-1:
+      '64': ami-dcf2e0bc
+    us-west-2:
+      '64': ami-4516793d
+    eu-west-1:
+      '64': ami-d17252a8
     eu-west-2:
-      '64': ami-a81804cc
+      '64': ami-b68b68d1
+    eu-west-3:
+      '64': ami-2bc07156
+    eu-central-1:
+      '64': ami-5de1c4b6
+    sa-east-1:
+      '64': ami-8593c3e9
+    ap-northeast-1:
+      '64': ami-0e617a72
+    ap-southeast-1:
+      '64': ami-b23614ce
+    ap-southeast-2:
+      '64': ami-c00bc0a2
+    ap-northeast-2:
+      '64': ami-664ae408
+    ap-south-1:
+      '64': ami-7c7a5c13
+    ca-central-1:
+      '64': ami-cef273aa
+
 Resources:
   SPS:
     Type: 'AWS::EC2::Instance'
@@ -99,7 +104,7 @@ Resources:
         'Fn::Join':
           - ''
           - - |
-              #/bin/bash
+              #!/bin/bash
             - 'chpasswd <<<"admin:'
             - !Ref SPSWebAdminPassword
             - '"'
@@ -119,7 +124,7 @@ Resources:
           CidrIp: 10.0.0.0/8
         - IpProtocol: tcp
           FromPort: '5274'
-          ToPort: '5274'
+          ToPort: '5275'
           CidrIp: 10.0.0.0/8
         - IpProtocol: tcp
           FromPort: '443'
@@ -131,7 +136,7 @@ Resources:
           CidrIp: 172.16.0.0/12
         - IpProtocol: tcp
           FromPort: '5274'
-          ToPort: '5274'
+          ToPort: '5275'
           CidrIp: 172.16.0.0/12
         - IpProtocol: tcp
           FromPort: '443'
@@ -143,7 +148,7 @@ Resources:
           CidrIp: 192.168.0.0/16
         - IpProtocol: tcp
           FromPort: '5274'
-          ToPort: '5274'
+          ToPort: '5275'
           CidrIp: 192.168.0.0/16
       SecurityGroupEgress:
         - IpProtocol: tcp
@@ -162,6 +167,14 @@ Outputs:
           - SPS
           - PrivateIp
         - ':5274'
+  WRSHTTPSurl:
+    Value: !Join 
+      - ''
+      - - 'https://'
+        - !GetAtt 
+          - SPS
+          - PrivateIp
+        - ':5275'
   FRSurl:
     Value: !Join 
       - ''
