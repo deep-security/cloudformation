@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  v5.14: Deploys Deep Security Manager to AWS. This template is designed to be
+  v5.15: Deploys Deep Security Manager to AWS. This template is designed to be
   nested in a stack, and requires several passed parameters to launch.
   **WARNING** This template creates Amazon EC2 instances and related resources.
   You will be billed for the AWS resources used if you create a stack from this
@@ -131,13 +131,13 @@ Parameters:
   DSMSG:
     Type: 'AWS::EC2::SecurityGroup::Id'
   DBPEngine:
-    Default: Embedded
+    Default: PostgreSQL
     Type: String
     AllowedValues:
-      - Embedded
       - Oracle
       - SQL
       - PostgreSQL
+      - PostgresDocker
   DSISubnetID:
     Description: >-
       Existing Subnet for Deep Security Manager. Must be a public subnet
@@ -263,6 +263,8 @@ Mappings:
     Embedded:
       DbTypeString: Embedded
     PostgreSQL:
+      DbTypeString: PostgreSQL
+    PostgresDocker:
       DbTypeString: PostgreSQL
 Resources:
   DSMRole:
@@ -438,9 +440,9 @@ Resources:
                 https://files.trendmicro.com/products/deepsecurity/en/11.0/Agent-RedHat_EL6-11.0.0-211.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/KernelSupport-RedHat_EL6-11.0.0-211.x86_64.zip:
+            /tmp/KernelSupport-RedHat_EL6-11.0.0-256.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/11.0/KernelSupport-RedHat_EL6-11.0.0-211.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/11.0/KernelSupport-RedHat_EL6-11.0.0-256.x86_64.zip
               owner: root
               mode: '000600'
             /tmp/Agent-RedHat_EL7-11.0.0-211.x86_64.zip:
@@ -448,9 +450,9 @@ Resources:
                 https://files.trendmicro.com/products/deepsecurity/en/11.0/Agent-RedHat_EL7-11.0.0-211.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/KernelSupport-RedHat_EL7-11.0.0-211.x86_64.zip:
+            /tmp/KernelSupport-RedHat_EL7-11.0.0-249.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/11.0/KernelSupport-RedHat_EL7-11.0.0-211.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/11.0/KernelSupport-RedHat_EL7-11.0.0-249.x86_64.zip
               owner: root
               mode: '000600'
             /tmp/Agent-Ubuntu_16.04-11.0.0-211.x86_64.zip:
@@ -458,9 +460,9 @@ Resources:
                 https://files.trendmicro.com/products/deepsecurity/en/11.0/Agent-Ubuntu_16.04-11.0.0-211.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/KernelSupport-Ubuntu_16.04-11.0.0-211.x86_64.zip:
+            /tmp/KernelSupport-Ubuntu_16.04-11.0.0-254.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/11.0/KernelSupport-Ubuntu_16.04-11.0.0-211.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/11.0/KernelSupport-Ubuntu_16.04-11.0.0-254.x86_64.zip
               owner: root
               mode: '000600'
             /tmp/Agent-Ubuntu_14.04-10.0.0-2094.x86_64.zip:
@@ -478,9 +480,9 @@ Resources:
                 https://files.trendmicro.com/products/deepsecurity/en/11.0/Agent-amzn1-11.0.0-211.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/KernelSupport-amzn1-11.0.0-211.x86_64.zip:
+            /tmp/KernelSupport-amzn1-11.0.0-253.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/11.0/KernelSupport-amzn1-11.0.0-211.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/11.0/KernelSupport-amzn1-11.0.0-253.x86_64.zip
               owner: root
               mode: '000600'
             /tmp/Agent-amzn2-11.0.0-211.x86_64.zip:
@@ -488,9 +490,9 @@ Resources:
                 https://files.trendmicro.com/products/deepsecurity/en/11.0/Agent-amzn2-11.0.0-211.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/KernelSupport-amzn2-11.0.0-211.x86_64.zip:
+            /tmp/KernelSupport-amzn2-11.0.0-252.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/11.0/KernelSupport-amzn2-11.0.0-211.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/11.0/KernelSupport-amzn2-11.0.0-252.x86_64.zip
               owner: root
               mode: '000600'
             /tmp/Agent-Windows-11.0.0-223.x86_64.zip:
@@ -611,7 +613,7 @@ Resources:
               ignoreErrors: 'false'
             1-install-DSM:
               command: >-
-                cd /tmp; sh Manager-Linux-10.3.102.x64.sh -q -console -varfile
+                cd /tmp; sh Manager-Linux-11.0.221.x64.sh -q -console -varfile
                 /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog
               ignoreErrors: 'false'
             2-fix-for-systemd:
@@ -915,18 +917,9 @@ Resources:
             - |+
 
 Conditions:
-  DBTypeIsOracle: !Equals 
-    - !Ref DBPEngine
-    - Oracle
-  DBTypeIsSQL: !Equals 
-    - !Ref DBPEngine
-    - SQL
-  DBTypeIsEmbedded: !Equals 
-    - !Ref DBPEngine
-    - Embedded
-  DBTypeIsPostgreSQL: !Equals 
-    - !Ref DBPEngine
-    - PostgreSQL
+  DBTypeIsSQL: !Equals
+      - !Ref DBPEngine
+      - SQL
   IsFirstNode: !Equals 
     - !Ref DSMPMNode
     - 'No'

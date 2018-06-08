@@ -1,8 +1,15 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.14: This template is an abstraction layer for choosing PostgreSQL,
+Description: 'v5.15: This template is an abstraction layer for choosing PostgreSQL,
   Oracle or MSSQL when deploying Deep Security Manager. (qs-1ngr590i4)'
 Parameters:
+  AWSIKeyPairName:
+    Description: Existing key pair to use for connecting to database if using Postgres on Docker
+      Instance
+    Type: AWS::EC2::KeyPair::KeyName
+    MinLength: '1'
+    MaxLength: '255'
+    ConstraintDescription: Select an existing EC2 Key Pair.
   DBIRDSInstanceSize:
     Default: db.m3.large
     Description: Trend Micro Deep Security Database instance class
@@ -79,6 +86,7 @@ Parameters:
     - SQL
     - Oracle
     - PostgreSQL
+    - PostgresDocker
   MultiAZ:
     Description: Use Multi-AZ or SQL Mirroring Option Group for RDS Instance
     Type: String
@@ -195,6 +203,26 @@ Resources:
       SubnetIds:
       - !Ref DBISubnet1
       - !Ref DBISubnet2
+  DSPostgreSQLDocker:
+    Type: AWS::CloudFormation::Stack
+    Condition: DBTypeIsPostgreSQLDocker
+    Properties:
+      TemplateURL:
+        Fn::Sub:
+        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/common/db/ds-db-postgresql-docker.template
+        - QSS3Region:
+            !If
+            - GovCloudCondition
+            - s3-us-gov-west-1
+            - s3
+      TimeoutInMinutes: '15'
+      Parameters:
+        AWSIKeyPairName: !Ref AWSIKeyPairName
+        DBICAdminName: !Ref DBICAdminName
+        DBICAdminPassword: !Ref DBICAdminPassword
+        DBPName: !Ref DBPName
+        RDSSG: !Ref RDSSG
+        DBISubnet: !Ref DBISubnet1
 Conditions:
   DBTypeIsOracle:
     !Equals
@@ -208,6 +236,10 @@ Conditions:
     !Equals
     - !Ref DBPEngine
     - PostgreSQL
+  DBTypeIsPostgreSQLDocker:
+    !Equals
+    - !Ref DBPEngine
+    - PostgresDocker
   GovCloudCondition:
     !Equals
     - !Ref AWS::Region
@@ -221,7 +253,10 @@ Outputs:
       - !If
         - DBTypeIsPostgreSQL
         - !GetAtt DSPostgreSQLRDS.Outputs.DSDBEndpoint
-        - !GetAtt DSSQLRDS.Outputs.DSDBEndpoint
+        - !If
+          - DBTypeIsPostgreSQLDocker
+          - !GetAtt DSPostgreSQLDocker.Outputs.DSDBEndpoint
+          - !GetAtt DSSQLRDS.Outputs.DSDBEndpoint
   DSDBPort:
     Value:
       !If
@@ -230,5 +265,8 @@ Outputs:
       - !If
         - DBTypeIsPostgreSQL
         - !GetAtt DSPostgreSQLRDS.Outputs.DSDBPort
-        - !GetAtt DSSQLRDS.Outputs.DSDBPort
+        - !If
+          - DBTypeIsPostgreSQLDocker
+          - !GetAtt DSPostgreSQLDocker.Outputs.DSDBPort
+          - !GetAtt DSSQLRDS.Outputs.DSDBPort
 ...

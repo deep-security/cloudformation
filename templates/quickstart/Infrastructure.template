@@ -1,7 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: >-
-  Template for testing the Quick Start, Creates the VPCs and subnets needed for
-  deployment
+Description: 'v5.15: Template for testing the Quick Start, Creates the VPCs
+  and subnets needed for deployment'
 Parameters:
   EnableDNSHostNames:
     Description: Enable DNS Host Names
