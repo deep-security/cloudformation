@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.14: Trend Micro Deep Security Marketplace master template. For more
+Description: 'v5.15: Trend Micro Deep Security Marketplace master template. For more
   information see http://aws.trendmicro.com. (qs-1ngr590jt)'
 Metadata:
   AWS::CloudFormation::Interface:
@@ -187,6 +187,7 @@ Parameters:
     - SQL
     - Oracle
     - PostgreSQL
+    - PostgresDocker
   DBPEndpoint:
     Type: String
     Description: If you have an existing oracle instance, enter the endpoint address
@@ -526,6 +527,7 @@ Resources:
             - s3-us-gov-west-1
             - s3
       Parameters:
+        AWSIKeyPairName: !Ref AWSIKeyPairName
         DBPName: !Ref DBPName
         DBIStorageAllocation: !Ref DBIStorageAllocation
         DBIRDSInstanceSize: !Ref DBIRDSInstanceSize

@@ -1,0 +1,177 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: 'v5.15: ONLY FOR DEMO, NOT A SUPPORTED DEPLOYMENT OPTION.
+  This template deploys PostgreSQL on Docker for Deep Security Manager.'
+Parameters:
+  AWSIKeyPairName:
+    Description: Existing key pair to use for connecting to database instance
+      Instance
+    Type: AWS::EC2::KeyPair::KeyName
+    MinLength: '1'
+    MaxLength: '255'
+    ConstraintDescription: Select an existing EC2 Key Pair.
+  DBIRDSInstanceSize:
+    Default: db.m3.large
+    Description: Trend Micro Deep Security Database instance class
+    Type: String
+    AllowedValues:
+    - db.m4.medium
+    - db.m4.large
+    - db.m4.xlarge
+    - db.m4.2xlarge
+    - db.m3.medium
+    - db.m3.large
+    - db.m3.xlarge
+    - db.m3.2xlarge
+    - db.m2.xlarge
+    - db.r3.large
+    - db.r3.xlarge
+    - db.r3.2xlarge
+    - db.r3.4xlarge
+    - db.r3.8xlarge
+    - db.m2.2xlarge
+    - db.m2.4xlarge
+    - db.m1.medium
+    - db.m1.large
+    - db.m1.xlarge
+    - db.m4.large
+    - db.m4.xlarge
+    - db.r4.large
+    - db.r4.xlarge
+    ConstraintDescription: must select a valid database instance type.
+  DBICAdminName:
+    Default: dsadmin
+    Description: Admin account username to be used for the database instance
+    Type: String
+    MinLength: 1
+    MaxLength: 16
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
+  DBICAdminPassword:
+    NoEcho: true
+    Description: Password to be used for the Oracle database admin account
+    Type: String
+    MinLength: 8
+    MaxLength: 41
+    AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
+    ConstraintDescription: Can only contain alphanumeric characters or the following
+      special characters !^*-_+ Min length 8, max length 41
+  DBPName:
+    Default: dsm
+    Description: Name to be assigned to the database
+    Type: String
+    MinLength: 1
+    MaxLength: 64
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
+  RDSSG:
+    Type: AWS::EC2::SecurityGroup::Id
+  DBISubnet:
+    Type: String
+Mappings:
+  AWSAMIRegionMap:
+    AMI:
+      AMZNLINUXHVM: amzn-ami-hvm-2017.09.1.20180307-x86_64-gp2
+    ap-northeast-1:
+      AMZNLINUXHVM: ami-a77c30c1
+      InstanceType: m4.large
+    ap-northeast-2:
+      AMZNLINUXHVM: ami-5e1ab730
+      InstanceType: m4.large
+    ap-south-1:
+      AMZNLINUXHVM: ami-7c87d913
+      InstanceType: m4.large
+    ap-southeast-1:
+      AMZNLINUXHVM: ami-e2adf99e
+      InstanceType: m4.large
+    ap-southeast-2:
+      AMZNLINUXHVM: ami-43874721
+      InstanceType: m4.large
+    ca-central-1:
+      AMZNLINUXHVM: ami-5b55d23f
+      InstanceType: m4.large
+    eu-central-1:
+      AMZNLINUXHVM: ami-ac442ac3
+      InstanceType: m4.large
+    eu-west-1:
+      AMZNLINUXHVM: ami-3bfab942
+      InstanceType: m4.large
+    eu-west-2:
+      AMZNLINUXHVM: ami-dff017b8
+      InstanceType: m4.large
+    sa-east-1:
+      AMZNLINUXHVM: ami-5339733f
+      InstanceType: m4.large
+    us-east-1:
+      AMZNLINUXHVM: ami-1853ac65
+      InstanceType: m4.large
+    us-east-2:
+      AMZNLINUXHVM: ami-25615740
+      InstanceType: m4.large
+    us-gov-west-1:
+      AMZNLINUXHVM: ami-ffa61d9e
+      InstanceType: m4.large
+    us-west-1:
+      AMZNLINUXHVM: ami-bf5540df
+      InstanceType: m4.large
+    us-west-2:
+      AMZNLINUXHVM: ami-d874e0a0
+      InstanceType: m4.large
+Resources:
+  DSDatabase:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: !Ref AWSIKeyPairName
+      InstanceType:
+        !FindInMap
+        - AWSAMIRegionMap
+        - !Ref AWS::Region
+        - InstanceType
+      ImageId:
+        !FindInMap
+        - AWSAMIRegionMap
+        - !Ref AWS::Region
+        - AMZNLINUXHVM
+      NetworkInterfaces:
+        - DeviceIndex: '0'
+          SubnetId: !Ref DBISubnet
+          AssociatePublicIpAddress: true
+          GroupSet:
+          - !Ref RDSSG
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: 100
+            VolumeType: gp2
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+
+          #Install Docker in the EC2 instance
+          sudo yum update -y
+          sudo yum install -y docker
+          sudo service docker start
+          sudo usermod -a -G docker ec2-user
+
+          docker pull postgres:9.6
+          docker run -e POSTGRES_PASSWORD=${DBICAdminPassword} -e POSTGRES_USER=${DBICAdminName} -p 5432:5432 -e POSTGRES_DB=${DBPName} --restart always --name dsm-psql -d postgres:9.6
+      Tags:
+      - Key: Application
+        Value: Deep Security Manager
+      - Key: Name
+        Value: Deep Security Database
+Conditions:
+  RegionIsUsGovCloud:
+    !Equals
+    - !Ref AWS::Region
+    - us-gov-west-1
+Outputs:
+  DSDBEndpoint:
+    Description: Endpoint to be passed to DSM installation properties file
+    Value: !GetAtt DSDatabase.PrivateIp
+  DSDBPort:
+    Description: Port to be passed to DSM installation properties file
+    Value: 5432
+...

@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'QS(0011) - v5.14: Quick Start that deploys Trend Micro Deep Security
+Description: 'QS(0011) - v5.15: Quick Start that deploys Trend Micro Deep Security
   into an existing VPC with a Multi-AZ RDS instance  **WARNING** This template uses
   images from the AWS Marketplace and an active subscription is required - Please
   see the Quick Start documentation for more details. You will be billed for the AWS
@@ -86,13 +86,13 @@ Parameters:
     - PostgreSQL
   DatabaseSubnet1:
     Description: Select a private subnet for the RDS database.  Must be a private
-      subnet contained the in VPC chosen above.
+      subnet contained in the VPC chosen above.
     Type: AWS::EC2::Subnet::Id
     ConstraintDescription: RDS Subnet Groups must be comprised of 2 subnets in seperate
       availability zones within the specified VPC for deploying this template
   DatabaseSubnet2:
     Description: Select a second private subnet for the RDS database.  Must be a private
-      subnet contained the in VPC chosen above.
+      subnet contained in the VPC chosen above.
     Type: AWS::EC2::Subnet::Id
     ConstraintDescription: RDS Subnet Groups must be comprised of 2 subnets in seperate
       availability zones within the specified VPC for deploying this template
@@ -119,7 +119,7 @@ Parameters:
       special characters !^*-_+ Min length 8, max length 41
   DeepSecuritySubnet:
     Description: Select an existing Subnet for Deep Security Manager. Must be a public
-      subnet contained the in VPC chosen above.
+      subnet contained in the VPC chosen above.
     Type: AWS::EC2::Subnet::Id
     MinLength: '1'
     MaxLength: '255'

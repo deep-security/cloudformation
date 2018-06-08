@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.14: Trend Micro Deep Security AWS RHEL master template.'
+Description: 'v5.15: Trend Micro Deep Security AWS RHEL master template.'
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
@@ -185,6 +185,7 @@ Parameters:
       - SQL
       - Oracle
       - PostgreSQL
+      - PostgresDocker
   DBPEndpoint:
     Type: String
     Description: >-
@@ -523,6 +524,7 @@ Resources:
             - s3-us-gov-west-1
             - s3
       Parameters:
+        AWSIKeyPairName: !Ref AWSIKeyPairName
         DBPName: !Ref DBPName
         DBIStorageAllocation: !Ref DBIStorageAllocation
         DBIRDSInstanceSize: !Ref DBIRDSInstanceSize
