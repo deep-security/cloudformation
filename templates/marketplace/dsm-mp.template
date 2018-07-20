@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.15: Deploys Deep Security Manager to AWS. This template is designed
+Description: 'v5.16: Deploys Deep Security Manager to AWS. This template is designed
   to be nested in a stack, and requires several passed parameters to launch. **WARNING**
   This template creates Amazon EC2 instances and related resources. You will be billed
   for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
@@ -213,53 +213,53 @@ Parameters:
 Mappings:
   DSMAMI:
     ap-northeast-1:
-      PerHost: ami-bbd429c4
-      BYOL: ami-9fd429e0
+      PerHost: ami-ce325c23
+      BYOL: ami-aa325c47
     ap-northeast-2:
-      PerHost: ami-aa3199c4
-      BYOL: ami-f03f979e
+      PerHost: ami-07eb5c69
+      BYOL: ami-a1d760cf
     ap-south-1:
-      PerHost: ami-f7133f98
-      BYOL: ami-59123e36
+      PerHost: ami-01f3c36e
+      BYOL: ami-46132329
     ap-southeast-1:
-      PerHost: ami-6cc0f210
-      BYOL: ami-25c1f359
+      PerHost: ami-457c06af
+      BYOL: ami-7b6a1091
     ap-southeast-2:
-      PerHost: ami-ec39e98e
-      BYOL: ami-ae39e9cc
+      PerHost: ami-af892dcd
+      BYOL: ami-ae892dcc
     ca-central-1:
-      PerHost: ami-8c1e9ee8
-      BYOL: ami-b621a1d2
+      PerHost: ami-d5e16cb1
+      BYOL: ami-c4e76aa0
     eu-central-1:
-      PerHost: ami-36e8c0dd
-      BYOL: ami-24173fcf
+      PerHost: ami-d6e2e43d
+      BYOL: ami-41e0e6aa
     eu-west-1:
-      PerHost: ami-5adfe023
-      BYOL: ami-bbdfe0c2
+      PerHost: ami-bfa0bc55
+      BYOL: ami-bf5f4055
     eu-west-2:
-      PerHost: ami-42af4325
-      BYOL: ami-b2ac40d5
+      PerHost: ami-d23dd6b5
+      BYOL: ami-b724cfd0
     eu-west-3:
-      PerHost: ami-ba60d1c7
-      BYOL: ami-f061d08d
+      PerHost: ami-88a616f5
+      BYOL: ami-89a616f4
     sa-east-1:
-      PerHost: ami-49ca9525
-      BYOL: ami-76ca951a
+      PerHost: ami-0b3a1c67
+      BYOL: ami-99381ef5
     us-east-1:
-      PerHost: ami-bf28b3c0
-      BYOL: ami-912bb0ee
+      PerHost: ami-91e2dcee
+      BYOL: ami-92e2dced
     us-east-2:
-      PerHost: ami-8f003cea
-      BYOL: ami-8a073bef
+      PerHost: ami-d3be85b6
+      BYOL: ami-fab3889f
     us-gov-west-1:
-      PerHost: ami-fe5dcb9f
-      BYOL: ami-c45bcda5
+      PerHost: ami-f0980a91
+      BYOL: ami-c3980aa2
     us-west-1:
-      PerHost: ami-569f8736
-      BYOL: ami-3b9e865b
+      PerHost: ami-73c22010
+      BYOL: ami-29c0224a
     us-west-2:
-      PerHost: ami-3678064e
-      BYOL: ami-a57907dd
+      PerHost: ami-448cd13c
+      BYOL: ami-468cd13e
   DSMSIZE:
     us-east-1:
       PerHost: m4.xlarge
