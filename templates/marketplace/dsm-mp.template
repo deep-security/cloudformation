@@ -218,8 +218,6 @@ Mappings:
     ap-northeast-2:
       PerHost: ami-07eb5c69
       BYOL: ami-a1d760cf
-    ap-northeast-3:
-      BYOL: ami-e8464f95
     ap-south-1:
       PerHost: ami-01f3c36e
       BYOL: ami-46132329
@@ -309,9 +307,6 @@ Mappings:
       PerHost: m4.xlarge
       BYOL: m4.xlarge
     us-gov-west-1:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
-    ap-northeast-3:
       PerHost: m4.xlarge
       BYOL: m4.xlarge
   DSMDBMap:
