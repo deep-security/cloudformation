@@ -71,6 +71,9 @@ Parameters:
     - m4.large
     - m4.xlarge
     - m4.2xlarge
+    - m5.large
+    - m5.xlarge
+    - m5.2xlarge
     - c3.xlarge
     - c3.2xlarge
     - c3.4xlarge
