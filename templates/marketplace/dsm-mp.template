@@ -213,53 +213,53 @@ Parameters:
 Mappings:
   DSMAMI:
     ap-northeast-1:
-      PerHost: ami-ce325c23
-      BYOL: ami-aa325c47
+      PerHost: ami-0ecec4b3de420bc3b
+      BYOL: ami-0a1e1f136e407693c
     ap-northeast-2:
-      PerHost: ami-07eb5c69
-      BYOL: ami-a1d760cf
+      PerHost: ami-0d1c9fe648b6dc701
+      BYOL: ami-0db757710ee8dc997
     ap-south-1:
-      PerHost: ami-01f3c36e
-      BYOL: ami-46132329
+      PerHost: ami-0fce14da2a73c2e44
+      BYOL: ami-07cbdc0d04f48d2e8
     ap-southeast-1:
-      PerHost: ami-457c06af
-      BYOL: ami-7b6a1091
+      PerHost: ami-092c893dcc5c670dd
+      BYOL: ami-0a0ab48d0a0031849
     ap-southeast-2:
-      PerHost: ami-af892dcd
-      BYOL: ami-ae892dcc
+      PerHost: ami-00dd4d6303426850c
+      BYOL: ami-0f023de0a6ed31b48
     ca-central-1:
-      PerHost: ami-d5e16cb1
-      BYOL: ami-c4e76aa0
+      PerHost: ami-0ffbe979d46808fab
+      BYOL: ami-0e870d970495dd352
     eu-central-1:
-      PerHost: ami-d6e2e43d
-      BYOL: ami-41e0e6aa
+      PerHost: ami-0c865a33494762550
+      BYOL: ami-0983dbbc0e100c938
     eu-west-1:
-      PerHost: ami-bfa0bc55
-      BYOL: ami-bf5f4055
+      PerHost: ami-0de24ff957e889844
+      BYOL: ami-09cc0afdc6254b801
     eu-west-2:
-      PerHost: ami-d23dd6b5
-      BYOL: ami-b724cfd0
+      PerHost: ami-06aaebf53274630e3
+      BYOL: ami-0945c4628dc4fad5b
     eu-west-3:
-      PerHost: ami-88a616f5
-      BYOL: ami-89a616f4
+      PerHost: ami-00883836d2894a9d3
+      BYOL: ami-0d29be9916dd0d8f4
     sa-east-1:
-      PerHost: ami-0b3a1c67
-      BYOL: ami-99381ef5
+      PerHost: ami-0fca3605d7ae93f5e
+      BYOL: ami-0285639bc29b63cb4
     us-east-1:
-      PerHost: ami-91e2dcee
-      BYOL: ami-92e2dced
+      PerHost: ami-0dd1ad16aa9e8cfa8
+      BYOL: ami-0efe65962a50771ba
     us-east-2:
-      PerHost: ami-d3be85b6
-      BYOL: ami-fab3889f
+      PerHost: ami-0e53dca56253c120d
+      BYOL: ami-0b1d4c1872170b148
     us-gov-west-1:
-      PerHost: ami-f0980a91
-      BYOL: ami-c3980aa2
+      PerHost: ami-c7cd57a6
+      BYOL: ami-7fc3591e
     us-west-1:
-      PerHost: ami-73c22010
-      BYOL: ami-29c0224a
+      PerHost: ami-0746680ef0f8ca91e
+      BYOL: ami-0bd282317b019b3be
     us-west-2:
-      PerHost: ami-448cd13c
-      BYOL: ami-468cd13e
+      PerHost: ami-0514be15681f83ede
+      BYOL: ami-0e6e7d7edacbff83a
   DSMSIZE:
     us-east-1:
       PerHost: m4.xlarge
