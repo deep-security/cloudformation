@@ -133,85 +133,85 @@ Parameters:
 Mappings:
   DSMSIZE:
     us-east-1:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     us-west-1:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     us-west-2:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     eu-west-1:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     eu-central-1:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     sa-east-1:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     ap-northeast-1:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     ap-southeast-1:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     ap-southeast-2:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     ap-northeast-2:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     us-east-2:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     ca-central-1:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     ap-south-1:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     eu-west-2:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     eu-west-3:
-      '1': r4.large
-      '2': r4.large
-      '3': r4.xlarge
-      '4': r4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     us-gov-west-1:
-      '1': m4.large
-      '2': m4.large
-      '3': m4.xlarge
-      '4': m4.xlarge
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
   RDSStorageSize:
     1-100:
       Size: '50'

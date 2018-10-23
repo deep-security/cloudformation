@@ -178,37 +178,37 @@ Parameters:
 Mappings:
   DSMSIZE:
     us-east-1:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     us-east-2:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     us-west-1:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     us-west-2:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     ca-central-1:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     ap-south-1:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     ap-northeast-2:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     ap-southeast-1:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     ap-southeast-2:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     ap-northeast-1:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     eu-central-1:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     eu-west-1:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     eu-west-2:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     sa-east-1:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     us-gov-west-1:
-      BYOL: m4.xlarge
+      BYOL: m5.xlarge
     eu-west-3:
-      BYOL: r4.xlarge
+      BYOL: m5.xlarge
   RDSInstanceSize:
     us-east-1:
       Oracle: db.m4.xlarge
