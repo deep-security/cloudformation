@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  v5.16: Quick Start that deploys a new VPC with Trend Micro Deep Security
+  v5.17: Quick Start that deploys a new VPC with Trend Micro Deep Security
   **WARNING** This template uses images from the AWS Marketplace and an active
   subscription is required - Please see the Quick Start documentation for more
   details. You will be billed for the AWS resources used if you create a stack
