@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.16: Deploys Deep Security Manager to AWS. This template is designed
+Description: 'v5.17: Deploys Deep Security Manager to AWS. This template is designed
   to be nested in a stack, and requires several passed parameters to launch. **WARNING**
   This template creates Amazon EC2 instances and related resources. You will be billed
   for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
@@ -265,53 +265,53 @@ Mappings:
       BYOL: ami-0e6e7d7edacbff83a
   DSMSIZE:
     us-east-1:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     us-east-2:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     us-west-1:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     us-west-2:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     ca-central-1:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     ap-south-1:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     ap-northeast-2:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     ap-southeast-1:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     ap-southeast-2:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     ap-northeast-1:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     eu-central-1:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     eu-west-1:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     eu-west-2:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     eu-west-3:
-      PerHost: r4.xlarge
-      BYOL: r4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     sa-east-1:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
     us-gov-west-1:
-      PerHost: m4.xlarge
-      BYOL: m4.xlarge
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
   DSMDBMap:
     SQL:
       DbTypeString: Microsoft SQL Server
