@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.17: ONLY FOR DEMO, NOT A SUPPORTED DEPLOYMENT OPTION.
+Description: 'v5.18: ONLY FOR DEMO, NOT A SUPPORTED DEPLOYMENT OPTION.
   This template deploys PostgreSQL on Docker for Deep Security Manager.'
 Parameters:
   AWSIKeyPairName:
