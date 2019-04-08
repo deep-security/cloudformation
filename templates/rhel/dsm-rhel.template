@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  v5.18: Deploys Deep Security Manager to AWS. This template is designed to be
+  v5.19: Deploys Deep Security Manager to AWS. This template is designed to be
   nested in a stack, and requires several passed parameters to launch.
   **WARNING** This template creates Amazon EC2 instances and related resources.
   You will be billed for the AWS resources used if you create a stack from this
@@ -208,35 +208,39 @@ Parameters:
 Mappings:
   AWSRegionArch2AMI:
     eu-central-1:
-      '64': ami-e4c63e8b
+      '64': ami-09de4a4c670389e4b
     sa-east-1:
-      '64': ami-7de77b11
+      '64': ami-05c1c16cac05a7c0b
     ap-northeast-1:
-      '64': ami-5de0433c
+      '64': ami-00b95502a4d51a07e
     ap-northeast-2:
-      '64': ami-6447930a
+      '64': ami-041b16ca28f036753
     ap-south-1:
-      '64': ami-7c9bef13
+      '64': ami-0963937a03c01ecd4
     eu-west-1:
-      '64': ami-02ace471
+      '64': ami-0202869bdd0fc8c75
     eu-west-2:
-      '64': ami-9c363cf8
+      '64': ami-0188c0c5eddd2d032
     ca-central-1:
-      '64': ami-9062d0f4
+      '64': ami-06ca3c0058d0275b3
     us-east-1:
-      '64': ami-b63769a1
+      '64': ami-000db10762d0c4c05
     us-east-2:
-      '64': ami-0932686c
+      '64': ami-094720ddca649952f
     us-west-1:
-      '64': ami-2cade64c
+      '64': ami-04642fc8fca1e8e67
     us-west-2:
-      '64': ami-6f68cf0f
+      '64': ami-0a7e1ebfee7a4570e
     ap-southeast-2:
-      '64': ami-39ac915a
+      '64': ami-036b423b657376f5b
     ap-southeast-1:
-      '64': ami-2c95344f
+      '64': ami-055c55112e25b1f1f
+    eu-west-3:
+      '64': ami-0c4224e392ec4e440
+    eu-north-1:
+      '64': ami-66f67f18
     us-gov-west-1:
-      '64': ami-299e2248
+      '64': ami-a1d349c0
   TrendRegionMap:
     us-east-1:
       regionkey: amazon.cloud.region.key.1
@@ -438,34 +442,34 @@ Resources:
                 https://files.trendmicro.com/products/deepsecurity/en/11.3/Manager-Linux-11.3.184.x64.sh
               owner: root
               mode: '000700'
-            /tmp/Agent-RedHat_EL6-11.3.0-168.x86_64.zip:
+            /tmp/Agent-RedHat_EL6-11.3.0-235.x86_64.zip:
               source: >-
-                https://files.trendmicro.com/products/deepsecurity/en/11.3/Agent-RedHat_EL6-11.3.0-168.x86_64.zip
+                https://files.trendmicro.com/products/deepsecurity/en/11.3/Agent-RedHat_EL6-11.3.0-235.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/KernelSupport-RedHat_EL6-11.3.0-168.x86_64.zip:
+            /tmp/KernelSupport-RedHat_EL6-11.3.0-239.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/11.3/KernelSupport-RedHat_EL6-11.3.0-168.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/11.3/KernelSupport-RedHat_EL6-11.3.0-239.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/Agent-RedHat_EL7-11.3.0-168.x86_64.zip:
+            /tmp/Agent-RedHat_EL7-11.3.0-235.x86_64.zip:
               source: >-
-                https://files.trendmicro.com/products/deepsecurity/en/11.3/Agent-RedHat_EL7-11.3.0-168.x86_64.zip
+                https://files.trendmicro.com/products/deepsecurity/en/11.3/Agent-RedHat_EL7-11.3.0-235.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/KernelSupport-RedHat_EL7-11.3.0-168.x86_64.zip:
+            /tmp/KernelSupport-RedHat_EL7-11.3.0-272.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/11.3/KernelSupport-RedHat_EL7-11.3.0-168.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/11.3/KernelSupport-RedHat_EL7-11.3.0-272.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/Agent-Ubuntu_16.04-11.3.0-168.x86_64.zip:
+            /tmp/Agent-Ubuntu_16.04-11.3.0-235.x86_64.zip:
               source: >-
-                https://files.trendmicro.com/products/deepsecurity/en/11.3/Agent-Ubuntu_16.04-11.3.0-168.x86_64.zip
+                https://files.trendmicro.com/products/deepsecurity/en/11.3/Agent-Ubuntu_16.04-11.3.0-235.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/KernelSupport-Ubuntu_16.04-11.3.0-168.x86_64.zip:
+            /tmp/KernelSupport-Ubuntu_16.04-11.3.0-281.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/11.3/KernelSupport-Ubuntu_16.04-11.3.0-168.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/11.3/KernelSupport-Ubuntu_16.04-11.3.0-281.x86_64.zip
               owner: root
               mode: '000600'
             /tmp/Agent-Ubuntu_14.04-10.0.0-2094.x86_64.zip:
@@ -478,29 +482,29 @@ Resources:
                 http://files.trendmicro.com/products/deepsecurity/en/10.0/KernelSupport-Ubuntu_14.04-10.0.0-2114.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/Agent-amzn1-11.3.0-168.x86_64.zip:
+            /tmp/Agent-amzn2-11.3.0-235.x86_64.zip:
               source: >-
-                https://files.trendmicro.com/products/deepsecurity/en/11.3/Agent-amzn1-11.3.0-168.x86_64.zip
+                https://files.trendmicro.com/products/deepsecurity/en/11.3/Agent-amzn2-11.3.0-235.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/KernelSupport-amzn1-11.3.0-168.x86_64.zip:
+            /tmp/KernelSupport-amzn1-11.3.0-267.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/11.3/KernelSupport-amzn1-11.3.0-168.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/11.3/KernelSupport-amzn1-11.3.0-267.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/Agent-amzn2-11.3.0-168.x86_64.zip:
+            /tmp/Agent-amzn2-11.3.0-235.x86_64.zip:
               source: >-
-                https://files.trendmicro.com/products/deepsecurity/en/11.3/Agent-amzn2-11.3.0-168.x86_64.zip
+                https://files.trendmicro.com/products/deepsecurity/en/11.3/Agent-amzn2-11.3.0-235.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/KernelSupport-amzn2-11.3.0-168.x86_64.zip:
+            /tmp/KernelSupport-amzn2-11.3.0-273.x86_64.zip:
               source: >-
-                http://files.trendmicro.com/products/deepsecurity/en/11.3/KernelSupport-amzn2-11.3.0-168.x86_64.zip
+                http://files.trendmicro.com/products/deepsecurity/en/11.3/KernelSupport-amzn2-11.3.0-273.x86_64.zip
               owner: root
               mode: '000600'
-            /tmp/Agent-Windows-11.3.0-169.x86_64.zip:
+            /tmp/Agent-Windows-11.3.0-235.x86_64.zip:
               source: >-
-                https://files.trendmicro.com/products/deepsecurity/en/11.3/Agent-Windows-11.3.0-169.x86_64.zip
+                https://files.trendmicro.com/products/deepsecurity/en/11.3/Agent-Windows-11.3.0-235.x86_64.zip
               owner: root
               mode: '000600'
             /etc/cfn/dsmConfiguration.properties:
@@ -616,7 +620,7 @@ Resources:
               ignoreErrors: 'false'
             1-install-DSM:
               command: >-
-                cd /tmp; sh Manager-Linux-11.2.225.x64.sh -q -console -varfile
+                cd /tmp; sh Manager-Linux-11.3.184.x64.sh -q -console -varfile
                 /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog
               ignoreErrors: 'false'
             2-fix-for-systemd:
