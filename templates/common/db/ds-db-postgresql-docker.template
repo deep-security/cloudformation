@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.19: ONLY FOR DEMO, NOT A SUPPORTED DEPLOYMENT OPTION.
+Description: 'v5.20: ONLY FOR DEMO, NOT A SUPPORTED DEPLOYMENT OPTION.
   This template deploys PostgreSQL on Docker for Deep Security Manager.'
 Parameters:
   AWSIKeyPairName:
@@ -19,6 +19,7 @@ Parameters:
     - db.m4.large
     - db.m4.xlarge
     - db.m4.2xlarge
+    - db.m4.4xlarge
     - db.m3.medium
     - db.m3.large
     - db.m3.xlarge

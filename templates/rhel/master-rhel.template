@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.19: Trend Micro Deep Security AWS RHEL master template.'
+Description: 'v5.20: Trend Micro Deep Security AWS RHEL master template.'
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
@@ -123,6 +123,7 @@ Parameters:
       - db.m4.large
       - db.m4.xlarge
       - db.m4.2xlarge
+      - db.m4.4xlarge
       - db.m3.medium
       - db.m3.large
       - db.m3.xlarge
@@ -264,9 +265,11 @@ Parameters:
       - m4.large
       - m4.xlarge
       - m4.2xlarge
+      - m4.4xlarge
       - m5.large
       - m5.xlarge
       - m5.2xlarge
+      - m5.4xlarge
       - c3.xlarge
       - c3.2xlarge
       - c3.4xlarge
