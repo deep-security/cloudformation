@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.19: Deploys Deep Security Manager to AWS. This template is designed
+Description: 'v5.20: Deploys Deep Security Manager to AWS. This template is designed
   to be nested in a stack, and requires several passed parameters to launch. **WARNING**
   This template creates Amazon EC2 instances and related resources. You will be billed
   for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
@@ -71,9 +71,11 @@ Parameters:
     - m4.large
     - m4.xlarge
     - m4.2xlarge
+    - m4.4xlarge
     - m5.large
     - m5.xlarge
     - m5.2xlarge
+    - m5.4xlarge
     - c3.xlarge
     - c3.2xlarge
     - c3.4xlarge

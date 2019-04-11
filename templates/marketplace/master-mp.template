@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.19: Trend Micro Deep Security Marketplace master template. For more
+Description: 'v5.20: Trend Micro Deep Security Marketplace master template. For more
   information see http://aws.trendmicro.com. (qs-1ngr590jt)'
 Metadata:
   AWS::CloudFormation::Interface:
@@ -126,6 +126,7 @@ Parameters:
     - db.m4.large
     - db.m4.xlarge
     - db.m4.2xlarge
+    - db.m4.4xlarge
     - db.m3.medium
     - db.m3.large
     - db.m3.xlarge
@@ -263,9 +264,11 @@ Parameters:
     - m4.large
     - m4.xlarge
     - m4.2xlarge
+    - m4.4xlarge
     - m5.large
     - m5.xlarge
     - m5.2xlarge
+    - m5.4xlarge
     - c3.xlarge
     - c3.2xlarge
     - c3.4xlarge
