@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.21: Deploys Deep Security Manager to AWS. This template is designed
+Description: 'v5.22: Deploys Deep Security Manager to AWS. This template is designed
   to be nested in a stack, and requires several passed parameters to launch. **WARNING**
   This template creates Amazon EC2 instances and related resources. You will be billed
   for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
@@ -139,7 +139,6 @@ Parameters:
     - Oracle
     - SQL
     - PostgreSQL
-    - PostgresDocker
   DSISubnetID:
     Description: Existing Subnet for Deep Security Manager. Must be a public subnet
       contained the in VPC chosen above.
@@ -322,8 +321,6 @@ Mappings:
     Embedded:
       DbTypeString: Embedded
     PostgreSQL:
-      DbTypeString: PostgreSQL
-    PostgresDocker:
       DbTypeString: PostgreSQL
 Resources:
   DSMRole:
