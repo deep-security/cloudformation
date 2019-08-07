@@ -30,14 +30,26 @@ Parameters:
     Default: t2.medium
     AllowedValues:
       - t2.medium
+      - t3.medium
+      - t3a.medium
       - m3.medium
       - m3.large
       - m3.xlarge
       - m3.2xlarge
+      - m5a.large
+      - m5a.xlarge
+      - m5a.2xlarge
+      - m5.large
+      - m5.xlarge
+      - m5.2xlarge
+      - c5.large
+      - c5.xlarge
       - c4.large
       - c4.xlarge
       - c3.large
       - c3.xlarge
+      - r5.large
+      - r5.xlarge
       - r3.large
       - r3.xlarge
   SPSWebAdminPassword:
@@ -50,37 +62,40 @@ Parameters:
     ConstraintDescription: must contain only alphanumeric characters.
 Mappings:
   RegionToAMI:
-    us-east-1:
-      '64': ami-9db11de2
-    us-east-2:
-      '64': ami-5edcef3b
-    us-west-1:
-      '64': ami-dcf2e0bc
-    us-west-2:
-      '64': ami-4516793d
-    eu-west-1:
-      '64': ami-d17252a8
-    eu-west-2:
-      '64': ami-b68b68d1
-    eu-west-3:
-      '64': ami-2bc07156
-    eu-central-1:
-      '64': ami-5de1c4b6
-    sa-east-1:
-      '64': ami-8593c3e9
-    ap-northeast-1:
-      '64': ami-0e617a72
-    ap-southeast-1:
-      '64': ami-b23614ce
-    ap-southeast-2:
-      '64': ami-c00bc0a2
-    ap-northeast-2:
-      '64': ami-664ae408
+    eu-north-1:
+      '64': ami-07d4cadf1f6e6dcf5
     ap-south-1:
-      '64': ami-7c7a5c13
+      '64': ami-0d588c1ecc867f9b0
+    eu-west-3:
+      '64': ami-0548a512bfabb7020
+    eu-west-2:
+      '64': ami-0099b15e02cbc488e
+    eu-west-1:
+      '64': ami-083040dfef09b28b0
+    ap-northeast-2:
+      '64': ami-0d0dcb075672adfe4
+    ap-northeast-1:
+      '64': ami-008baa28c0a0105eb
+    me-south-1:
+      '64': ami-03c7d37cbb18698fa
+    sa-east-1:
+      '64': ami-0718d6348ef627b93
     ca-central-1:
-      '64': ami-cef273aa
-
+      '64': ami-01f4f0f5375f1eec4
+    ap-southeast-1:
+      '64': ami-04509179ca2cdfbd3
+    ap-southeast-2:
+      '64': ami-00f8ce0c9003507e7
+    eu-central-1:
+      '64': ami-04c81252a6434067e
+    us-east-1:
+      '64': ami-05a80a92619022a9c
+    us-east-2:
+      '64': ami-0fc6441a897b9a7e5
+    us-west-1:
+      '64': ami-02cce509753786773
+    us-west-2:
+      '64': ami-047672c1ed5463130
 Resources:
   SPS:
     Type: 'AWS::EC2::Instance'
