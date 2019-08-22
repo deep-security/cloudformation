@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.22: Trend Micro Deep Security Marketplace master template. For more
+Description: 'v5.27: Trend Micro Deep Security Marketplace master template. For more
   information see http://aws.trendmicro.com. (qs-1ngr590jt)'
 Metadata:
   AWS::CloudFormation::Interface:
@@ -119,7 +119,7 @@ Parameters:
     AllowedPattern: '[-_a-zA-Z0-9]*'
     ConstraintDescription: Subnet ID must exist in the chosen VPC
   DBIRDSInstanceSize:
-    Default: db.m3.large
+    Default: db.m5.large
     Description: Trend Micro Deep Security Database instance class
     Type: String
     AllowedValues:
@@ -131,6 +131,10 @@ Parameters:
     - db.m3.large
     - db.m3.xlarge
     - db.m3.2xlarge
+    - db.m5.medium
+    - db.m5.large
+    - db.m5.xlarge
+    - db.m5.2xlarge
     - db.r3.large
     - db.r3.xlarge
     - db.r3.2xlarge

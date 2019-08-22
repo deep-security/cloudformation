@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.22: This template is an abstraction layer for choosing PostgreSQL,
+Description: 'v5.27: This template is an abstraction layer for choosing PostgreSQL,
   Oracle or MSSQL when deploying Deep Security Manager. (qs-1ngr590i4)'
 Parameters:
   AWSIKeyPairName:
@@ -11,10 +11,14 @@ Parameters:
     MaxLength: '255'
     ConstraintDescription: Select an existing EC2 Key Pair.
   DBIRDSInstanceSize:
-    Default: db.m3.large
+    Default: db.m5.large
     Description: Trend Micro Deep Security Database instance class
     Type: String
     AllowedValues:
+    - db.m5.medium
+    - db.m5.large
+    - db.m5.xlarge
+    - db.m5.2xlarge
     - db.m4.large
     - db.m4.xlarge
     - db.m4.2xlarge
