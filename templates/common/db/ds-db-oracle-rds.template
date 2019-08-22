@@ -1,13 +1,17 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.22: This template deploys an Oracle RDS instance for Deep Security
+Description: 'v5.27: This template deploys an Oracle RDS instance for Deep Security
   Manager. (qs-1ngr590i9)'
 Parameters:
   DBIRDSInstanceSize:
-    Default: db.m3.large
+    Default: db.m5.large
     Description: Trend Micro Deep Security Database instance class
     Type: String
     AllowedValues:
+    - db.m5.medium
+    - db.m5.large
+    - db.m5.xlarge
+    - db.m5.2xlarge
     - db.m4.large
     - db.m4.xlarge
     - db.m4.2xlarge
@@ -95,6 +99,7 @@ Resources:
         - RegionIsUsGovCloud
         - oracle-se1
         - oracle-se2
+      EngineVersion: 12.1.0.2.v17
       MasterUsername: !Ref DBICAdminName
       MasterUserPassword: !Ref DBICAdminPassword
       VPCSecurityGroups:

@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.22: ONLY FOR DEMO, NOT A SUPPORTED DEPLOYMENT OPTION.
+Description: 'v5.27: ONLY FOR DEMO, NOT A SUPPORTED DEPLOYMENT OPTION.
   This template deploys PostgreSQL on Docker for Deep Security Manager.'
 Parameters:
   AWSIKeyPairName:
@@ -11,10 +11,14 @@ Parameters:
     MaxLength: '255'
     ConstraintDescription: Select an existing EC2 Key Pair.
   DBIRDSInstanceSize:
-    Default: db.m3.large
+    Default: db.m5.large
     Description: Trend Micro Deep Security Database instance class
     Type: String
     AllowedValues:
+    - db.m5.medium
+    - db.m5.large
+    - db.m5.xlarge
+    - db.m5.2xlarge
     - db.m4.medium
     - db.m4.large
     - db.m4.xlarge
@@ -77,49 +81,52 @@ Mappings:
       AMZNLINUXHVM: amzn-ami-hvm-2017.09.1.20180307-x86_64-gp2
     ap-northeast-1:
       AMZNLINUXHVM: ami-a77c30c1
-      InstanceType: m4.large
+      InstanceType: m5.large
     ap-northeast-2:
       AMZNLINUXHVM: ami-5e1ab730
-      InstanceType: m4.large
+      InstanceType: m5.large
     ap-south-1:
       AMZNLINUXHVM: ami-7c87d913
-      InstanceType: m4.large
+      InstanceType: m5.large
     ap-southeast-1:
       AMZNLINUXHVM: ami-e2adf99e
-      InstanceType: m4.large
+      InstanceType: m5.large
     ap-southeast-2:
       AMZNLINUXHVM: ami-43874721
-      InstanceType: m4.large
+      InstanceType: m5.large
     ca-central-1:
       AMZNLINUXHVM: ami-5b55d23f
-      InstanceType: m4.large
+      InstanceType: m5.large
+    eu-north-1:
+      AMZNLINUXHVM: ami-8c169ef2
+      InstanceType: m5.large
     eu-central-1:
       AMZNLINUXHVM: ami-ac442ac3
-      InstanceType: m4.large
+      InstanceType: m5.large
     eu-west-1:
       AMZNLINUXHVM: ami-3bfab942
-      InstanceType: m4.large
+      InstanceType: m5.large
     eu-west-2:
       AMZNLINUXHVM: ami-dff017b8
-      InstanceType: m4.large
+      InstanceType: m5.large
     sa-east-1:
       AMZNLINUXHVM: ami-5339733f
-      InstanceType: m4.large
+      InstanceType: m5.large
     us-east-1:
       AMZNLINUXHVM: ami-1853ac65
-      InstanceType: m4.large
+      InstanceType: m5.large
     us-east-2:
       AMZNLINUXHVM: ami-25615740
-      InstanceType: m4.large
+      InstanceType: m5.large
     us-gov-west-1:
       AMZNLINUXHVM: ami-ffa61d9e
-      InstanceType: m4.large
+      InstanceType: m5.large
     us-west-1:
       AMZNLINUXHVM: ami-bf5540df
-      InstanceType: m4.large
+      InstanceType: m5.large
     us-west-2:
       AMZNLINUXHVM: ami-d874e0a0
-      InstanceType: m4.large
+      InstanceType: m5.large
 Resources:
   DSDatabase:
     Type: AWS::EC2::Instance

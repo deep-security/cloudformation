@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'QS(0011) - v5.22: Quick Start that deploys Trend Micro Deep Security
+Description: 'QS(0011) - v5.27: Quick Start that deploys Trend Micro Deep Security
   into an existing VPC with a Multi-AZ RDS instance  **WARNING** This template uses
   images from the AWS Marketplace and an active subscription is required - Please
   see the Quick Start documentation for more details. You will be billed for the AWS
@@ -197,6 +197,8 @@ Mappings:
       BYOL: m5.xlarge
     ap-northeast-1:
       BYOL: m5.xlarge
+    eu-north-1:
+      BYOL: m5.xlarge
     eu-central-1:
       BYOL: m5.xlarge
     eu-west-1:
@@ -211,69 +213,73 @@ Mappings:
       BYOL: m5.xlarge
   RDSInstanceSize:
     us-east-1:
-      Oracle: db.m4.xlarge
-      MSSQL: db.m4.xlarge
-      PostgreSQL: db.m4.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     us-east-2:
-      Oracle: db.m4.xlarge
-      MSSQL: db.m4.xlarge
-      PostgreSQL: db.m4.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     us-west-1:
-      Oracle: db.m4.xlarge
-      MSSQL: db.m4.xlarge
-      PostgreSQL: db.m4.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     us-west-2:
-      Oracle: db.m4.xlarge
-      MSSQL: db.m4.xlarge
-      PostgreSQL: db.m4.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     ca-central-1:
-      Oracle: db.m4.xlarge
-      MSSQL: db.m4.xlarge
-      PostgreSQL: db.m4.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     ap-south-1:
-      Oracle: db.m4.xlarge
-      MSSQL: db.m4.xlarge
-      PostgreSQL: db.m4.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     ap-northeast-2:
-      Oracle: db.m4.xlarge
-      MSSQL: db.m4.xlarge
-      PostgreSQL: db.m4.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     ap-southeast-1:
-      Oracle: db.m4.xlarge
-      MSSQL: db.m4.xlarge
-      PostgreSQL: db.m4.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     ap-southeast-2:
-      Oracle: db.m4.xlarge
-      MSSQL: db.m4.xlarge
-      PostgreSQL: db.m4.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     ap-northeast-1:
-      Oracle: db.m4.xlarge
-      MSSQL: db.m4.xlarge
-      PostgreSQL: db.m4.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
+    eu-north-1:
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     eu-central-1:
-      Oracle: db.m4.xlarge
-      MSSQL: db.m4.xlarge
-      PostgreSQL: db.m4.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     eu-west-1:
-      Oracle: db.m4.xlarge
-      MSSQL: db.m4.xlarge
-      PostgreSQL: db.m4.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     eu-west-2:
-      Oracle: db.m4.xlarge
-      MSSQL: db.m4.xlarge
-      PostgreSQL: db.m4.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     sa-east-1:
-      Oracle: db.m3.xlarge
-      MSSQL: db.m3.xlarge
-      PostgreSQL: db.m3.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     us-gov-west-1:
-      Oracle: db.m3.xlarge
-      MSSQL: db.m3.xlarge
-      PostgreSQL: db.m3.xlarge
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
     eu-west-3:
-      Oracle: db.r4.xlarge
+      Oracle: db.m5.xlarge
       MSSQL: db.r4.xlarge
-      PostgreSQL: db.r4.xlarge
+      PostgreSQL: db.m5.xlarge
   RDSMultiAZ:
     us-east-1:
       Oracle: 'true'
@@ -314,6 +320,10 @@ Mappings:
     ap-northeast-1:
       Oracle: 'true'
       MSSQL: 'true'
+      PostgreSQL: 'true'
+    eu-north-1:
+      Oracle: 'true'
+      MSSQL: 'false'
       PostgreSQL: 'true'
     eu-central-1:
       Oracle: 'true'

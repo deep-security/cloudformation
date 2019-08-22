@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'DEMO ONLY - v5.22: Demo of the Trend Micro Deep Security Quick Start.
+Description: 'DEMO ONLY - v5.27: Demo of the Trend Micro Deep Security Quick Start.
   This template creates the VPC infrastructure needed for the Quick Start and deploys an
   EC2 instance with Docker and PostgreSQL for the database. **WARNING** This template
   uses images from the AWS Marketplace and an active subscription is required - Please
@@ -96,6 +96,11 @@ Mappings:
       '2': m5.large
       '3': m5.xlarge
       '4': m5.xlarge
+    eu-north-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
     eu-west-1:
       '1': m5.large
       '2': m5.large
@@ -179,7 +184,7 @@ Resources:
         AWSIKeyPairName: !Ref AWSKeyPairName
         AWSIVPC: !GetAtt Infrastructure.Outputs.VPCID
         DSISubnetID: !GetAtt Infrastructure.Outputs.PublicSubnet
-        DBIRDSInstanceSize: db.m4.large
+        DBIRDSInstanceSize: db.m5.large
         DBIStorageAllocation: '10'
         DBPBackupDays: '5'
         DBPCreateDbInstance: 'Yes'
