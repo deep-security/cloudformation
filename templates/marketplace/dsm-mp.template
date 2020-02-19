@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.27: Deploys Deep Security Manager to AWS. This template is designed
+Description: 'v5.28: Deploys Deep Security Manager to AWS. This template is designed
   to be nested in a stack, and requires several passed parameters to launch. **WARNING**
   This template creates Amazon EC2 instances and related resources. You will be billed
   for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
@@ -267,6 +267,9 @@ Mappings:
     us-west-2:
       PerHost: ami-0a839d555bfb4e7b2
       BYOL: ami-0aee1d974524d29ba
+    me-south-1 :
+      PerHost: ami-05727e9494c923314
+      BYOL: ami-042276eca86e21cdc
   DSMSIZE:
     us-east-1:
       PerHost: m5.xlarge
@@ -317,6 +320,9 @@ Mappings:
       PerHost: m5.xlarge
       BYOL: m5.xlarge
     us-gov-west-1:
+      PerHost: m5.xlarge
+      BYOL: m5.xlarge
+    me-south-1:
       PerHost: m5.xlarge
       BYOL: m5.xlarge
   DSMDBMap:

@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'QS(0011) - v5.27: Quick Start that deploys Trend Micro Deep Security
+Description: 'QS(0011) - v5.28: Quick Start that deploys Trend Micro Deep Security
   into an existing VPC with a Multi-AZ RDS instance  **WARNING** This template uses
   images from the AWS Marketplace and an active subscription is required - Please
   see the Quick Start documentation for more details. You will be billed for the AWS
@@ -211,6 +211,8 @@ Mappings:
       BYOL: m5.xlarge
     us-gov-west-1:
       BYOL: m5.xlarge
+    me-south-1:
+      BYOL: m5.xlarge
   RDSInstanceSize:
     us-east-1:
       Oracle: db.m5.xlarge
@@ -275,10 +277,14 @@ Mappings:
     us-gov-west-1:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
-      PostgreSQL: db.m5.xlarge
+      PostgreSQL: db.m4.xlarge
     eu-west-3:
       Oracle: db.m5.xlarge
       MSSQL: db.r4.xlarge
+      PostgreSQL: db.m5.xlarge
+    me-south-1:
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
   RDSMultiAZ:
     us-east-1:
@@ -346,6 +352,10 @@ Mappings:
       MSSQL: 'false'
       PostgreSQL: 'true'
     eu-west-3:
+      Oracle: 'true'
+      MSSQL: 'true'
+      PostgreSQL: 'true'
+    me-south-1:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
