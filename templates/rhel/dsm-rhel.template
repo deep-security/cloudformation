@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  v5.28: Deploys Deep Security Manager to AWS. This template is designed to be
+  v5.29: Deploys Deep Security Manager to AWS. This template is designed to be
   nested in a stack, and requires several passed parameters to launch.
   **WARNING** This template creates Amazon EC2 instances and related resources.
   You will be billed for the AWS resources used if you create a stack from this
@@ -72,9 +72,6 @@ Parameters:
     Type: String
     Default: m4.large
     AllowedValues:
-      - m3.large
-      - m3.xlarge
-      - m3.2xlarge
       - m4.large
       - m4.xlarge
       - m4.2xlarge
@@ -316,7 +313,7 @@ Resources:
                   Resource: !Join 
                     - ''
                     - - !If 
-                        - RegionIsUsGovWest1
+                        - GovCloudCondition
                         - 'arn:aws-us-gov:elasticloadbalancing:'
                         - 'arn:aws:elasticloadbalancing:'
                       - !Ref 'AWS::Region'
@@ -331,7 +328,7 @@ Resources:
                   Resource: !Join 
                     - ''
                     - - !If 
-                        - RegionIsUsGovWest1
+                        - GovCloudCondition
                         - 'arn:aws-us-gov:iam::'
                         - 'arn:aws:iam::'
                       - !Ref 'AWS::AccountId'
@@ -959,17 +956,18 @@ Conditions:
   InternetFacingELB: !Equals 
     - !Ref DSELBPosture
     - Internet-facing
-  RegionIsUsGovWest1: !Equals 
-    - !Ref 'AWS::Region'
-    - us-gov-west-1
   UseProxy: !Not 
     - !Equals 
       - !Ref DSProxyUrl
       - ''
   GovCloudCondition:
-    !Equals
-    - !Ref AWS::Region
-    - us-gov-west-1
+    !Or 
+    - !Equals 
+      - !Ref AWS::Region
+      - us-gov-west-1
+    - !Equals 
+      - !Ref AWS::Region
+      - us-gov-east-1
 Outputs:
   DSMFQDN:
     Value: !GetAtt 

@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.28: Trend Micro Deep Security Marketplace master template. For more
+Description: 'v5.29: Trend Micro Deep Security Marketplace master template. For more
   information see http://aws.trendmicro.com. (qs-1ngr590jt)'
 Metadata:
   AWS::CloudFormation::Interface:
@@ -259,11 +259,8 @@ Parameters:
     Description: Amazon EC2 instance type for BYOL Deep Security Manager Node Instances
       (ignored for other license types)
     Type: String
-    Default: m3.xlarge
+    Default: m5.xlarge
     AllowedValues:
-    - m3.large
-    - m3.xlarge
-    - m3.2xlarge
     - m4.large
     - m4.xlarge
     - m4.2xlarge
@@ -665,9 +662,13 @@ Conditions:
     - !Ref DSELBPosture
     - Internet-facing
   GovCloudCondition:
-    !Equals
-    - !Ref AWS::Region
-    - us-gov-west-1
+    !Or 
+    - !Equals 
+      - !Ref AWS::Region
+      - us-gov-west-1
+    - !Equals 
+      - !Ref AWS::Region
+      - us-gov-east-1
 Outputs:
   DeepSecurityConsole:
     Value:
