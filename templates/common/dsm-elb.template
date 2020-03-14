@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.28: Deploys Elastic Load Balancers and Security Groups for Deep Security
+Description: 'v5.29: Deploys Elastic Load Balancers and Security Groups for Deep Security
   (qs-1ngr590je). Manager.'
 Parameters:
   AWSIVPC:
@@ -115,9 +115,13 @@ Conditions:
     - !Ref DSELBPosture
     - Internet-facing
   GovCloudCondition:
-    !Equals
-    - !Ref AWS::Region
-    - us-gov-west-1
+    !Or 
+    - !Equals 
+      - !Ref AWS::Region
+      - us-gov-west-1
+    - !Equals 
+      - !Ref AWS::Region
+      - us-gov-east-1
 Outputs:
   ELBFQDN:
     Value: !GetAtt DSMELB.DNSName

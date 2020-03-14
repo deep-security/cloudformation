@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'QS(0011) - v5.28: Quick Start that deploys Trend Micro Deep Security
+Description: 'QS(0011) - v5.29: Quick Start that deploys Trend Micro Deep Security
   into an existing VPC with a Multi-AZ RDS instance  **WARNING** This template uses
   images from the AWS Marketplace and an active subscription is required - Please
   see the Quick Start documentation for more details. You will be billed for the AWS
@@ -213,6 +213,8 @@ Mappings:
       BYOL: m5.xlarge
     me-south-1:
       BYOL: m5.xlarge
+    us-gov-east-1:
+      BYOL: m5.xlarge
   RDSInstanceSize:
     us-east-1:
       Oracle: db.m5.xlarge
@@ -286,6 +288,10 @@ Mappings:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+    us-gov-east-1:
+      Oracle: db.r4.xlarge
+      MSSQL: db.r4.xlarge
+      PostgreSQL: db.r4.xlarge
   RDSMultiAZ:
     us-east-1:
       Oracle: 'true'
@@ -359,6 +365,10 @@ Mappings:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
+    us-gov-east-1:
+      Oracle: 'true'
+      MSSQL: 'true'
+      PostgreSQL: 'true'
 Resources:
   MasterMP:
     Type: AWS::CloudFormation::Stack
@@ -427,9 +437,13 @@ Conditions:
     - !Ref DatabaseEngine
     - MSSQL
   GovCloudCondition:
-    !Equals
-    - !Ref AWS::Region
-    - us-gov-west-1
+    !Or 
+    - !Equals 
+      - !Ref AWS::Region
+      - us-gov-west-1
+    - !Equals 
+      - !Ref AWS::Region
+      - us-gov-east-1
 Outputs:
   DeepSecurityConsole:
     Value: !GetAtt MasterMP.Outputs.DeepSecurityConsole
