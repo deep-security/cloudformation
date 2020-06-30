@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.30: Deploys Elastic Load Balancers and Security Groups for Deep Security
+Description: 'v5.31: Deploys Elastic Load Balancers and Security Groups for Deep Security
   (qs-1ngr590je). Manager.'
 Parameters:
   AWSIVPC:
@@ -49,6 +49,10 @@ Parameters:
       can include numbers, lowercase letters, uppercase letters, and hyphens (-).
       It cannot start or end with a hyphen (-).
     Type: String
+  QSS3BucketRegion:
+    Default: 'us-east-1'
+    Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
+    Type: String
   QSS3KeyPrefix:
     AllowedPattern: ^[0-9a-zA-Z-/]*$
     ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
@@ -63,13 +67,10 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL:
-        Fn::Sub:
-        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/common/security-groups/ds-elb-sg.template
-        - QSS3Region:
-            !If
-            - GovCloudCondition
-            - s3-us-gov-west-1
-            - s3
+        !Sub
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/security-groups/ds-elb-sg.template'
+          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DSIPGUIPort: !Ref DSIPGUIPort
@@ -110,6 +111,7 @@ Resources:
       ConnectionSettings:
         IdleTimeout: 600
 Conditions:
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
   InternetFacingELB:
     !Equals
     - !Ref DSELBPosture
