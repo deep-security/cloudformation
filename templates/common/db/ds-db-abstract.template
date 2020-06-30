@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.30: This template is an abstraction layer for choosing PostgreSQL,
+Description: 'v5.31: This template is an abstraction layer for choosing PostgreSQL,
   Oracle or MSSQL when deploying Deep Security Manager. (qs-1ngr590i4)'
 Parameters:
   AWSIKeyPairName:
@@ -122,6 +122,10 @@ Parameters:
       can include numbers, lowercase letters, uppercase letters, and hyphens (-).
       It cannot start or end with a hyphen (-).
     Type: String
+  QSS3BucketRegion:
+    Default: 'us-east-1'
+    Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
+    Type: String
   QSS3KeyPrefix:
     AllowedPattern: ^[0-9a-zA-Z-/]*$
     ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
@@ -137,13 +141,10 @@ Resources:
     Condition: DBTypeIsOracle
     Properties:
       TemplateURL:
-        Fn::Sub:
-        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/common/db/ds-db-oracle-rds.template
-        - QSS3Region:
-            !If
-            - GovCloudCondition
-            - s3-us-gov-west-1
-            - s3
+        !Sub
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/db/ds-db-oracle-rds.template'
+          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       TimeoutInMinutes: '45'
       Parameters:
         DBIRDSInstanceSize: !Ref DBIRDSInstanceSize
@@ -160,13 +161,10 @@ Resources:
     Condition: DBTypeIsSQL
     Properties:
       TemplateURL:
-        Fn::Sub:
-        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/common/db/ds-db-mssql-rds.template
-        - QSS3Region:
-            !If
-            - GovCloudCondition
-            - s3-us-gov-west-1
-            - s3
+        !Sub
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/db/ds-db-mssql-rds.template'
+          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       TimeoutInMinutes: '45'
       Parameters:
         DBIRDSInstanceSize: !Ref DBIRDSInstanceSize
@@ -183,13 +181,10 @@ Resources:
     Condition: DBTypeIsPostgreSQL
     Properties:
       TemplateURL:
-        Fn::Sub:
-        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/common/db/ds-db-postgresql-rds.template
-        - QSS3Region:
-            !If
-            - GovCloudCondition
-            - s3-us-gov-west-1
-            - s3
+        !Sub
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/db/ds-db-postgresql-rds.template'
+          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       TimeoutInMinutes: '45'
       Parameters:
         DBIRDSInstanceSize: !Ref DBIRDSInstanceSize
@@ -213,13 +208,10 @@ Resources:
     Condition: DBTypeIsPostgreSQLDocker
     Properties:
       TemplateURL:
-        Fn::Sub:
-        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/common/db/ds-db-postgresql-docker.template
-        - QSS3Region:
-            !If
-            - GovCloudCondition
-            - s3-us-gov-west-1
-            - s3
+        !Sub
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/db/ds-db-postgresql-docker.template'
+          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       TimeoutInMinutes: '15'
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
@@ -253,6 +245,7 @@ Conditions:
     - !Equals 
       - !Ref AWS::Region
       - us-gov-east-1
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
 Outputs:
   DSDBEndpoint:
     Value:

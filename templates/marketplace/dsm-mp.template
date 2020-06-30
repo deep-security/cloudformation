@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.30: Deploys Deep Security Manager to AWS. This template is designed
+Description: 'v5.31: Deploys Deep Security Manager to AWS. This template is designed
   to be nested in a stack, and requires several passed parameters to launch. **WARNING**
   This template creates Amazon EC2 instances and related resources. You will be billed
   for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
@@ -193,6 +193,10 @@ Parameters:
       can include numbers, lowercase letters, uppercase letters, and hyphens (-).
       It cannot start or end with a hyphen (-).
     Type: String
+  QSS3BucketRegion:
+    Default: 'us-east-1'
+    Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
+    Type: String
   QSS3KeyPrefix:
     AllowedPattern: ^[0-9a-zA-Z-/]*$
     ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
@@ -214,62 +218,62 @@ Parameters:
 Mappings:
   DSMAMI:
     ap-northeast-1:
-      PerHost: ami-0b25d1b6668ece3b6
-      BYOL: ami-01266ddf117fb8321
+      PerHost: ami-0eb8fc8bcc4151184
+      BYOL: ami-065066e785990b8f8
     ap-northeast-2:
-      PerHost: ami-09fd0839c99eca15f
-      BYOL: ami-070b872829c013de9
+      PerHost: ami-0a5c1a8b409581dc5
+      BYOL: ami-0d1e9d26650ed90e9
     ap-south-1:
-      PerHost: ami-087a9203ad68eab9b
-      BYOL: ami-02e2d939ffb896065
+      PerHost: ami-01c86b761e6a317e1
+      BYOL: ami-0f7c1004963c91f40
     ap-southeast-1:
-      PerHost: ami-07034c540a78e4a68
-      BYOL: ami-086585aa0063cc888
+      PerHost: ami-05edde9391cb8d0b8
+      BYOL: ami-0d4b01d970fe7cc89
     ap-southeast-2:
-      PerHost: ami-0e1a3b9f764af7204
-      BYOL: ami-036ed91efe0eb2b50
+      PerHost: ami-0c8ecb6b21d2bd278
+      BYOL: ami-05f629cc2a737ccbb
     ca-central-1:
-      PerHost: ami-0d8f7c5469be74dc4
-      BYOL: ami-0834a5f2a6661ef4a
+      PerHost: ami-0deb5bac6addd6618
+      BYOL: ami-0d1574856370f199b
     eu-north-1:
-      PerHost: ami-0084375c54d7a3f8c
-      BYOL: ami-064a92bbb2901598e
+      PerHost: ami-0bb0f0d9a26fd6062
+      BYOL: ami-04b9d986f28d83687
     eu-central-1:
-      PerHost: ami-04df980f348dc36bc
-      BYOL: ami-0221930ec32159ff9
+      PerHost: ami-0f33a06ec27b209ed
+      BYOL: ami-03450e4e48aa3af25
     eu-west-1:
-      PerHost: ami-0bfbeac12e509d93e
-      BYOL: ami-0484ec24af8cd42d8
+      PerHost: ami-05e472bdbb5ce7bb1
+      BYOL: ami-0d8f1abcc01eb524a
     eu-west-2:
-      PerHost: ami-0e335b92acc072166
-      BYOL: ami-0f423f94c479816cf
+      PerHost: ami-07e41aecaed04d884
+      BYOL: ami-0787c9e0feb5f687f
     eu-west-3:
-      PerHost: ami-02f8a8df3c9e99c84
-      BYOL: ami-087e9dbc5b6a1b168
+      PerHost: ami-0692165847deb8e46
+      BYOL: ami-0e27aaf6d8e86dfed
     sa-east-1:
-      PerHost: ami-0d0886279d98a552a
-      BYOL: ami-04593be55dfad60e9
+      PerHost: ami-06bb4e95975e42414
+      BYOL: ami-01dc310042055eb58
     us-east-1:
-      PerHost: ami-0ac75de992838a10c
-      BYOL: ami-0e70f6cc7c38a7815
+      PerHost: ami-06b61abd05e4c9898
+      BYOL: ami-0648927d9960d339c
     us-east-2:
-      PerHost: ami-017796f62594f2a93
-      BYOL: ami-084d50b32481db320
+      PerHost: ami-0c8c51eed1ffbea76
+      BYOL: ami-09e6c029444bf13c2
     us-gov-west-1:
-      PerHost: ami-a6320fc7
-      BYOL: ami-fa1a279b
+      PerHost: ami-0e34a3ee2bd47f4b8
+      BYOL: ami-0dce04e5df49a6f51
     us-west-1:
-      PerHost: ami-0a50bd481bbf51105
-      BYOL: ami-07b1109ee5bb048e9
+      PerHost: ami-000ddf98080478263
+      BYOL: ami-0a90e5404685326d6
     us-west-2:
-      PerHost: ami-0556a6e419a35e363
-      BYOL: ami-041a7e695c4244c59
-    me-south-1 :
-      PerHost: ami-0ff44c44ddd3f80df
-      BYOL: ami-011785d9c069322fd
+      PerHost: ami-033725455e09fa1f9
+      BYOL: ami-06104c55cbc4c094d
+    me-south-1:
+      PerHost: ami-0e33e3059c632275c
+      BYOL: ami-0e8a2b0d35e0d9564
     us-gov-east-1:
-      PerHost: ami-c26d81b3
-      BYOL: ami-8317fbf2
+      PerHost: ami-0c5f9fddf5d23f3b8
+      BYOL: ami-0d662550008dc65c8
   DSMSIZE:
     us-east-1:
       PerHost: m5.xlarge
@@ -363,14 +367,9 @@ Resources:
           - Effect: Allow
             Action:
             - s3:GetObject
-            Resource:
-              Fn::Sub:
-              - arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*
-              - Partition:
-                  !If
-                  - GovCloudCondition
-                  - aws-us-gov
-                  - aws
+            Resource: !Sub
+              - arn:${AWS::Partition}:s3:::${S3Bucket}/${QSS3KeyPrefix}*
+              - S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       - !If
         - AddToELB
         - PolicyName: DeepSecurityManagerInstancePolicy
@@ -457,7 +456,7 @@ Resources:
         S3AccessCreds:
           type: S3
           roleName: !Ref DSMRole
-          buckets: !Ref QSS3BucketName
+          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       AWS::CloudFormation::Init:
         configSets:
           default:
@@ -531,15 +530,12 @@ Resources:
                   AddressAndPortsScreen.HeartbeatPort=${DSIPHeartbeatPort}
                   ${NodeConfig}
                   SecurityUpdateScreen.UpdateComponents=true
-                  SecurityUpdateScreen.UpdateSoftware=true
+                  SoftwareUpdateScreen.UpdateSoftware=True
                   SmartProtectionNetworkScreen.EnableFeedback=false
                   SmartProtectionNetworkScreen.IndustryType=blank
                   RelayScreen.Install=True
-                  RelayScreen.ProxyType=None
-                  RelayScreen.ProxyPort=None
-                  RelayScreen.Proxy=False
-                  RelayScreen.AntiMalware=True
-                  RelayScreen.ProxyAuthentication=False
+                  ${softwareUpdateScreenProxyConfig}
+                  ${securityUpdateScreenProxyConfig}
                   Override.Automation=True
                 - LicenseConfig:
                     !If
@@ -561,6 +557,52 @@ Resources:
                     - |
                       AddressAndPortsScreen.NewNode=true
                       UpgradeVerificationScreen.Overwrite=False
+                  softwareUpdateScreenProxyConfig:
+                    !If
+                    - UseProxy
+                    - Fn::Sub:
+                      - |
+                        SoftwareUpdateScreen.Proxy=True
+                        SoftwareUpdateScreen.ProxyType=HTTP
+                        SoftwareUpdateScreen.ProxyAddress=${softwareUpdateScreenProxyHost}
+                        SoftwareUpdateScreen.ProxyPort=${softwareUpdateScreenProxyPort}
+                        SoftwareUpdateScreen.ProxyAuthentication="False"
+                        SoftwareUpdateScreen.ProxyUsername=""
+                        SoftwareUpdateScreen.ProxyPassword=""
+                      - softwareUpdateScreenProxyHost: !Select
+                        - 0
+                        - Fn::Split:
+                          - ":"
+                          - Fn::Sub: "${DSProxyUrl}"
+                        softwareUpdateScreenProxyPort: !Select
+                        - 1
+                        - Fn::Split:
+                          - ":"
+                          - Fn::Sub: "${DSProxyUrl}"
+                    - ''
+                  securityUpdateScreenProxyConfig:
+                    !If
+                    - UseProxy
+                    - Fn::Sub:
+                      - |
+                        SecurityUpdateScreen.Proxy=True
+                        SecurityUpdateScreen.ProxyType=HTTP
+                        SecurityUpdateScreen.ProxyAddress=${securityUpdateScreenProxyHost}
+                        SecurityUpdateScreen.ProxyPort=${securityUpdateScreenProxyPort}
+                        SecurityUpdateScreen.ProxyAuthentication="False"
+                        SecurityUpdateScreen.ProxyUsername=""
+                        SecurityUpdateScreen.ProxyPassword=""
+                      - securityUpdateScreenProxyHost: !Select
+                        - 0
+                        - Fn::Split:
+                          - ":"
+                          - Fn::Sub: "${DSProxyUrl}"
+                        securityUpdateScreenProxyPort: !Select
+                        - 1
+                        - Fn::Split:
+                          - ":"
+                          - Fn::Sub: "${DSProxyUrl}"
+                    - ''
               owner: root
               mode: '000600'
         installDSM:
@@ -581,36 +623,27 @@ Resources:
             /etc/cfn/set-aia-settings.sh:
               source:
                 Fn::Sub:
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/set-aia-settings.sh
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/set-aia-settings.sh
+                - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               owner: root
               mode: '000700'
               authentication: S3AccessCreds
             /etc/cfn/kill-mp-web-installer.sh:
               source:
                 Fn::Sub:
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/kill-mp-web-installer.sh
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/kill-mp-web-installer.sh
+                - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               owner: root
               mode: '000700'
               authentication: S3AccessCreds
             /etc/cfn/add-aws-account-with-instance-role.sh:
               source:
                 Fn::Sub:
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/add-aws-account-with-instance-role.sh
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/add-aws-account-with-instance-role.sh
+                - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               owner: root
               mode: '000700'
               authentication: S3AccessCreds
@@ -636,12 +669,9 @@ Resources:
             /etc/cfn/rhel-scripts/create-dsm-db.py:
               source:
                 Fn::Sub:
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/create-dsm-db.py
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/create-dsm-db.py
+                - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               owner: root
               mode: '000755'
               authentication: S3AccessCreds
@@ -665,24 +695,18 @@ Resources:
             /etc/cfn/create-console-listener.sh:
               source:
                 Fn::Sub:
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/create-console-listener.sh
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/create-console-listener.sh
+                - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               owner: root
               mode: '000700'
               authentication: S3AccessCreds
             /etc/cfn/set-lb-settings.sh:
               source:
                 Fn::Sub:
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/set-lb-settings.sh
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/set-lb-settings.sh
+                - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               owner: root
               mode: '000700'
               authentication: S3AccessCreds
@@ -706,12 +730,9 @@ Resources:
             /etc/cfn/reactivate-manager.sh:
               source:
                 Fn::Sub:
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/reactivate-manager.sh
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/reactivate-manager.sh
+                - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               owner: root
               mode: '000700'
               authentication: S3AccessCreds
@@ -766,7 +787,6 @@ Resources:
                   export HTTP_PROXY="http://${DSProxyUrl}"
                   export NO_PROXY="169.254.169.254,localhost,127.0.0.1"
                   echo -e "proxy=http://${DSProxyUrl}" >> /etc/yum.conf
-                  curl -ko /opt/trend/packages/dsm/default/Agent-amzn1-10.0.0-2240.x86_64.zip https://files.trendmicro.com/products/deepsecurity/en/10.0/Agent-amzn1-10.0.0-2240.x86_64.zip
               - ''
             ConfigSetOption1:
               !If
@@ -807,6 +827,7 @@ Resources:
               - Fn::Sub: ' --https-proxy https://${DSProxyUrl}'
               - ''
 Conditions:
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
   DBTypeIsSQL:
     !Equals
     - !Ref DBPEngine
