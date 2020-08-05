@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.31: This template deploys an MSSQL RDS Instance for Deep Security
+Description: 'v5.32: This template deploys an MSSQL RDS Instance for Deep Security
   Manager. (qs-1ngr590ij)'
 Parameters:
   DBIRDSInstanceSize:

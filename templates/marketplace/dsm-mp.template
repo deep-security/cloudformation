@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.31: Deploys Deep Security Manager to AWS. This template is designed
+Description: 'v5.32: Deploys Deep Security Manager to AWS. This template is designed
   to be nested in a stack, and requires several passed parameters to launch. **WARNING**
   This template creates Amazon EC2 instances and related resources. You will be billed
   for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
@@ -218,62 +218,62 @@ Parameters:
 Mappings:
   DSMAMI:
     ap-northeast-1:
-      PerHost: ami-0eb8fc8bcc4151184
-      BYOL: ami-065066e785990b8f8
+      PerHost: ami-0108b5e93819995cf
+      BYOL: ami-05a5094e17282c4ae
     ap-northeast-2:
-      PerHost: ami-0a5c1a8b409581dc5
-      BYOL: ami-0d1e9d26650ed90e9
+      PerHost: ami-045ffa75a6123665b
+      BYOL: ami-01b2869c88125bf3a
     ap-south-1:
-      PerHost: ami-01c86b761e6a317e1
-      BYOL: ami-0f7c1004963c91f40
+      PerHost: ami-0bb4a0a0afa84515e
+      BYOL: ami-03f47074666ac3b22
     ap-southeast-1:
-      PerHost: ami-05edde9391cb8d0b8
-      BYOL: ami-0d4b01d970fe7cc89
+      PerHost: ami-05d5005643407898a
+      BYOL: ami-05ebda1f31a3875c5
     ap-southeast-2:
-      PerHost: ami-0c8ecb6b21d2bd278
-      BYOL: ami-05f629cc2a737ccbb
+      PerHost: ami-06594eb53ce7b403b
+      BYOL: ami-0414cb34ff9164c97
     ca-central-1:
-      PerHost: ami-0deb5bac6addd6618
-      BYOL: ami-0d1574856370f199b
-    eu-north-1:
-      PerHost: ami-0bb0f0d9a26fd6062
-      BYOL: ami-04b9d986f28d83687
+      PerHost: ami-00c9767dc6edde5da
+      BYOL: ami-02fb9ff785d2f4471
     eu-central-1:
-      PerHost: ami-0f33a06ec27b209ed
-      BYOL: ami-03450e4e48aa3af25
+      PerHost: ami-0a9ddefd7a924ac66
+      BYOL: ami-00fe2065fc44f20d8
+    eu-north-1:
+      PerHost: ami-04c1c0bda16e81cb1
+      BYOL: ami-0b5f1cc0741085214
     eu-west-1:
-      PerHost: ami-05e472bdbb5ce7bb1
-      BYOL: ami-0d8f1abcc01eb524a
+      PerHost: ami-0922ba3bb85e1246d
+      BYOL: ami-03d26449f81118a4d
     eu-west-2:
-      PerHost: ami-07e41aecaed04d884
-      BYOL: ami-0787c9e0feb5f687f
+      PerHost: ami-002e4ffb17dc10657
+      BYOL: ami-07cc9e5fcac0ac34e
     eu-west-3:
-      PerHost: ami-0692165847deb8e46
-      BYOL: ami-0e27aaf6d8e86dfed
-    sa-east-1:
-      PerHost: ami-06bb4e95975e42414
-      BYOL: ami-01dc310042055eb58
-    us-east-1:
-      PerHost: ami-06b61abd05e4c9898
-      BYOL: ami-0648927d9960d339c
-    us-east-2:
-      PerHost: ami-0c8c51eed1ffbea76
-      BYOL: ami-09e6c029444bf13c2
-    us-gov-west-1:
-      PerHost: ami-0e34a3ee2bd47f4b8
-      BYOL: ami-0dce04e5df49a6f51
-    us-west-1:
-      PerHost: ami-000ddf98080478263
-      BYOL: ami-0a90e5404685326d6
-    us-west-2:
-      PerHost: ami-033725455e09fa1f9
-      BYOL: ami-06104c55cbc4c094d
+      PerHost: ami-0f798710e57bc9618
+      BYOL: ami-06f3e0e3a153a8d2e
     me-south-1:
-      PerHost: ami-0e33e3059c632275c
-      BYOL: ami-0e8a2b0d35e0d9564
+      PerHost: ami-0c4e7de8d8a2088d8
+      BYOL: ami-0cc42a653d9f076ab
+    sa-east-1:
+      PerHost: ami-0f998052d38a3096a
+      BYOL: ami-0c4dd3425b83088f2
+    us-east-1:
+      PerHost: ami-03d5316ee012a9e7f
+      BYOL: ami-06b06d2555bda46b9
+    us-east-2:
+      PerHost: ami-0a965d402e91a6a80
+      BYOL: ami-0352ffff22344f0a5
     us-gov-east-1:
-      PerHost: ami-0c5f9fddf5d23f3b8
-      BYOL: ami-0d662550008dc65c8
+      PerHost: ami-0f5b4986b49ecaf67
+      BYOL: ami-04043e7ea8e1968fd
+    us-gov-west-1:
+      PerHost: ami-04c31a2998349ecc8
+      BYOL: ami-0b4ce4d3e17676a9c
+    us-west-1:
+      PerHost: ami-009c1c5db0eab8f6d
+      BYOL: ami-0f0bc62d74dbecf76
+    us-west-2:
+      PerHost: ami-087eabe2877768784
+      BYOL: ami-04e1fbc3ed1381def
   DSMSIZE:
     us-east-1:
       PerHost: m5.xlarge
@@ -537,6 +537,9 @@ Resources:
                   ${softwareUpdateScreenProxyConfig}
                   ${securityUpdateScreenProxyConfig}
                   Override.Automation=True
+                  Cloudformation.QSS3BucketName=${QSS3BucketName}
+                  Cloudformation.QSS3BucketRegion=${QSS3BucketRegion}
+                  Cloudformation.QSS3KeyPrefix=${QSS3KeyPrefix}
                 - LicenseConfig:
                     !If
                     - AddAcAnswer

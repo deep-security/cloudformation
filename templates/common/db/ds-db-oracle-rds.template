@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.31: This template deploys an Oracle RDS instance for Deep Security
+Description: 'v5.32: This template deploys an Oracle RDS instance for Deep Security
   Manager. (qs-1ngr590i9)'
 Parameters:
   DBIRDSInstanceSize:
@@ -8,25 +8,27 @@ Parameters:
     Description: Trend Micro Deep Security Database instance class
     Type: String
     AllowedValues:
-    - db.m5.medium
     - db.m5.large
     - db.m5.xlarge
     - db.m5.2xlarge
+    - db.m5.4xlarge
     - db.m4.large
     - db.m4.xlarge
     - db.m4.2xlarge
     - db.m4.4xlarge
-    - db.m3.medium
-    - db.m3.large
-    - db.m3.xlarge
-    - db.m3.2xlarge
-    - db.r3.large
-    - db.r3.xlarge
-    - db.r3.2xlarge
-    - db.r3.4xlarge
-    - db.r3.8xlarge
     - db.r4.large
     - db.r4.xlarge
+    - db.r4.2xlarge
+    - db.r4.4xlarge
+    - db.r5.large
+    - db.r5.xlarge
+    - db.r5.2xlarge
+    - db.r5.4xlarge
+    - db.t3.small
+    - db.t3.medium
+    - db.t3.large
+    - db.t3.xlarge
+    - db.t3.2xlarge
     ConstraintDescription: must select a valid database instance type.
   DBIStorageAllocation:
     Default: 10
@@ -94,12 +96,8 @@ Resources:
       DBName: !Ref DBPName
       AllocatedStorage: !Ref DBIStorageAllocation
       DBInstanceClass: !Ref DBIRDSInstanceSize
-      Engine:
-        !If
-        - RegionIsUsGovCloud
-        - oracle-se1
-        - oracle-se2
-      EngineVersion: 12.1.0.2.v17
+      Engine: oracle-se2
+      EngineVersion: 19.0.0.0.ru-2020-04.rur-2020-04.r1
       MasterUsername: !Ref DBICAdminName
       MasterUserPassword: !Ref DBICAdminPassword
       VPCSecurityGroups:
@@ -113,10 +111,6 @@ Resources:
       - Key: Application
         Value: Deep Security Manager
 Conditions:
-  RegionIsUsGovCloud:
-    !Equals
-    - !Ref AWS::Region
-    - us-gov-west-1
   MultiAZ:
     !Equals
     - !Ref MultiAZ
