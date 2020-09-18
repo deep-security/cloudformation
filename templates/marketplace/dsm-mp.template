@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.32: Deploys Deep Security Manager to AWS. This template is designed
+Description: 'v5.33: Deploys Deep Security Manager to AWS. This template is designed
   to be nested in a stack, and requires several passed parameters to launch. **WARNING**
   This template creates Amazon EC2 instances and related resources. You will be billed
   for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
@@ -69,10 +69,12 @@ Parameters:
     - m4.xlarge
     - m4.2xlarge
     - m4.4xlarge
+    - m4.10xlarge
     - m5.large
     - m5.xlarge
     - m5.2xlarge
     - m5.4xlarge
+    - m5.8xlarge
     - c3.xlarge
     - c3.2xlarge
     - c3.4xlarge
@@ -81,6 +83,8 @@ Parameters:
     - c4.2xlarge
     - c4.4xlarge
     - c4.8xlarge
+    - c5.4xlarge
+    - c5.9xlarge
     - r3.large
     - r3.xlarge
     - r3.2xlarge
@@ -218,62 +222,62 @@ Parameters:
 Mappings:
   DSMAMI:
     ap-northeast-1:
-      PerHost: ami-0108b5e93819995cf
-      BYOL: ami-05a5094e17282c4ae
+      PerHost: ami-0a2f354157a87d729
+      BYOL: ami-0e302336b7682636c
     ap-northeast-2:
-      PerHost: ami-045ffa75a6123665b
-      BYOL: ami-01b2869c88125bf3a
+      PerHost: ami-0737f9d70fd4d04f3
+      BYOL: ami-00dc7d75798200cde
     ap-south-1:
-      PerHost: ami-0bb4a0a0afa84515e
-      BYOL: ami-03f47074666ac3b22
+      PerHost: ami-02346573fa15d1895
+      BYOL: ami-0455c38f09ac2e7a9
     ap-southeast-1:
-      PerHost: ami-05d5005643407898a
-      BYOL: ami-05ebda1f31a3875c5
+      PerHost: ami-08a7a8e9f5fcf2d64
+      BYOL: ami-002d00b3b78c3a9a8
     ap-southeast-2:
-      PerHost: ami-06594eb53ce7b403b
-      BYOL: ami-0414cb34ff9164c97
+      PerHost: ami-03f7de9e950d4bf2a
+      BYOL: ami-0e446e51efeeeafb7
     ca-central-1:
-      PerHost: ami-00c9767dc6edde5da
-      BYOL: ami-02fb9ff785d2f4471
+      PerHost: ami-0b0b98d56ba1a6179
+      BYOL: ami-0b41cf1a503fc30a7
     eu-central-1:
-      PerHost: ami-0a9ddefd7a924ac66
-      BYOL: ami-00fe2065fc44f20d8
+      PerHost: ami-09ace5ec15cff1ffa
+      BYOL: ami-09d3948613e2ffff8
     eu-north-1:
-      PerHost: ami-04c1c0bda16e81cb1
-      BYOL: ami-0b5f1cc0741085214
+      PerHost: ami-0ed4005889e30f39e
+      BYOL: ami-0eb99a8bab8388c10
     eu-west-1:
-      PerHost: ami-0922ba3bb85e1246d
-      BYOL: ami-03d26449f81118a4d
+      PerHost: ami-0add496ef8fa00500
+      BYOL: ami-01ff854c1877f9cac
     eu-west-2:
-      PerHost: ami-002e4ffb17dc10657
-      BYOL: ami-07cc9e5fcac0ac34e
+      PerHost: ami-0045c0ebfeba6291d
+      BYOL: ami-04252595ec7c5fdbf
     eu-west-3:
-      PerHost: ami-0f798710e57bc9618
-      BYOL: ami-06f3e0e3a153a8d2e
+      PerHost: ami-006736e5e126170c4
+      BYOL: ami-0ca7de52a6d488a76
     me-south-1:
-      PerHost: ami-0c4e7de8d8a2088d8
-      BYOL: ami-0cc42a653d9f076ab
+      PerHost: ami-0327d5bbb787b81c0
+      BYOL: ami-0c3c491c917bef25f
     sa-east-1:
-      PerHost: ami-0f998052d38a3096a
-      BYOL: ami-0c4dd3425b83088f2
+      PerHost: ami-0568c1000df369296
+      BYOL: ami-0b742b23c16bf921f
     us-east-1:
-      PerHost: ami-03d5316ee012a9e7f
-      BYOL: ami-06b06d2555bda46b9
+      PerHost: ami-0b9a5613bf3c7a0ec
+      BYOL: ami-0b30361db90bbaeee
     us-east-2:
-      PerHost: ami-0a965d402e91a6a80
-      BYOL: ami-0352ffff22344f0a5
+      PerHost: ami-0bfb880ee8070f685
+      BYOL: ami-07a9ec1734911fe47
     us-gov-east-1:
-      PerHost: ami-0f5b4986b49ecaf67
-      BYOL: ami-04043e7ea8e1968fd
+      PerHost: ami-00c7bda040bc80302
+      BYOL: ami-0959044160cc43bd9
     us-gov-west-1:
-      PerHost: ami-04c31a2998349ecc8
-      BYOL: ami-0b4ce4d3e17676a9c
+      PerHost: ami-001eef3040faa25c9
+      BYOL: ami-0de0e15763499eafa
     us-west-1:
-      PerHost: ami-009c1c5db0eab8f6d
-      BYOL: ami-0f0bc62d74dbecf76
+      PerHost: ami-02eec3a1c2300bef3
+      BYOL: ami-02ebba1270401fdfe
     us-west-2:
-      PerHost: ami-087eabe2877768784
-      BYOL: ami-04e1fbc3ed1381def
+      PerHost: ami-0037760aa99977a4b
+      BYOL: ami-0b70fcbe08f884715
   DSMSIZE:
     us-east-1:
       PerHost: m5.xlarge
@@ -449,6 +453,12 @@ Resources:
       Path: /
       Roles:
       - !Ref DSMRole
+  DSMLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        MetadataOptions:
+          HttpTokens: 'required'
   DSM:
     Type: AWS::EC2::Instance
     Metadata:
@@ -611,9 +621,10 @@ Resources:
         installDSM:
           commands:
             0-sethostnameinprops:
-              command:
-                Fn::Sub: echo "AddressAndPortsScreen.ManagerAddress=$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)"
-                  >> /etc/cfn/dsmConfiguration.properties
+              command: |
+                  TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60"`
+                  managerAddress=`curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/local-ipv4/`
+                  echo "AddressAndPortsScreen.ManagerAddress=$managerAddress" >> /etc/cfn/dsmConfiguration.properties
               ignoreErrors: 'false'
             1-install-DSM:
               command: cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/ManagerAWS.sh
@@ -689,9 +700,9 @@ Resources:
           commands:
             0-add-instance-to-elb:
               command:
-                Fn::Sub: aws elb register-instances-with-load-balancer --load-balancer
-                  ${DSIELB} --instances $(curl http://169.254.169.254/latest/meta-data/instance-id/)
-                  --region ${AWS::Region}
+                Fn::Sub: |
+                  TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60"`
+                  aws elb register-instances-with-load-balancer --load-balancer ${DSIELB} --instances $(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id/) --region ${AWS::Region}
               ignoreErrors: 'false'
         fixManagerLoadBalancerSettings:
           files:
@@ -726,8 +737,9 @@ Resources:
           commands:
             1-setHostsFileELB:
               command:
-                Fn::Sub: echo "$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)
-                  ${DSIELBFQDN}" >> /etc/hosts
+                Fn::Sub: |
+                  TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60"`
+                  echo "$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/local-ipv4/) ${DSIELBFQDN}" >> /etc/hosts
         fixManagerHostObject:
           files:
             /etc/cfn/reactivate-manager.sh:
@@ -746,6 +758,9 @@ Resources:
                   ${DSCAdminName} ${DSCAdminPassword} ${DSIPGUIPort}
     Properties:
       IamInstanceProfile: !Ref DSMProfile
+      LaunchTemplate:
+          LaunchTemplateId: !Ref DSMLaunchTemplate
+          Version: '1'
       ImageId:
         !FindInMap
         - DSMAMI
