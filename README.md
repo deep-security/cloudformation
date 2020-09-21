@@ -10,7 +10,7 @@ This repository contains a collection of AWS CloudFormation templates that will 
 
 ## Usage
 
-This project contains 2 sets of templates. The "marketplace" folder contains the top level and Deep Security Manager node templates for deploying from the Deep Security Marketplace AMI. RHEL contains versions for deploying on an Amazon RHEL 6 AMI. The "common" folder contains nested templates for objects which are common to both deployment types, including ELBs, Security Groups, and RDS.
+This project contains 2 sets of templates. The "marketplace" folder contains the top level and Deep Security Manager node templates for deploying from the Deep Security Marketplace AMI. RHEL contains versions for deploying on an Amazon RHEL 7 AMI. The "common" folder contains nested templates for objects which are common to both deployment types, including ELBs, Security Groups, and RDS.
 
 Each nested template should be maintained such that it can be run standalone (for example, to create an RDS instance seperately from manager nodes for a staged deployment, to add an additional manager node to scale out an existing implementation, or for easier integration with other custom template use cases).
 

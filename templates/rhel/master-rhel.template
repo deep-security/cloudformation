@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.32: Trend Micro Deep Security AWS RHEL master template.'
+Description: 'v5.33: Trend Micro Deep Security AWS RHEL master template.'
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
@@ -267,10 +267,12 @@ Parameters:
       - m4.xlarge
       - m4.2xlarge
       - m4.4xlarge
+      - m4.10xlarge
       - m5.large
       - m5.xlarge
       - m5.2xlarge
       - m5.4xlarge
+      - m5.8xlarge
       - c3.xlarge
       - c3.2xlarge
       - c3.4xlarge
@@ -279,6 +281,8 @@ Parameters:
       - c4.2xlarge
       - c4.4xlarge
       - c4.8xlarge
+      - c5.4xlarge
+      - c5.9xlarge
       - r3.large
       - r3.xlarge
       - r3.2xlarge
@@ -289,6 +293,8 @@ Parameters:
       - i2.4xlarge
       - i2.8xlarge
       - g2.2xlarge
+      - r4.large
+      - r4.xlarge
   DBISubnet1:
     Description: >-
       Choose a primary private subnet for RDS instance. Must be in same AZ as
@@ -344,6 +350,7 @@ Parameters:
   DSProxyUrl:
     Type: String
     Default: ''
+    AllowedPattern: '^$|^(?!(?i)http)(.+):[\d]+$|^(?=\d+\.\d+\.\d+\.\d+\:\d+$)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.?){4}:(6553[0-5]|655[0-2][0-9]\d|65[0-4](\d){2}|6[0-4](\d){3}|[1-5](\d){4}|[1-9](\d){0,3}){1}$'
 Resources:
   DSMNode1:
     Type: 'AWS::CloudFormation::Stack'

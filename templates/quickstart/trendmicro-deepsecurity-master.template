@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'QS(0011) - v5.32: Quick Start that deploys Trend Micro Deep Security
+Description: 'QS(0011) - v5.33: Quick Start that deploys Trend Micro Deep Security
   into an existing VPC with a Multi-AZ PostgreSQL RDS instance  **WARNING** This template
   uses images from the AWS Marketplace and an active subscription is required - Please
   see the Quick Start documentation for more details. You will be billed for the AWS
@@ -140,98 +140,98 @@ Parameters:
 Mappings:
   DSMSIZE:
     us-east-1:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     us-west-1:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     us-west-2:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     eu-west-1:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     eu-central-1:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     sa-east-1:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     ap-northeast-1:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     ap-southeast-1:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     ap-southeast-2:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     ap-northeast-2:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     us-east-2:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     ca-central-1:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     ap-south-1:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     eu-north-1:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     eu-west-2:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     eu-west-3:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     us-gov-west-1:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     me-south-1:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
     us-gov-east-1:
-      '1': m5.large
-      '2': m5.large
+      '1': m5.xlarge
+      '2': m5.xlarge
       '3': m5.xlarge
       '4': m5.xlarge
   RDSStorageSize:

@@ -5,7 +5,8 @@ dnsHostNamesOn=
 SID=`curl -k -H "Content-Type: application/json" -X POST "https://localhost:$3/rest/authentication/login/primary" -d '{"dsCredentials":{"userName":"'$1'","password":"'$2'"}}'`
 
 ## get public hostname from metadata
-public_hostname=$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)
+TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60"`
+public_hostname=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/public-hostname)
 echo -e "public hostname returned from meta-data endpoint was \"$public_hostname\"\n" > mgract.log
 
 if [ -z $public_hostname ]
