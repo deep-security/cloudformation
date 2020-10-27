@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.33: Deploys Deep Security Manager to AWS. This template is designed
+Description: 'v5.34: Deploys Deep Security Manager to AWS. This template is designed
   to be nested in a stack, and requires several passed parameters to launch. **WARNING**
   This template creates Amazon EC2 instances and related resources. You will be billed
   for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
@@ -129,7 +129,7 @@ Parameters:
     Description: FQDN or IP of RDS Endpoint
     Type: String
     MinLength: '1'
-    MaxLength: '64'
+    MaxLength: '254'
   DSMSG:
     Type: AWS::EC2::SecurityGroup::Id
   DBPEngine:
@@ -140,6 +140,7 @@ Parameters:
     - Oracle
     - SQL
     - PostgreSQL
+    - AuroraPostgreSQL
   DSISubnetID:
     Description: Existing Subnet for Deep Security Manager. Must be a public subnet
       contained the in VPC chosen above.
@@ -222,62 +223,62 @@ Parameters:
 Mappings:
   DSMAMI:
     ap-northeast-1:
-      PerHost: ami-0a2f354157a87d729
-      BYOL: ami-0e302336b7682636c
+      PerHost: ami-084f75d506cc91d14
+      BYOL: ami-025e0806e68cc70c7
     ap-northeast-2:
-      PerHost: ami-0737f9d70fd4d04f3
-      BYOL: ami-00dc7d75798200cde
+      PerHost: ami-0bcae2382cd2e769a
+      BYOL: ami-049f61b176df30b61
     ap-south-1:
-      PerHost: ami-02346573fa15d1895
-      BYOL: ami-0455c38f09ac2e7a9
+      PerHost: ami-0392444f9a4f6f7b5
+      BYOL: ami-03c378fc3512cdbe1
     ap-southeast-1:
-      PerHost: ami-08a7a8e9f5fcf2d64
-      BYOL: ami-002d00b3b78c3a9a8
+      PerHost: ami-04db13dcc6019794b
+      BYOL: ami-0ee1702b9e2eff53a
     ap-southeast-2:
-      PerHost: ami-03f7de9e950d4bf2a
-      BYOL: ami-0e446e51efeeeafb7
+      PerHost: ami-0f157a95ef8348d15
+      BYOL: ami-05c004ab627455281
     ca-central-1:
-      PerHost: ami-0b0b98d56ba1a6179
-      BYOL: ami-0b41cf1a503fc30a7
+      PerHost: ami-00b87a7cc45b6136d
+      BYOL: ami-023d8ce5142e5abe5
     eu-central-1:
-      PerHost: ami-09ace5ec15cff1ffa
-      BYOL: ami-09d3948613e2ffff8
+      PerHost: ami-0cea71ac70e349c62
+      BYOL: ami-09a9042299cffd506
     eu-north-1:
-      PerHost: ami-0ed4005889e30f39e
-      BYOL: ami-0eb99a8bab8388c10
+      PerHost: ami-087bab1c0cc0763b7
+      BYOL: ami-08d584604933583d1
     eu-west-1:
-      PerHost: ami-0add496ef8fa00500
-      BYOL: ami-01ff854c1877f9cac
+      PerHost: ami-09b4373eb69cc8b6a
+      BYOL: ami-04c94dc400071ad64
     eu-west-2:
-      PerHost: ami-0045c0ebfeba6291d
-      BYOL: ami-04252595ec7c5fdbf
+      PerHost: ami-0de163a81e2b62013
+      BYOL: ami-0d05d36f5aa4b21bf
     eu-west-3:
-      PerHost: ami-006736e5e126170c4
-      BYOL: ami-0ca7de52a6d488a76
+      PerHost: ami-05a75c0362916d941
+      BYOL: ami-0bbfb91c86fe30dfa
     me-south-1:
-      PerHost: ami-0327d5bbb787b81c0
-      BYOL: ami-0c3c491c917bef25f
+      PerHost: ami-03d30e7a9f143e596
+      BYOL: ami-01378114cb3fd127a
     sa-east-1:
-      PerHost: ami-0568c1000df369296
-      BYOL: ami-0b742b23c16bf921f
+      PerHost: ami-016df0263b04f9793
+      BYOL: ami-03a2e0f319e8269f6
     us-east-1:
-      PerHost: ami-0b9a5613bf3c7a0ec
-      BYOL: ami-0b30361db90bbaeee
+      PerHost: ami-0e4356fd15c775a85
+      BYOL: ami-0a11f9d2205dcd337
     us-east-2:
-      PerHost: ami-0bfb880ee8070f685
-      BYOL: ami-07a9ec1734911fe47
+      PerHost: ami-0b2b0fa917364fe75
+      BYOL: ami-0352b451e91537056
     us-gov-east-1:
-      PerHost: ami-00c7bda040bc80302
-      BYOL: ami-0959044160cc43bd9
+      PerHost: ami-0559bfa38c81734d7
+      BYOL: ami-0e8efc11f6291bb57
     us-gov-west-1:
-      PerHost: ami-001eef3040faa25c9
-      BYOL: ami-0de0e15763499eafa
+      PerHost: ami-0922b4584089b2976
+      BYOL: ami-027a5739a5a183108
     us-west-1:
-      PerHost: ami-02eec3a1c2300bef3
-      BYOL: ami-02ebba1270401fdfe
+      PerHost: ami-0d7b0bf8b93ec1c9c
+      BYOL: ami-0f04fae2120807ed0
     us-west-2:
-      PerHost: ami-0037760aa99977a4b
-      BYOL: ami-0b70fcbe08f884715
+      PerHost: ami-0160839f7af137412
+      BYOL: ami-092c626e509910a13
   DSMSIZE:
     us-east-1:
       PerHost: m5.xlarge
@@ -344,6 +345,8 @@ Mappings:
     Embedded:
       DbTypeString: Embedded
     PostgreSQL:
+      DbTypeString: PostgreSQL
+    AuroraPostgreSQL:
       DbTypeString: PostgreSQL
 Resources:
   DSMRole:
@@ -915,11 +918,11 @@ Conditions:
       - !Ref DSProxyUrl
       - ''
   GovCloudCondition:
-    !Or 
-    - !Equals 
+    !Or
+    - !Equals
       - !Ref AWS::Region
       - us-gov-west-1
-    - !Equals 
+    - !Equals
       - !Ref AWS::Region
       - us-gov-east-1
 Outputs:

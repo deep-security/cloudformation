@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'QS(0011) - v5.33: Quick Start that deploys Trend Micro Deep Security
+Description: 'QS(0011) - v5.34: Quick Start that deploys Trend Micro Deep Security
   into an existing VPC with a Multi-AZ RDS instance  **WARNING** This template uses
   images from the AWS Marketplace and an active subscription is required - Please
   see the Quick Start documentation for more details. You will be billed for the AWS
@@ -79,7 +79,7 @@ Parameters:
     MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
   DatabaseEngine:
-    Description: Choose PostgreSQL, Microsoft SQL or Oracle for Deep Security database
+    Description: Choose PostgreSQL, Microsoft SQL, Oracle or Aurora PostgreSQL for Deep Security database
       engine.
     Type: String
     Default: PostgreSQL
@@ -87,6 +87,7 @@ Parameters:
     - Oracle
     - MSSQL
     - PostgreSQL
+    - AuroraPostgreSQL
   DatabaseSubnet1:
     Description: Select a private subnet for the RDS database.  Must be a private
       subnet contained in the VPC chosen above.
@@ -227,155 +228,193 @@ Mappings:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     us-east-2:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     us-west-1:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     us-west-2:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     ca-central-1:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     ap-south-1:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     ap-northeast-2:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     ap-southeast-1:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     ap-southeast-2:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     ap-northeast-1:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     eu-north-1:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     eu-central-1:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     eu-west-1:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     eu-west-2:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     sa-east-1:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     us-gov-west-1:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m4.xlarge
+      AuroraPostgreSQL: db.r4.xlarge
     eu-west-3:
       Oracle: db.m5.xlarge
       MSSQL: db.r4.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     me-south-1:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     us-gov-east-1:
       Oracle: db.r4.xlarge
       MSSQL: db.r4.xlarge
       PostgreSQL: db.r4.xlarge
+      AuroraPostgreSQL: db.r4.xlarge
   RDSMultiAZ:
     us-east-1:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     us-east-2:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     us-west-1:
       Oracle: 'true'
       MSSQL: 'false'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     us-west-2:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     ca-central-1:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     ap-south-1:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     ap-northeast-2:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     ap-southeast-1:
       Oracle: 'true'
       MSSQL: 'false'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     ap-southeast-2:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     ap-northeast-1:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     eu-north-1:
       Oracle: 'true'
       MSSQL: 'false'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     eu-central-1:
       Oracle: 'true'
       MSSQL: 'false'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     eu-west-1:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     eu-west-2:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     sa-east-1:
       Oracle: 'true'
       MSSQL: 'false'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     us-gov-west-1:
       Oracle: 'true'
       MSSQL: 'false'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     eu-west-3:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     me-south-1:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     us-gov-east-1:
       Oracle: 'true'
       MSSQL: 'true'
       PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
 Resources:
   MasterMP:
     Type: AWS::CloudFormation::Stack
@@ -443,11 +482,11 @@ Conditions:
     - !Ref DatabaseEngine
     - MSSQL
   GovCloudCondition:
-    !Or 
-    - !Equals 
+    !Or
+    - !Equals
       - !Ref AWS::Region
       - us-gov-west-1
-    - !Equals 
+    - !Equals
       - !Ref AWS::Region
       - us-gov-east-1
 Outputs:

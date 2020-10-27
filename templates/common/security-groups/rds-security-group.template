@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.33: This template creates the security group to allow communication
+Description: 'v5.34: This template creates the security group to allow communication
   from Deep Security Managers to their RDS Instance. (qs-1ngr590j9)'
 Parameters:
   AWSIVPC:
@@ -10,7 +10,7 @@ Parameters:
     MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
   DBPEngine:
-    Description: Choose PostgreSQL, MSSQL or Oracle for DSM database Engine
+    Description: Choose PostgreSQL, MSSQL, Oracle or AuroraPostgreSQL for DSM database Engine
     Type: String
     Default: PostgreSQL
     AllowedValues:
@@ -18,6 +18,7 @@ Parameters:
     - Oracle
     - PostgreSQL
     - PostgresDocker
+    - AuroraPostgreSQL
   DSMSG:
     Type: AWS::EC2::SecurityGroup::Id
 Resources:
@@ -68,6 +69,9 @@ Conditions:
     - !Equals
       - !Ref DBPEngine
       - PostgresDocker
+    - !Equals
+      - !Ref DBPEngine
+      - AuroraPostgreSQL
 Outputs:
   RDSSG:
     Value: !GetAtt RDSSG.GroupId
