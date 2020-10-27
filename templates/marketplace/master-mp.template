@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.33: Trend Micro Deep Security Marketplace master template. For more
+Description: 'v5.34: Trend Micro Deep Security Marketplace master template. For more
   information see http://aws.trendmicro.com. (qs-1ngr590jt)'
 Metadata:
   AWS::CloudFormation::Interface:
@@ -61,7 +61,7 @@ Metadata:
       DBICAdminPassword:
         default: Admin password for Database
       DBPEngine:
-        default: Choose PostgreSQL, MSSQL or Oracle Engine
+        default: Choose PostgreSQL, MSSQL, Oracle or Aurora PostgreSQL Engine
       DBPEndpoint:
         default: Existing Database Endpoint if not creating new
       DBPName:
@@ -142,6 +142,14 @@ Parameters:
     - db.r3.8xlarge
     - db.r4.large
     - db.r4.xlarge
+    - db.r4.2xlarge
+    - db.r4.4xlarge
+    - db.r4.8xlarge
+    - db.r5.large
+    - db.r5.xlarge
+    - db.r5.2xlarge
+    - db.r5.4xlarge
+    - db.r5.8xlarge
     ConstraintDescription: must select a valid database instance type.
   DBIStorageAllocation:
     Default: 100
@@ -185,13 +193,14 @@ Parameters:
     ConstraintDescription: Can only contain alphanumeric characters or the following
       special characters !^*-_+ Min length 8, max length 41
   DBPEngine:
-    Description: Choose PostgreSQL, Microsoft SQL or Oracle for DSM database Engine
+    Description: Choose PostgreSQL, Microsoft SQL, Oracle or Aurora PostgreSQL for DSM database Engine
     Type: String
     Default: PostgreSQL
     AllowedValues:
     - SQL
     - Oracle
     - PostgreSQL
+    - AuroraPostgreSQL
   DBPEndpoint:
     Type: String
     Description: If you have an existing oracle instance, enter the endpoint address
@@ -651,11 +660,11 @@ Conditions:
     - !Ref DSELBPosture
     - Internet-facing
   GovCloudCondition:
-    !Or 
-    - !Equals 
+    !Or
+    - !Equals
       - !Ref AWS::Region
       - us-gov-west-1
-    - !Equals 
+    - !Equals
       - !Ref AWS::Region
       - us-gov-east-1
 Outputs:

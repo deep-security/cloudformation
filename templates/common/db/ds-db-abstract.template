@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.33: This template is an abstraction layer for choosing PostgreSQL,
+Description: 'v5.34: This template is an abstraction layer for choosing PostgreSQL,
   Oracle or MSSQL when deploying Deep Security Manager. (qs-1ngr590i4)'
 Parameters:
   AWSIKeyPairName:
@@ -34,6 +34,14 @@ Parameters:
     - db.r3.8xlarge
     - db.r4.large
     - db.r4.xlarge
+    - db.r4.2xlarge
+    - db.r4.4xlarge
+    - db.r4.8xlarge
+    - db.r5.large
+    - db.r5.xlarge
+    - db.r5.2xlarge
+    - db.r5.4xlarge
+    - db.r5.8xlarge
     ConstraintDescription: must select a valid database instance type.
   DBIStorageAllocation:
     Default: 10
@@ -84,7 +92,7 @@ Parameters:
   RDSSG:
     Type: AWS::EC2::SecurityGroup::Id
   DBPEngine:
-    Description: Choose PostgreSQL, MSSSQL or Oracle for DSM database Engine
+    Description: Choose PostgreSQL, MSSSQL, Oracle or Aurora PostgreSQL for DSM database Engine
     Type: String
     Default: PostgreSQL
     AllowedValues:
@@ -92,6 +100,7 @@ Parameters:
     - Oracle
     - PostgreSQL
     - PostgresDocker
+    - AuroraPostgreSQL
   MultiAZ:
     Description: Use Multi-AZ or SQL Mirroring Option Group for RDS Instance
     Type: String
@@ -196,6 +205,24 @@ Resources:
         RDSSG: !Ref RDSSG
         DBISubnetGroupName: !Ref DBISubnetGroup
         MultiAZ: !Ref MultiAZ
+  DSAuroraPostgreSQLRDS:
+    Type: AWS::CloudFormation::Stack
+    Condition: DBTypeIsAuroraPostgreSQL
+    Properties:
+      TemplateURL:
+        !Sub
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/db/ds-db-postgresql-rds-aurora.template'
+          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+      TimeoutInMinutes: '45'
+      Parameters:
+        DBIRDSInstanceSize: !Ref DBIRDSInstanceSize
+        DBPBackupDays: !Ref DBPBackupDays
+        DBICAdminName: !Ref DBICAdminName
+        DBICAdminPassword: !Ref DBICAdminPassword
+        DBPName: !Ref DBPName
+        RDSSG: !Ref RDSSG
+        DBISubnetGroupName: !Ref DBISubnetGroup
   DBISubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
@@ -237,12 +264,16 @@ Conditions:
     !Equals
     - !Ref DBPEngine
     - PostgresDocker
+  DBTypeIsAuroraPostgreSQL:
+    !Equals
+    - !Ref DBPEngine
+    - AuroraPostgreSQL
   GovCloudCondition:
-    !Or 
-    - !Equals 
+    !Or
+    - !Equals
       - !Ref AWS::Region
       - us-gov-west-1
-    - !Equals 
+    - !Equals
       - !Ref AWS::Region
       - us-gov-east-1
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
@@ -258,7 +289,13 @@ Outputs:
         - !If
           - DBTypeIsPostgreSQLDocker
           - !GetAtt DSPostgreSQLDocker.Outputs.DSDBEndpoint
-          - !GetAtt DSSQLRDS.Outputs.DSDBEndpoint
+          - !If
+            - DBTypeIsSQL
+            - !GetAtt DSSQLRDS.Outputs.DSDBEndpoint
+            - !If
+              - DBTypeIsAuroraPostgreSQL
+              - !GetAtt DSAuroraPostgreSQLRDS.Outputs.DSDBEndpoint
+              - ''
   DSDBPort:
     Value:
       !If
@@ -270,5 +307,11 @@ Outputs:
         - !If
           - DBTypeIsPostgreSQLDocker
           - !GetAtt DSPostgreSQLDocker.Outputs.DSDBPort
-          - !GetAtt DSSQLRDS.Outputs.DSDBPort
+          - !If
+            - DBTypeIsSQL
+            - !GetAtt DSSQLRDS.Outputs.DSDBPort
+            - !If
+              - DBTypeIsAuroraPostgreSQL
+              - !GetAtt DSAuroraPostgreSQLRDS.Outputs.DSDBPort
+              - ''
 ...
