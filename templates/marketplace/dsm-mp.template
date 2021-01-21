@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.35: Deploys Deep Security Manager to AWS. This template is designed
+Description: 'v5.36: Deploys Deep Security Manager to AWS. This template is designed
   to be nested in a stack, and requires several passed parameters to launch. **WARNING**
   This template creates Amazon EC2 instances and related resources. You will be billed
   for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
@@ -223,65 +223,65 @@ Parameters:
 Mappings:
   DSMAMI:
     ap-northeast-1:
-      PerHost: ami-0ff94d285ea50af1b
-      BYOL: ami-063660d5b05ac92b0
+      PerHost: ami-0b78678e6dd688f84
+      BYOL: ami-02a31bc92ce1ed98b
     ap-northeast-2:
-      PerHost: ami-0c4004c211b12d7d6
-      BYOL: ami-0ae6932289eead74f
+      PerHost: ami-02ef9b18afbcdb47a
+      BYOL: ami-0cf32d39dc5eb2f68
     ap-south-1:
-      PerHost: ami-00ff19b54f23ecb6f
-      BYOL: ami-0b0e460c8efcefe28
+      PerHost: ami-0cd8543c21ef216e4
+      BYOL: ami-051f6e326292d7112
     ap-southeast-1:
-      PerHost: ami-0fb489563a6ea5d95
-      BYOL: ami-0908c179600cd4152
+      PerHost: ami-070a3be3f901be8b7
+      BYOL: ami-0ae7b6e307123417c
     ap-southeast-2:
-      PerHost: ami-076e67ffe9f0480f5
-      BYOL: ami-005ac048c761a8a39
+      PerHost: ami-00d713c4f2d4eb5f4
+      BYOL: ami-083f9411f3711530c
     ca-central-1:
-      PerHost: ami-075517ba13699b71d
-      BYOL: ami-01dbc6eb17add8ec6
+      PerHost: ami-09db9f640e3a3e777
+      BYOL: ami-028810f64c89bb4ab
     eu-central-1:
-      PerHost: ami-0b31babd809f53b72
-      BYOL: ami-07277821816df8f5b
+      PerHost: ami-06f503cee6e43b79a
+      BYOL: ami-0dd24f921487eb459
     eu-north-1:
-      PerHost: ami-0c91dc8161c31e2c6
-      BYOL: ami-0263ee3e779c4c2fd
+      PerHost: ami-0784b9a9d6a678236
+      BYOL: ami-04dd05b271e21d3b0
     eu-west-1:
-      PerHost: ami-0bcaed7a8f63588de
-      BYOL: ami-017db2130262c9f6b
+      PerHost: ami-02f03d4c3b782d3f3
+      BYOL: ami-0faa0d67e86ddff68
     eu-west-2:
-      PerHost: ami-06fbd67fb9897f373
-      BYOL: ami-0c2be795ceb5a46b0
+      PerHost: ami-0f70505c3e628570d
+      BYOL: ami-0dddbb35e7f4fdc04
     eu-west-3:
-      PerHost: ami-0b3f4a28b8173841d
-      BYOL: ami-03eff1eb23745350d
+      PerHost: ami-0c66c28f5357c33dd
+      BYOL: ami-0e0d246498295140c
     eu-south-1:
-      PerHost: ami-0fc0142811090b3ca
-      BYOL: ami-0154a57b987756b83
+      PerHost: ami-0376e11abf82cff3f
+      BYOL: ami-0578bc68a97e743f4
     me-south-1:
-      PerHost: ami-017b7f4acdaaa9ba3
-      BYOL: ami-0a657a791523e1b50
+      PerHost: ami-0c5f7c00f31ac730e
+      BYOL: ami-0f27c24e139b611c6
     sa-east-1:
-      PerHost: ami-05eb361239c2d1528
-      BYOL: ami-0269b54b04d72759e
+      PerHost: ami-0eb2b6e46cf7bf73e
+      BYOL: ami-0cb388a581daaaf59
     us-east-1:
-      PerHost: ami-0522b7ab56ded46c7
-      BYOL: ami-09bd6f62124781947
+      PerHost: ami-0ace7c2c0df8a90bd
+      BYOL: ami-09d383f29da36d8ac
     us-east-2:
-      PerHost: ami-0559ae685149b0034
-      BYOL: ami-0412bd3bbd2c4cf56
+      PerHost: ami-0d707f3f9f5573e64
+      BYOL: ami-066d5b3e3dd3e55e2
     us-gov-east-1:
-      PerHost: ami-0a0ae3b39d6f7b488
-      BYOL: ami-07d10276880acc26d
+      PerHost: ami-0bb9972c9de54e93a
+      BYOL: ami-06000e94b504e8aad
     us-gov-west-1:
-      PerHost: ami-0040499dddf282aed
-      BYOL: ami-0b787e7829233421f
+      PerHost: ami-02762827b056ad441
+      BYOL: ami-0b0dfe36a2aab74ee
     us-west-1:
-      PerHost: ami-0d359a040a0ea42b6
-      BYOL: ami-05434d2951df67f9c
+      PerHost: ami-0c90b8c8140ad5361
+      BYOL: ami-0d05c5743ff716900
     us-west-2:
-      PerHost: ami-0dfd83021b4e3c96a
-      BYOL: ami-0770a8561e693a96c
+      PerHost: ami-0b4c8f8191c80e8c0
+      BYOL: ami-0b45eed46711d2659
   DSMSIZE:
     us-east-1:
       PerHost: m5.xlarge
