@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.37: Deploys Elastic Load Balancers and Security Groups for Deep Security
+Description: 'v5.38: Deploys Elastic Load Balancers and Security Groups for Deep Security
   (qs-1ngr590je). Manager.'
 Parameters:
   AWSIVPC:
