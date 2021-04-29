@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.38: This template creates the security group to allow communication
+Description: 'v5.39: This template creates the security group to allow communication
   from Deep Security Managers to their RDS Instance. (qs-1ngr590j9)'
 Parameters:
   AWSIVPC:
