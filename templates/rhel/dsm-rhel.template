@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  v5.40: Deploys Deep Security Manager to AWS. This template is designed to be
+  v5.41: Deploys Deep Security Manager to AWS. This template is designed to be
   nested in a stack, and requires several passed parameters to launch.
   **WARNING** This template creates Amazon EC2 instances and related resources.
   You will be billed for the AWS resources used if you create a stack from this
@@ -10,13 +10,13 @@ Parameters:
     Description: >-
       Existing key pair to use for connecting to your Deep Security Manager
       Instance
-    Type: 'AWS::EC2::KeyPair::KeyName'
+    Type: AWS::EC2::KeyPair::KeyName
     MinLength: '1'
     MaxLength: '255'
     ConstraintDescription: Select an existing EC2 Key Pair.
   AWSIVPC:
     Description: Existing VPC to deploy Deep Security Manager
-    Type: 'AWS::EC2::VPC::Id'
+    Type: AWS::EC2::VPC::Id
     MinLength: '1'
     MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
@@ -47,8 +47,7 @@ Parameters:
     Type: String
     MinLength: 37
     MaxLength: 37
-    AllowedPattern: >-
-      [A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}
+    AllowedPattern: '[A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}'
     ConstraintDescription: Key can only contain ASCII characters.
     Default: XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
   DSIPHeartbeatPort:
@@ -70,7 +69,7 @@ Parameters:
   DSIPInstanceType:
     Description: Amazon EC2 instance type for the Deep Security Manager Node Instances
     Type: String
-    Default: m4.large
+    Default: m5.large
     AllowedValues:
       - m4.large
       - m4.xlarge
@@ -135,9 +134,9 @@ Parameters:
     Description: FQDN or IP of RDS Endpoint
     Type: String
     MinLength: '1'
-    MaxLength: '64'
+    MaxLength: '254'
   DSMSG:
-    Type: 'AWS::EC2::SecurityGroup::Id'
+    Type: AWS::EC2::SecurityGroup::Id
   DBPEngine:
     Default: PostgreSQL
     Type: String
@@ -150,7 +149,7 @@ Parameters:
     Description: >-
       Existing Subnet for Deep Security Manager. Must be a public subnet
       contained the in VPC chosen above.
-    Type: 'AWS::EC2::Subnet::Id'
+    Type: AWS::EC2::Subnet::Id
     MinLength: '1'
     MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
@@ -217,39 +216,45 @@ Parameters:
 Mappings:
   AWSRegionArch2AMI:
     eu-central-1:
-      '64': ami-0695e4927367baa17
+      '64': ami-02241e4f36e06d650
     sa-east-1:
-      '64': ami-056d79d57521531b4
+      '64': ami-06501af02091f3351
     ap-northeast-1:
-      '64': ami-08c0c4d79e4b3b616
+      '64': ami-08f3cb671cb7b9d93
     ap-northeast-2:
-      '64': ami-0fd8c2f7a8929329f
+      '64': ami-08a24b6a40691f3b1
     ap-south-1:
-      '64': ami-0906346bc14594b4d
+      '64': ami-00d05da9ad5c69bfd
     eu-west-1:
-      '64': ami-07d9f26c7a87fad3d
+      '64': ami-04dad2d3a5f416753
     eu-west-2:
-      '64': ami-0c54ce0bdcf726046
+      '64': ami-04565b86951d4a592
     ca-central-1:
-      '64': ami-05454d7d7a0035c4b
+      '64': ami-02f25d3c05191cab9
     us-east-1:
-      '64': ami-038714142142a6a64
+      '64': ami-030e754805234517e
     us-east-2:
-      '64': ami-04d7524f0f99dcb18
+      '64': ami-0680f7cf1ea8cb793
     us-west-1:
-      '64': ami-05285bb64643a2f07
+      '64': ami-004556491237681fa
     us-west-2:
-      '64': ami-0f33167cb74b5d62f
+      '64': ami-0c6e102894167eccf
     ap-southeast-2:
-      '64': ami-0fc7ddf6fb9e5b50a
+      '64': ami-0d19256691ae1801c
     ap-southeast-1:
-      '64': ami-0cf8b4c747dd40262
+      '64': ami-087edfebb51897996
     eu-west-3:
-      '64': ami-0c0e7ef278242be2a
+      '64': ami-0768d11005626f47b
     eu-north-1:
-      '64': ami-0414c8f1381d61e9c
+      '64': ami-086552a77a7850338
+    eu-south-1:
+      '64': ami-06b1b3c59b8dcbfb7
+    me-south-1:
+      '64': ami-09ac0939c456652e6
     us-gov-west-1:
-      '64': ami-a63804c7
+      '64': ami-6b8bb10a
+    us-gov-east-1:
+      '64': ami-3923c948
   TrendRegionMap:
     us-east-1:
       regionkey: amazon.cloud.region.key.1
@@ -284,7 +289,7 @@ Mappings:
       DbTypeString: PostgreSQL
 Resources:
   DSMRole:
-    Type: 'AWS::IAM::Role'
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Statement:
@@ -293,79 +298,94 @@ Resources:
               Service:
                 - ec2.amazonaws.com
             Action:
-              - 'sts:AssumeRole'
+              - sts:AssumeRole
       Path: /
       Policies:
-        - !If 
+        - PolicyName: aws-quick-start-s3-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                 - s3:GetObject
+                Resource: !Sub
+                  - arn:${AWS::Partition}:s3:::${S3Bucket}/${QSS3KeyPrefix}*
+                  - S3Bucket: !If [ UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName ]
+        - !If
           - AddToELB
           - PolicyName: DeepSecurityManagerInstancePolicy
             PolicyDocument:
               Statement:
                 - Effect: Allow
                   Action:
-                    - 'ec2:DescribeLicenses'
-                    - 'ec2:DescribeInstances'
-                    - 'ec2:DescribeImages'
-                    - 'ec2:DescribeRegions'
-                    - 'ec2:DescribeVpcs'
-                    - 'ec2:DescribeSubnets'
-                    - 'ec2:DescribeTags'
-                    - 'ec2:DescribeAvailabilityZones'
-                    - 'ec2:DescribeSecurityGroups'
-                    - 'iam:ListAccountAliases'
+                  - ec2:DescribeLicenses
+                  - ec2:DescribeInstances
+                  - ec2:DescribeImages
+                  - ec2:DescribeRegions
+                  - ec2:DescribeVpcs
+                  - ec2:DescribeSubnets
+                  - ec2:DescribeTags
+                  - ec2:DescribeAvailabilityZones
+                  - ec2:DescribeSecurityGroups
+                  - iam:ListAccountAliases
+                  - sts:AssumeRole
                   Resource: '*'
                 - Effect: Allow
                   Action:
-                    - 'elasticloadbalancing:RegisterInstancesWithLoadBalancer'
-                    - 'elasticloadbalancing:CreateLoadBalancerListeners'
-                    - 'elasticloadbalancing:CreateLoadBalancerPolicy'
-                    - 'elasticloadbalancing:SetLoadBalancerPoliciesOfListener'
-                  Resource: !Join 
+                  - elasticloadbalancing:RegisterInstancesWithLoadBalancer
+                  - elasticloadbalancing:CreateLoadBalancerListeners
+                  - elasticloadbalancing:CreateLoadBalancerPolicy
+                  - elasticloadbalancing:SetLoadBalancerPoliciesOfListener
+                  Resource:
+                    !Join
                     - ''
-                    - - !If 
+                    - - !If
                         - GovCloudCondition
                         - 'arn:aws-us-gov:elasticloadbalancing:'
                         - 'arn:aws:elasticloadbalancing:'
-                      - !Ref 'AWS::Region'
+                      - !Ref AWS::Region
                       - ':'
-                      - !Ref 'AWS::AccountId'
-                      - ':loadbalancer/'
+                      - !Ref AWS::AccountId
+                      - :loadbalancer/
                       - !Ref DSIELB
                 - Effect: Allow
                   Action:
-                    - 'iam:UploadServerCertificate'
-                    - 'iam:GetServerCertificate'
-                  Resource: !Join 
+                    - iam:UploadServerCertificate
+                    - iam:GetServerCertificate
+                  Resource:
+                    !Join
                     - ''
-                    - - !If 
+                    - - !If
                         - GovCloudCondition
                         - 'arn:aws-us-gov:iam::'
                         - 'arn:aws:iam::'
-                      - !Ref 'AWS::AccountId'
-                      - ':server-certificate/DeepSecurityElbCertificate-'
-                      - !Ref 'AWS::StackName'
+                      - !Ref AWS::AccountId
+                      - :server-certificate/DeepSecurityElbCertificate-
+                      - !Ref AWS::StackName
                 - Effect: Allow
                   Action:
-                    - 'elasticloadbalancing:DescribeLoadBalancers'
+                  - elasticloadbalancing:DescribeLoadBalancers
                   Resource: '*'
           - PolicyName: DeepSecurityManagerInstancePolicy
             PolicyDocument:
               Statement:
                 - Effect: Allow
                   Action:
-                    - 'ec2:DescribeLicenses'
-                    - 'ec2:DescribeInstances'
-                    - 'ec2:DescribeImages'
-                    - 'ec2:DescribeRegions'
-                    - 'ec2:DescribeVpcs'
-                    - 'ec2:DescribeSubnets'
-                    - 'ec2:DescribeTags'
-                    - 'ec2:DescribeAvailabilityZones'
-                    - 'ec2:DescribeSecurityGroups'
-                    - 'iam:ListAccountAliases'
+                  - ec2:DescribeLicenses
+                  - ec2:DescribeImages
+                  - ec2:DescribeInstances
+                  - ec2:DescribeRegions
+                  - ec2:DescribeSubnets
+                  - ec2:DescribeTags
+                  - ec2:DescribeVpcs
+                  - iam:ListAccountAliases
+                  - sts:AssumeRole
+                  - ec2:DescribeAvailabilityZones
+                  - ec2:DescribeSecurityGroups
+                  - iam:ListAccountAliases
                   Resource: '*'
   DSMProfile:
-    Type: 'AWS::IAM::InstanceProfile'
+    Type: AWS::IAM::InstanceProfile
     Properties:
       Path: /
       Roles:
@@ -377,9 +397,14 @@ Resources:
         MetadataOptions:
           HttpTokens: 'required'
   DSM:
-    Type: 'AWS::EC2::Instance'
+    Type: AWS::EC2::Instance
     Metadata:
-      'AWS::CloudFormation::Init':
+      AWS::CloudFormation::Authentication:
+        S3AccessCreds:
+          type: S3
+          roleName: !Ref DSMRole
+          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+      AWS::CloudFormation::Init:
         configSets:
           default:
             - setup
@@ -408,53 +433,37 @@ Resources:
         setup:
           files:
             /etc/cfn/cfn-hup.conf:
-              content: !Join 
-                - ''
-                - - |
-                    [main]
-                  - stack=
-                  - !Ref 'AWS::StackId'
-                  - |+
-
-                  - region=
-                  - !Ref 'AWS::Region'
-                  - |+
-
+              content:
+                Fn::Sub: |
+                  [main]
+                  stack=${AWS::StackId}
+                  region=${AWS::Region}
               mode: '000400'
               owner: root
               group: root
             /etc/cfn/hooks.d/cfn-auto-reloader.conf:
-              content: !Join 
-                - ''
-                - - |
-                    [cfn-auto-reloader-hook]
-                  - |
-                    triggers=post.update
-                  - |
-                    path=Resources.DSM.Metadata.AWS::CloudFormation::Init
-                  - 'action=/opt/aws/bin/cfn-init -v --stack '
-                  - !Ref 'AWS::StackId'
-                  - ' --resource DSM1'
-                  - ' --region '
-                  - !Ref 'AWS::Region'
-                  - |2
-                     runas=root
+              content:
+                Fn::Sub: |
+                  [cfn-auto-reloader-hook]
+                  triggers=post.update
+                  path=Resources.DSM.Metadata.AWS::CloudFormation::Init
+                  action=/opt/aws/bin/cfn-init -v -c updateDSM --stack ${AWS::StackId} --resource DSM1 --region ${AWS::Region} runas=root
           services:
             sysvinit:
               cfn-hup:
                 enabled: 'true'
                 ensureRunning: 'true'
                 files:
-                  - /etc/cfn/cfn-hup.conf
-                  - /etc/cfn/hooks.d/cfn-auto-reloader.conf
+                - /etc/cfn/cfn-hup.conf
+                - /etc/cfn/hooks.d/cfn-auto-reloader.conf
           commands:
             0-set-vmoptions:
               command: mkdir /opt/dsm/; echo -Xmx12g >> /opt/dsm/dsm_s.vmoptions
         prepDSMInstall:
           files:
-            /tmp/Manager-Linux-20.0.60.x64.sh:
+            /tmp/Manager-Linux-20.0.414.x64.sh:
               source: >-
-                https://files.trendmicro.com/products/deepsecurity/en/20.0/Manager-Linux-20.0.60.x64.sh
+                https://files.trendmicro.com/products/deepsecurity/en/20.0/Manager-Linux-20.0.414.x64.sh
               owner: root
               mode: '000700'
             /tmp/Agent-RedHat_EL6-20.0.0-877.x86_64.zip:
@@ -523,11 +532,11 @@ Resources:
               owner: root
               mode: '000600'
             /etc/cfn/dsmConfiguration.properties:
-              content: !Join 
+              content: !Join
                 - ''
-                - - !If 
+                - - !If
                     - KeyProvided
-                    - !Join 
+                    - !Join
                       - ''
                       - - LicenseScreen.License.-1=
                         - !Ref DSIPLicenseKey
@@ -548,7 +557,7 @@ Resources:
                   - |
                     Dinstall4j.language=en
                   - DatabaseScreen.DatabaseType=
-                  - !FindInMap 
+                  - !FindInMap
                     - DSMDBMap
                     - !Ref DBPEngine
                     - DbTypeString
@@ -580,7 +589,7 @@ Resources:
                   - !Ref DSIPHeartbeatPort
                   - |+
 
-                  - !If 
+                  - !If
                     - IsFirstNode
                     - |
                       AddressAndPortsScreen.NewNode=false
@@ -619,7 +628,7 @@ Resources:
 
                   - Cloudformation.QSS3KeyPrefix=
                   - !Ref QSS3KeyPrefix
-                  - |+    
+                  - |+
 
               owner: root
               mode: '000600'
@@ -642,8 +651,7 @@ Resources:
               ignoreErrors: 'false'
             1-install-DSM:
               command: >-
-                cd /tmp; sh Manager-Linux-20.0.60.x64.sh -q -console -varfile
-                /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog
+                cd /tmp; sh Manager-Linux-20.0.414.x64.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog
               ignoreErrors: 'false'
             2-fix-for-systemd:
               command: systemctl daemon-reload; systemctl enable dsm_s
@@ -656,7 +664,7 @@ Resources:
                 Fn::Sub:
                 - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/set-aia-settings.sh
                 - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]            
+                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               owner: root
               mode: '000700'
             /etc/cfn/add-aws-account-with-instance-role.sh:
@@ -669,40 +677,23 @@ Resources:
               mode: '000700'
           commands:
             5-check-service:
-              command: !Join 
-                - ''
-                - - 'until curl -vk https://127.0.0.1:'
-                  - !Ref DSIPGUIPort
-                  - >-
-                    /rest/status/manager/current/ping; do echo "manager not
-                    started yet" >> /tmp/4-check-service; service dsm_s start >>
-                    /tmp/4-check-service; sleep 30; done
+              command:
+                Fn::Sub: until curl -vk https://127.0.0.1:${DSIPGUIPort}/rest/status/manager/current/ping;
+                  do echo "manager not started yet" >> /tmp/4-check-service; service
+                  dsm_s start >> /tmp/4-check-service;sleep 30; done
             7-set-aia-settings:
-              command: !Join 
-                - ''
-                - - '/etc/cfn/set-aia-settings.sh '
-                  - !Ref DSCAdminName
-                  - ' '
-                  - !Ref DSCAdminPassword
-                  - ' - '
-                  - !Ref DSIPGUIPort
-                  - ' >> /tmp/set-aia-settings.log'
-            8-addCloudAccount:
-              command: !Join 
-                - ''
-                - - '/etc/cfn/add-aws-account-with-instance-role.sh '
-                  - !Ref DSCAdminName
-                  - ' '
-                  - !Ref DSCAdminPassword
-                  - ' localhost '
-                  - !Ref DSIPGUIPort
-                  - ' '
-                  - !Ref 'AWS::Region'
-              ignoreErrors: 'False'
+              command:
+                Fn::Sub: /etc/cfn/set-aia-settings.sh ${DSCAdminName} ${DSCAdminPassword}
+                  - ${DSIPGUIPort} >> /tmp/set-aia-settings.log
+              8-addCloudAccount:
+                command:
+                  Fn::Sub: /etc/cfn/add-aws-account-with-instance-role.sh ${DSCAdminName}
+                    ${DSCAdminPassword} localhost ${DSIPGUIPort} ${AWS::Region}
+                ignoreErrors: 'False'
         sqlSetup:
           commands:
             1-get-sql-helper:
-              command: !Join 
+              command: !Join
                 - ''
                 - - 'cd /etc/cfn/rhel-scripts; curl -O '
                   - !Sub
@@ -725,7 +716,7 @@ Resources:
               command: cd /etc/cfn/rhel-scripts; sh cfn-rh-sql.sh
               ignoreErrors: 'false'
             4-create-db:
-              command: !Join 
+              command: !Join
                 - ''
                 - - 'cd /etc/cfn/rhel-scripts; python create-dsm-db.py --user '
                   - !Ref DBICAdminName
@@ -754,6 +745,7 @@ Resources:
                   S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               owner: root
               mode: '000700'
+              authentication: S3AccessCreds
             /etc/cfn/set-lb-settings.sh:
               source:
                 Fn::Sub:
@@ -762,36 +754,16 @@ Resources:
                   S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               owner: root
               mode: '000700'
+              authentication: S3AccessCreds
           commands:
             1-setup-elb-listener:
-              command: !Join 
-                - ''
-                - - '/etc/cfn/create-console-listener.sh '
-                  - !Ref DSIELB
-                  - ' '
-                  - !Ref DSIELBFQDN
-                  - ' '
-                  - !Ref DSIPGUIPort
-                  - ' '
-                  - !Ref 'AWS::StackName'
-                  - ' '
-                  - '1 '
-                  - !Ref 'AWS::Region'
-                  - ' >> /tmp/listener.log'
-            4-set-load-balancer-settings:
-              command: !Join 
-                - ''
-                - - '/etc/cfn/set-lb-settings.sh '
-                  - !Ref DSCAdminName
-                  - ' '
-                  - !Ref DSCAdminPassword
-                  - ' '
-                  - !Ref DSIELBFQDN
-                  - ' '
-                  - !Ref DSIPGUIPort
-                  - ' '
-                  - !Ref DSIPHeartbeatPort
-                  - ' >> /tmp/set-lb-settings.log'
+              command:
+                Fn::Sub: /etc/cfn/create-console-listener.sh ${DSIELB} ${DSIELBFQDN}
+                  ${DSIPGUIPort} ${AWS::StackName} 1 ${AWS::Region} >> /tmp/listener.log
+              4-set-load-balancer-settings:
+                command:
+                  Fn::Sub: /etc/cfn/set-lb-settings.sh ${DSCAdminName} ${DSCAdminPassword}
+                    ${DSIELBFQDN} ${DSIPGUIPort} ${DSIPHeartbeatPort} >> /tmp/set-lb-settings.log
         fixManagerLocalLoadBalancerHostsFile:
           commands:
             1-setHostsFileELB:
@@ -809,9 +781,10 @@ Resources:
                   S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               owner: root
               mode: '000700'
+              authentication: S3AccessCreds
           commands:
             1-reactivate-manager:
-              command: !Join 
+              command: !Join
                 - ''
                 - - '/etc/cfn/reactivate-manager.sh '
                   - !Ref DSCAdminName
@@ -824,7 +797,7 @@ Resources:
       LaunchTemplate:
           LaunchTemplateId: !Ref DSMLaunchTemplate
           Version: '1'
-      ImageId: !FindInMap 
+      ImageId: !FindInMap
         - AWSRegionArch2AMI
         - !Ref 'AWS::Region'
         - '64'
@@ -832,7 +805,7 @@ Resources:
       NetworkInterfaces:
         - DeviceIndex: '0'
           SubnetId: !Ref DSISubnetID
-          AssociatePublicIpAddress: !If 
+          AssociatePublicIpAddress: !If
             - InternetFacingELB
             - true
             - false
@@ -840,24 +813,24 @@ Resources:
             - !Ref DSMSG
       Tags:
         - Key: Name
-          Value: DSM
+          Value: Deep Security Manager
       KeyName: !Ref AWSIKeyPairName
-      UserData: !Base64 
+      UserData: !Base64
         'Fn::Join':
           - ''
           - - |
               #!/bin/bash -xe
             - |
               # cloud-init
-            - !If 
+            - !If
               - UseProxy
-              - !Join 
+              - !Join
                 - ''
-                - - !Sub 
+                - - !Sub
                     - |
                       export HTTPS_PROXY="https://${proxyUrl}"
                     - proxyUrl: !Ref DSProxyUrl
-                  - !Sub 
+                  - !Sub
                     - |
                       export HTTP_PROXY="http://${proxyUrl}"
                     - proxyUrl: !Ref DSProxyUrl
@@ -885,39 +858,39 @@ Resources:
             - !If
               - SQLplusELB
               - ' -c doSqlSetup,default,setupLocalELB,setupGlobalELB'
-              - !If 
+              - !If
                 - DoSQLSetup
                 - ' -c doSqlSetup,default'
-                - !If 
+                - !If
                   - IsFirstNodePlusELB
                   - ' -c default,setupLocalELB,setupGlobalELB'
                   - ''
-            - !If 
+            - !If
               - AddNodePlusELB
               - ' -c fixManagerLocalLbAddress,addDsmNode,setupLocalELB'
-              - !If 
+              - !If
                 - IsFirstNode
                 - ''
                 - ' -c addDsmNode'
-            - !If 
+            - !If
               - UseProxy
-              - !Sub 
+              - !Sub
                 - ' --https-proxy https://${proxyUrl}'
                 - proxyUrl: !Ref DSProxyUrl
               - ''
             - |+
 
-            - !If 
+            - !If
               - IsFirstNode
-              - !Join 
+              - !Join
                 - ''
                 - - 'cfn-signal -e $? -r "DSM Node configuration complete" '
-                  - !Base64 
+                  - !Base64
                     Ref: DSM1CompleteWaitHandle
               - ''
-            - !If 
+            - !If
               - UseProxy
-              - !Sub 
+              - !Sub
                 - ' --https-proxy https://${proxyUrl}'
                 - proxyUrl: !Ref DSProxyUrl
               - ''
@@ -928,61 +901,52 @@ Conditions:
   DBTypeIsSQL: !Equals
       - !Ref DBPEngine
       - SQL
-  IsFirstNode: !Equals 
+  IsFirstNode: !Equals
     - !Ref DSMPMNode
     - 'No'
-  DoSQLSetup: !And 
+  DoSQLSetup: !And
     - !Condition DBTypeIsSQL
     - !Condition IsFirstNode
-  KeyProvided: !Not 
-    - !Equals 
+  KeyProvided: !Not
+    - !Equals
       - !Ref DSIPLicenseKey
       - XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
-  AddToELB: !Not 
-    - !Equals 
+  AddToELB: !Not
+    - !Equals
       - !Ref DSIELB
       - ''
-  WaitNotProvided: !Equals 
+  WaitNotProvided: !Equals
     - DSM1CompleteWaitHandle
     - ''
-  SQLplusELB: !And 
+  SQLplusELB: !And
     - !Condition AddToELB
     - !Condition DoSQLSetup
-  AddNodePlusELB: !And 
-    - !Not 
+  AddNodePlusELB: !And
+    - !Not
       - !Condition IsFirstNode
     - !Condition AddToELB
-  IsFirstNodePlusELB: !And 
+  IsFirstNodePlusELB: !And
     - !Condition IsFirstNode
     - !Condition AddToELB
-  InternetFacingELB: !Equals 
+  InternetFacingELB: !Equals
     - !Ref DSELBPosture
     - Internet-facing
-  UseProxy: !Not 
-    - !Equals 
+  UseProxy: !Not
+    - !Equals
       - !Ref DSProxyUrl
       - ''
-  GovCloudCondition:
-    !Or 
-    - !Equals 
+  GovCloudCondition: !Or
+    - !Equals
       - !Ref AWS::Region
       - us-gov-west-1
-    - !Equals 
+    - !Equals
       - !Ref AWS::Region
       - us-gov-east-1
 Outputs:
   DSMFQDN:
-    Value: !GetAtt 
-      - DSM
-      - PublicDnsName
+    Value: !GetAtt DSM.PublicDnsName
   DSMURL:
-    Value: !Join 
-      - ''
-      - - 'https://'
-        - !GetAtt 
-          - DSM
-          - PublicDnsName
-        - ':'
-        - !Ref DSIPGUIPort
+    Value:
+      Fn::Sub: https://${DSM.PublicDnsName}:${DSIPGUIPort}
   DSMInstanceId:
     Value: !Ref DSM
