@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.42: Trend Micro Deep Security Marketplace master template. For more
+Description: 'v5.43: Trend Micro Deep Security Marketplace master template. For more
   information see http://aws.trendmicro.com. (qs-1ngr590jt)'
 Metadata:
   AWS::CloudFormation::Interface:
@@ -621,7 +621,7 @@ Resources:
     - DSMNode1
     Properties:
       Handle: !Ref DSM1CompleteWaitHandle
-      Timeout: '1800'
+      Timeout: '2400'
   DSM1NoDBCompleteWaitHandle:
     Condition: DoNotLaunchRDSInstance
     Type: AWS::CloudFormation::WaitConditionHandle
@@ -632,7 +632,7 @@ Resources:
     - DSMNode1NoDB
     Properties:
       Handle: !Ref DSM1CompleteWaitHandle
-      Timeout: '1800'
+      Timeout: '2400'
 Conditions:
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
   DSIsMultiNode:
