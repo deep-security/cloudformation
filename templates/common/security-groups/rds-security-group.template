@@ -1,13 +1,11 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.42: This template creates the security group to allow communication
+Description: 'v5.43: This template creates the security group to allow communication
   from Deep Security Managers to their RDS Instance. (qs-1ngr590j9)'
 Parameters:
   AWSIVPC:
     Description: Existing VPC to deploy Deep Security Manager
     Type: AWS::EC2::VPC::Id
-    MinLength: '1'
-    MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
   DBPEngine:
     Description: Choose PostgreSQL, MSSQL, Oracle or AuroraPostgreSQL for DSM database Engine
@@ -32,19 +30,19 @@ Resources:
         FromPort:
           !If
           - DBTypeIsOracle
-          - '1521'
+          - 1521
           - !If
             - DBTypeIsPostgreSQL
-            - '5432'
-            - '1433'
+            - 5432
+            - 1433
         ToPort:
           !If
           - DBTypeIsOracle
-          - '1521'
+          - 1521
           - !If
             - DBTypeIsPostgreSQL
-            - '5432'
-            - '1433'
+            - 5432
+            - 1433
         SourceSecurityGroupId: !Ref DSMSG
       SecurityGroupEgress:
       - IpProtocol: '-1'

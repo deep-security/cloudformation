@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.42: This template deploys a PostgreSQL RDS instance for Deep Security
+Description: 'v5.43: This template deploys a PostgreSQL RDS instance for Deep Security
   Manager. (qs-1ngr590ie)'
 Parameters:
   DBIRDSInstanceSize:
@@ -104,7 +104,7 @@ Resources:
       AllocatedStorage: !Ref DBIStorageAllocation
       DBInstanceClass: !Ref DBIRDSInstanceSize
       Engine: postgres
-      EngineVersion: 11.9
+      EngineVersion: '11.9'
       MasterUsername: !Ref DBICAdminName
       MasterUserPassword: !Ref DBICAdminPassword
       VPCSecurityGroups:
