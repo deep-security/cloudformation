@@ -1,14 +1,12 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.42: ONLY FOR DEMO, NOT A SUPPORTED DEPLOYMENT OPTION.
+Description: 'v5.43: ONLY FOR DEMO, NOT A SUPPORTED DEPLOYMENT OPTION.
   This template deploys PostgreSQL on Docker for Deep Security Manager.'
 Parameters:
   AWSIKeyPairName:
     Description: Existing key pair to use for connecting to database instance
       Instance
     Type: AWS::EC2::KeyPair::KeyName
-    MinLength: '1'
-    MaxLength: '255'
     ConstraintDescription: Select an existing EC2 Key Pair.
   DBIRDSInstanceSize:
     Default: db.m5.large

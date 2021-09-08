@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.42: This template creates the ingress rules for Deep Security Managers.
+Description: 'v5.43: This template creates the ingress rules for Deep Security Managers.
   (qs-1ngr590j4)'
 Parameters:
   DSMSG:
@@ -46,16 +46,16 @@ Resources:
     Properties:
       GroupId: !Ref DSMSG
       IpProtocol: tcp
-      FromPort: '4122'
-      ToPort: '4122'
+      FromPort: 4122
+      ToPort: 4122
       SourceSecurityGroupId: !Ref ELBSourceSG
   DSMAgentIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       GroupId: !Ref DSMSG
       IpProtocol: tcp
-      FromPort: '4118'
-      ToPort: '4118'
+      FromPort: 4118
+      ToPort: 4118
       SourceSecurityGroupId: !Ref DSMSG
   DSMConsoleIngressSelf:
     Type: AWS::EC2::SecurityGroupIngress
@@ -78,8 +78,8 @@ Resources:
     Properties:
       GroupId: !Ref DSMSG
       IpProtocol: tcp
-      FromPort: '4122'
-      ToPort: '4122'
+      FromPort: 4122
+      ToPort: 4122
       SourceSecurityGroupId: !Ref DSMSG
   DSMConsoleIngress1921918:
     Type: AWS::EC2::SecurityGroupIngress
@@ -102,8 +102,8 @@ Resources:
     Properties:
       GroupId: !Ref DSMSG
       IpProtocol: tcp
-      FromPort: '4122'
-      ToPort: '4122'
+      FromPort: 4122
+      ToPort: 4122
       CidrIp: 192.168.0.0/16
   DSMConsoleIngress101918:
     Type: AWS::EC2::SecurityGroupIngress
@@ -126,8 +126,8 @@ Resources:
     Properties:
       GroupId: !Ref DSMSG
       IpProtocol: tcp
-      FromPort: '4122'
-      ToPort: '4122'
+      FromPort: 4122
+      ToPort: 4122
       CidrIp: 10.0.0.0/8
   DSMConsoleIngress1721918:
     Type: AWS::EC2::SecurityGroupIngress
@@ -150,31 +150,31 @@ Resources:
     Properties:
       GroupId: !Ref DSMSG
       IpProtocol: tcp
-      FromPort: '4122'
-      ToPort: '4122'
+      FromPort: 4122
+      ToPort: 4122
       CidrIp: 172.16.0.0/12
   DSMDNS1721918:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       GroupId: !Ref DSMSG
       IpProtocol: udp
-      FromPort: '53'
-      ToPort: '53'
+      FromPort: 53
+      ToPort: 53
       CidrIp: 172.16.0.0/12
   DSMDNS101918:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       GroupId: !Ref DSMSG
       IpProtocol: udp
-      FromPort: '53'
-      ToPort: '53'
+      FromPort: 53
+      ToPort: 53
       CidrIp: 10.0.0.0/8
   DSMDNS1921918:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       GroupId: !Ref DSMSG
       IpProtocol: udp
-      FromPort: '53'
-      ToPort: '53'
+      FromPort: 53
+      ToPort: 53
       CidrIp: 192.168.0.0/16
 ...

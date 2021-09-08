@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.42: Template for testing the Quick Start, Creates the VPCs
+Description: 'v5.43: Template for testing the Quick Start, Creates the VPCs
   and subnets needed for deployment'
 Parameters:
   EnableDNSHostNames:
@@ -14,7 +14,7 @@ Resources:
     Type: 'AWS::EC2::VPC'
     Properties:
       CidrBlock: 10.0.0.0/16
-      EnableDnsSupport: 'true'
+      EnableDnsSupport: true
       EnableDnsHostnames: !Ref EnableDNSHostNames
       Tags:
         - Key: Application

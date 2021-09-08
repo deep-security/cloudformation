@@ -1,13 +1,11 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.42: Deploys Elastic Load Balancers and Security Groups for Deep Security
+Description: 'v5.43: Deploys Elastic Load Balancers and Security Groups for Deep Security
   (qs-1ngr590je). Manager.'
 Parameters:
   AWSIVPC:
     Description: Existing VPC to deploy Deep Security Manager
     Type: AWS::EC2::VPC::Id
-    MinLength: '1'
-    MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
   DSIPHeartbeatPort:
     Description: The heartbeat port used by Deep Security Agents and appliances to

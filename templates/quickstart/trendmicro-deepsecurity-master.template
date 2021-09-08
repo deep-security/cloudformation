@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'QS(0011) - v5.42: Quick Start that deploys Trend Micro Deep Security
+Description: 'QS(0011) - v5.43: Quick Start that deploys Trend Micro Deep Security
   into an existing VPC with a Multi-AZ PostgreSQL RDS instance  **WARNING** This template
   uses images from the AWS Marketplace and an active subscription is required - Please
   see the Quick Start documentation for more details. You will be billed for the AWS
@@ -56,14 +56,10 @@ Parameters:
     Description: Select an existing key pair to use for connecting to your Deep Security
       Manager Instance.
     Type: AWS::EC2::KeyPair::KeyName
-    MinLength: '1'
-    MaxLength: '255'
     ConstraintDescription: Select an existing EC2 Key Pair.
   AWSVPC:
     Description: Select an existing VPC to deploy Deep Security Manager.
     Type: AWS::EC2::VPC::Id
-    MinLength: '1'
-    MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
   DatabaseSubnet1:
     Description: Select a private subnet for the RDS database.  Must be a private
@@ -81,12 +77,10 @@ Parameters:
     Description: Select an existing Subnet for Deep Security Manager. Must be a public
       subnet contained in the VPC chosen above.
     Type: AWS::EC2::Subnet::Id
-    MinLength: '1'
-    MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
     ConstraintDescription: Subnet ID must exist in the chosen VPC
   DeepSecurityAdminName:
-    Default: MasterAdmin
+    Default: admin
     Description: The Deep Security Manager administrator username for Web Console
       Access.
     Type: String
@@ -359,13 +353,13 @@ Mappings:
     1001-2000:
       Size: '4'
 Resources:
-  MasterMP:
+  MainMP:
     Type: AWS::CloudFormation::Stack
     Condition: PerHostSupportedRegion
     Properties:
       TemplateURL:
         !Sub
-          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/marketplace/master-mp.template'
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/marketplace/main-mp.template'
           - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:
@@ -430,5 +424,5 @@ Conditions:
       - us-gov-east-1
 Outputs:
   DeepSecurityConsole:
-    Value: !GetAtt MasterMP.Outputs.DeepSecurityConsole
+    Value: !GetAtt MainMP.Outputs.DeepSecurityConsole
 ...
