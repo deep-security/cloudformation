@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.42: This template deploys an Aurora PostgreSQL RDS instance for Deep Security
+Description: 'v5.44: This template deploys an Aurora PostgreSQL RDS instance for Deep Security
   Manager. (qs-1ngr590ie)'
 Parameters:
   DBIRDSInstanceSize:
@@ -60,6 +60,12 @@ Parameters:
 Resources:
   DSAuroraCluster:
     Type: AWS::RDS::DBCluster
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks: [ERDSStorageEncryptionEnabled]
+          ignore_reasons:
+            ERDSStorageEncryptionEnabled: 'This setting of StorageEncrypted is true in the template.'
     Properties:
       BackupRetentionPeriod: !Ref DBPBackupDays
       DatabaseName: !Ref DBPName

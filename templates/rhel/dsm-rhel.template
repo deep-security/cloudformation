@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  v5.42: Deploys Deep Security Manager to AWS. This template is designed to be
+  v5.44: Deploys Deep Security Manager to AWS. This template is designed to be
   nested in a stack, and requires several passed parameters to launch.
   **WARNING** This template creates Amazon EC2 instances and related resources.
   You will be billed for the AWS resources used if you create a stack from this
@@ -11,14 +11,10 @@ Parameters:
       Existing key pair to use for connecting to your Deep Security Manager
       Instance
     Type: AWS::EC2::KeyPair::KeyName
-    MinLength: '1'
-    MaxLength: '255'
     ConstraintDescription: Select an existing EC2 Key Pair.
   AWSIVPC:
     Description: Existing VPC to deploy Deep Security Manager
     Type: AWS::EC2::VPC::Id
-    MinLength: '1'
-    MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
   DSCAdminName:
     Default: MasterAdmin
@@ -150,8 +146,6 @@ Parameters:
       Existing Subnet for Deep Security Manager. Must be a public subnet
       contained the in VPC chosen above.
     Type: AWS::EC2::Subnet::Id
-    MinLength: '1'
-    MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
     ConstraintDescription: Subnet ID must exist in the chosen VPC
   DSMPMNode:

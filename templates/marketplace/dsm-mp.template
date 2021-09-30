@@ -1,25 +1,25 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.42: Deploys Deep Security Manager to AWS. This template is designed
+Description: 'v5.44: Deploys Deep Security Manager to AWS. This template is designed
   to be nested in a stack, and requires several passed parameters to launch. **WARNING**
   This template creates Amazon EC2 instances and related resources. You will be billed
   for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
+Metadata:
+  cfn-lint:
+    config:
+      ignore_checks: [W2001,W4002]
 Parameters:
   AWSIKeyPairName:
     Description: Existing key pair to use for connecting to your Deep Security Manager
       Instance
     Type: AWS::EC2::KeyPair::KeyName
-    MinLength: '1'
-    MaxLength: '255'
     ConstraintDescription: Select an existing EC2 Key Pair.
   AWSIVPC:
     Description: Existing VPC to deploy Deep Security Manager
     Type: AWS::EC2::VPC::Id
-    MinLength: '1'
-    MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
   DSCAdminName:
-    Default: MasterAdmin
+    Default: admin
     Description: The Deep Security Manager administrator account username for Web
       Console Access
     Type: String
@@ -145,8 +145,6 @@ Parameters:
     Description: Existing Subnet for Deep Security Manager. Must be a public subnet
       contained the in VPC chosen above.
     Type: AWS::EC2::Subnet::Id
-    MinLength: '1'
-    MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
     ConstraintDescription: Subnet ID must exist in the chosen VPC
   DSMPMNode:
@@ -223,65 +221,65 @@ Parameters:
 Mappings:
   DSMAMI:
     ap-northeast-1:
-      PerHost: ami-0412ee5db8ad0a804
-      BYOL: ami-0e4baf68e53d498e6
+      PerHost: ami-0c70cf767599ef582
+      BYOL: ami-0bb3f32d2703f9b25
     ap-northeast-2:
-      PerHost: ami-002075901b87110f8
-      BYOL: ami-091ef122dd8a9b06d
+      PerHost: ami-032b8e695d810a33f
+      BYOL: ami-08172d2535f08f2cc
     ap-south-1:
-      PerHost: ami-0487df7f085d44a2e
-      BYOL: ami-042587efedef008fc
+      PerHost: ami-00ac9913e2aaf7859
+      BYOL: ami-07228a9f8644cfa72
     ap-southeast-1:
-      PerHost: ami-046ba1316a8486b91
-      BYOL: ami-0f603efc4ddb6a601
+      PerHost: ami-0a49664cc74fea628
+      BYOL: ami-0a938b981cb149425
     ap-southeast-2:
-      PerHost: ami-0eb267f273ab1c737
-      BYOL: ami-00076f552ccf59e9b
+      PerHost: ami-01278eb6be02e5bf2
+      BYOL: ami-0edc53ae080403ced
     ca-central-1:
-      PerHost: ami-004a1d72f6ce943f4
-      BYOL: ami-02e87c634543e7275
+      PerHost: ami-0370e2ddaa280965a
+      BYOL: ami-0f1bac832c99e5cb4
     eu-central-1:
-      PerHost: ami-060fea26b2318136e
-      BYOL: ami-020d2f1bdb454b030
+      PerHost: ami-0c3e2af3750bb6366
+      BYOL: ami-0209a26945763d201
     eu-north-1:
-      PerHost: ami-04aed3cf805bcff60
-      BYOL: ami-0a6799194c54ec07d
+      PerHost: ami-05913e69ec6eb1b01
+      BYOL: ami-01888d1940462340e
     eu-west-1:
-      PerHost: ami-01458243a6d8f60f8
-      BYOL: ami-094ef4227dbcc4636
+      PerHost: ami-016123509f6b9f7fe
+      BYOL: ami-05a45c53bd26ed78e
     eu-west-2:
-      PerHost: ami-0dc85467fa244935a
-      BYOL: ami-0d2e6f889bebae922
+      PerHost: ami-0b41638e483752cc5
+      BYOL: ami-09a9f3baecedfc450
     eu-west-3:
-      PerHost: ami-0db8f74a49fad6dc3
-      BYOL: ami-0318594180a036259
+      PerHost: ami-0397116bb6364eb08
+      BYOL: ami-041035a961e41e8b1
     eu-south-1:
-      PerHost: ami-06fcd9f708d571028
-      BYOL: ami-0b6aae1c847d8f51f
+      PerHost: ami-06967c588acf4b343
+      BYOL: ami-09e35ceaa96ffcbfa
     me-south-1:
-      PerHost: ami-09f364483cbd7148a
-      BYOL: ami-07c75202aa9966383
+      PerHost: ami-0db066e0cd1baefb8
+      BYOL: ami-01a965d99a7d6e184
     sa-east-1:
-      PerHost: ami-089071320aa69869b
-      BYOL: ami-0f5f0c2f9e0d986ab
+      PerHost: ami-0ffbb42cd1607e18c
+      BYOL: ami-051d31c91b6e4cb10
     us-east-1:
-      PerHost: ami-0ba04754208f9959f
-      BYOL: ami-004dd550ed91769a4
+      PerHost: ami-08091741b3cbaaf9e
+      BYOL: ami-09579940c4d0ff2a9
     us-east-2:
-      PerHost: ami-042def3cffd95388e
-      BYOL: ami-07bbc71e8e7fafbe6
+      PerHost: ami-0da5bcd7561a9d50b
+      BYOL: ami-07260f3724dcf724c
     us-gov-east-1:
-      PerHost: ami-001fd56c5aadf76ab
-      BYOL: ami-08ba9f671935d8f39
+      PerHost: ami-05d27b805d8abf4c3
+      BYOL: ami-0c1236be09e8ede7e
     us-gov-west-1:
-      PerHost: ami-01f42de6c25184d54
-      BYOL: ami-0214aa594a1e64b0d
+      PerHost: ami-027954763468648f0
+      BYOL: ami-02cbffc80a8a77334
     us-west-1:
-      PerHost: ami-0493c60acc9c7c847
-      BYOL: ami-094d93607af4a065a
+      PerHost: ami-0b05b1f94f1a70db0
+      BYOL: ami-0c5c69e3b60bb7303
     us-west-2:
-      PerHost: ami-02c72dbd5809359ca
-      BYOL: ami-0785d8e5f6d7b23f0
+      PerHost: ami-04fda63da5e2cb0b4
+      BYOL: ami-0b7590b53c399dd5f
   DSMSIZE:
     us-east-1:
       PerHost: m5.xlarge
@@ -357,6 +355,12 @@ Mappings:
 Resources:
   DSMRole:
     Type: AWS::IAM::Role
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks: [EIAMPolicyWildcardResource]
+          ignore_reasons:
+            EIAMPolicyWildcardResource: 'Those actions of ec2, iam and elasticloadbalancing:DescribeLoadBalancers does not support resource-level permissions, it only supports the ”*” in the resource element.'
     Properties:
       AssumeRolePolicyDocument:
         Statement:
@@ -400,7 +404,7 @@ Resources:
               - ec2:DescribeAvailabilityZones
               - ec2:DescribeSecurityGroups
               - iam:ListAccountAliases
-              - sts:AssumeRole
+              - elasticloadbalancing:DescribeLoadBalancers
               Resource: '*'
             - Effect: Allow
               Action:
@@ -422,6 +426,18 @@ Resources:
                   - !Ref DSIELB
             - Effect: Allow
               Action:
+              - sts:AssumeRole
+              Resource:
+                !Join
+                - ''
+                - - !If
+                    - GovCloudCondition
+                    - 'arn:aws-us-gov:iam::'
+                    - 'arn:aws:iam::'
+                  - !Ref AWS::AccountId
+                  - :role/*
+            - Effect: Allow
+              Action:
               - iam:UploadServerCertificate
               - iam:GetServerCertificate
               Resource:
@@ -434,10 +450,6 @@ Resources:
                   - !Ref AWS::AccountId
                   - :server-certificate/DeepSecurityElbCertificate-
                   - !Ref AWS::StackName
-            - Effect: Allow
-              Action:
-              - elasticloadbalancing:DescribeLoadBalancers
-              Resource: '*'
         - PolicyName: DeepSecurityManagerInstancePolicy
           PolicyDocument:
             Statement:
@@ -451,11 +463,22 @@ Resources:
               - ec2:DescribeTags
               - ec2:DescribeVpcs
               - iam:ListAccountAliases
-              - sts:AssumeRole
               - ec2:DescribeAvailabilityZones
               - ec2:DescribeSecurityGroups
               - iam:ListAccountAliases
               Resource: '*'
+            - Effect: Allow
+              Action:
+              - sts:AssumeRole
+              Resource:
+                !Join
+                - ''
+                - - !If
+                    - GovCloudCondition
+                    - 'arn:aws-us-gov:iam::'
+                    - 'arn:aws:iam::'
+                  - !Ref AWS::AccountId
+                  - :role/*
   DSMProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
@@ -652,10 +675,10 @@ Resources:
               owner: root
               mode: '000700'
               authentication: S3AccessCreds
-            /etc/cfn/kill-mp-web-installer.sh:
+            /etc/cfn/end-mp-web-installer.sh:
               source:
                 Fn::Sub:
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/kill-mp-web-installer.sh
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/end-mp-web-installer.sh
                 - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
                   S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               owner: root
@@ -685,8 +708,8 @@ Resources:
                 Fn::Sub: /etc/cfn/add-aws-account-with-instance-role.sh ${DSCAdminName}
                   ${DSCAdminPassword} localhost ${DSIPGUIPort} ${AWS::Region}
               ignoreErrors: 'False'
-            10-killWebInstaller:
-              command: /etc/cfn/kill-mp-web-installer.sh
+            10-endWebInstaller:
+              command: /etc/cfn/end-mp-web-installer.sh
         sqlSetup:
           files:
             /etc/cfn/rhel-scripts/create-dsm-db.py:

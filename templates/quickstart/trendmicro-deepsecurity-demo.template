@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'DEMO ONLY - v5.42: Demo of the Trend Micro Deep Security Quick Start.
+Description: 'DEMO ONLY - v5.44: Demo of the Trend Micro Deep Security Quick Start.
   This template creates the VPC infrastructure needed for the Quick Start and deploys an
   EC2 instance with Docker and PostgreSQL for the database. **WARNING** This template
   uses images from the AWS Marketplace and an active subscription is required - Please
@@ -39,8 +39,6 @@ Parameters:
     Description: Select an existing key pair to use for connecting to your Deep Security
       Manager Instance.
     Type: AWS::EC2::KeyPair::KeyName
-    MinLength: '1'
-    MaxLength: '255'
     ConstraintDescription: Select an existing EC2 Key Pair.
   DeepSecurityAdminName:
     Default: MasterAdmin
