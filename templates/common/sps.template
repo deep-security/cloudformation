@@ -1,27 +1,21 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  v5.42: Smart protection server template (qs-1ngr590jj).
+  v5.44: Smart protection server template (qs-1ngr590jj).
 Parameters:
   AWSIKeyPairName:
     Description: Existing key pair to use for connecting to your Smart Protection Server
     Type: 'AWS::EC2::KeyPair::KeyName'
-    MinLength: '1'
-    MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
     ConstraintDescription: Select an existing EC2 Key Pair.
   AWSIVPC:
     Description: Existing VPC to deploy Smart Protection Server
     Type: 'AWS::EC2::VPC::Id'
-    MinLength: '1'
-    MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
   AWSSubnetID:
     Description: >-
       Existing Subnet for Smart Protection Server. Must be a subnet contained
       the in VPC chosen above.
     Type: 'AWS::EC2::Subnet::Id'
-    MinLength: '1'
-    MaxLength: '255'
     AllowedPattern: '[-_a-zA-Z0-9]*'
     ConstraintDescription: Subnet ID must exist in the chosen VPC
   SPSInstanceType:
@@ -108,7 +102,7 @@ Resources:
       NetworkInterfaces:
         - DeviceIndex: '0'
           SubnetId: !Ref AWSSubnetID
-          AssociatePublicIpAddress: 'true'
+          AssociatePublicIpAddress: true
           GroupSet:
             - !Ref TmSpsSecurityGroup
       Tags:
@@ -130,45 +124,45 @@ Resources:
       VpcId: !Ref AWSIVPC
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
+          FromPort: 443
+          ToPort: 443
           CidrIp: 10.0.0.0/8
         - IpProtocol: tcp
-          FromPort: '4343'
-          ToPort: '4343'
+          FromPort: 4343
+          ToPort: 4343
           CidrIp: 10.0.0.0/8
         - IpProtocol: tcp
-          FromPort: '5274'
-          ToPort: '5275'
+          FromPort: 5274
+          ToPort: 5275
           CidrIp: 10.0.0.0/8
         - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
+          FromPort: 443
+          ToPort: 443
           CidrIp: 172.16.0.0/12
         - IpProtocol: tcp
-          FromPort: '4343'
-          ToPort: '4343'
+          FromPort: 4343
+          ToPort: 4343
           CidrIp: 172.16.0.0/12
         - IpProtocol: tcp
-          FromPort: '5274'
-          ToPort: '5275'
+          FromPort: 5274
+          ToPort: 5275
           CidrIp: 172.16.0.0/12
         - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
+          FromPort: 443
+          ToPort: 443
           CidrIp: 192.168.0.0/16
         - IpProtocol: tcp
-          FromPort: '4343'
-          ToPort: '4343'
+          FromPort: 4343
+          ToPort: 4343
           CidrIp: 192.168.0.0/16
         - IpProtocol: tcp
-          FromPort: '5274'
-          ToPort: '5275'
+          FromPort: 5274
+          ToPort: 5275
           CidrIp: 192.168.0.0/16
       SecurityGroupEgress:
         - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
+          FromPort: 443
+          ToPort: 443
           CidrIp: 0.0.0.0/0
       Tags:
         - Key: Name
