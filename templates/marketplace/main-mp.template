@@ -1,11 +1,15 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.44: Trend Micro Deep Security Marketplace main template. For more
+Description: 'v5.45: Trend Micro Deep Security Marketplace main template. For more
   information see http://aws.trendmicro.com. (qs-1ngr590jt)'
 Metadata:
   cfn-lint:
     config:
       ignore_checks: [W3005,W7001,W8001]
+      ignore_reasons:
+        W3005:'DSMNode2, DSMNode1NoDB and DSIDSMSecurityGroup needs to depend on resource DSIDSMSecurityGroup to make sure the stack will create not fail'
+        W7001:'Definition is used by another template'
+        W8001:'Conditions are referenced by other template'
   AWS::CloudFormation::Interface:
     ParameterGroups:
     - Label:

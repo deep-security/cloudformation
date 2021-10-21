@@ -1,11 +1,13 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.44: This template creates the security group to allow communication
+Description: 'v5.45: This template creates the security group to allow communication
   from Deep Security Managers to their RDS Instance. (qs-1ngr590j9)'
 Metadata:
   cfn-lint:
     config:
       ignore_checks: [W8001]
+      ignore_reasons:
+        W8001:'Conditions are referenced by other template'
 Parameters:
   AWSIVPC:
     Description: Existing VPC to deploy Deep Security Manager
