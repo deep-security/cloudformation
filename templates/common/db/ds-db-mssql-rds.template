@@ -1,18 +1,20 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.44: This template deploys an MSSQL RDS Instance for Deep Security
+Description: 'v5.46: This template deploys an MSSQL RDS Instance for Deep Security
   Manager. (qs-1ngr590ij)'
 Metadata:
   cfn-lint:
     config:
-      ignore_checks: [W2001,W8001,W2030]
+      ignore_checks: [W2001,W8001]
+      ignore_reasons:
+        W2001:'Parameters are referenced by other template'
+        W8001:'Conditions are referenced by other template'
 Parameters:
   DBIRDSInstanceSize:
     Default: db.m5.large
     Description: Trend Micro Deep Security Database instance class
     Type: String
     AllowedValues:
-    - db.m5.medium
     - db.m5.large
     - db.m5.xlarge
     - db.m5.2xlarge

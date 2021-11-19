@@ -1,11 +1,14 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.44: This template is an abstraction layer for choosing PostgreSQL,
+Description: 'v5.46: This template is an abstraction layer for choosing PostgreSQL,
   Oracle or MSSQL when deploying Deep Security Manager. (qs-1ngr590i4)'
 Metadata:
   cfn-lint:
     config:
       ignore_checks: [W2001,W8001]
+      ignore_reasons:
+        W2001:'Parameters are referenced by other template'
+        W8001:'Conditions are referenced by other template'
 Parameters:
   AWSIKeyPairName:
     Description: Existing key pair to use for connecting to database if using Postgres on Docker

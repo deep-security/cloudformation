@@ -1,11 +1,14 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.44: Deploys Elastic Load Balancers and Security Groups for Deep Security
+Description: 'v5.46: Deploys Elastic Load Balancers and Security Groups for Deep Security
   (qs-1ngr590je). Manager.'
 Metadata:
   cfn-lint:
     config:
       ignore_checks: [W3005,W8001]
+      ignore_reasons:
+        W8001:'Conditions are referenced by other template'
+        W3005:'DSM needs to depend on resource ELBSG to make sure the stack will create not fail'
 Parameters:
   AWSIVPC:
     Description: Existing VPC to deploy Deep Security Manager

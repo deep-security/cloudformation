@@ -1,11 +1,13 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.44: This template creates the security group to allow inbound communication
+Description: 'v5.46: This template creates the security group to allow inbound communication
   to Deep Security Manager. (qs-1ngr590iu)'
 Metadata:
   cfn-lint:
     config:
       ignore_checks: [W2001]
+      ignore_reasons:
+        W2001:'Parameters are referenced by other template'
 Parameters:
   AWSIVPC:
     Description: Existing VPC to deploy Deep Security Manager
