@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.46: This template deploys an Oracle RDS instance for Deep Security
+Description: 'v5.47: This template deploys an Oracle RDS instance for Deep Security
   Manager. (qs-1ngr590i9)'
 Metadata:
   cfn-lint:
