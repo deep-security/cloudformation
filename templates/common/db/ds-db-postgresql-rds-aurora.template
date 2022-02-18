@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.48: This template deploys an Aurora PostgreSQL RDS instance for Deep Security
+Description: 'v5.49: This template deploys an Aurora PostgreSQL RDS instance for Deep Security
   Manager. (qs-1ngr590ie)'
 Parameters:
   DBIRDSInstanceSize:
