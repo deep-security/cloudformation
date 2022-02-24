@@ -1,0 +1,115 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: '#VERSION: This template deploys an Aurora PostgreSQL RDS instance for Deep Security
+  Manager. (qs-1ngr590ie)'
+Parameters:
+  DBIRDSInstanceSize:
+    Default: db.r5.large
+    Description: Trend Micro Deep Security Database instance class
+    Type: String
+    AllowedValues:
+    - db.r4.large
+    - db.r4.xlarge
+    - db.r4.2xlarge
+    - db.r4.4xlarge
+    - db.r4.8xlarge
+    - db.r5.large
+    - db.r5.xlarge
+    - db.r5.2xlarge
+    - db.r5.4xlarge
+    - db.r5.8xlarge
+    ConstraintDescription: must select a valid database instance type.
+  DBPBackupDays:
+    Default: 1
+    Description: Days to keep automatic RDS backups (0-35)
+    Type: Number
+    MinValue: 0
+    MaxValue: 35
+    ConstraintDescription: must be between 0 and 35 days.
+  DBICAdminName:
+    Default: dsadmin
+    Description: Admin account username to be used for the database instance
+    Type: String
+    MinLength: 1
+    MaxLength: 16
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
+  DBICAdminPassword:
+    NoEcho: true
+    Description: Password to be used for the database admin account
+    Type: String
+    MinLength: 8
+    MaxLength: 41
+    AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
+    ConstraintDescription: Can only contain alphanumeric characters or the following
+      special characters !^*-_+ Min length 8, max length 41
+  DBPName:
+    Default: dsm
+    Description: Name to be assigned to the database
+    Type: String
+    MinLength: 1
+    MaxLength: 64
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
+  RDSSG:
+    Type: AWS::EC2::SecurityGroup::Id
+  DBISubnetGroupName:
+    Type: String
+Resources:
+  DSAuroraCluster:
+    Type: AWS::RDS::DBCluster
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks: [ERDSStorageEncryptionEnabled]
+          ignore_reasons:
+            ERDSStorageEncryptionEnabled: 'This setting of StorageEncrypted is true in the template.'
+    Properties:
+      BackupRetentionPeriod: !Ref DBPBackupDays
+      DatabaseName: !Ref DBPName
+      DBClusterParameterGroupName: default.aurora-postgresql11
+      DBSubnetGroupName: !Ref DBISubnetGroupName
+      Engine: aurora-postgresql
+      EngineMode: provisioned
+      EngineVersion: '11.9'
+      MasterUsername: !Ref DBICAdminName
+      MasterUserPassword: !Ref DBICAdminPassword
+      Port: 5432
+      StorageEncrypted: true
+      Tags:
+      - Key: Application
+        Value: Deep Security Manager
+      VpcSecurityGroupIds:
+      - !Ref RDSSG
+  DSDatabase1:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBClusterIdentifier: !Ref DSAuroraCluster
+      LicenseModel: postgresql-license
+      PubliclyAccessible: false
+      DBInstanceClass: !Ref DBIRDSInstanceSize
+      Engine: aurora-postgresql
+      Tags:
+      - Key: Application
+        Value: Deep Security Manager
+  DSDatabase2:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBClusterIdentifier: !Ref DSAuroraCluster
+      LicenseModel: postgresql-license
+      PubliclyAccessible: false
+      DBInstanceClass: !Ref DBIRDSInstanceSize
+      Engine: aurora-postgresql
+      Tags:
+      - Key: Application
+        Value: Deep Security Manager
+Outputs:
+  DSDBEndpoint:
+    Description: Endpoint to be passed to DSM installation properties file
+    Value: !GetAtt DSAuroraCluster.Endpoint.Address
+  DSDBPort:
+    Description: Port to be passed to DSM installation properties file
+    Value: !GetAtt DSAuroraCluster.Endpoint.Port
+...

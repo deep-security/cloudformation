@@ -1,0 +1,299 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: 'This template is used strictly for CI entrypoints. It is not designed to be launched outside of the CI/CD Pipeline of the AWS QuickStart Team. (qs-1r17m59ba)'
+Metadata:
+  cfn-lint:
+    config:
+      ignore_checks: [W2001,W8001,W7001,E9010]
+      ignore_reasons:
+        W2001:'Parameters are referenced by other template'
+        W7001:'Definition is used by another template'
+        W8001:'Conditions are referenced by other template'
+        E9010:'Definition is used by another template'
+Parameters:
+  KeyPairName:
+    Description: Select an existing key pair to use for connecting to your Deep Security
+      Manager Instance.
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: Select an existing EC2 Key Pair.
+  DeepSecurityAdminName:
+    Default: admin
+    Description: The Deep Security Manager administrator username for Web Console
+      Access.
+    Type: String
+    MinLength: 1
+    MaxLength: 16
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: Must begin with a letter and contain only alphanumeric
+      characters. Min length 1, max length 16
+  DeepSecurityAdminPass:
+    NoEcho: true
+    Description: The Deep Security Manager administrator password. Must be 8-41 characters
+      long and can only contain alphanumeric characters or the following special characters
+      !^*-_+
+    Type: String
+    MinLength: 8
+    MaxLength: 41
+    AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
+    ConstraintDescription: Can only contain alphanumeric characters or the following
+      special characters !^*-_+ Min length 8, max length 41
+  ProtectedInstances:
+    Description: Select how many instances would you like to protect.
+    Type: String
+    AllowedValues:
+    - 1-100
+    - 101-500
+    - 501-1000
+    - 1001-2000
+  QSS3BucketName:
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    ConstraintDescription: Quick Start bucket name can include numbers, lowercase
+      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
+      (-).
+    Default: aws-quickstart
+    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
+      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
+      It cannot start or end with a hyphen (-).
+    Type: String
+  QSS3BucketRegion:
+    Default: 'us-east-1'
+    Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
+    Type: String
+  QSS3KeyPrefix:
+    AllowedPattern: ^[0-9a-zA-Z-/]*$
+    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
+      uppercase letters, hyphens (-), and forward slash (/).
+    Default: quickstart-trendmicro-deepsecurity/
+    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
+      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
+      forward slash (/).
+    Type: String
+  AvailabilityZones:
+    Description: List of Availability Zones to use for the subnets in the VPC. Three
+      Availability Zones are used for this deployment, and the logical order of your
+      selections is preserved.
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+Mappings:
+  DSMSIZE:
+    us-east-1:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    us-west-1:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    us-west-2:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    eu-west-1:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    eu-central-1:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    sa-east-1:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    ap-northeast-1:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    ap-southeast-1:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    ap-southeast-2:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    ap-northeast-2:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    us-east-2:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    ca-central-1:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    ap-south-1:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    eu-west-2:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    eu-west-3:
+      '1': r4.large
+      '2': r4.large
+      '3': r4.xlarge
+      '4': r4.xlarge
+    us-gov-west-1:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+  RDSStorageSize:
+    1-100:
+      Size: '50'
+    101-500:
+      Size: '150'
+    501-1000:
+      Size: '200'
+    1001-2000:
+      Size: '300'
+  RDSInstanceSize:
+    us-east-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    us-east-2:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    us-west-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    us-west-2:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ca-central-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-south-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-northeast-2:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-southeast-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-southeast-2:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-northeast-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    eu-central-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    eu-west-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    eu-west-2:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    sa-east-1:
+      '1': db.m3.large
+      '2': db.m3.large
+      '3': db.m3.xlarge
+      '4': db.m3.xlarge
+    eu-west-3:
+      '1': db.r4.large
+      '2': db.r4.large
+      '3': db.r4.xlarge
+      '4': db.r4.xlarge
+    us-gov-west-1:
+      '1': db.m3.large
+      '2': db.m3.large
+      '3': db.m3.xlarge
+      '4': db.m3.xlarge
+  DeploymentSize:
+    1-100:
+      Size: '1'
+    101-500:
+      Size: '2'
+    501-1000:
+      Size: '3'
+    1001-2000:
+      Size: '4'
+Resources:
+  VPCStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:
+        !Sub
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template.yaml'
+          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+      Parameters:
+        AvailabilityZones: !Join [ ',', !Ref 'AvailabilityZones' ]
+        NumberOfAZs: '3'
+  TrendMicroQuickStart:
+    Type: AWS::CloudFormation::Stack
+    Condition: PerHostSupportedRegion
+    Properties:
+      TemplateURL:
+        !Sub
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart/trendmicro-deepsecurity-main.template.yaml'
+          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+      Parameters:
+        AWSKeyPairName: !Ref KeyPairName
+        AWSVPC: !GetAtt 'VPCStack.Outputs.VPCID'
+        DatabaseSubnet1: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
+        DatabaseSubnet2: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
+        DeepSecuritySubnet: !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
+        DeepSecurityAdminPass: !Ref DeepSecurityAdminPass
+        ProtectedInstances: !Ref ProtectedInstances
+        QSS3BucketName: !Ref QSS3BucketName
+        QSS3BucketRegion: !Ref QSS3BucketRegion
+        QSS3KeyPrefix: !Ref QSS3KeyPrefix
+Conditions:
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
+  PerHostSupportedRegion:
+    !Not
+    - !Equals
+      - !Ref AWS::Region
+      - match-all-regions
+  GovCloudCondition:
+    !Equals
+    - !Ref AWS::Region
+    - us-gov-west-1

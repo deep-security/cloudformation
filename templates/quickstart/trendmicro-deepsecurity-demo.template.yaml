@@ -1,0 +1,258 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: 'DEMO ONLY - #VERSION: Demo of the Trend Micro Deep Security Quick Start.
+  This template creates the VPC infrastructure needed for the Quick Start and deploys an
+  EC2 instance with Docker and PostgreSQL for the database. **WARNING** This template
+  uses images from the AWS Marketplace and an active subscription is required - Please
+  see the Quick Start documentation for more details. You will be billed for the AWS
+  resources used if you create a stack from this template.'
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Deep Security Manager Configuration
+      Parameters:
+      - DeepSecurityAdminName
+      - DeepSecurityAdminPass
+      - AWSKeyPairName
+    - Label:
+        default: AWS Quick Start Configuration
+      Parameters:
+      - QSS3BucketName
+      - QSS3BucketRegion
+      - QSS3KeyPrefix
+    ParameterLabels:
+      AWSKeyPairName:
+        default: EC2 Key Pair for SSH access
+      DeepSecurityAdminName:
+        default: Administrator username for Deep Security
+      DeepSecurityAdminPass:
+        default: Administrator password for Deep Security
+      QSS3BucketName:
+        default: Quick Start S3 Bucket Name
+      QSS3BucketRegion:
+        default: Quick Start S3 bucket region
+      QSS3KeyPrefix:
+        default: Quick Start S3 Key Prefix
+Parameters:
+  AWSKeyPairName:
+    Description: Select an existing key pair to use for connecting to your Deep Security
+      Manager Instance.
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: Select an existing EC2 Key Pair.
+  DeepSecurityAdminName:
+    Default: MasterAdmin
+    Description: The Deep Security Manager administrator username for Web Console
+      Access.
+    Type: String
+    MinLength: 1
+    MaxLength: 16
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: Must begin with a letter and contain only alphanumeric
+      characters. Min length 1, max length 16
+  DeepSecurityAdminPass:
+    NoEcho: true
+    Description: The Deep Security Manager administrator password. Must be 8-41 characters
+      long and can only contain alphanumeric characters or the following special characters
+      !^*-_+
+    Type: String
+    MinLength: 8
+    MaxLength: 41
+    AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
+    ConstraintDescription: Can only contain alphanumeric characters or the following
+      special characters !^*-_+ Min length 8, max length 41
+  QSS3BucketName:
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    ConstraintDescription: Quick Start bucket name can include numbers, lowercase
+      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
+      (-).
+    Default: aws-quickstart
+    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
+      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
+      It cannot start or end with a hyphen (-).
+    Type: String
+  QSS3BucketRegion:
+    Default: 'us-east-1'
+    Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
+    Type: String
+  QSS3KeyPrefix:
+    AllowedPattern: ^[0-9a-zA-Z-/]*$
+    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
+      uppercase letters, hyphens (-), and forward slash (/).
+    Default: quickstart-trendmicro-deepsecurity/
+    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
+      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
+      forward slash (/).
+    Type: String
+Mappings:
+  DSMSIZE:
+    us-east-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    us-west-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    us-west-2:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    eu-north-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    eu-west-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    eu-central-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    sa-east-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    ap-northeast-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    ap-southeast-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    ap-southeast-2:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    ap-northeast-2:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    us-east-2:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    ca-central-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    ap-south-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    eu-west-2:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    eu-west-3:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    eu-south-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    us-gov-west-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    me-south-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+    us-gov-east-1:
+      '1': m5.large
+      '2': m5.large
+      '3': m5.xlarge
+      '4': m5.xlarge
+Resources:
+  MasterMP:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: Infrastructure
+    Condition: PerHostSupportedRegion
+    Properties:
+      TemplateURL:
+        !Sub
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/rhel/master-rhel.template.yaml'
+          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+      Parameters:
+        AWSIKeyPairName: !Ref AWSKeyPairName
+        AWSIVPC: !GetAtt Infrastructure.Outputs.VPCID
+        DSISubnetID: !GetAtt Infrastructure.Outputs.PublicSubnet
+        DBIRDSInstanceSize: db.m5.large
+        DBIStorageAllocation: '10'
+        DBPBackupDays: '5'
+        DBPCreateDbInstance: 'Yes'
+        DBICAdminName: dsmadmin
+        DBICAdminPassword: !Ref DeepSecurityAdminPass
+        DBPEngine: PostgresDocker
+        DBPEndpoint: ''
+        DBPName: dsm
+        DSCAdminName: !Ref DeepSecurityAdminName
+        DSCAdminPassword: !Ref DeepSecurityAdminPass
+        DSIMultiNode: '2'
+        DSIPLicenseKey: XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
+        DSIPHeartbeatPort: '4120'
+        DSIPGUIPort: '443'
+        DSIPInstanceType:
+          !FindInMap
+          - DSMSIZE
+          - !Ref AWS::Region
+          - '1'
+        DBISubnet1: !GetAtt Infrastructure.Outputs.PublicSubnet
+        DBISubnet2: !GetAtt Infrastructure.Outputs.PrivateSubnet2
+        DBPMultiAZ: 'true'
+        QSS3BucketName: !Ref QSS3BucketName
+        QSS3BucketRegion: !Ref QSS3BucketRegion
+        QSS3KeyPrefix: !Ref QSS3KeyPrefix
+  Infrastructure:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:
+        !Sub
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart/Infrastructure.template.yaml'
+          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+      Parameters:
+        EnableDNSHostNames: 'true'
+Conditions:
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
+  PerHostSupportedRegion:
+    !Not
+    - !Equals
+      - !Ref AWS::Region
+      - match-all-regions
+  GovCloudCondition:
+    !Or 
+    - !Equals 
+      - !Ref AWS::Region
+      - us-gov-west-1
+    - !Equals 
+      - !Ref AWS::Region
+      - us-gov-east-1
+Outputs:
+  DeepSecurityConsole:
+    Value: !GetAtt MasterMP.Outputs.DeepSecurityConsole
+...
