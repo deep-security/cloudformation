@@ -108,7 +108,7 @@ Resources:
       AllocatedStorage: !Ref DBIStorageAllocation
       DBInstanceClass: !Ref DBIRDSInstanceSize
       Engine: postgres
-      EngineVersion: '11.9'
+      EngineVersion: '11.13'
       MasterUsername: !Ref DBICAdminName
       MasterUserPassword: !Ref DBICAdminPassword
       VPCSecurityGroups:
