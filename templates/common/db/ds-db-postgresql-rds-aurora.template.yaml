@@ -73,7 +73,7 @@ Resources:
       DBSubnetGroupName: !Ref DBISubnetGroupName
       Engine: aurora-postgresql
       EngineMode: provisioned
-      EngineVersion: '11.9'
+      EngineVersion: '11.13'
       MasterUsername: !Ref DBICAdminName
       MasterUserPassword: !Ref DBICAdminPassword
       Port: 5432
