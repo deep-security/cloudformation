@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'QS(0011) - v5.51: Quick Start that deploys Trend Micro Deep Security
+Description: 'QS(0011) - v5.52: Quick Start that deploys Trend Micro Deep Security
   into an existing VPC with a Multi-AZ RDS instance  **WARNING** This template uses
   images from the AWS Marketplace and an active subscription is required - Please
   see the Quick Start documentation for more details. You will be billed for the AWS
@@ -198,9 +198,13 @@ Mappings:
       BYOL: m5.xlarge
     ap-northeast-2:
       BYOL: m5.xlarge
+    ap-northeast-3:
+      BYOL: m5.xlarge
     ap-southeast-1:
       BYOL: m5.xlarge
     ap-southeast-2:
+      BYOL: m5.xlarge
+    ap-southeast-3:
       BYOL: m5.xlarge
     ap-northeast-1:
       BYOL: m5.xlarge
@@ -260,12 +264,22 @@ Mappings:
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
       AuroraPostgreSQL: db.r5.xlarge
+    ap-northeast-3:
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
     ap-southeast-1:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
       AuroraPostgreSQL: db.r5.xlarge
     ap-southeast-2:
+      Oracle: db.m5.xlarge
+      MSSQL: db.m5.xlarge
+      PostgreSQL: db.m5.xlarge
+      AuroraPostgreSQL: db.r5.xlarge
+    ap-southeast-3:
       Oracle: db.m5.xlarge
       MSSQL: db.m5.xlarge
       PostgreSQL: db.m5.xlarge
@@ -361,6 +375,11 @@ Mappings:
       MSSQL: 'true'
       PostgreSQL: 'true'
       AuroraPostgreSQL: 'true'
+    ap-northeast-3:
+      Oracle: 'true'
+      MSSQL: 'true'
+      PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
     ap-southeast-1:
       Oracle: 'true'
       MSSQL: 'false'
@@ -368,6 +387,11 @@ Mappings:
       AuroraPostgreSQL: 'true'
     ap-southeast-2:
       Oracle: 'true'
+      MSSQL: 'true'
+      PostgreSQL: 'true'
+      AuroraPostgreSQL: 'true'
+    ap-southeast-3:
+      Oracle: 'false'
       MSSQL: 'true'
       PostgreSQL: 'true'
       AuroraPostgreSQL: 'true'

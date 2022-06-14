@@ -125,6 +125,16 @@ Mappings:
       '2': m4.large
       '3': m4.xlarge
       '4': m4.xlarge
+    ap-southeast-3:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
+    ap-northeast-3:
+      '1': m4.large
+      '2': m4.large
+      '3': m4.xlarge
+      '4': m4.xlarge
     us-east-2:
       '1': m4.large
       '2': m4.large
@@ -211,6 +221,16 @@ Mappings:
       '3': db.m4.xlarge
       '4': db.m4.xlarge
     ap-northeast-1:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-southeast-3:
+      '1': db.m4.large
+      '2': db.m4.large
+      '3': db.m4.xlarge
+      '4': db.m4.xlarge
+    ap-northeast-3:
       '1': db.m4.large
       '2': db.m4.large
       '3': db.m4.xlarge
