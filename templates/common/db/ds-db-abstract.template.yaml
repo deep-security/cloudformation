@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.59: This template is an abstraction layer for choosing PostgreSQL,
+Description: 'v5.60: This template is an abstraction layer for choosing PostgreSQL,
   Oracle or MSSQL when deploying Deep Security Manager. (qs-1ngr590i4)'
 Metadata:
   cfn-lint:
@@ -160,7 +160,7 @@ Resources:
           - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/db/ds-db-oracle-rds.template.yaml'
           - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
-      TimeoutInMinutes: 65
+      TimeoutInMinutes: 120
       Parameters:
         DBIRDSInstanceSize: !Ref DBIRDSInstanceSize
         DBIStorageAllocation: !Ref DBIStorageAllocation
@@ -180,7 +180,7 @@ Resources:
           - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/db/ds-db-mssql-rds.template.yaml'
           - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
-      TimeoutInMinutes: 65
+      TimeoutInMinutes: 120
       Parameters:
         DBIRDSInstanceSize: !Ref DBIRDSInstanceSize
         DBIStorageAllocation: !Ref DBIStorageAllocation
@@ -200,7 +200,7 @@ Resources:
           - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/db/ds-db-postgresql-rds.template.yaml'
           - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
-      TimeoutInMinutes: 65
+      TimeoutInMinutes: 120
       Parameters:
         DBIRDSInstanceSize: !Ref DBIRDSInstanceSize
         DBIStorageAllocation: !Ref DBIStorageAllocation
