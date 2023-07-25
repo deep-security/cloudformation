@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.66: This template deploys an MSSQL RDS Instance for Deep Security
+Description: 'v5.67: This template deploys an MSSQL RDS Instance for Deep Security
   Manager. (qs-1ngr590ij)'
 Metadata:
   cfn-lint:
@@ -101,7 +101,7 @@ Resources:
       AllocatedStorage: !Ref DBIStorageAllocation
       DBInstanceClass: !Ref DBIRDSInstanceSize
       Engine: sqlserver-se
-      EngineVersion: 12.00.6433.1.v1
+      EngineVersion: 15.00.4236.7.v1
       MasterUsername: !Ref DBICAdminName
       MasterUserPassword: !Ref DBICAdminPassword
       VPCSecurityGroups:

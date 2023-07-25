@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.66: This template deploys an Oracle RDS instance for Deep Security
+Description: 'v5.67: This template deploys an Oracle RDS instance for Deep Security
   Manager. (qs-1ngr590i9)'
 Metadata:
   cfn-lint:
@@ -103,7 +103,7 @@ Resources:
       AllocatedStorage: !Ref DBIStorageAllocation
       DBInstanceClass: !Ref DBIRDSInstanceSize
       Engine: oracle-se2
-      EngineVersion: 19.0.0.0.ru-2020-04.rur-2020-04.r1
+      EngineVersion: 19.0.0.0.ru-2022-10.rur-2022-10.r1
       MasterUsername: !Ref DBICAdminName
       MasterUserPassword: !Ref DBICAdminPassword
       VPCSecurityGroups:
