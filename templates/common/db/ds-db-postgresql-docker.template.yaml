@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.67: ONLY FOR DEMO, NOT A SUPPORTED DEPLOYMENT OPTION.
+Description: 'v5.68: ONLY FOR DEMO, NOT A SUPPORTED DEPLOYMENT OPTION.
   This template deploys PostgreSQL on Docker for Deep Security Manager.'
 Metadata:
   cfn-lint:
@@ -17,34 +17,26 @@ Parameters:
     Description: Trend Micro Deep Security Database instance class
     Type: String
     AllowedValues:
-    - db.m5.medium
     - db.m5.large
     - db.m5.xlarge
     - db.m5.2xlarge
-    - db.m4.medium
-    - db.m4.large
-    - db.m4.xlarge
-    - db.m4.2xlarge
-    - db.m4.4xlarge
-    - db.m3.medium
-    - db.m3.large
-    - db.m3.xlarge
-    - db.m3.2xlarge
-    - db.m2.xlarge
-    - db.r3.large
-    - db.r3.xlarge
-    - db.r3.2xlarge
-    - db.r3.4xlarge
-    - db.r3.8xlarge
-    - db.m2.2xlarge
-    - db.m2.4xlarge
-    - db.m1.medium
-    - db.m1.large
-    - db.m1.xlarge
-    - db.m4.large
-    - db.m4.xlarge
-    - db.r4.large
-    - db.r4.xlarge
+    - db.m5.4xlarge
+    - db.m5.8xlarge
+    - db.m6g.large
+    - db.m6g.xlarge
+    - db.m6g.2xlarge
+    - db.m6g.4xlarge
+    - db.m6g.8xlarge
+    - db.r5.large
+    - db.r5.xlarge
+    - db.r5.2xlarge
+    - db.r5.4xlarge
+    - db.r5.8xlarge
+    - db.r6g.large
+    - db.r6g.xlarge
+    - db.r6g.2xlarge
+    - db.r6g.4xlarge
+    - db.r6g.8xlarge
     ConstraintDescription: must select a valid database instance type.
   DBICAdminName:
     Default: dsadmin
@@ -165,8 +157,8 @@ Resources:
           sudo service docker start
           sudo usermod -a -G docker ec2-user
 
-          docker pull postgres:9.6
-          docker run -e POSTGRES_PASSWORD=${DBICAdminPassword} -e POSTGRES_USER=${DBICAdminName} -p 5432:5432 -e POSTGRES_DB=${DBPName} --restart always --name dsm-psql -d postgres:9.6
+          docker pull postgres:14.6
+          docker run -e POSTGRES_PASSWORD=${DBICAdminPassword} -e POSTGRES_USER=${DBICAdminName} -p 5432:5432 -e POSTGRES_DB=${DBPName} --restart always --name dsm-psql -d postgres:14.6
       Tags:
       - Key: Application
         Value: Deep Security Manager
