@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.67: This template is an abstraction layer for choosing PostgreSQL,
+Description: 'v5.68: This template is an abstraction layer for choosing PostgreSQL,
   Oracle or MSSQL when deploying Deep Security Manager. (qs-1ngr590i4)'
 Metadata:
   cfn-lint:
@@ -21,28 +21,11 @@ Parameters:
     Description: Trend Micro Deep Security Database instance class
     Type: String
     AllowedValues:
-    - db.m5.medium
     - db.m5.large
     - db.m5.xlarge
     - db.m5.2xlarge
-    - db.m4.large
-    - db.m4.xlarge
-    - db.m4.2xlarge
-    - db.m4.4xlarge
-    - db.m3.medium
-    - db.m3.large
-    - db.m3.xlarge
-    - db.m3.2xlarge
-    - db.r3.large
-    - db.r3.xlarge
-    - db.r3.2xlarge
-    - db.r3.4xlarge
-    - db.r3.8xlarge
-    - db.r4.large
-    - db.r4.xlarge
-    - db.r4.2xlarge
-    - db.r4.4xlarge
-    - db.r4.8xlarge
+    - db.m5.4xlarge
+    - db.m5.8xlarge
     - db.r5.large
     - db.r5.xlarge
     - db.r5.2xlarge
@@ -50,13 +33,13 @@ Parameters:
     - db.r5.8xlarge
     ConstraintDescription: must select a valid database instance type.
   DBIStorageAllocation:
-    Default: 10
+    Default: 20
     Description: The Storage Allocated to Database Instance (in GB). Minimum 200 for
-      SQL Server, 10 for Oracle.
+      SQL Server, 20 for Oracle.
     Type: Number
-    MinValue: 10
+    MinValue: 20
     MaxValue: 3072
-    ConstraintDescription: must be between 10 and 3072Gb.
+    ConstraintDescription: must be between 20 and 3072Gb.
   DBPBackupDays:
     Default: 1
     Description: Days to keep automatic RDS backups (0-35)

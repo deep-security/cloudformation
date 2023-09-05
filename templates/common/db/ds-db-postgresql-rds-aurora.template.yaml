@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.67: This template deploys an Aurora PostgreSQL RDS instance for Deep Security
+Description: 'v5.68: This template deploys an Aurora PostgreSQL RDS instance for Deep Security
   Manager. (qs-1ngr590ie)'
 Parameters:
   DBIRDSInstanceSize:
@@ -8,16 +8,21 @@ Parameters:
     Description: Trend Micro Deep Security Database instance class
     Type: String
     AllowedValues:
-    - db.r4.large
-    - db.r4.xlarge
-    - db.r4.2xlarge
-    - db.r4.4xlarge
-    - db.r4.8xlarge
     - db.r5.large
     - db.r5.xlarge
     - db.r5.2xlarge
     - db.r5.4xlarge
     - db.r5.8xlarge
+    - db.r6g.large
+    - db.r6g.xlarge
+    - db.r6g.2xlarge
+    - db.r6g.4xlarge
+    - db.r6g.8xlarge
+    - db.r6i.large
+    - db.r6i.xlarge
+    - db.r6i.2xlarge
+    - db.r6i.4xlarge
+    - db.r6i.8xlarge
     ConstraintDescription: must select a valid database instance type.
   DBPBackupDays:
     Default: 1
