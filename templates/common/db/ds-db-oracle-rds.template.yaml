@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.68: This template deploys an Oracle RDS instance for Deep Security
+Description: 'v5.69: This template deploys an Oracle RDS instance for Deep Security
   Manager. (qs-1ngr590i9)'
 Metadata:
   cfn-lint:
@@ -72,10 +72,10 @@ Parameters:
     ConstraintDescription: must begin with a letter and contain only alphanumeric
       characters.
   StorageType:
-    Default: gp2
+    Default: gp3
     Type: String
     AllowedValues:
-    - gp2
+    - gp3
   RDSSG:
     Type: AWS::EC2::SecurityGroup::Id
   DBISubnetGroupName:

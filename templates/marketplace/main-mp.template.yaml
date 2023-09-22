@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.68: Trend Micro Deep Security Marketplace main template. For more
+Description: 'v5.69: Trend Micro Deep Security Marketplace main template. For more
   information see http://aws.trendmicro.com. (qs-1ngr590jt)'
 Metadata:
   cfn-lint:
@@ -550,7 +550,7 @@ Resources:
         DBICAdminPassword: !Ref DBICAdminPassword
         RDSSG: !GetAtt DSIRDSSecurityGroup.Outputs.RDSSG
         MultiAZ: !Ref DBPMultiAZ
-        StorageType: gp2
+        StorageType: gp3
         DBPBackupDays: !Ref DBPBackupDays
         DBISubnet1: !Ref DBISubnet1
         DBISubnet2: !Ref DBISubnet2
