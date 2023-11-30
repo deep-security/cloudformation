@@ -1,13 +1,12 @@
----
 AWSTemplateFormatVersion: 2010-09-09
 Description: 'v5.71: This template creates the security group to allow inbound communication to Deep Security Manager. (qs-1ngr590iu)'
 Metadata:
   cfn-lint:
     config:
-      ignore_checks: [W2001,E9010]
-      ignore_reasons:
-        W2001:'Parameters are referenced by other template'
-        E9010:'Definition is used by another template'
+      ignore_checks:
+        - W2001
+        - E9010
+      ignore_reasons: W2001:'Parameters are referenced by other template' E9010:'Definition is used by another template'
 Parameters:
   AWSIVPC:
     Description: Existing VPC to deploy Deep Security Manager
@@ -21,8 +20,7 @@ Parameters:
     Default: '4119'
     ConstraintDescription: Must be a valid TCP port.
   DSIPHeartbeatPort:
-    Description: The heartbeat port used by Deep Security Agents and appliances to
-      communicate with the Deep Security Manager.
+    Description: The heartbeat port used by Deep Security Agents and appliances to communicate with the Deep Security Manager.
     Type: Number
     MinValue: 0
     MaxValue: 65535
@@ -33,14 +31,21 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Allow GUI, Hearbeat, and 4122 inbound to DSMs from ELB
-      VpcId: !Ref AWSIVPC
+      VpcId:
+        Ref: AWSIVPC
       SecurityGroupEgress:
-      - IpProtocol: '-1'
-        CidrIp: 0.0.0.0/0
+        - IpProtocol: '-1'
+          CidrIp: 0.0.0.0/0
       Tags:
-      - Key: Name
-        Value: DSMSG
+        - Key: Name
+          Value: DSMSG
 Outputs:
   DSMSG:
-    Value: !Ref DSMSG
-...
+    Value:
+      Ref: DSMSG
+  DSIPGUIPort:
+    Value:
+      Ref: DSIPGUIPort
+  DSIPHeartbeatPort:
+    Value:
+      Ref: DSIPHeartbeatPort

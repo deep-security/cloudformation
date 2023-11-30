@@ -1,19 +1,17 @@
----
 AWSTemplateFormatVersion: 2010-09-09
 Description: 'v5.71: Deploys Deep Security Manager to AWS. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2
   instances and related resources. You will be billed for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
 Metadata:
   cfn-lint:
     config:
-      ignore_checks: [W2001,W4002,E9010]
-      ignore_reasons:
-        W2001:'Parameters are referenced by other template'
-        W4002:'Using NoEcho parameters as the scripte input'
-        E9010:'Definition is used by another template'
+      ignore_checks:
+        - W2001
+        - W4002
+        - E9010
+      ignore_reasons: W2001:'Parameters are referenced by other template' W4002:'Using NoEcho parameters as the scripte input' E9010:'Definition is used by another template'
 Parameters:
   AWSIKeyPairName:
-    Description: Existing key pair to use for connecting to your Deep Security Manager
-      Instance
+    Description: Existing key pair to use for connecting to your Deep Security Manager Instance
     Type: AWS::EC2::KeyPair::KeyName
     ConstraintDescription: Select an existing EC2 Key Pair.
   AWSIVPC:
@@ -22,14 +20,12 @@ Parameters:
     AllowedPattern: '[-_a-zA-Z0-9]*'
   DSCAdminName:
     Default: admin
-    Description: The Deep Security Manager administrator account username for Web
-      Console Access
+    Description: The Deep Security Manager administrator account username for Web Console Access
     Type: String
     MinLength: 1
     MaxLength: 16
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: must begin with a letter and contain only alphanumeric
-      characters.
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
   DSCAdminPassword:
     NoEcho: true
     Description: The Deep Security Manager administrator account password
@@ -37,8 +33,7 @@ Parameters:
     MinLength: 8
     MaxLength: 41
     AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
-    ConstraintDescription: Can only contain alphanumeric characters or the following
-      special characters !^*-_+ Min length 8, max length 41
+    ConstraintDescription: Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41
   DSIPLicenseKey:
     Description: Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)
     Type: String
@@ -48,8 +43,7 @@ Parameters:
     ConstraintDescription: Key can only contain ASCII characters.
     Default: XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
   DSIPHeartbeatPort:
-    Description: The heartbeat port used by Deep Security Agents and appliances to
-      communicate with the Deep Security Manager.
+    Description: The heartbeat port used by Deep Security Agents and appliances to communicate with the Deep Security Manager.
     Type: Number
     MinValue: 0
     MaxValue: 65535
@@ -67,42 +61,42 @@ Parameters:
     Type: String
     Default: m5.large
     AllowedValues:
-    - m4.large
-    - m4.xlarge
-    - m4.2xlarge
-    - m4.4xlarge
-    - m4.10xlarge
-    - m5.large
-    - m5.xlarge
-    - m5.2xlarge
-    - m5.4xlarge
-    - m5.8xlarge
-    - c3.xlarge
-    - c3.2xlarge
-    - c3.4xlarge
-    - c3.8xlarge
-    - c4.xlarge
-    - c4.2xlarge
-    - c4.4xlarge
-    - c4.8xlarge
-    - c5.4xlarge
-    - c5.9xlarge
-    - r3.large
-    - r3.xlarge
-    - r3.2xlarge
-    - r3.4xlarge
-    - r3.8xlarge
-    - i2.xlarge
-    - i2.2xlarge
-    - i2.4xlarge
-    - i2.8xlarge
-    - g3.4xlarge
-    - g3.8xlarge
-    - r4.large
-    - r4.xlarge
-    - r4.2xlarge
-    - r4.4xlarge
-    - r4.8xlarge
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - m5.large
+      - m5.xlarge
+      - m5.2xlarge
+      - m5.4xlarge
+      - m5.8xlarge
+      - c3.xlarge
+      - c3.2xlarge
+      - c3.4xlarge
+      - c3.8xlarge
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - c5.4xlarge
+      - c5.9xlarge
+      - r3.large
+      - r3.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+      - i2.xlarge
+      - i2.2xlarge
+      - i2.4xlarge
+      - i2.8xlarge
+      - g3.4xlarge
+      - g3.8xlarge
+      - r4.large
+      - r4.xlarge
+      - r4.2xlarge
+      - r4.4xlarge
+      - r4.8xlarge
   DBICAdminName:
     Default: dsadmin
     Description: Admin account username to be used for the database instance
@@ -110,8 +104,7 @@ Parameters:
     MinLength: 1
     MaxLength: 16
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: must begin with a letter and contain only alphanumeric
-      characters.
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
   DBICAdminPassword:
     NoEcho: true
     Description: Password to be used for the database admin account
@@ -119,8 +112,7 @@ Parameters:
     MinLength: 8
     MaxLength: 41
     AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
-    ConstraintDescription: Can only contain alphanumeric characters or the following
-      special characters !^*-_+ Min length 8, max length 41
+    ConstraintDescription: Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41
   DBPName:
     Default: dsm
     Description: Name to be assigned to the database
@@ -128,8 +120,7 @@ Parameters:
     MinLength: 1
     MaxLength: 64
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: must begin with a letter and contain only alphanumeric
-      characters.
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
   DBPRDSEndpoint:
     Default: RDS.FQDN.domain
     Description: FQDN or IP of RDS Endpoint
@@ -142,39 +133,35 @@ Parameters:
     Default: Embedded
     Type: String
     AllowedValues:
-    - Embedded
-    - Oracle
-    - SQL
-    - PostgreSQL
-    - AuroraPostgreSQL
+      - Embedded
+      - Oracle
+      - SQL
+      - PostgreSQL
+      - AuroraPostgreSQL
   DSISubnetID:
-    Description: Existing Subnet for Deep Security Manager. Must be a public subnet
-      contained the in VPC chosen above.
+    Description: Existing Subnet for Deep Security Manager. Must be a public subnet contained the in VPC chosen above.
     Type: AWS::EC2::Subnet::Id
     AllowedPattern: '[-_a-zA-Z0-9]*'
     ConstraintDescription: Subnet ID must exist in the chosen VPC
   DSMPMNode:
-    Description: Select whether this is an additional node to be added to an existing
-      Deep Security Manager Infrastructure
+    Description: Select whether this is an additional node to be added to an existing Deep Security Manager Infrastructure
     Type: String
     AllowedValues:
-    - 'Yes'
-    - 'No'
+      - 'Yes'
+      - 'No'
     Default: 'No'
   DSIPLicense:
-    Description: Choose License Model. If choosing BYOL you may enter the license
-      below
+    Description: Choose License Model. If choosing BYOL you may enter the license below
     Type: String
     AllowedValues:
-    - PerHost
-    - BYOL
+      - PerHost
+      - BYOL
   CreateEIP:
-    Description: Allocate an EIP and associate it with this Deep Security Manager
-      Instance. Recommend set to true unless deploying behind an ELB
+    Description: Allocate an EIP and associate it with this Deep Security Manager Instance. Recommend set to true unless deploying behind an ELB
     Type: String
     AllowedValues:
-    - 'True'
-    - 'False'
+      - 'True'
+      - 'False'
     Default: 'True'
   DSIELB:
     Type: String
@@ -189,38 +176,31 @@ Parameters:
     Description: Use internal or internet-facing ELB
     Type: String
     AllowedValues:
-    - Internet-facing
-    - Internal
+      - Internet-facing
+      - Internal
     Default: Internet-facing
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
-    ConstraintDescription: Quick Start bucket name can include numbers, lowercase
-      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
-      (-).
-    Default: aws-quickstart
-    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
-      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
-      It cannot start or end with a hyphen (-).
+    ConstraintDescription: Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).
+    Default: aws-ia
+    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).
     Type: String
   QSS3BucketRegion:
-    Default: 'us-east-1'
-    Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
+    Default: us-east-1
+    Description: The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.
     Type: String
   QSS3KeyPrefix:
     AllowedPattern: ^[0-9a-zA-Z-/]*$
-    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
-      uppercase letters, hyphens (-), and forward slash (/).
-    Default: quickstart-trendmicro-deepsecurity/
-    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
-      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
-      forward slash (/).
+    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).
+    Default: cfn-ps-trendmicro-deepsecurity/
+    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).
     Type: String
   DSCLicenseType:
     Type: String
     Default: Enterprise
     AllowedValues:
-    - Enterprise
-    - Network
+      - Enterprise
+      - Network
   DSProxyUrl:
     Type: String
     Default: ''
@@ -376,309 +356,281 @@ Resources:
     Metadata:
       cfn-lint:
         config:
-          ignore_checks: [EIAMPolicyWildcardResource]
+          ignore_checks:
+            - EIAMPolicyWildcardResource
           ignore_reasons:
-            EIAMPolicyWildcardResource: 'Those actions of ec2, iam and elasticloadbalancing:DescribeLoadBalancers does not support resource-level permissions, it only supports the ”*” in the resource element.'
+            EIAMPolicyWildcardResource: Those actions of ec2, iam and elasticloadbalancing:DescribeLoadBalancers does not support resource-level permissions, it only supports the ” *” in the resource element.
     Properties:
       AssumeRolePolicyDocument:
         Statement:
-        - Effect: Allow
-          Principal:
-            Service:
-            - ec2.amazonaws.com
-          Action:
-          - sts:AssumeRole
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
       ManagedPolicyArns:
-        !If
-        - UsePerHost
-        - - arn:aws:iam::aws:policy/AWSMarketplaceMeteringFullAccess
-        - !Ref AWS::NoValue
+        Fn::If:
+          - UsePerHost
+          - - arn:aws:iam::aws:policy/AWSMarketplaceMeteringFullAccess
+          - Ref: AWS::NoValue
       Path: /
       Policies:
-      - PolicyName: aws-quick-start-s3-policy
-        PolicyDocument:
-          Version: 2012-10-17
-          Statement:
-          - Effect: Allow
-            Action:
-            - s3:GetObject
-            Resource: !Sub
-              - arn:${AWS::Partition}:s3:::${S3Bucket}/${QSS3KeyPrefix}*
-              - S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
-      - !If
-        - AddToELB
-        - PolicyName: DeepSecurityManagerInstancePolicy
+        - PolicyName: aws-quick-start-s3-policy
           PolicyDocument:
+            Version: 2012-10-17
             Statement:
-            - Effect: Allow
-              Action:
-              - ec2:DescribeLicenses
-              - ec2:DescribeInstances
-              - ec2:DescribeImages
-              - ec2:DescribeRegions
-              - ec2:DescribeVpcs
-              - ec2:DescribeSubnets
-              - ec2:DescribeTags
-              - ec2:DescribeAvailabilityZones
-              - ec2:DescribeSecurityGroups
-              - iam:ListAccountAliases
-              - elasticloadbalancing:DescribeLoadBalancers
-              Resource: '*'
-            - Effect: Allow
-              Action:
-              - elasticloadbalancing:RegisterInstancesWithLoadBalancer
-              - elasticloadbalancing:CreateLoadBalancerListeners
-              - elasticloadbalancing:CreateLoadBalancerPolicy
-              - elasticloadbalancing:SetLoadBalancerPoliciesOfListener
-              Resource:
-                !Join
-                - ''
-                - - !If
-                    - GovCloudCondition
-                    - 'arn:aws-us-gov:elasticloadbalancing:'
-                    - 'arn:aws:elasticloadbalancing:'
-                  - !Ref AWS::Region
-                  - ':'
-                  - !Ref AWS::AccountId
-                  - :loadbalancer/
-                  - !Ref DSIELB
-            - Effect: Allow
-              Action:
-              - sts:AssumeRole
-              Resource:
-                !Join
-                - ''
-                - - !If
-                    - GovCloudCondition
-                    - 'arn:aws-us-gov:iam::'
-                    - 'arn:aws:iam::'
-                  - !Ref AWS::AccountId
-                  - :role/*
-            - Effect: Allow
-              Action:
-              - iam:UploadServerCertificate
-              - iam:GetServerCertificate
-              Resource:
-                !Join
-                - ''
-                - - !If
-                    - GovCloudCondition
-                    - 'arn:aws-us-gov:iam::'
-                    - 'arn:aws:iam::'
-                  - !Ref AWS::AccountId
-                  - :server-certificate/DeepSecurityElbCertificate-
-                  - !Ref AWS::StackName
-        - PolicyName: DeepSecurityManagerInstancePolicy
-          PolicyDocument:
-            Statement:
-            - Effect: Allow
-              Action:
-              - ec2:DescribeLicenses
-              - ec2:DescribeImages
-              - ec2:DescribeInstances
-              - ec2:DescribeRegions
-              - ec2:DescribeSubnets
-              - ec2:DescribeTags
-              - ec2:DescribeVpcs
-              - iam:ListAccountAliases
-              - ec2:DescribeAvailabilityZones
-              - ec2:DescribeSecurityGroups
-              - iam:ListAccountAliases
-              Resource: '*'
-            - Effect: Allow
-              Action:
-              - sts:AssumeRole
-              Resource:
-                !Join
-                - ''
-                - - !If
-                    - GovCloudCondition
-                    - 'arn:aws-us-gov:iam::'
-                    - 'arn:aws:iam::'
-                  - !Ref AWS::AccountId
-                  - :role/*
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                Resource:
+                  Fn::Sub:
+                    - arn:${AWS::Partition}:s3:::${S3Bucket}/${QSS3KeyPrefix}*
+                    - S3Bucket:
+                        Fn::If:
+                          - UsingDefaultBucket
+                          - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
+                          - Ref: QSS3BucketName
+        - Fn::If:
+            - AddToELB
+            - PolicyName: DeepSecurityManagerInstancePolicy
+              PolicyDocument:
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - ec2:DescribeLicenses
+                      - ec2:DescribeInstances
+                      - ec2:DescribeImages
+                      - ec2:DescribeRegions
+                      - ec2:DescribeVpcs
+                      - ec2:DescribeSubnets
+                      - ec2:DescribeTags
+                      - ec2:DescribeAvailabilityZones
+                      - ec2:DescribeSecurityGroups
+                      - iam:ListAccountAliases
+                      - elasticloadbalancing:DescribeLoadBalancers
+                    Resource: '*'
+                  - Effect: Allow
+                    Action:
+                      - elasticloadbalancing:RegisterInstancesWithLoadBalancer
+                      - elasticloadbalancing:CreateLoadBalancerListeners
+                      - elasticloadbalancing:CreateLoadBalancerPolicy
+                      - elasticloadbalancing:SetLoadBalancerPoliciesOfListener
+                    Resource:
+                      Fn::Join:
+                        - ''
+                        - - Fn::If:
+                              - GovCloudCondition
+                              - 'arn:aws-us-gov:elasticloadbalancing:'
+                              - 'arn:aws:elasticloadbalancing:'
+                          - Ref: AWS::Region
+                          - ':'
+                          - Ref: AWS::AccountId
+                          - :loadbalancer/
+                          - Ref: DSIELB
+                  - Effect: Allow
+                    Action:
+                      - sts:AssumeRole
+                    Resource:
+                      Fn::Join:
+                        - ''
+                        - - Fn::If:
+                              - GovCloudCondition
+                              - 'arn:aws-us-gov:iam::'
+                              - 'arn:aws:iam::'
+                          - Ref: AWS::AccountId
+                          - :role/*
+                  - Effect: Allow
+                    Action:
+                      - iam:UploadServerCertificate
+                      - iam:GetServerCertificate
+                    Resource:
+                      Fn::Join:
+                        - ''
+                        - - Fn::If:
+                              - GovCloudCondition
+                              - 'arn:aws-us-gov:iam::'
+                              - 'arn:aws:iam::'
+                          - Ref: AWS::AccountId
+                          - :server-certificate/DeepSecurityElbCertificate-
+                          - Ref: AWS::StackName
+            - PolicyName: DeepSecurityManagerInstancePolicy
+              PolicyDocument:
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - ec2:DescribeLicenses
+                      - ec2:DescribeImages
+                      - ec2:DescribeInstances
+                      - ec2:DescribeRegions
+                      - ec2:DescribeSubnets
+                      - ec2:DescribeTags
+                      - ec2:DescribeVpcs
+                      - iam:ListAccountAliases
+                      - ec2:DescribeAvailabilityZones
+                      - ec2:DescribeSecurityGroups
+                      - iam:ListAccountAliases
+                    Resource: '*'
+                  - Effect: Allow
+                    Action:
+                      - sts:AssumeRole
+                    Resource:
+                      Fn::Join:
+                        - ''
+                        - - Fn::If:
+                              - GovCloudCondition
+                              - 'arn:aws-us-gov:iam::'
+                              - 'arn:aws:iam::'
+                          - Ref: AWS::AccountId
+                          - :role/*
   DSMProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Path: /
       Roles:
-      - !Ref DSMRole
+        - Ref: DSMRole
   DSMLaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
       LaunchTemplateData:
         MetadataOptions:
-          HttpTokens: 'required'
+          HttpTokens: required
   DSM:
     Type: AWS::EC2::Instance
     Metadata:
       AWS::CloudFormation::Authentication:
         S3AccessCreds:
           type: S3
-          roleName: !Ref DSMRole
-          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+          roleName:
+            Ref: DSMRole
+          buckets:
+            Fn::If:
+              - UsingDefaultBucket
+              - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
+              - Ref: QSS3BucketName
       AWS::CloudFormation::Init:
         configSets:
           default:
-          - setup
-          - prepDSMInstall
-          - installDSM
-          - addCloudAccount
-          - fixManagerHostObject
+            - setup
+            - prepDSMInstall
+            - installDSM
+            - addCloudAccount
+            - fixManagerHostObject
           doSqlSetup:
-          - sqlSetup
+            - sqlSetup
           fixManagerLbSettings:
-          - fixManagerLoadBalancerSettings
+            - fixManagerLoadBalancerSettings
           fixManagerLocalLbAddress:
-          - fixManagerLocalLoadBalancerHostsFile
+            - fixManagerLocalLoadBalancerHostsFile
           fixManagerHostObject:
-          - fixManagerHostObject
+            - fixManagerHostObject
           addDsmNode:
-          - setup
-          - prepDSMInstall
-          - installDSM
-          - fixManagerHostObject
+            - setup
+            - prepDSMInstall
+            - installDSM
+            - fixManagerHostObject
           setupLocalELB:
-          - addToELB
-          - fixManagerLocalLoadBalancerHostsFile
+            - addToELB
+            - fixManagerLocalLoadBalancerHostsFile
           setupGlobalELB:
-          - fixManagerLoadBalancerSettings
+            - fixManagerLoadBalancerSettings
         setup:
           files:
             /etc/cfn/cfn-hup.conf:
               content:
-                Fn::Sub: |
-                  [main]
-                  stack=${AWS::StackId}
-                  region=${AWS::Region}
+                Fn::Sub: "[main]\nstack=${AWS::StackId}\nregion=${AWS::Region}\n"
               mode: '000400'
               owner: root
               group: root
             /etc/cfn/hooks.d/cfn-auto-reloader.conf:
               content:
-                Fn::Sub: |
-                  [cfn-auto-reloader-hook]
-                  triggers=post.update
-                  path=Resources.DSM.Metadata.AWS::CloudFormation::Init
-                  action=/opt/aws/bin/cfn-init -v -c updateDSM --stack ${AWS::StackId} --resource DSM1 --region ${AWS::Region} runas=root
+                Fn::Sub: "[cfn-auto-reloader-hook]\ntriggers=post.update\npath=Resources.DSM.Metadata.AWS::CloudFormation::Init\naction=/opt/aws/bin/cfn-init -v -c updateDSM --stack ${AWS::StackId} --resource\
+                  \ DSM1 --region ${AWS::Region} runas=root\n"
           services:
             sysvinit:
               cfn-hup:
                 enabled: 'true'
                 ensureRunning: 'true'
                 files:
-                - /etc/cfn/cfn-hup.conf
-                - /etc/cfn/hooks.d/cfn-auto-reloader.conf
+                  - /etc/cfn/cfn-hup.conf
+                  - /etc/cfn/hooks.d/cfn-auto-reloader.conf
         prepDSMInstall:
           files:
             /etc/cfn/dsmConfiguration.properties:
               content:
                 Fn::Sub:
-                - |
-                  ${LicenseConfig}
-                  CredentialsScreen.Administrator.Username=${DSCAdminName}
-                  CredentialsScreen.Administrator.Password=${DSCAdminPassword}
-                  CredentialsScreen.UseStrongPasswords=False
-                  Dinstall4j.language=en
-                  DatabaseScreen.DatabaseType=${DBTypeConfig}
-                  DatabaseScreen.Hostname=${DBPRDSEndpoint}
-                  DatabaseScreen.DatabaseName=${DBPName}
-                  DatabaseScreen.Transport=TCP
-                  DatabaseScreen.Username=${DBICAdminName}
-                  DatabaseScreen.Password=${DBICAdminPassword}
-                  AddressAndPortsScreen.ManagerPort=${DSIPGUIPort}
-                  AddressAndPortsScreen.HeartbeatPort=${DSIPHeartbeatPort}
-                  ${NodeConfig}
-                  SecurityUpdateScreen.UpdateComponents=true
-                  SoftwareUpdateScreen.UpdateSoftware=True
-                  SmartProtectionNetworkScreen.EnableFeedback=false
-                  SmartProtectionNetworkScreen.IndustryType=blank
-                  RelayScreen.Install=True
-                  ${softwareUpdateScreenProxyConfig}
-                  ${securityUpdateScreenProxyConfig}
-                  Override.Automation=True
-                  Cloudformation.QSS3BucketName=${QSS3BucketName}
-                  Cloudformation.QSS3BucketRegion=${QSS3BucketRegion}
-                  Cloudformation.QSS3KeyPrefix=${QSS3KeyPrefix}
-                - LicenseConfig:
-                    !If
-                    - AddAcAnswer
-                    - !If
-                      - NetworkOnlyLicense
-                      - Fn::Sub: LicenseScreen.License.1=${DSIPLicenseKey}
-                      - Fn::Sub: LicenseScreen.License.-1=${DSIPLicenseKey}
-                    - ''
-                  DBTypeConfig:
-                    !FindInMap
-                    - DSMDBMap
-                    - !Ref DBPEngine
-                    - DbTypeString
-                  NodeConfig:
-                    !If
-                    - IsFirstNode
-                    - AddressAndPortsScreen.NewNode=false
-                    - |
-                      AddressAndPortsScreen.NewNode=true
-                      UpgradeVerificationScreen.Overwrite=False
-                  softwareUpdateScreenProxyConfig:
-                    !If
-                    - UseProxy
-                    - Fn::Sub:
-                      - |
-                        SoftwareUpdateScreen.Proxy=True
-                        SoftwareUpdateScreen.ProxyType=HTTP
-                        SoftwareUpdateScreen.ProxyAddress=${softwareUpdateScreenProxyHost}
-                        SoftwareUpdateScreen.ProxyPort=${softwareUpdateScreenProxyPort}
-                        SoftwareUpdateScreen.ProxyAuthentication="False"
-                        SoftwareUpdateScreen.ProxyUsername=""
-                        SoftwareUpdateScreen.ProxyPassword=""
-                      - softwareUpdateScreenProxyHost: !Select
-                        - 0
-                        - Fn::Split:
-                          - ":"
-                          - Fn::Sub: "${DSProxyUrl}"
-                        softwareUpdateScreenProxyPort: !Select
-                        - 1
-                        - Fn::Split:
-                          - ":"
-                          - Fn::Sub: "${DSProxyUrl}"
-                    - ''
-                  securityUpdateScreenProxyConfig:
-                    !If
-                    - UseProxy
-                    - Fn::Sub:
-                      - |
-                        SecurityUpdateScreen.Proxy=True
-                        SecurityUpdateScreen.ProxyType=HTTP
-                        SecurityUpdateScreen.ProxyAddress=${securityUpdateScreenProxyHost}
-                        SecurityUpdateScreen.ProxyPort=${securityUpdateScreenProxyPort}
-                        SecurityUpdateScreen.ProxyAuthentication="False"
-                        SecurityUpdateScreen.ProxyUsername=""
-                        SecurityUpdateScreen.ProxyPassword=""
-                      - securityUpdateScreenProxyHost: !Select
-                        - 0
-                        - Fn::Split:
-                          - ":"
-                          - Fn::Sub: "${DSProxyUrl}"
-                        securityUpdateScreenProxyPort: !Select
-                        - 1
-                        - Fn::Split:
-                          - ":"
-                          - Fn::Sub: "${DSProxyUrl}"
-                    - ''
+                  - "${LicenseConfig}\nCredentialsScreen.Administrator.Username=${DSCAdminName}\nCredentialsScreen.Administrator.Password=${DSCAdminPassword}\nCredentialsScreen.UseStrongPasswords=False\n\
+                    Dinstall4j.language=en\nDatabaseScreen.DatabaseType=${DBTypeConfig}\nDatabaseScreen.Hostname=${DBPRDSEndpoint}\nDatabaseScreen.DatabaseName=${DBPName}\nDatabaseScreen.Transport=TCP\n\
+                    DatabaseScreen.Username=${DBICAdminName}\nDatabaseScreen.Password=${DBICAdminPassword}\nAddressAndPortsScreen.ManagerPort=${DSIPGUIPort}\nAddressAndPortsScreen.HeartbeatPort=${DSIPHeartbeatPort}\n\
+                    ${NodeConfig}\nSecurityUpdateScreen.UpdateComponents=true\nSoftwareUpdateScreen.UpdateSoftware=True\nSmartProtectionNetworkScreen.EnableFeedback=false\nSmartProtectionNetworkScreen.IndustryType=blank\n\
+                    RelayScreen.Install=True\n${softwareUpdateScreenProxyConfig}\n${securityUpdateScreenProxyConfig}\nOverride.Automation=True\nCloudformation.QSS3BucketName=${QSS3BucketName}\nCloudformation.QSS3BucketRegion=${QSS3BucketRegion}\n\
+                    Cloudformation.QSS3KeyPrefix=${QSS3KeyPrefix}\n"
+                  - LicenseConfig:
+                      Fn::If:
+                        - AddAcAnswer
+                        - Fn::If:
+                            - NetworkOnlyLicense
+                            - Fn::Sub: LicenseScreen.License.1=${DSIPLicenseKey}
+                            - Fn::Sub: LicenseScreen.License.-1=${DSIPLicenseKey}
+                        - ''
+                    DBTypeConfig:
+                      Fn::FindInMap:
+                        - DSMDBMap
+                        - Ref: DBPEngine
+                        - DbTypeString
+                    NodeConfig:
+                      Fn::If:
+                        - IsFirstNode
+                        - AddressAndPortsScreen.NewNode=false
+                        - "AddressAndPortsScreen.NewNode=true\nUpgradeVerificationScreen.Overwrite=False\n"
+                    softwareUpdateScreenProxyConfig:
+                      Fn::If:
+                        - UseProxy
+                        - Fn::Sub:
+                            - "SoftwareUpdateScreen.Proxy=True\nSoftwareUpdateScreen.ProxyType=HTTP\nSoftwareUpdateScreen.ProxyAddress=${softwareUpdateScreenProxyHost}\nSoftwareUpdateScreen.ProxyPort=${softwareUpdateScreenProxyPort}\n\
+                              SoftwareUpdateScreen.ProxyAuthentication=\"False\"\nSoftwareUpdateScreen.ProxyUsername=\"\"\nSoftwareUpdateScreen.ProxyPassword=\"\"\n"
+                            - softwareUpdateScreenProxyHost:
+                                Fn::Select:
+                                  - 0
+                                  - Fn::Split:
+                                      - ':'
+                                      - Fn::Sub: ${DSProxyUrl}
+                              softwareUpdateScreenProxyPort:
+                                Fn::Select:
+                                  - 1
+                                  - Fn::Split:
+                                      - ':'
+                                      - Fn::Sub: ${DSProxyUrl}
+                        - ''
+                    securityUpdateScreenProxyConfig:
+                      Fn::If:
+                        - UseProxy
+                        - Fn::Sub:
+                            - "SecurityUpdateScreen.Proxy=True\nSecurityUpdateScreen.ProxyType=HTTP\nSecurityUpdateScreen.ProxyAddress=${securityUpdateScreenProxyHost}\nSecurityUpdateScreen.ProxyPort=${securityUpdateScreenProxyPort}\n\
+                              SecurityUpdateScreen.ProxyAuthentication=\"False\"\nSecurityUpdateScreen.ProxyUsername=\"\"\nSecurityUpdateScreen.ProxyPassword=\"\"\n"
+                            - securityUpdateScreenProxyHost:
+                                Fn::Select:
+                                  - 0
+                                  - Fn::Split:
+                                      - ':'
+                                      - Fn::Sub: ${DSProxyUrl}
+                              securityUpdateScreenProxyPort:
+                                Fn::Select:
+                                  - 1
+                                  - Fn::Split:
+                                      - ':'
+                                      - Fn::Sub: ${DSProxyUrl}
+                        - ''
               owner: root
               mode: '000600'
         installDSM:
           commands:
             0-sethostnameinprops:
-              command: |
-                  TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60"`
-                  managerAddress=`curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/local-ipv4/`
-                  echo "AddressAndPortsScreen.ManagerAddress=$managerAddress" >> /etc/cfn/dsmConfiguration.properties
+              command: "TOKEN=`curl -X PUT \"http://169.254.169.254/latest/api/token\" -H \"X-aws-ec2-metadata-token-ttl-seconds: 60\"`\nmanagerAddress=`curl -H \"X-aws-ec2-metadata-token: $TOKEN\" http://169.254.169.254/latest/meta-data/local-ipv4/`\n\
+                echo \"AddressAndPortsScreen.ManagerAddress=$managerAddress\" >> /etc/cfn/dsmConfiguration.properties\n"
               ignoreErrors: 'false'
             1-install-DSM:
-              command: cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/ManagerAWS.sh
-                -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog
+              command: cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/ManagerAWS.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog
               ignoreErrors: 'false'
             6-install-xml_grep:
               command: yum -y install perl-XML-Twig
@@ -687,44 +639,65 @@ Resources:
             /etc/cfn/set-aia-settings.sh:
               source:
                 Fn::Sub:
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/set-aia-settings.sh
-                - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+                  - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/set-aia-settings.sh
+                  - S3Region:
+                      Fn::If:
+                        - UsingDefaultBucket
+                        - Ref: AWS::Region
+                        - Ref: QSS3BucketRegion
+                    S3Bucket:
+                      Fn::If:
+                        - UsingDefaultBucket
+                        - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
+                        - Ref: QSS3BucketName
               owner: root
               mode: '000700'
               authentication: S3AccessCreds
             /etc/cfn/end-mp-web-installer.sh:
               source:
                 Fn::Sub:
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/end-mp-web-installer.sh
-                - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+                  - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/end-mp-web-installer.sh
+                  - S3Region:
+                      Fn::If:
+                        - UsingDefaultBucket
+                        - Ref: AWS::Region
+                        - Ref: QSS3BucketRegion
+                    S3Bucket:
+                      Fn::If:
+                        - UsingDefaultBucket
+                        - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
+                        - Ref: QSS3BucketName
               owner: root
               mode: '000700'
               authentication: S3AccessCreds
             /etc/cfn/add-aws-account-with-instance-role.sh:
               source:
                 Fn::Sub:
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/add-aws-account-with-instance-role.sh
-                - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+                  - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/add-aws-account-with-instance-role.sh
+                  - S3Region:
+                      Fn::If:
+                        - UsingDefaultBucket
+                        - Ref: AWS::Region
+                        - Ref: QSS3BucketRegion
+                    S3Bucket:
+                      Fn::If:
+                        - UsingDefaultBucket
+                        - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
+                        - Ref: QSS3BucketName
               owner: root
               mode: '000700'
               authentication: S3AccessCreds
           commands:
             5-check-service:
               command:
-                Fn::Sub: until curl -vk https://127.0.0.1:${DSIPGUIPort}/rest/status/manager/current/ping;
-                  do echo "manager not started yet" >> /tmp/4-check-service; service
-                  dsm_s start >> /tmp/4-check-service;sleep 30; done
+                Fn::Sub: until curl -vk https://127.0.0.1:${DSIPGUIPort}/rest/status/manager/current/ping; do echo "manager not started yet" >> /tmp/4-check-service; service dsm_s start >> /tmp/4-check-service;sleep
+                  30; done
             7-set-aia-settings:
               command:
-                Fn::Sub: /etc/cfn/set-aia-settings.sh ${DSCAdminName} ${DSCAdminPassword}
-                  - ${DSIPGUIPort} >> /tmp/set-aia-settings.log
+                Fn::Sub: /etc/cfn/set-aia-settings.sh ${DSCAdminName} ${DSCAdminPassword} - ${DSIPGUIPort} >> /tmp/set-aia-settings.log
             8-addCloudAccount:
               command:
-                Fn::Sub: /etc/cfn/add-aws-account-with-instance-role.sh ${DSCAdminName}
-                  ${DSCAdminPassword} localhost ${DSIPGUIPort} ${AWS::Region}
+                Fn::Sub: /etc/cfn/add-aws-account-with-instance-role.sh ${DSCAdminName} ${DSCAdminPassword} localhost ${DSIPGUIPort} ${AWS::Region}
               ignoreErrors: 'False'
             10-endWebInstaller:
               command: /etc/cfn/end-mp-web-installer.sh
@@ -733,251 +706,285 @@ Resources:
             /etc/cfn/rhel-scripts/create-dsm-db.py:
               source:
                 Fn::Sub:
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/create-dsm-db.py
-                - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+                  - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/create-dsm-db.py
+                  - S3Region:
+                      Fn::If:
+                        - UsingDefaultBucket
+                        - Ref: AWS::Region
+                        - Ref: QSS3BucketRegion
+                    S3Bucket:
+                      Fn::If:
+                        - UsingDefaultBucket
+                        - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
+                        - Ref: QSS3BucketName
               owner: root
               mode: '000755'
               authentication: S3AccessCreds
           commands:
             1-create-db:
               command:
-                Fn::Sub: cd /etc/cfn/rhel-scripts; python create-dsm-db.py --user
-                  ${DBICAdminName} --pass ${DBICAdminPassword} --endpoint ${DBPRDSEndpoint}
-                  --dbname ${DBPName}
+                Fn::Sub: cd /etc/cfn/rhel-scripts; python create-dsm-db.py --user ${DBICAdminName} --pass ${DBICAdminPassword} --endpoint ${DBPRDSEndpoint} --dbname ${DBPName}
               ignoreErrors: 'false'
         addToELB:
           commands:
             0-add-instance-to-elb:
               command:
-                Fn::Sub: |
-                  TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60"`
-                  aws elb register-instances-with-load-balancer --load-balancer ${DSIELB} --instances $(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id/) --region ${AWS::Region}
+                Fn::Sub: "TOKEN=`curl -X PUT \"http://169.254.169.254/latest/api/token\" -H \"X-aws-ec2-metadata-token-ttl-seconds: 60\"`\naws elb register-instances-with-load-balancer --load-balancer ${DSIELB}\
+                  \ --instances $(curl -H \"X-aws-ec2-metadata-token: $TOKEN\" http://169.254.169.254/latest/meta-data/instance-id/) --region ${AWS::Region}\n"
               ignoreErrors: 'false'
         fixManagerLoadBalancerSettings:
           files:
             /etc/cfn/create-console-listener.sh:
               source:
                 Fn::Sub:
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/create-console-listener.sh
-                - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+                  - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/create-console-listener.sh
+                  - S3Region:
+                      Fn::If:
+                        - UsingDefaultBucket
+                        - Ref: AWS::Region
+                        - Ref: QSS3BucketRegion
+                    S3Bucket:
+                      Fn::If:
+                        - UsingDefaultBucket
+                        - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
+                        - Ref: QSS3BucketName
               owner: root
               mode: '000700'
               authentication: S3AccessCreds
             /etc/cfn/set-lb-settings.sh:
               source:
                 Fn::Sub:
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/set-lb-settings.sh
-                - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+                  - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/set-lb-settings.sh
+                  - S3Region:
+                      Fn::If:
+                        - UsingDefaultBucket
+                        - Ref: AWS::Region
+                        - Ref: QSS3BucketRegion
+                    S3Bucket:
+                      Fn::If:
+                        - UsingDefaultBucket
+                        - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
+                        - Ref: QSS3BucketName
               owner: root
               mode: '000700'
               authentication: S3AccessCreds
           commands:
             1-setup-elb-listener:
               command:
-                Fn::Sub: /etc/cfn/create-console-listener.sh ${DSIELB} ${DSIELBFQDN}
-                  ${DSIPGUIPort} ${AWS::StackName} 1 ${AWS::Region} >> /tmp/listener.log
+                Fn::Sub: /etc/cfn/create-console-listener.sh ${DSIELB} ${DSIELBFQDN} ${DSIPGUIPort} ${AWS::StackName} 1 ${AWS::Region} >> /tmp/listener.log
             4-set-load-balancer-settings:
               command:
-                Fn::Sub: /etc/cfn/set-lb-settings.sh ${DSCAdminName} ${DSCAdminPassword}
-                  ${DSIELBFQDN} ${DSIPGUIPort} ${DSIPHeartbeatPort} >> /tmp/set-lb-settings.log
+                Fn::Sub: /etc/cfn/set-lb-settings.sh ${DSCAdminName} ${DSCAdminPassword} ${DSIELBFQDN} ${DSIPGUIPort} ${DSIPHeartbeatPort} >> /tmp/set-lb-settings.log
         fixManagerLocalLoadBalancerHostsFile:
           commands:
             1-setHostsFileELB:
               command:
-                Fn::Sub: |
-                  TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60"`
-                  echo "$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/local-ipv4/) ${DSIELBFQDN}" >> /etc/hosts
+                Fn::Sub: "TOKEN=`curl -X PUT \"http://169.254.169.254/latest/api/token\" -H \"X-aws-ec2-metadata-token-ttl-seconds: 60\"`\necho \"$(curl -H \"X-aws-ec2-metadata-token: $TOKEN\" http://169.254.169.254/latest/meta-data/local-ipv4/)\
+                  \ ${DSIELBFQDN}\" >> /etc/hosts\n"
         fixManagerHostObject:
           files:
             /etc/cfn/reactivate-manager.sh:
               source:
                 Fn::Sub:
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/reactivate-manager.sh
-                - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+                  - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/reactivate-manager.sh
+                  - S3Region:
+                      Fn::If:
+                        - UsingDefaultBucket
+                        - Ref: AWS::Region
+                        - Ref: QSS3BucketRegion
+                    S3Bucket:
+                      Fn::If:
+                        - UsingDefaultBucket
+                        - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
+                        - Ref: QSS3BucketName
               owner: root
               mode: '000700'
               authentication: S3AccessCreds
           commands:
             1-reactivate-manager.sh:
               command:
-                Fn::Sub: /etc/cfn/reactivate-manager.sh >> /etc/cfn/reactivate-manager.log
-                  ${DSCAdminName} ${DSCAdminPassword} ${DSIPGUIPort}
+                Fn::Sub: /etc/cfn/reactivate-manager.sh >> /etc/cfn/reactivate-manager.log ${DSCAdminName} ${DSCAdminPassword} ${DSIPGUIPort}
     Properties:
-      IamInstanceProfile: !Ref DSMProfile
+      IamInstanceProfile:
+        Ref: DSMProfile
       LaunchTemplate:
-          LaunchTemplateId: !Ref DSMLaunchTemplate
-          Version: '1'
+        LaunchTemplateId:
+          Ref: DSMLaunchTemplate
+        Version: '1'
       ImageId:
-        !FindInMap
-        - DSMAMI
-        - !Ref AWS::Region
-        - !Ref DSIPLicense
+        Fn::FindInMap:
+          - DSMAMI
+          - Ref: AWS::Region
+          - Ref: DSIPLicense
       InstanceType:
-        !If
-        - PPUNotSelected
-        - !Ref DSIPInstanceType
-        - !FindInMap
-          - DSMSIZE
-          - !Ref AWS::Region
-          - !Ref DSIPLicense
+        Fn::If:
+          - PPUNotSelected
+          - Ref: DSIPInstanceType
+          - Fn::FindInMap:
+              - DSMSIZE
+              - Ref: AWS::Region
+              - Ref: DSIPLicense
       NetworkInterfaces:
-      - DeviceIndex: '0'
-        SubnetId: !Ref DSISubnetID
-        AssociatePublicIpAddress:
-          !If
-          - InternetFacingELB
-          - true
-          - false
-        GroupSet:
-        - !Ref DSMSG
+        - DeviceIndex: '0'
+          SubnetId:
+            Ref: DSISubnetID
+          AssociatePublicIpAddress:
+            Fn::If:
+              - InternetFacingELB
+              - true
+              - false
+          GroupSet:
+            - Ref: DSMSG
       Tags:
-      - Key: Name
-        Value: Deep Security Manager
-      KeyName: !Ref AWSIKeyPairName
+        - Key: Name
+          Value: Deep Security Manager
+      KeyName:
+        Ref: AWSIKeyPairName
       UserData:
-        !Base64
+        Fn::Base64:
           Fn::Sub:
-          - |
-            #!/bin/bash -x
-            # cloud-init
-            ${ProxyConfig}
-            /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource DSM --region ${AWS::Region}${ConfigSetOption1}${ConfigSetOption2}${ProxyOption1}
-            /opt/aws/bin/cfn-signal ${CFNSignalOption}${ProxyOption2}
-          - ProxyConfig:
-              !If
-              - UseProxy
-              - Fn::Sub: |
-                  export HTTPS_PROXY="https://${DSProxyUrl}"
-                  export HTTP_PROXY="http://${DSProxyUrl}"
-                  export NO_PROXY="169.254.169.254,localhost,127.0.0.1"
-                  echo -e "proxy=http://${DSProxyUrl}" >> /etc/yum.conf
-              - ''
-            ConfigSetOption1:
-              !If
-              - SQLplusELB
-              - ' -c doSqlSetup,default,setupLocalELB,setupGlobalELB'
-              - !If
-                - DoSQLSetup
-                - ' -c doSqlSetup,default'
-                - !If
-                  - IsFirstNodePlusELB
-                  - ' -c default,setupLocalELB,setupGlobalELB'
+            - "#!/bin/bash -x\n# cloud-init\n${ProxyConfig}\n/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource DSM --region ${AWS::Region}${ConfigSetOption1}${ConfigSetOption2}${ProxyOption1}\n\
+              /opt/aws/bin/cfn-signal ${CFNSignalOption}${ProxyOption2}\n"
+            - ProxyConfig:
+                Fn::If:
+                  - UseProxy
+                  - Fn::Sub: "export HTTPS_PROXY=\"https://${DSProxyUrl}\"\nexport HTTP_PROXY=\"http://${DSProxyUrl}\"\nexport NO_PROXY=\"169.254.169.254,localhost,127.0.0.1\"\necho -e \"proxy=http://${DSProxyUrl}\"\
+                      \ >> /etc/yum.conf\n"
                   - ''
-            ConfigSetOption2:
-              !If
-              - AddNodePlusELB
-              - ' -c fixManagerLocalLbAddress,addDsmNode,setupLocalELB'
-              - !If
-                - IsFirstNode
-                - ''
-                - ' -c addDsmNode'
-            ProxyOption1:
-              !If
-              - UseProxy
-              - Fn::Sub: ' --https-proxy https://${DSProxyUrl}'
-              - ''
-            CFNSignalOption:
-              !If
-              - WaitNotProvided
-              - -e $? -r "Complete"
-              - !Join
-                - ''
-                - - '-e $? -r "DSM Node configuration complete" '
-                  - !Base64
-                      Ref: DSM1CompleteWaitHandle
-            ProxyOption2:
-              !If
-              - UseProxy
-              - Fn::Sub: ' --https-proxy https://${DSProxyUrl}'
-              - ''
+              ConfigSetOption1:
+                Fn::If:
+                  - SQLplusELB
+                  - ' -c doSqlSetup,default,setupLocalELB,setupGlobalELB'
+                  - Fn::If:
+                      - DoSQLSetup
+                      - ' -c doSqlSetup,default'
+                      - Fn::If:
+                          - IsFirstNodePlusELB
+                          - ' -c default,setupLocalELB,setupGlobalELB'
+                          - ''
+              ConfigSetOption2:
+                Fn::If:
+                  - AddNodePlusELB
+                  - ' -c fixManagerLocalLbAddress,addDsmNode,setupLocalELB'
+                  - Fn::If:
+                      - IsFirstNode
+                      - ''
+                      - ' -c addDsmNode'
+              ProxyOption1:
+                Fn::If:
+                  - UseProxy
+                  - Fn::Sub: ' --https-proxy https://${DSProxyUrl}'
+                  - ''
+              CFNSignalOption:
+                Fn::If:
+                  - WaitNotProvided
+                  - -e $? -r "Complete"
+                  - Fn::Join:
+                      - ''
+                      - - '-e $? -r "DSM Node configuration complete" '
+                        - Fn::Base64:
+                            Ref: DSM1CompleteWaitHandle
+              ProxyOption2:
+                Fn::If:
+                  - UseProxy
+                  - Fn::Sub: ' --https-proxy https://${DSProxyUrl}'
+                  - ''
 Conditions:
-  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
+  UsingDefaultBucket:
+    Fn::Equals:
+      - Ref: QSS3BucketName
+      - aws-ia
   DBTypeIsSQL:
-    !Equals
-    - !Ref DBPEngine
-    - SQL
+    Fn::Equals:
+      - Ref: DBPEngine
+      - SQL
   IsFirstNode:
-    !Equals
-    - !Ref DSMPMNode
-    - 'No'
+    Fn::Equals:
+      - Ref: DSMPMNode
+      - 'No'
   DoSQLSetup:
-    !And
-    - !Condition DBTypeIsSQL
-    - !Condition IsFirstNode
+    Fn::And:
+      - Condition: DBTypeIsSQL
+      - Condition: IsFirstNode
   UseBYOL:
-    !Equals
-    - !Ref DSIPLicense
-    - BYOL
+    Fn::Equals:
+      - Ref: DSIPLicense
+      - BYOL
   UsePerHost:
-    !Equals
-    - !Ref DSIPLicense
-    - PerHost
+    Fn::Equals:
+      - Ref: DSIPLicense
+      - PerHost
   PPUNotSelected:
-    !Or
-    - !Condition UsePerHost
-    - !Condition UseBYOL
+    Fn::Or:
+      - Condition: UsePerHost
+      - Condition: UseBYOL
   AddToELB:
-    !Not
-    - !Equals
-      - !Ref DSIELB
-      - ''
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: DSIELB
+          - ''
   WaitNotProvided:
-    !Equals
-    - DSM1CompleteWaitHandle
-    - ''
-  SQLplusELB:
-    !And
-    - !Condition AddToELB
-    - !Condition DoSQLSetup
-  AddNodePlusELB:
-    !And
-    - !Not
-      - !Condition IsFirstNode
-    - !Condition AddToELB
-  KeyProvided:
-    !Not
-    - !Equals
-      - !Ref DSIPLicenseKey
-      - XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
-  IsFirstNodePlusELB:
-    !And
-    - !Condition IsFirstNode
-    - !Condition AddToELB
-  AddAcAnswer:
-    !And
-    - !Condition KeyProvided
-    - !Condition PPUNotSelected
-  InternetFacingELB:
-    !Equals
-    - !Ref DSELBPosture
-    - Internet-facing
-  NetworkOnlyLicense:
-    !Equals
-    - !Ref DSCLicenseType
-    - Network
-  UseProxy:
-    !Not
-    - !Equals
-      - !Ref DSProxyUrl
+    Fn::Equals:
+      - DSM1CompleteWaitHandle
       - ''
+  SQLplusELB:
+    Fn::And:
+      - Condition: AddToELB
+      - Condition: DoSQLSetup
+  AddNodePlusELB:
+    Fn::And:
+      - Fn::Not:
+          - Condition: IsFirstNode
+      - Condition: AddToELB
+  KeyProvided:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: DSIPLicenseKey
+          - XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
+  IsFirstNodePlusELB:
+    Fn::And:
+      - Condition: IsFirstNode
+      - Condition: AddToELB
+  AddAcAnswer:
+    Fn::And:
+      - Condition: KeyProvided
+      - Condition: PPUNotSelected
+  InternetFacingELB:
+    Fn::Equals:
+      - Ref: DSELBPosture
+      - Internet-facing
+  NetworkOnlyLicense:
+    Fn::Equals:
+      - Ref: DSCLicenseType
+      - Network
+  UseProxy:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: DSProxyUrl
+          - ''
   GovCloudCondition:
-    !Or
-    - !Equals
-      - !Ref AWS::Region
-      - us-gov-west-1
-    - !Equals
-      - !Ref AWS::Region
-      - us-gov-east-1
+    Fn::Or:
+      - Fn::Equals:
+          - Ref: AWS::Region
+          - us-gov-west-1
+      - Fn::Equals:
+          - Ref: AWS::Region
+          - us-gov-east-1
 Outputs:
   DSMFQDN:
-    Value: !GetAtt DSM.PublicDnsName
+    Value:
+      Fn::GetAtt:
+        - DSM
+        - PublicDnsName
   DSMURL:
     Value:
       Fn::Sub: https://${DSM.PublicDnsName}:${DSIPGUIPort}
   DSMInstanceId:
-    Value: !Ref DSM
-...
+    Value:
+      Ref: DSM
+  AWSIVPC:
+    Value:
+      Ref: AWSIVPC
+  CreateEIP:
+    Value:
+      Ref: CreateEIP
