@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.75: This template deploys an Aurora PostgreSQL RDS instance for Deep Security
+Description: 'v5.76: This template deploys an Aurora PostgreSQL RDS instance for Deep Security
   Manager. (qs-1ngr590ie)'
 Parameters:
   DBIRDSInstanceSize:
@@ -78,7 +78,7 @@ Resources:
       DBSubnetGroupName: !Ref DBISubnetGroupName
       Engine: aurora-postgresql
       EngineMode: provisioned
-      EngineVersion: '14.8'
+      EngineVersion: '14.10'
       MasterUsername: !Ref DBICAdminName
       MasterUserPassword: !Ref DBICAdminPassword
       Port: 5432

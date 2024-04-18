@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.75: Trend Micro Deep Security AWS RHEL master template.'
+Description: 'v5.76: Trend Micro Deep Security AWS RHEL master template.'
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:

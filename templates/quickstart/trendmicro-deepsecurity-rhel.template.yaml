@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  v5.75: Quick Start that deploys Trend Micro Deep Security into an existing VPC
+  v5.76: Quick Start that deploys Trend Micro Deep Security into an existing VPC
   with a Multi-AZ PostgreSQL RDS instance  **WARNING** This template uses images
   from the AWS Marketplace and an active subscription is required - Please see
   the Quick Start documentation for more details. You will be billed for the AWS
