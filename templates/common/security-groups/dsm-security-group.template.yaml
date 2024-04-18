@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.75: This template creates the security group to allow inbound communication to Deep Security Manager. (qs-1ngr590iu)'
+Description: 'v5.76: This template creates the security group to allow inbound communication to Deep Security Manager. (qs-1ngr590iu)'
 Metadata:
   cfn-lint:
     config:

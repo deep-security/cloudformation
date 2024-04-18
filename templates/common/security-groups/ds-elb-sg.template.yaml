@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.75: This template creates security groups for the ELB for Deep Security
+Description: 'v5.76: This template creates security groups for the ELB for Deep Security
   Manager. (qs-1ngr590io)'
 Parameters:
   AWSIVPC:

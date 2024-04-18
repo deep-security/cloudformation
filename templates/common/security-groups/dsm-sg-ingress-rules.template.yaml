@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.75: This template creates the ingress rules for Deep Security Managers.
+Description: 'v5.76: This template creates the ingress rules for Deep Security Managers.
   (qs-1ngr590j4)'
 Parameters:
   DSMSG:
