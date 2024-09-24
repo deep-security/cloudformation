@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.80: This template creates the security group to allow communication
+Description: 'v5.81: This template creates the security group to allow communication
   from Deep Security Managers to their RDS Instance. (qs-1ngr590j9)'
 Metadata:
   cfn-lint:
@@ -21,7 +21,6 @@ Parameters:
     - SQL
     - Oracle
     - PostgreSQL
-    - PostgresDocker
     - AuroraPostgreSQL
   DSMSG:
     Type: AWS::EC2::SecurityGroup::Id
@@ -70,9 +69,6 @@ Conditions:
     - !Equals
       - !Ref DBPEngine
       - PostgreSQL
-    - !Equals
-      - !Ref DBPEngine
-      - PostgresDocker
     - !Equals
       - !Ref DBPEngine
       - AuroraPostgreSQL
