@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.80: This template is an abstraction layer for choosing PostgreSQL, Oracle or MSSQL when deploying Deep Security Manager. (qs-1ngr590i4)'
+Description: 'v5.81: This template is an abstraction layer for choosing PostgreSQL, Oracle or MSSQL when deploying Deep Security Manager. (qs-1ngr590i4)'
 Metadata:
   cfn-lint:
     config:
@@ -9,10 +9,6 @@ Metadata:
         - E9010
       ignore_reasons: W2001:'Parameters are referenced by other template' W8001:'Conditions are referenced by other template' E9010:'Definition is used by another template'
 Parameters:
-  AWSIKeyPairName:
-    Description: Existing key pair to use for connecting to database if using Postgres on Docker Instance
-    Type: AWS::EC2::KeyPair::KeyName
-    ConstraintDescription: Select an existing EC2 Key Pair.
   DBIRDSInstanceSize:
     Default: db.m5.large
     Description: Trend Micro Deep Security Database instance class
@@ -80,7 +76,6 @@ Parameters:
       - SQL
       - Oracle
       - PostgreSQL
-      - PostgresDocker
       - AuroraPostgreSQL
   MultiAZ:
     Description: Use Multi-AZ or SQL Mirroring Option Group for RDS Instance
@@ -268,37 +263,6 @@ Resources:
       SubnetIds:
         - Ref: DBISubnet1
         - Ref: DBISubnet2
-  DSPostgreSQLDocker:
-    Type: AWS::CloudFormation::Stack
-    Condition: DBTypeIsPostgreSQLDocker
-    Properties:
-      TemplateURL:
-        Fn::Sub:
-          - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/db/ds-db-postgresql-docker.template.yaml
-          - S3Region:
-              Fn::If:
-                - UsingDefaultBucket
-                - Ref: AWS::Region
-                - Ref: QSS3BucketRegion
-            S3Bucket:
-              Fn::If:
-                - UsingDefaultBucket
-                - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
-                - Ref: QSS3BucketName
-      TimeoutInMinutes: 15
-      Parameters:
-        AWSIKeyPairName:
-          Ref: AWSIKeyPairName
-        DBICAdminName:
-          Ref: DBICAdminName
-        DBICAdminPassword:
-          Ref: DBICAdminPassword
-        DBPName:
-          Ref: DBPName
-        RDSSG:
-          Ref: RDSSG
-        DBISubnet:
-          Ref: DBISubnet1
 Conditions:
   DBTypeIsOracle:
     Fn::Equals:
@@ -312,10 +276,6 @@ Conditions:
     Fn::Equals:
       - Ref: DBPEngine
       - PostgreSQL
-  DBTypeIsPostgreSQLDocker:
-    Fn::Equals:
-      - Ref: DBPEngine
-      - PostgresDocker
   DBTypeIsAuroraPostgreSQL:
     Fn::Equals:
       - Ref: DBPEngine
@@ -346,21 +306,16 @@ Outputs:
                 - DSPostgreSQLRDS
                 - Outputs.DSDBEndpoint
             - Fn::If:
-                - DBTypeIsPostgreSQLDocker
+                - DBTypeIsSQL
                 - Fn::GetAtt:
-                    - DSPostgreSQLDocker
+                    - DSSQLRDS
                     - Outputs.DSDBEndpoint
                 - Fn::If:
-                    - DBTypeIsSQL
+                    - DBTypeIsAuroraPostgreSQL
                     - Fn::GetAtt:
-                        - DSSQLRDS
+                        - DSAuroraPostgreSQLRDS
                         - Outputs.DSDBEndpoint
-                    - Fn::If:
-                        - DBTypeIsAuroraPostgreSQL
-                        - Fn::GetAtt:
-                            - DSAuroraPostgreSQLRDS
-                            - Outputs.DSDBEndpoint
-                        - ''
+                    - ''
   DSDBPort:
     Value:
       Fn::If:
@@ -374,21 +329,16 @@ Outputs:
                 - DSPostgreSQLRDS
                 - Outputs.DSDBPort
             - Fn::If:
-                - DBTypeIsPostgreSQLDocker
+                - DBTypeIsSQL
                 - Fn::GetAtt:
-                    - DSPostgreSQLDocker
+                    - DSSQLRDS
                     - Outputs.DSDBPort
                 - Fn::If:
-                    - DBTypeIsSQL
+                    - DBTypeIsAuroraPostgreSQL
                     - Fn::GetAtt:
-                        - DSSQLRDS
+                        - DSAuroraPostgreSQLRDS
                         - Outputs.DSDBPort
-                    - Fn::If:
-                        - DBTypeIsAuroraPostgreSQL
-                        - Fn::GetAtt:
-                            - DSAuroraPostgreSQLRDS
-                            - Outputs.DSDBPort
-                        - ''
+                    - ''
   StorageType:
     Value:
       Ref: StorageType

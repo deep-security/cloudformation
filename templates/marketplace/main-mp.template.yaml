@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.80: Trend Micro Deep Security Marketplace main template. For more
+Description: 'v5.81: Trend Micro Deep Security Marketplace main template. For more
   information see http://aws.trendmicro.com. (qs-1ngr590jt)'
 Metadata:
   cfn-lint:
@@ -541,7 +541,6 @@ Resources:
           - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:
-        AWSIKeyPairName: !Ref AWSIKeyPairName
         DBPName: !Ref DBPName
         DBIStorageAllocation: !Ref DBIStorageAllocation
         DBIRDSInstanceSize: !Ref DBIRDSInstanceSize
