@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.81: This template is an abstraction layer for choosing PostgreSQL, Oracle or MSSQL when deploying Deep Security Manager. (qs-1ngr590i4)'
+Description: 'v5.83: This template is an abstraction layer for choosing PostgreSQL, Oracle or MSSQL when deploying Deep Security Manager. (qs-1ngr590i4)'
 Metadata:
   cfn-lint:
     config:
@@ -116,19 +116,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Condition: DBTypeIsOracle
     Properties:
-      TemplateURL:
-        Fn::Sub:
-          - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/db/ds-db-oracle-rds.template.yaml
-          - S3Region:
-              Fn::If:
-                - UsingDefaultBucket
-                - Ref: AWS::Region
-                - Ref: QSS3BucketRegion
-            S3Bucket:
-              Fn::If:
-                - UsingDefaultBucket
-                - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
-                - Ref: QSS3BucketName
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/ds-db-oracle-rds.template.yaml'
       TimeoutInMinutes: 120
       Parameters:
         DBIRDSInstanceSize:
@@ -153,19 +141,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Condition: DBTypeIsSQL
     Properties:
-      TemplateURL:
-        Fn::Sub:
-          - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/db/ds-db-mssql-rds.template.yaml
-          - S3Region:
-              Fn::If:
-                - UsingDefaultBucket
-                - Ref: AWS::Region
-                - Ref: QSS3BucketRegion
-            S3Bucket:
-              Fn::If:
-                - UsingDefaultBucket
-                - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
-                - Ref: QSS3BucketName
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/ds-db-mssql-rds.template.yaml'
       TimeoutInMinutes: 120
       Parameters:
         DBIRDSInstanceSize:
@@ -190,19 +166,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Condition: DBTypeIsPostgreSQL
     Properties:
-      TemplateURL:
-        Fn::Sub:
-          - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/db/ds-db-postgresql-rds.template.yaml
-          - S3Region:
-              Fn::If:
-                - UsingDefaultBucket
-                - Ref: AWS::Region
-                - Ref: QSS3BucketRegion
-            S3Bucket:
-              Fn::If:
-                - UsingDefaultBucket
-                - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
-                - Ref: QSS3BucketName
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/ds-db-postgresql-rds.template.yaml'
       TimeoutInMinutes: 120
       Parameters:
         DBIRDSInstanceSize:
@@ -227,19 +191,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Condition: DBTypeIsAuroraPostgreSQL
     Properties:
-      TemplateURL:
-        Fn::Sub:
-          - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/db/ds-db-postgresql-rds-aurora.template.yaml
-          - S3Region:
-              Fn::If:
-                - UsingDefaultBucket
-                - Ref: AWS::Region
-                - Ref: QSS3BucketRegion
-            S3Bucket:
-              Fn::If:
-                - UsingDefaultBucket
-                - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
-                - Ref: QSS3BucketName
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/ds-db-postgresql-rds-aurora.template.yaml'
       TimeoutInMinutes: 65
       Parameters:
         DBIRDSInstanceSize:

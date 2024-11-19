@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.81: Deploys Elastic Load Balancers and Security Groups for Deep Security
+Description: 'v5.83: Deploys Elastic Load Balancers and Security Groups for Deep Security
   (qs-1ngr590je). Manager.'
 Metadata:
   cfn-lint:
@@ -71,11 +71,7 @@ Resources:
   ELBSG:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL:
-        !Sub
-          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/common/security-groups/ds-elb-sg.template.yaml'
-          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/ds-elb-sg.template.yaml'
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DSIPGUIPort: !Ref DSIPGUIPort
