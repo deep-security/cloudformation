@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.81: Deploys Deep Security Manager to AWS. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2
+Description: 'v5.83: Deploys Deep Security Manager to AWS. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2
   instances and related resources. You will be billed for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
 Metadata:
   cfn-lint:
@@ -207,71 +207,71 @@ Parameters:
 Mappings:
   DSMAMI:
     us-east-1:
-      PerHost: ami-033b9413271d768d7
-      BYOL: ami-0309fac5af2647429
+      PerHost: ami-08ca706e4a2ec656b
+      BYOL: ami-07d332be5b62651c3
     us-east-2:
-      PerHost: ami-0f07ff1c232c858cb
-      BYOL: ami-0641b1e958a9207d7
+      PerHost: ami-0ef5868d383131b3d
+      BYOL: ami-02a06bbf0baed6b08
     us-west-1:
-      PerHost: ami-069ae7ea7e8c51385
-      BYOL: ami-00dd69e4205f5a5dd
+      PerHost: ami-0b4fb1aa398e6cf06
+      BYOL: ami-09093719ad5ef70ca
     us-west-2:
-      PerHost: ami-048aa6f303c344469
-      BYOL: ami-06c21f790fc7cc1f3
+      PerHost: ami-015bd95aa5adb9057
+      BYOL: ami-0996697675eabb36e
     ca-central-1:
-      PerHost: ami-0c81ea3b8b43e4b68
-      BYOL: ami-0db193e587acefaa2
+      PerHost: ami-0b3dbb20f6c5c1718
+      BYOL: ami-047b67a7810dec2d2
     eu-central-1:
-      PerHost: ami-0b9a40813d0598d5b
-      BYOL: ami-0698f954801e2cf2a
+      PerHost: ami-0c28e2fe6201ca888
+      BYOL: ami-0a71ae45993ddf295
     eu-west-1:
-      PerHost: ami-039109dc8591db434
-      BYOL: ami-0161747adda249790
+      PerHost: ami-094d5e28d6e288cb7
+      BYOL: ami-080e0fed8c4f94f2c
     eu-west-2:
-      PerHost: ami-0991db7390f968194
-      BYOL: ami-0e03d33635b1e9555
+      PerHost: ami-099a59cd8bd94a800
+      BYOL: ami-046b2b21300d7b5cd
     eu-west-3:
-      PerHost: ami-030a0067911a76823
-      BYOL: ami-036aa0015194d08d3
+      PerHost: ami-0c19e01bbe348987f
+      BYOL: ami-068ec52528d72361b
     ap-southeast-1:
-      PerHost: ami-0adc9e9f8cbf42290
-      BYOL: ami-0efb88787f27b1745
+      PerHost: ami-0dfe3eec14a615229
+      BYOL: ami-0895910598eccfc9a
     ap-southeast-2:
-      PerHost: ami-03a8662a2b222b5d7
-      BYOL: ami-0b81e8b4b114b4ce3
+      PerHost: ami-095c6a7c8b7726c63
+      BYOL: ami-08ca801d6436947cf
     ap-southeast-3:
-      PerHost: ami-0fe421440795ddb13
-      BYOL: ami-0e3695a1f9eceb665
+      PerHost: ami-0f8e0b845a6ea15ed
+      BYOL: ami-0c577bfb8e1fc05fa
     ap-south-1:
-      PerHost: ami-04bf602ac92df45e8
-      BYOL: ami-053b294698888cb65
+      PerHost: ami-0201460a5a1abbd43
+      BYOL: ami-0f32e4b938bf28c8d
     ap-northeast-1:
-      PerHost: ami-0f1d743ee3c6b2edd
-      BYOL: ami-06b8328b0274a73bb
+      PerHost: ami-0c1667af5ee57b795
+      BYOL: ami-01d5a18a9ab62409b
     ap-northeast-2:
-      PerHost: ami-0ade5d7a63ea89f2b
-      BYOL: ami-054ed5b3dfdb09885
+      PerHost: ami-01290de74f9fe8571
+      BYOL: ami-05ce6004713f4ab93
     ap-northeast-3:
-      PerHost: ami-072115084b9096aed
-      BYOL: ami-0c81d3cce0b6087de
+      PerHost: ami-09fb88ce020c68bd5
+      BYOL: ami-050b154f17e365554
     sa-east-1:
-      PerHost: ami-0b20fa35f7ef1c6a3
-      BYOL: ami-01a08fb6bb1224380
+      PerHost: ami-0c3a2d95353ead0ec
+      BYOL: ami-0f5da118279986c49
     eu-north-1:
-      PerHost: ami-0c5997d9e17606ccc
-      BYOL: ami-00f6b2e8fcf4cf1c4
+      PerHost: ami-0c846779be997b5ae
+      BYOL: ami-046e68310be4fe5b7
     me-south-1:
-      PerHost: ami-047959fb3d7a5d000
-      BYOL: ami-0a8bbab3a766ddbb4
+      PerHost: ami-075a338f4350b4a86
+      BYOL: ami-03d54b8bb7115dbd0
     eu-south-1:
-      PerHost: ami-0bbdaef68c3bff1b6
-      BYOL: ami-0569944ab024431ed
+      PerHost: ami-064e1c02056a411f5
+      BYOL: ami-08a2b47f2ec10694a
     us-gov-east-1:
-      PerHost: ami-086f3c1a552052bf6
-      BYOL: ami-0e56388e3f565c302
+      PerHost: ami-039dbc37e6149562e
+      BYOL: ami-0d2ea86086eee2e04
     us-gov-west-1:
-      PerHost: ami-06d39cb35fc2bff41
-      BYOL: ami-0b6a57bcc62429f13
+      PerHost: ami-003c083fe8b4a9c4d
+      BYOL: ami-0052a7c0cbb5d8422
   DSMSIZE:
     us-east-1:
       PerHost: m5.xlarge
@@ -637,56 +637,17 @@ Resources:
         addCloudAccount:
           files:
             /etc/cfn/set-aia-settings.sh:
-              source:
-                Fn::Sub:
-                  - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/set-aia-settings.sh
-                  - S3Region:
-                      Fn::If:
-                        - UsingDefaultBucket
-                        - Ref: AWS::Region
-                        - Ref: QSS3BucketRegion
-                    S3Bucket:
-                      Fn::If:
-                        - UsingDefaultBucket
-                        - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
-                        - Ref: QSS3BucketName
+              source: 'https://deepsecurity-cloudformation.s3.us-east-1.amazonaws.com/cfn-ps-trendmicro-deepsecurity/scripts/set-aia-settings.sh'
               owner: root
               mode: '000700'
-              authentication: S3AccessCreds
             /etc/cfn/end-mp-web-installer.sh:
-              source:
-                Fn::Sub:
-                  - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/end-mp-web-installer.sh
-                  - S3Region:
-                      Fn::If:
-                        - UsingDefaultBucket
-                        - Ref: AWS::Region
-                        - Ref: QSS3BucketRegion
-                    S3Bucket:
-                      Fn::If:
-                        - UsingDefaultBucket
-                        - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
-                        - Ref: QSS3BucketName
+              source: 'https://deepsecurity-cloudformation.s3.us-east-1.amazonaws.com/cfn-ps-trendmicro-deepsecurity/scripts/end-mp-web-installer.sh'
               owner: root
               mode: '000700'
-              authentication: S3AccessCreds
             /etc/cfn/add-aws-account-with-instance-role.sh:
-              source:
-                Fn::Sub:
-                  - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/add-aws-account-with-instance-role.sh
-                  - S3Region:
-                      Fn::If:
-                        - UsingDefaultBucket
-                        - Ref: AWS::Region
-                        - Ref: QSS3BucketRegion
-                    S3Bucket:
-                      Fn::If:
-                        - UsingDefaultBucket
-                        - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
-                        - Ref: QSS3BucketName
+              source: 'https://deepsecurity-cloudformation.s3.us-east-1.amazonaws.com/cfn-ps-trendmicro-deepsecurity/scripts/add-aws-account-with-instance-role.sh'
               owner: root
               mode: '000700'
-              authentication: S3AccessCreds
           commands:
             5-check-service:
               command:
@@ -704,22 +665,9 @@ Resources:
         sqlSetup:
           files:
             /etc/cfn/rhel-scripts/create-dsm-db.py:
-              source:
-                Fn::Sub:
-                  - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/create-dsm-db.py
-                  - S3Region:
-                      Fn::If:
-                        - UsingDefaultBucket
-                        - Ref: AWS::Region
-                        - Ref: QSS3BucketRegion
-                    S3Bucket:
-                      Fn::If:
-                        - UsingDefaultBucket
-                        - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
-                        - Ref: QSS3BucketName
+              source: 'https://deepsecurity-cloudformation.s3.us-east-1.amazonaws.com/cfn-ps-trendmicro-deepsecurity/scripts/create-dsm-db.py'
               owner: root
               mode: '000755'
-              authentication: S3AccessCreds
           commands:
             1-create-db:
               command:
@@ -735,39 +683,13 @@ Resources:
         fixManagerLoadBalancerSettings:
           files:
             /etc/cfn/create-console-listener.sh:
-              source:
-                Fn::Sub:
-                  - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/create-console-listener.sh
-                  - S3Region:
-                      Fn::If:
-                        - UsingDefaultBucket
-                        - Ref: AWS::Region
-                        - Ref: QSS3BucketRegion
-                    S3Bucket:
-                      Fn::If:
-                        - UsingDefaultBucket
-                        - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
-                        - Ref: QSS3BucketName
+              source: 'https://deepsecurity-cloudformation.s3.us-east-1.amazonaws.com/cfn-ps-trendmicro-deepsecurity/scripts/create-console-listener.sh'
               owner: root
               mode: '000700'
-              authentication: S3AccessCreds
             /etc/cfn/set-lb-settings.sh:
-              source:
-                Fn::Sub:
-                  - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/set-lb-settings.sh
-                  - S3Region:
-                      Fn::If:
-                        - UsingDefaultBucket
-                        - Ref: AWS::Region
-                        - Ref: QSS3BucketRegion
-                    S3Bucket:
-                      Fn::If:
-                        - UsingDefaultBucket
-                        - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
-                        - Ref: QSS3BucketName
+              source: 'https://deepsecurity-cloudformation.s3.us-east-1.amazonaws.com/cfn-ps-trendmicro-deepsecurity/scripts/set-lb-settings.sh'
               owner: root
               mode: '000700'
-              authentication: S3AccessCreds
           commands:
             1-setup-elb-listener:
               command:
@@ -784,22 +706,9 @@ Resources:
         fixManagerHostObject:
           files:
             /etc/cfn/reactivate-manager.sh:
-              source:
-                Fn::Sub:
-                  - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/reactivate-manager.sh
-                  - S3Region:
-                      Fn::If:
-                        - UsingDefaultBucket
-                        - Ref: AWS::Region
-                        - Ref: QSS3BucketRegion
-                    S3Bucket:
-                      Fn::If:
-                        - UsingDefaultBucket
-                        - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
-                        - Ref: QSS3BucketName
+              source: 'https://deepsecurity-cloudformation.s3.us-east-1.amazonaws.com/cfn-ps-trendmicro-deepsecurity/scripts/reactivate-manager.sh'
               owner: root
               mode: '000700'
-              authentication: S3AccessCreds
           commands:
             1-reactivate-manager.sh:
               command:
