@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.86: Trend Micro Deep Security Marketplace main template. For more
+Description: 'v5.87: Trend Micro Deep Security Marketplace main template. For more
   information see http://aws.trendmicro.com. (qs-1ngr590jt)'
 Metadata:
   cfn-lint:
@@ -336,29 +336,6 @@ Parameters:
     - Internet-facing
     - Internal
     Default: Internet-facing
-  QSS3BucketName:
-    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
-    ConstraintDescription: Quick Start bucket name can include numbers, lowercase
-      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
-      (-).
-    Default: aws-ia
-    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
-      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
-      It cannot start or end with a hyphen (-).
-    Type: String
-  QSS3BucketRegion:
-    Default: 'us-east-1'
-    Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
-    Type: String
-  QSS3KeyPrefix:
-    AllowedPattern: ^[0-9a-zA-Z-/]*$
-    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
-      uppercase letters, hyphens (-), and forward slash (/).
-    Default: cfn-ps-trendmicro-deepsecurity/
-    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
-      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
-      forward slash (/).
-    Type: String
   DSCLicenseType:
     Type: String
     Default: Enterprise
@@ -411,9 +388,6 @@ Resources:
         DSM1CompleteWaitHandle: !Ref DSM1CompleteWaitHandle
         DSIELBFQDN: !GetAtt DSIELB.Outputs.ELBFQDN
         DSELBPosture: !Ref DSELBPosture
-        QSS3BucketName: !Ref QSS3BucketName
-        QSS3BucketRegion: !Ref QSS3BucketRegion
-        QSS3KeyPrefix: !Ref QSS3KeyPrefix
         DSCLicenseType: !Ref DSCLicenseType
         DSProxyUrl: !Ref DSProxyUrl
   DSMNode2:
@@ -445,9 +419,6 @@ Resources:
         CreateEIP: 'False'
         DSIELB: !GetAtt DSIELB.Outputs.DSIELB
         DSELBPosture: !Ref DSELBPosture
-        QSS3BucketName: !Ref QSS3BucketName
-        QSS3BucketRegion: !Ref QSS3BucketRegion
-        QSS3KeyPrefix: !Ref QSS3KeyPrefix
         DSProxyUrl: !Ref DSProxyUrl
   DSMNode1NoDB:
     Type: AWS::CloudFormation::Stack
@@ -479,9 +450,6 @@ Resources:
         DSIELB: !GetAtt DSIELB.Outputs.DSIELB
         DSIELBFQDN: !GetAtt DSIELB.Outputs.ELBFQDN
         DSELBPosture: !Ref DSELBPosture
-        QSS3BucketName: !Ref QSS3BucketName
-        QSS3BucketRegion: !Ref QSS3BucketRegion
-        QSS3KeyPrefix: !Ref QSS3KeyPrefix
         DSProxyUrl: !Ref DSProxyUrl
   DSMNode2NoDB:
     Type: AWS::CloudFormation::Stack
@@ -510,9 +478,6 @@ Resources:
         CreateEIP: 'False'
         DSIELB: !GetAtt DSIELB.Outputs.DSIELB
         DSELBPosture: !Ref DSELBPosture
-        QSS3BucketName: !Ref QSS3BucketName
-        QSS3BucketRegion: !Ref QSS3BucketRegion
-        QSS3KeyPrefix: !Ref QSS3KeyPrefix
         DSProxyUrl: !Ref DSProxyUrl
   DSDatabaseAbstract:
     Type: AWS::CloudFormation::Stack
@@ -533,9 +498,6 @@ Resources:
         DBPBackupDays: !Ref DBPBackupDays
         DBISubnet1: !Ref DBISubnet1
         DBISubnet2: !Ref DBISubnet2
-        QSS3BucketName: !Ref QSS3BucketName
-        QSS3BucketRegion: !Ref QSS3BucketRegion
-        QSS3KeyPrefix: !Ref QSS3KeyPrefix
   DSIRDSSecurityGroup:
     Type: AWS::CloudFormation::Stack
     Condition: LaunchRDSInstance
@@ -563,9 +525,6 @@ Resources:
         DSIPGUIPort: !Ref DSIPGUIPort
         DSISubnetID: !Ref DSISubnetID
         DSELBPosture: !Ref DSELBPosture
-        QSS3BucketName: !Ref QSS3BucketName
-        QSS3BucketRegion: !Ref QSS3BucketRegion
-        QSS3KeyPrefix: !Ref QSS3KeyPrefix
   DSIDSMSecurityGroupIngressRules:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -598,7 +557,6 @@ Resources:
       Handle: !Ref DSM1CompleteWaitHandle
       Timeout: '3000'
 Conditions:
-  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-ia']
   DSIsMultiNode:
     !Equals
     - !Ref DSIMultiNode
