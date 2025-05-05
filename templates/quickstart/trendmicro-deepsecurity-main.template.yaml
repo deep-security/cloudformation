@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'QS(0011) - v5.86: Quick Start that deploys Trend Micro Deep Security
+Description: 'QS(0011) - v5.87: Quick Start that deploys Trend Micro Deep Security
   into an existing VPC with a Multi-AZ PostgreSQL RDS instance  **WARNING** This template
   uses images from the AWS Marketplace and an active subscription is required - Please
   see the Quick Start documentation for more details. You will be billed for the AWS
@@ -28,12 +28,6 @@ Metadata:
       - DeepSecuritySubnet
       - DatabaseSubnet1
       - DatabaseSubnet2
-    - Label:
-        default: AWS Quick Start Configuration
-      Parameters:
-      - QSS3BucketName
-      - QSS3BucketRegion
-      - QSS3KeyPrefix
     ParameterLabels:
       AWSKeyPairName:
         default: EC2 Key Pair for SSH access
@@ -51,12 +45,6 @@ Metadata:
         default: Secondary private subnet for RDS
       ProtectedInstances:
         default: Number of instances you expect to protect with Deep Security Agents
-      QSS3BucketName:
-        default: Quick Start S3 Bucket Name
-      QSS3BucketRegion:
-        default: Quick Start S3 bucket region
-      QSS3KeyPrefix:
-        default: Quick Start S3 Key Prefix
 Parameters:
   AWSKeyPairName:
     Description: Select an existing key pair to use for connecting to your Deep Security
@@ -114,29 +102,6 @@ Parameters:
     - 101-500
     - 501-1000
     - 1001-2000
-  QSS3BucketName:
-    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
-    ConstraintDescription: Quick Start bucket name can include numbers, lowercase
-      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
-      (-).
-    Default: aws-ia
-    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
-      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
-      It cannot start or end with a hyphen (-).
-    Type: String
-  QSS3BucketRegion:
-    Default: 'us-east-1'
-    Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
-    Type: String
-  QSS3KeyPrefix:
-    AllowedPattern: ^[0-9a-zA-Z-/]*$
-    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
-      uppercase letters, hyphens (-), and forward slash (/).
-    Default: cfn-ps-trendmicro-deepsecurity/
-    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
-      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
-      forward slash (/).
-    Type: String
 Mappings:
   DSMSIZE:
     us-east-1:
@@ -426,11 +391,7 @@ Resources:
         DBISubnet2: !Ref DatabaseSubnet2
         DSIPLicense: PerHost
         DBPMultiAZ: 'true'
-        QSS3BucketName: !Ref QSS3BucketName
-        QSS3BucketRegion: !Ref QSS3BucketRegion
-        QSS3KeyPrefix: !Ref QSS3KeyPrefix
 Conditions:
-  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-ia']
   PerHostSupportedRegion:
     !Not
     - !Equals
