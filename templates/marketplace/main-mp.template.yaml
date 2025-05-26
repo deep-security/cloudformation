@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.87: Trend Micro Deep Security Marketplace main template. For more
+Description: 'v5.88: Trend Micro Deep Security Marketplace main template. For more
   information see http://aws.trendmicro.com. (qs-1ngr590jt)'
 Metadata:
   cfn-lint:
@@ -377,7 +377,7 @@ Resources:
     - DSIDSMSecurityGroup
     Condition: LaunchRDSInstance
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/dsm-mp.template.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/dsm-mp.template.yaml'
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -410,7 +410,7 @@ Resources:
     - DSM1CompleteWaitCondition
     Condition: DSMNode2DB
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/dsm-mp.template.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/dsm-mp.template.yaml'
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -439,7 +439,7 @@ Resources:
     - DSIDSMSecurityGroup
     Condition: DoNotLaunchRDSInstance
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/dsm-mp.template.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/dsm-mp.template.yaml'
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -469,7 +469,7 @@ Resources:
     DependsOn: DSM1NoDBCompleteWaitCondition
     Condition: DSMNode2NoDB
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/dsm-mp.template.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/dsm-mp.template.yaml'
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -497,7 +497,7 @@ Resources:
     Condition: LaunchRDSInstance
     DependsOn: DSIRDSSecurityGroup
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/ds-db-abstract.template.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/ds-db-abstract.template.yaml'
       Parameters:
         DBPName: !Ref DBPName
         DBIStorageAllocation: !Ref DBIStorageAllocation
@@ -515,7 +515,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Condition: LaunchRDSInstance
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/rds-security-group.template.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/rds-security-group.template.yaml'
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DBPEngine: !Ref DBPEngine
@@ -523,7 +523,7 @@ Resources:
   DSIDSMSecurityGroup:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/dsm-security-group.template.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/dsm-security-group.template.yaml'
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DSIPGUIPort: !Ref DSIPGUIPort
@@ -531,7 +531,7 @@ Resources:
   DSIELB:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/dsm-elb.template.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/dsm-elb.template.yaml'
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DSIPHeartbeatPort: !Ref DSIPHeartbeatPort
@@ -541,7 +541,7 @@ Resources:
   DSIDSMSecurityGroupIngressRules:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/dsm-sg-ingress-rules.template.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/dsm-sg-ingress-rules.template.yaml'
       Parameters:
         DSMSG: !GetAtt DSIDSMSecurityGroup.Outputs.DSMSG
         ELBSourceSG: !GetAtt DSIELB.Outputs.ELBSourceSecurityGroup

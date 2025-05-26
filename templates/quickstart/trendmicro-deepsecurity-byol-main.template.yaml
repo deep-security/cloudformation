@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'QS(0011) - v5.87: Quick Start that deploys Trend Micro Deep Security
+Description: 'QS(0011) - v5.88: Quick Start that deploys Trend Micro Deep Security
   into an existing VPC with a Multi-AZ RDS instance  **WARNING** This template uses
   images from the AWS Marketplace and an active subscription is required - Please
   see the Quick Start documentation for more details. You will be billed for the AWS
@@ -419,7 +419,7 @@ Resources:
   MainMP:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/main-mp.template.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/main-mp.template.yaml'
       Parameters:
         AWSIKeyPairName: !Ref AWSKeyPairName
         AWSIVPC: !Ref AWSVPC

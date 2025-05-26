@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.87: This template deploys a PostgreSQL RDS instance for Deep Security
+Description: 'v5.88: This template deploys a PostgreSQL RDS instance for Deep Security
   Manager. (qs-1ngr590ie)'
 Metadata:
   cfn-lint:
@@ -95,6 +95,7 @@ Parameters:
 Resources:
   DSDatabase:
     Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot
     Properties:
       LicenseModel: postgresql-license
       PubliclyAccessible: false
