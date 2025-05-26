@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.87: This template is an abstraction layer for choosing PostgreSQL, Oracle or MSSQL when deploying Deep Security Manager. (qs-1ngr590i4)'
+Description: 'v5.88: This template is an abstraction layer for choosing PostgreSQL, Oracle or MSSQL when deploying Deep Security Manager. (qs-1ngr590i4)'
 Metadata:
   cfn-lint:
     config:
@@ -130,7 +130,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Condition: DBTypeIsOracle
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/ds-db-oracle-rds.template.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/ds-db-oracle-rds.template.yaml'
       TimeoutInMinutes: 120
       Parameters:
         DBIRDSInstanceSize:
@@ -155,7 +155,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Condition: DBTypeIsSQL
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/ds-db-mssql-rds.template.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/ds-db-mssql-rds.template.yaml'
       TimeoutInMinutes: 120
       Parameters:
         DBIRDSInstanceSize:
@@ -180,7 +180,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Condition: DBTypeIsPostgreSQL
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/ds-db-postgresql-rds.template.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/ds-db-postgresql-rds.template.yaml'
       TimeoutInMinutes: 120
       Parameters:
         DBIRDSInstanceSize:
@@ -205,7 +205,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Condition: DBTypeIsAuroraPostgreSQL
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/a55109c6-2916-4d00-9886-1c5c28da085d/Layer/ds-db-postgresql-rds-aurora.template.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/ds-db-postgresql-rds-aurora.template.yaml'
       TimeoutInMinutes: 65
       Parameters:
         DBIRDSInstanceSize:

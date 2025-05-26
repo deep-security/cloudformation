@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.87: This template deploys an MSSQL RDS Instance for Deep Security Manager. (qs-1ngr590ij)'
+Description: 'v5.88: This template deploys an MSSQL RDS Instance for Deep Security Manager. (qs-1ngr590ij)'
 Metadata:
   cfn-lint:
     config:
@@ -87,6 +87,7 @@ Parameters:
 Resources:
   DSDatabase:
     Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot
     Properties:
       LicenseModel: license-included
       PubliclyAccessible: false

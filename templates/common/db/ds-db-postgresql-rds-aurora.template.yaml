@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.87: This template deploys an Aurora PostgreSQL RDS instance for Deep Security
+Description: 'v5.88: This template deploys an Aurora PostgreSQL RDS instance for Deep Security
   Manager. (qs-1ngr590ie)'
 Parameters:
   DBIRDSInstanceSize:
@@ -65,6 +65,7 @@ Parameters:
 Resources:
   DSAuroraCluster:
     Type: AWS::RDS::DBCluster
+    DeletionPolicy: Snapshot
     Metadata:
       cfn-lint:
         config:
@@ -90,6 +91,7 @@ Resources:
       - !Ref RDSSG
   DSDatabase1:
     Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot
     Properties:
       DBClusterIdentifier: !Ref DSAuroraCluster
       LicenseModel: postgresql-license
@@ -101,6 +103,7 @@ Resources:
         Value: Deep Security Manager
   DSDatabase2:
     Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot
     Properties:
       DBClusterIdentifier: !Ref DSAuroraCluster
       LicenseModel: postgresql-license
