@@ -1,65 +1,71 @@
-AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.90: Deploys Deep Security Manager to AWS. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2
-  instances and related resources. You will be billed for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: 'Deploys Deep Security Manager to AWS. This template is designed to be nested in a stack, and requires several passed parameters to launch. **WARNING** This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template. (qs-1ngr590jo)'
+
 Metadata:
   cfn-lint:
     config:
       ignore_checks:
-        - W2001
-        - W4002
-        - E9010
-      ignore_reasons: W2001:'Parameters are referenced by other template' W4002:'Using NoEcho parameters as the scripte input' E9010:'Definition is used by another template'
+        - W1028
+        - W2010
+
 Parameters:
   AWSIKeyPairName:
     Description: Existing key pair to use for connecting to your Deep Security Manager Instance
     Type: AWS::EC2::KeyPair::KeyName
     ConstraintDescription: Select an existing EC2 Key Pair.
+
   AWSIVPC:
     Description: Existing VPC to deploy Deep Security Manager
     Type: AWS::EC2::VPC::Id
     AllowedPattern: '[-_a-zA-Z0-9]*'
+
   DSCAdminName:
-    Default: admin
     Description: The Deep Security Manager administrator account username for Web Console Access
     Type: String
+    Default: admin
     MinLength: 1
     MaxLength: 16
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
     ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+
   DSCAdminPassword:
-    NoEcho: true
     Description: The Deep Security Manager administrator account password
     Type: String
+    NoEcho: true
     MinLength: 8
     MaxLength: 41
     AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
     ConstraintDescription: Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41
+
   DSIPLicenseKey:
     Description: Deep Security License key including dashes (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)
     Type: String
+    Default: XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
     MinLength: 37
     MaxLength: 37
     AllowedPattern: '[A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}'
     ConstraintDescription: Key can only contain ASCII characters.
-    Default: XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
+
   DSIPHeartbeatPort:
     Description: The heartbeat port used by Deep Security Agents and appliances to communicate with the Deep Security Manager.
     Type: Number
+    Default: "4120"
     MinValue: 0
     MaxValue: 65535
-    Default: '4120'
     ConstraintDescription: Must be a valid TCP port.
+
   DSIPGUIPort:
     Description: The Deep Security Manager application and GUI port.
     Type: Number
+    Default: "4119"
     MinValue: 0
     MaxValue: 65535
-    Default: '4119'
     ConstraintDescription: Must be a valid TCP port.
+
   DSIPInstanceType:
     Description: Amazon EC2 instance type for the Deep Security Manager Node Instances
     Type: String
-    Default: m5.large
     AllowedValues:
       - m4.large
       - m4.xlarge
@@ -97,40 +103,46 @@ Parameters:
       - r4.2xlarge
       - r4.4xlarge
       - r4.8xlarge
+    Default: m5.large
+
   DBICAdminName:
-    Default: dsadmin
     Description: Admin account username to be used for the database instance
     Type: String
+    Default: dsadmin
     MinLength: 1
     MaxLength: 16
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
     ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+
   DBICAdminPassword:
-    NoEcho: true
     Description: Password to be used for the database admin account
     Type: String
+    NoEcho: true
     MinLength: 8
     MaxLength: 41
     AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
     ConstraintDescription: Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41
+
   DBPName:
-    Default: dsm
     Description: Name to be assigned to the database
     Type: String
+    Default: dsm
     MinLength: 1
     MaxLength: 64
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
     ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+
   DBPRDSEndpoint:
-    Default: RDS.FQDN.domain
     Description: FQDN or IP of RDS Endpoint
     Type: String
-    MinLength: '1'
-    MaxLength: '254'
+    Default: RDS.FQDN.domain
+    MinLength: "1"
+    MaxLength: "254"
+
   DSMSG:
     Type: AWS::EC2::SecurityGroup::Id
+
   DBPEngine:
-    Default: Embedded
     Type: String
     AllowedValues:
       - Embedded
@@ -138,40 +150,49 @@ Parameters:
       - SQL
       - PostgreSQL
       - AuroraPostgreSQL
+    Default: Embedded
+
   DSISubnetID:
     Description: Existing Subnet for Deep Security Manager. Must be a public subnet contained the in VPC chosen above.
     Type: AWS::EC2::Subnet::Id
     AllowedPattern: '[-_a-zA-Z0-9]*'
     ConstraintDescription: Subnet ID must exist in the chosen VPC
+
   DSMPMNode:
     Description: Select whether this is an additional node to be added to an existing Deep Security Manager Infrastructure
     Type: String
     AllowedValues:
-      - 'Yes'
-      - 'No'
-    Default: 'No'
+      - Yes
+      - No
+    Default: No
+
   DSIPLicense:
     Description: Choose License Model. If choosing BYOL you may enter the license below
     Type: String
     AllowedValues:
       - PerHost
       - BYOL
+
   CreateEIP:
     Description: Allocate an EIP and associate it with this Deep Security Manager Instance. Recommend set to true unless deploying behind an ELB
     Type: String
     AllowedValues:
-      - 'True'
-      - 'False'
-    Default: 'True'
+      - "True"
+      - "False"
+    Default: "True"
+
   DSIELB:
     Type: String
-    Default: ''
+    Default: ""
+
   DSIELBFQDN:
     Type: String
-    Default: ''
+    Default: ""
+
   DSM1CompleteWaitHandle:
     Type: String
-    Default: ''
+    Default: ""
+
   DSELBPosture:
     Description: Use internal or internet-facing ELB
     Type: String
@@ -179,83 +200,35 @@ Parameters:
       - Internet-facing
       - Internal
     Default: Internet-facing
+
   DSCLicenseType:
     Type: String
-    Default: Enterprise
     AllowedValues:
       - Enterprise
       - Network
+    Default: Enterprise
+
   DSProxyUrl:
     Type: String
-    Default: ''
+    Default: ""
+
+  ImageId:
+    Description: The AMI that will be used to launch EC2 resources.
+    Type: AWS::EC2::Image::Id
+
+  MPS3BucketName:
+    Description: Name of the S3 bucket for the copy of the nested templates.
+    Type: String
+
+  MPS3BucketRegion:
+    Description: AWS Region where the S3 bucket for the copy of the nested templates is hosted.
+    Type: String
+
+  MPS3KeyPrefix:
+    Description: S3 key prefix that is used to simulate a folder for the copy of the nested templates.
+    Type: String
+
 Mappings:
-  DSMAMI:
-    us-east-1:
-      PerHost: ami-0f320acee837361d9
-      BYOL: ami-055e2c219d168f996
-    us-east-2:
-      PerHost: ami-03df38ffafd6941a6
-      BYOL: ami-03f952f6fddfbcdb6
-    us-west-1:
-      PerHost: ami-06282ba4abd834e0c
-      BYOL: ami-0746b03bdd2a8d2e8
-    us-west-2:
-      PerHost: ami-087c5821655e833f4
-      BYOL: ami-03919081e8f379fd1
-    ca-central-1:
-      PerHost: ami-0965d177c54b6549b
-      BYOL: ami-03e157cf7a73aed4b
-    eu-central-1:
-      PerHost: ami-062e4bb638891b446
-      BYOL: ami-0c289ed6011baba98
-    eu-west-1:
-      PerHost: ami-05a79ae463c8f0abe
-      BYOL: ami-0545e4f21c862eff7
-    eu-west-2:
-      PerHost: ami-06aa06eb20782a16b
-      BYOL: ami-09d177f6665ef4d7b
-    eu-west-3:
-      PerHost: ami-0d490a5d0d62bdb62
-      BYOL: ami-0a0bd1ee8a1249474
-    ap-southeast-1:
-      PerHost: ami-008362c38c9fdd515
-      BYOL: ami-099969b94f601784c
-    ap-southeast-2:
-      PerHost: ami-01826cc312c86351a
-      BYOL: ami-086e65e4ff927deb8
-    ap-southeast-3:
-      PerHost: ami-06cc46f316e1d86ac
-      BYOL: ami-0d36dbf5ce401f5c6
-    ap-south-1:
-      PerHost: ami-0b829ea7d1b0b14fd
-      BYOL: ami-0dd54e80fda0e246a
-    ap-northeast-1:
-      PerHost: ami-05f60a82d51585bc5
-      BYOL: ami-025acb8c553cf5e05
-    ap-northeast-2:
-      PerHost: ami-06e722380f30bfd1e
-      BYOL: ami-092e51fe6f295e133
-    ap-northeast-3:
-      PerHost: ami-0785d132e422e5358
-      BYOL: ami-028660ab615dc8f73
-    sa-east-1:
-      PerHost: ami-08474eebfd6344298
-      BYOL: ami-0ed475f38976369bb
-    eu-north-1:
-      PerHost: ami-093f9c69ef6079a6c
-      BYOL: ami-0b09316a4acfeede0
-    me-south-1:
-      PerHost: ami-0669bac9364c8579b
-      BYOL: ami-023101518a773e5b0
-    eu-south-1:
-      PerHost: ami-0dcf5ba570c03a52b
-      BYOL: ami-0c0ac20822f1e8a1c
-    us-gov-east-1:
-      PerHost: ami-089dfcdef997da562
-      BYOL: ami-0a0471fed2ef7d23b
-    us-gov-west-1:
-      PerHost: ami-0be6b6ae1b5fae6b4
-      BYOL: ami-01d83598c7bbd34d6
   DSMSIZE:
     us-east-1:
       PerHost: m5.xlarge
@@ -323,6 +296,7 @@ Mappings:
     us-gov-east-1:
       PerHost: m5.xlarge
       BYOL: m5.xlarge
+
   DSMDBMap:
     SQL:
       DbTypeString: Microsoft SQL Server
@@ -334,380 +308,87 @@ Mappings:
       DbTypeString: PostgreSQL
     AuroraPostgreSQL:
       DbTypeString: PostgreSQL
-  Scripts:
-    SetAiaSettings:
-      Script: |
-        #!/bin/bash
-        ## set-aia-settings <user> <pass> <elbfqdn> <consoleport>
-        user=$1
-        pass=$2
-        managerfqdn=$3
-        consoleport=$4
-        manager=localhost:${4}
 
+Conditions:
+  DBTypeIsSQL: !Equals
+    - !Ref DBPEngine
+    - SQL
 
-        SID=`curl -k -H "Content-Type: application/json" -X POST "https://${manager}/rest/authentication/login/primary" -d '{"dsCredentials":{"userName":"'${user}'","password":"'${pass}'"}}'`
+  IsFirstNode: !Equals
+    - !Ref DSMPMNode
+    - No
 
-        curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "systemSettingSet"' "https://${manager}/webservice/Manager" -d \
-        '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
-        '<soapenv:Header/>'\
-        '<soapenv:Body>'\
-        '<urn:systemSettingSet>'\
-        '<urn:editableSettings>'\
-        '<urn:settingKey>CONFIGURATION_AGENTINITIATEDACTIVATION</urn:settingKey>'\
-        '<urn:settingUnit>NONE</urn:settingUnit>'\
-        '<urn:settingValue>1</urn:settingValue>'\
-        '</urn:editableSettings>'\
-        '<urn:editableSettings>'\
-        '<urn:settingKey>CONFIGURATION_AGENTINITIATEDACTIVATIONACTIVEHOST</urn:settingKey>'\
-        '<urn:settingUnit>NONE</urn:settingUnit>'\
-        '<urn:settingValue>2</urn:settingValue>'\
-        '<urn:settingKey>CONFIGURATION_AGENTCOMMUNICATIONS</urn:settingKey>'\
-        '<urn:settingUnit>NONE</urn:settingUnit>'\
-        '<urn:settingValue>1</urn:settingValue>'\
-        '</urn:editableSettings>'\
-        '<urn:sID>'${SID}'</urn:sID>'\
-        '</urn:systemSettingSet>'\
-        '</soapenv:Body>'\
-        '</soapenv:Envelope'\>
+  DoSQLSetup: !And
+    - !Condition DBTypeIsSQL
+    - !Condition IsFirstNode
 
-        ## get Base Policy policyId
-        policyid=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileRetrieveByName"' "https://${manager}/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:securityProfileRetrieveByName><urn:name>Base Policy</urn:name><urn:sID>'${SID}'</urn:sID></urn:securityProfileRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)
+  UseBYOL: !Equals
+    - !Ref DSIPLicense
+    - BYOL
 
-        echo -e "policyid for Deep Security Manager Policy is $policyid\n" >> aiaSettings.log
+  UsePerHost: !Equals
+    - !Ref DSIPLicense
+    - PerHost
 
-        ## Set Communication Direction to Agent Initated on Base Policy
-            curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileSettingSet"' "https://${manager}/webservice/Manager" -d \
-        '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
-        '<soapenv:Header/>'\
-        '<soapenv:Body>'\
-        '<urn:securityProfileSettingSet>'\
-        '<urn:securityProfileID>'${policyid}'</urn:securityProfileID>'\
-        '<urn:editableSettings>'\
-        '<urn:settingKey>CONFIGURATION_AGENTCOMMUNICATIONS</urn:settingKey>'\
-        '<urn:settingUnit>NONE</urn:settingUnit>'\
-        '<urn:settingValue>1</urn:settingValue>'\
-        '</urn:editableSettings>'\
-        '<urn:sID>'${SID}'</urn:sID>'\
-        '</urn:securityProfileSettingSet>'\
-        '</soapenv:Body>'\
-        '</soapenv:Envelope>'
+  PPUNotSelected: !Or
+    - !Condition UsePerHost
+    - !Condition UseBYOL
 
-        ## get Deep Security Virtual Appliance policyId
-        policyid=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileRetrieveByName"' "https://${manager}/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:securityProfileRetrieveByName><urn:name>Deep Security Virtual Appliance</urn:name><urn:sID>'${SID}'</urn:sID></urn:securityProfileRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)
+  AddToELB: !Not
+    - !Equals
+      - !Ref DSIELB
+      - ""
 
-        echo -e "policyid for Deep Security Virtual Appliance Policy is $policyid\n" >> aiaSettings.log
+  WaitNotProvided: !Equals
+    - !Ref DSM1CompleteWaitHandle
+    - ""
 
-        ## Set Communication Direction to Bi-directional on DSVA policy
-            curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileSettingSet"' "https://${manager}/webservice/Manager" -d \
-        '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
-        '<soapenv:Header/>'\
-        '<soapenv:Body>'\
-        '<urn:securityProfileSettingSet>'\
-        '<urn:securityProfileID>'${policyid}'</urn:securityProfileID>'\
-        '<urn:editableSettings>'\
-        '<urn:settingKey>CONFIGURATION_AGENTCOMMUNICATIONS</urn:settingKey>'\
-        '<urn:settingUnit>NONE</urn:settingUnit>'\
-        '<urn:settingValue>3</urn:settingValue>'\
-        '</urn:editableSettings>'\
-        '<urn:sID>'${SID}'</urn:sID>'\
-        '</urn:securityProfileSettingSet>'\
-        '</soapenv:Body>'\
-        '</soapenv:Envelope>'
+  SQLplusELB: !And
+    - !Condition AddToELB
+    - !Condition DoSQLSetup
 
+  AddNodePlusELB: !And
+    - !Not
+      - !Condition IsFirstNode
+    - !Condition AddToELB
 
-        ## log out
-        curl -k -X DELETE https://localhost:$4/rest/authentication/logout?sID="$SID"
-        exit 
-    ConsoleListener:
-      Script: |
-        #!/bin/bash
-        ## create listenter on elb
-        ## createlistener <elb name> <elb fqdn> <dsm console port> <StackName> <firstelb>
-        if [ $5 -eq 1 ]; then
-          /usr/local/ssl/bin/openssl req -nodes -new -sha256 -newkey rsa:2048 -subj '/CN='DeepSecurityManager'/O=Trend Micro/OU=Deep Security Manager' -keyout /etc/cfn/privatekey -out /etc/cfn/csr;
-          /usr/local/ssl/bin/openssl x509 -req -days 3650 -in /etc/cfn/csr -signkey /etc/cfn/privatekey -out /etc/cfn/certificatebody;
-          aws iam upload-server-certificate --server-certificate-name DeepSecurityElbCertificate-$4 --certificate-body file:///etc/cfn/certificatebody --private-key file:///etc/cfn/privatekey --region $6
-        fi
+  KeyProvided: !Not
+    - !Equals
+      - !Ref DSIPLicenseKey
+      - XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
 
-        loop=1
+  IsFirstNodePlusELB: !And
+    - !Condition IsFirstNode
+    - !Condition AddToELB
 
-        certid=" "
-        until [ -n "$certid" -a "$certid" != " " ]
-        do
-          if [ $loop -eq 1 ]; then echo 'checking for cert availability in iam'; else echo 'cert not yet available in iam'; fi
-          loop=$((loop+1))
-          sleep 10
-          certid=$(aws iam get-server-certificate --server-certificate-name DeepSecurityElbCertificate-$4 --query ServerCertificate.ServerCertificateMetadata.Arn --output text --region $6)
-        done
+  AddAcAnswer: !And
+    - !Condition KeyProvided
+    - !Condition PPUNotSelected
 
-        loadbalancer=" "
-        loop=1
+  InternetFacingELB: !Equals
+    - !Ref DSELBPosture
+    - Internet-facing
 
-        until [ -n "$loadbalancercert" -a "$loadbalancercert" != " " ]
-        do
-          if [ $loop -eq 1 ]; then echo 'attempting to create listener'; else echo 'listener not yet created, retrying command'; fi
-          loop=$((loop+1))
-          sleep 10
-          aws elb create-load-balancer-listeners --load-balancer-name $1 --region $6 --listeners Protocol=HTTPS,LoadBalancerPort=$3,InstanceProtocol=HTTPS,InstancePort=$3,SSLCertificateId=$certid
-          loadbalancercert=$(aws elb describe-load-balancers --load-balancer-name $1 --region $6 --query 'LoadBalancerDescriptions[*].ListenerDescriptions[*].Listener.[SSLCertificateId]' --output text | grep $certid)
-        done
+  NetworkOnlyLicense: !Equals
+    - !Ref DSCLicenseType
+    - Network
 
-        echo 'load balancer listener created'
+  UseProxy: !Not
+    - !Equals
+      - !Ref DSProxyUrl
+      - ""
 
-        aws elb create-load-balancer-policy --load-balancer-name $1 --policy-name DSMConsoleStickySessions --policy-type-name LBCookieStickinessPolicyType --region $6 --policy-attributes AttributeName=CookieExpirationPeriod,AttributeValue=600
-        aws elb set-load-balancer-policies-of-listener --load-balancer-name $1 --load-balancer-port $3 --policy-names DSMConsoleStickySessions --region $6
-    EndMpWebInstaller:
-      Script: |
-        #!/bin/bash
-        sed -i "s|/opt/trend/dsm_app/start.sh &||g" /etc/rc.local
-        sed -i "s|/opt/trend/dsm_app/start.sh &||g" /etc/rc.d/rc.local
-        for pid in $(ps -ef | grep "/opt/trend/dsm_app/start.sh" | awk '{print $2}'); do kill -9 $pid; done
-        kill -9 $(netstat -plnt | grep :8080 | grep python | grep -oP '(\d*)\/python' | grep -oP '(\d*)')
-        exit 0
-    AddAwsAccountWithInstanceRole:
-      Script: |
-        #!/bin/bash
-        # cloudAccountCreateWithInstanceRole.sh dsmuser dsmpass manager address guiPort region tenant
-        username=$1
-        password=$2
-        tenant=$6
-        region=$5
+  GovCloudCondition: !Or
+    - !Equals
+      - !Ref AWS::Region
+      - us-gov-west-1
+    - !Equals
+      - !Ref AWS::Region
+      - us-gov-east-1
 
-        # replace this with your DSM IP or FQDN
-        DSMURL="$3:$4"
-
-        echo "#####Login to DSM"
-        if [[ -z ${tenant} ]]
-          then
-              SID=`curl -ks -H "Content-Type: application/json" -X POST "https://${DSMURL}/rest/authentication/login/primary" -d '{"dsCredentials":{"userName":"'${username}'","password":"'${password}'"}}'`
-          else
-              SID=`curl -ks -H "Content-Type: application/json" -X POST "https://${DSMURL}/rest/authentication/login" -d '{"dsCredentials":{"userName":"'${username}'","password":"'${password}'","tenantName":"'${tenant}'"}}'`
-        fi
-
-        curl -ks --cookie "sID=${SID}" -H "Content-Type: application/json" "Accept: application/json" -X POST "https://${DSMURL}/rest/cloudaccounts/aws" -d '{"AddAwsAccountRequest":{"useInstanceRole":true, "seedRegion":"'${region}'"}}'
-
-        curl -k -X DELETE https://${DSMURL}/rest/authentication/logout?sID=${SID}
-
-        unset SID
-        unset username
-        unset password
-    CreateDsmDb:
-      Script: |
-        #!/usr/bin/python
-        import pymssql
-        import argparse
-
-        ## create-DSM-SqlDB --user {username} --pass {password} --endpoint {sql fqdn} --dbname {name of db to create}
-
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--endpoint', action='store', dest='endpoint')
-        parser.add_argument('--user', action='store', dest='dbuser')
-        parser.add_argument('--pass', action='store', dest='dbpass')
-        parser.add_argument('--dbname', action='store', dest='dbname')
-        args = parser.parse_args()
-
-        conn = pymssql.connect(args.endpoint, args.dbuser, args.dbpass)
-        conn.autocommit(True)
-        cursor = conn.cursor()
-        cursor.execute("CREATE DATABASE %s" % args.dbname)
-        conn.close()
-        #done
-    SetLbSettings:
-      Script: |
-        #!/bin/bash
-        ##set-lb-settings <dsmuser> <dsmpass> <managerfqdn> <consoleport> <hbport>
-        user=$1
-        pass=$2
-        managerfqdn=$3
-        consoleport=$4
-        heartbeatport=$5
-        manager=localhost:${4}
-
-
-        SID=`curl -k -H "Content-Type: application/json" -X POST "https://${manager}/rest/authentication/login/primary" -d '{"dsCredentials":{"userName":"'${user}'","password":"'${pass}'"}}'`
-
-        curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "systemSettingSet"' "https://${manager}/webservice/Manager" -d \
-        '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
-        '<soapenv:Header/>'\
-        '<soapenv:Body>'\
-        '<urn:systemSettingSet>'\
-        '<urn:editableSettings>'\
-        '<urn:settingKey>CONFIGURATION_SYSTEMLOADBALANCERHEARTBEATHOSTNAME</urn:settingKey>'\
-        '<urn:settingUnit>NONE</urn:settingUnit>'\
-        '<urn:settingValue>'${managerfqdn}'</urn:settingValue>'\
-        '</urn:editableSettings>'\
-        '<urn:editableSettings>'\
-        '<urn:settingKey>CONFIGURATION_SYSTEMLOADBALANCERHEARTBEATPORT</urn:settingKey>'\
-        '<urn:settingUnit>PORT</urn:settingUnit>'\
-        '<urn:settingValue>'${heartbeatport}'</urn:settingValue>'\
-        '</urn:editableSettings>'\
-        '<urn:editableSettings>'\
-        '<urn:settingKey>CONFIGURATION_SYSTEMLOADBALANCERMANAGERHOSTNAME</urn:settingKey>'\
-        '<urn:settingUnit>NONE</urn:settingUnit>'\
-        '<urn:settingValue>'${managerfqdn}'</urn:settingValue>'\
-        '</urn:editableSettings>'\
-        '<urn:editableSettings>'\
-        '<urn:settingKey>CONFIGURATION_SYSTEMLOADBALANCERMANAGERPORT</urn:settingKey>'\
-        '<urn:settingUnit>PORT</urn:settingUnit>'\
-        '<urn:settingValue>'${consoleport}'</urn:settingValue>'\
-        '</urn:editableSettings>'\
-        '<urn:editableSettings>'\
-        '<urn:settingKey>CONFIGURATION_SYSTEMLOADBALANCERRELAYHOSTNAME</urn:settingKey>'\
-        '<urn:settingUnit>NONE</urn:settingUnit>'\
-        '<urn:settingValue>'${managerfqdn}'</urn:settingValue>'\
-        '</urn:editableSettings>'\
-        '<urn:sID>'${SID}'</urn:sID>'\
-        '</urn:systemSettingSet>'\
-        '</soapenv:Body>'\
-        '</soapenv:Envelope'\>
-    ReactivateManager:
-      Script: |
-        #!/bin/bash
-        ##reactivate-manager <username> <password> <console-port>
-        dnsHostNamesOn=
-        ## get a token
-        SID=`curl -k -H "Content-Type: application/json" -X POST "https://localhost:$3/rest/authentication/login/primary" -d '{"dsCredentials":{"userName":"'$1'","password":"'$2'"}}'`
-
-        ## get public hostname from metadata
-        TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60"`
-        public_hostname=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/public-hostname)
-        echo -e "public hostname returned from meta-data endpoint was \"$public_hostname\"\n" > mgract.log
-
-        if [ -z $public_hostname ]
-          then
-            dnsHostnamesOn=false
-            echo -e "dnsHostnamesOn=false\n" >> mgract.log
-          else
-            dnsHostnamesOn=true
-            echo -e "dnsHostnamesOn=true\n" >> mgract.log
-        fi
-
-        ## delete host object matching local-hostname metadata
-        #curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostdelete"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostDelete><urn:ids>'$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$(curl http://169.254.169.254/latest/meta-data/local-hostname)'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostDelete></soapenv:Body></soapenv:Envelope>'>>mgract.log
-        #echo -e "\n" >> mgract.log
-        ## delete host object matching local hostname from hostname command just to be thorough
-        #curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostdelete"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostDelete><urn:ids>'$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'${hostname}'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostDelete></soapenv:Body></soapenv:Envelope>'>>mgract.log
-        #echo -e "\n" >> mgract.log
-        ## delete host object matching local hostname from hostname command just to be thorough
-        #curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostdelete"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostDelete><urn:ids>'$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$(curl http://169.254.169.254/latest/meta-data/local-ipv4)'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostDelete></soapenv:Body></soapenv:Envelope>'>>mgract.log
-        #echo -e "\n" >> mgract.log
-        ## get Deep Security Manager policyId
-        policyid=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:securityProfileRetrieveByName><urn:name>Deep Security Manager</urn:name><urn:sID>'$SID'</urn:sID></urn:securityProfileRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)
-
-        echo -e "policyid for Deep Security Manager Policy is $policyid\n" >> mgract.log
-
-        ## If the Manager node is launched into a VPC with dns names turned off, we'll need to use AIA to get the Manager nodes activated
-        case $dnsHostnamesOn in    
-          false)
-            echo -e "public hostname returned from meta-data endpoint was zero length; using AIA\n" >> mgract.log
-
-        ## Set Communication Direction to Agent Initated on Deep Security Manager Policy
-            curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileSettingGet"' "https://localhost:$3/webservice/Manager" -d \
-        '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
-        '<soapenv:Header/>'\
-        '<soapenv:Body>'\
-        '<urn:securityProfileSettingSet>'\
-        '<urn:securityProfileID>'${policyid}'</urn:securityProfileID>'\
-        '<urn:editableSettings>'\
-        '<urn:settingKey>CONFIGURATION_AGENTCOMMUNICATIONS</urn:settingKey>'\
-        '<urn:settingUnit>NONE</urn:settingUnit>'\
-        '<urn:settingValue>1</urn:settingValue>'\
-        '</urn:editableSettings>'\
-        '<urn:sID>'${SID}'</urn:sID>'\
-        '</urn:securityProfileSettingSet>'\
-        '</soapenv:Body>'\
-        '</soapenv:Envelope>'
-
-        ## AIA for manager node
-        #    /opt/ds_agent/dsa_control -r
-        #    /opt/ds_agent/dsa_control -a dsm://localhost:4120/ "policyid:${policyid}"
-        ## get hostid for this manager
-        #    publicip_hostId=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$(curl http://169.254.169.254/latest/meta-data/public-ipv4)'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)
-        ## enable relay for this agent
-        #curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostSettingSet"' "https://localhost:$3/webservice/Manager" -d \
-        #'<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
-        #'<soapenv:Header/>'\
-        #'<soapenv:Body>'\
-        #'<urn:hostSettingSet>'\
-        #'<urn:hostID>'$publicip_hostId'</urn:hostID>'\
-        #'<urn:editableSettings>'\
-        #'<urn:settingKey>CONFIGURATION_RELAYSTATE</urn:settingKey>'\
-        #'<urn:settingUnit>NONE</urn:settingUnit>'\
-        #'<urn:settingValue>true</urn:settingValue>'\
-        #'</urn:editableSettings>'\
-        #'<urn:sID>'${SID}'</urn:sID>'\
-        #'</urn:hostSettingSet>'\
-        #'</soapenv:Body>'\
-        #'</soapenv:Envelope>'
-
-            ;;
-          true)
-            echo -e "public hostname returned from meta-data endpoint was non-zero length; using MIA\n" >> mgract.log
-
-        ## get hostId of object matcihng public-hostname metadata
-            public_hostId=$(curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostRetrieveByName"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostRetrieveByName><urn:hostname>'$public_hostname'</urn:hostname><urn:sID>'$SID'</urn:sID></urn:hostRetrieveByName></soapenv:Body></soapenv:Envelope>' | xml_grep ID --text_only)
-            echo -e "public host Id returned from manager was $public_hostId\n" >> mgract.log
-        ## Starting in stack v3.1 comm is set aic for everything - set managers back to bi-directional in VPCs with dnshostnames turned on
-            curl -ks -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileSettingGet"' "https://localhost:$3/webservice/Manager" -d \
-        '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
-        '<soapenv:Header/>'\
-        '<soapenv:Body>'\
-        '<urn:securityProfileSettingSet>'\
-        '<urn:securityProfileID>'${policyid}'</urn:securityProfileID>'\
-        '<urn:editableSettings>'\
-        '<urn:settingKey>CONFIGURATION_AGENTCOMMUNICATIONS</urn:settingKey>'\
-        '<urn:settingUnit>NONE</urn:settingUnit>'\
-        '<urn:settingValue>3</urn:settingValue>'\
-        '</urn:editableSettings>'\
-        '<urn:sID>'${SID}'</urn:sID>'\
-        '</urn:securityProfileSettingSet>'\
-        '</soapenv:Body>'\
-        '</soapenv:Envelope>'
-
-        ## assign Deep Security Manager Policy to that hostId
-        #    curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "securityProfileAssignToHost"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:securityProfileAssignToHost><urn:securityProfileID>'$policyid'</urn:securityProfileID><urn:hostIDs>'$public_hostId'</urn:hostIDs><urn:sID>'$SID'</urn:sID></urn:securityProfileAssignToHost></soapenv:Body></soapenv:Envelope>'>>mgract.log
-
-        ## reset agent because current securityProfile is AIC
-        #    /opt/ds_agent/dsa_control -r
-
-        ## activate that hostId
-        #    curl -k -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostAgentActivate"' "https://localhost:$3/webservice/Manager" -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager"><soapenv:Header/><soapenv:Body><urn:hostAgentActivate><urn:ids>'$public_hostId'</urn:ids><urn:sID>'$SID'</urn:sID></urn:hostAgentActivate></soapenv:Body></soapenv:Envelope>'>>mgract.log
-        #    echo -e "\n" >> mgract.log
-        #    echo -e "enable relay" >> mgract.log
-        #    echo -e "\n" >> mgract.log
-        ## enable relay for this agent
-        #    curl -k -v -H "Content-Type: text/xml;charset=UTF-8" -H 'SOAPAction: "hostSettingSet"' "https://localhost:$3/webservice/Manager" -d \
-        #'<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Manager">'\
-        #'<soapenv:Header/>'\
-        #'<soapenv:Body>'\
-        #'<urn:hostSettingSet>'\
-        #'<urn:hostID>'$public_hostId'</urn:hostID>'\
-        #'<urn:editableSettings>'\
-        #'<urn:settingKey>CONFIGURATION_RELAYSTATE</urn:settingKey>'\
-        #'<urn:settingUnit>NONE</urn:settingUnit>'\
-        #'<urn:settingValue>true</urn:settingValue>'\
-        #'</urn:editableSettings>'\
-        #'<urn:sID>'${SID}'</urn:sID>'\
-        #'</urn:hostSettingSet>'\
-        #'</soapenv:Body>'\
-        #'</soapenv:Envelope>' >>mgract.log
-
-        esac
-
-        ## log out
-        curl -k -X DELETE https://localhost:$3/rest/authentication/logout?sID="$SID"
-        exit 0
 Resources:
   DSMRole:
     Type: AWS::IAM::Role
-    Metadata:
-      cfn-lint:
-        config:
-          ignore_checks:
-            - EIAMPolicyWildcardResource
-          ignore_reasons:
-            EIAMPolicyWildcardResource: Those actions of ec2, iam and elasticloadbalancing:DescribeLoadBalancers does not support resource-level permissions, it only supports the ” *” in the resource element.
     Properties:
       AssumeRolePolicyDocument:
         Statement:
@@ -717,117 +398,115 @@ Resources:
                 - ec2.amazonaws.com
             Action:
               - sts:AssumeRole
-      ManagedPolicyArns:
-        Fn::If:
-          - UsePerHost
-          - - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/AWSMarketplaceMeteringFullAccess
-          - Ref: AWS::NoValue
+      ManagedPolicyArns: !If
+        - UsePerHost
+        - - !Sub arn:${AWS::Partition}:iam::aws:policy/AWSMarketplaceMeteringFullAccess
+        - !Ref AWS::NoValue
       Path: /
       Policies:
-        - Fn::If:
-            - AddToELB
-            - PolicyName: DeepSecurityManagerInstancePolicy
-              PolicyDocument:
-                Statement:
-                  - Effect: Allow
-                    Action:
-                      - ec2:DescribeLicenses
-                      - ec2:DescribeInstances
-                      - ec2:DescribeImages
-                      - ec2:DescribeRegions
-                      - ec2:DescribeVpcs
-                      - ec2:DescribeSubnets
-                      - ec2:DescribeTags
-                      - ec2:DescribeAvailabilityZones
-                      - ec2:DescribeSecurityGroups
-                      - iam:ListAccountAliases
-                      - elasticloadbalancing:DescribeLoadBalancers
-                    Resource: '*'
-                  - Effect: Allow
-                    Action:
-                      - elasticloadbalancing:RegisterInstancesWithLoadBalancer
-                      - elasticloadbalancing:CreateLoadBalancerListeners
-                      - elasticloadbalancing:CreateLoadBalancerPolicy
-                      - elasticloadbalancing:SetLoadBalancerPoliciesOfListener
-                    Resource:
-                      Fn::Join:
-                        - ''
-                        - - Fn::If:
-                              - GovCloudCondition
-                              - 'arn:aws-us-gov:elasticloadbalancing:'
-                              - 'arn:aws:elasticloadbalancing:'
-                          - Ref: AWS::Region
-                          - ':'
-                          - Ref: AWS::AccountId
-                          - :loadbalancer/
-                          - Ref: DSIELB
-                  - Effect: Allow
-                    Action:
-                      - sts:AssumeRole
-                    Resource:
-                      Fn::Join:
-                        - ''
-                        - - Fn::If:
-                              - GovCloudCondition
-                              - 'arn:aws-us-gov:iam::'
-                              - 'arn:aws:iam::'
-                          - Ref: AWS::AccountId
-                          - :role/*
-                  - Effect: Allow
-                    Action:
-                      - iam:UploadServerCertificate
-                      - iam:GetServerCertificate
-                    Resource:
-                      Fn::Join:
-                        - ''
-                        - - Fn::If:
-                              - GovCloudCondition
-                              - 'arn:aws-us-gov:iam::'
-                              - 'arn:aws:iam::'
-                          - Ref: AWS::AccountId
-                          - :server-certificate/DeepSecurityElbCertificate-
-                          - Ref: AWS::StackName
-            - PolicyName: DeepSecurityManagerInstancePolicy
-              PolicyDocument:
-                Statement:
-                  - Effect: Allow
-                    Action:
-                      - ec2:DescribeLicenses
-                      - ec2:DescribeImages
-                      - ec2:DescribeInstances
-                      - ec2:DescribeRegions
-                      - ec2:DescribeSubnets
-                      - ec2:DescribeTags
-                      - ec2:DescribeVpcs
-                      - iam:ListAccountAliases
-                      - ec2:DescribeAvailabilityZones
-                      - ec2:DescribeSecurityGroups
-                      - iam:ListAccountAliases
-                    Resource: '*'
-                  - Effect: Allow
-                    Action:
-                      - sts:AssumeRole
-                    Resource:
-                      Fn::Join:
-                        - ''
-                        - - Fn::If:
-                              - GovCloudCondition
-                              - 'arn:aws-us-gov:iam::'
-                              - 'arn:aws:iam::'
-                          - Ref: AWS::AccountId
-                          - :role/*
+        - !If
+          - AddToELB
+          - PolicyName: DeepSecurityManagerInstancePolicy
+            PolicyDocument:
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - license-manager:ListLicenses
+                    - ec2:DescribeInstances
+                    - ec2:DescribeImages
+                    - ec2:DescribeRegions
+                    - ec2:DescribeVpcs
+                    - ec2:DescribeSubnets
+                    - ec2:DescribeTags
+                    - ec2:DescribeAvailabilityZones
+                    - ec2:DescribeSecurityGroups
+                    - iam:ListAccountAliases
+                    - elasticloadbalancing:DescribeLoadBalancers
+                  Resource: '*'
+                - Effect: Allow
+                  Action:
+                    - elasticloadbalancing:RegisterInstancesWithLoadBalancer
+                    - elasticloadbalancing:CreateLoadBalancerListeners
+                    - elasticloadbalancing:CreateLoadBalancerPolicy
+                    - elasticloadbalancing:SetLoadBalancerPoliciesOfListener
+                  Resource: !Join
+                    - ""
+                    - - !If
+                        - GovCloudCondition
+                        - 'arn:aws-us-gov:elasticloadbalancing:'
+                        - 'arn:aws:elasticloadbalancing:'
+                      - !Ref AWS::Region
+                      - ':'
+                      - !Ref AWS::AccountId
+                      - :loadbalancer/
+                      - !Ref DSIELB
+                - Effect: Allow
+                  Action:
+                    - sts:AssumeRole
+                  Resource: !Join
+                    - ""
+                    - - !If
+                        - GovCloudCondition
+                        - 'arn:aws-us-gov:iam::'
+                        - 'arn:aws:iam::'
+                      - !Ref AWS::AccountId
+                      - :role/*
+                - Effect: Allow
+                  Action:
+                    - iam:UploadServerCertificate
+                    - iam:GetServerCertificate
+                  Resource: !Join
+                    - ""
+                    - - !If
+                        - GovCloudCondition
+                        - 'arn:aws-us-gov:iam::'
+                        - 'arn:aws:iam::'
+                      - !Ref AWS::AccountId
+                      - :server-certificate/DeepSecurityElbCertificate-
+                      - !Ref AWS::StackName
+          - PolicyName: DeepSecurityManagerInstancePolicy
+            PolicyDocument:
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - license-manager:ListLicenses
+                    - ec2:DescribeImages
+                    - ec2:DescribeInstances
+                    - ec2:DescribeRegions
+                    - ec2:DescribeSubnets
+                    - ec2:DescribeTags
+                    - ec2:DescribeVpcs
+                    - iam:ListAccountAliases
+                    - ec2:DescribeAvailabilityZones
+                    - ec2:DescribeSecurityGroups
+                    - iam:ListAccountAliases
+                  Resource: '*'
+                - Effect: Allow
+                  Action:
+                    - sts:AssumeRole
+                  Resource: !Join
+                    - ""
+                    - - !If
+                        - GovCloudCondition
+                        - 'arn:aws-us-gov:iam::'
+                        - 'arn:aws:iam::'
+                      - !Ref AWS::AccountId
+                      - :role/*
+
   DSMProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Path: /
       Roles:
-        - Ref: DSMRole
+        - !Ref DSMRole
+
   DSMLaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
       LaunchTemplateData:
         MetadataOptions:
           HttpTokens: required
+
   DSM:
     Type: AWS::EC2::Instance
     Metadata:
@@ -860,365 +539,289 @@ Resources:
         setup:
           files:
             /etc/cfn/cfn-hup.conf:
-              content:
-                Fn::Sub: "[main]\nstack=${AWS::StackId}\nregion=${AWS::Region}\n"
-              mode: '000400'
+              content: !Sub |
+                [main]
+                stack=${AWS::StackId}
+                region=${AWS::Region}
+              mode: "000400"
               owner: root
               group: root
             /etc/cfn/hooks.d/cfn-auto-reloader.conf:
-              content:
-                Fn::Sub: "[cfn-auto-reloader-hook]\ntriggers=post.update\npath=Resources.DSM.Metadata.AWS::CloudFormation::Init\naction=/opt/aws/bin/cfn-init -v -c updateDSM --stack ${AWS::StackId} --resource\
-                  \ DSM1 --region ${AWS::Region} runas=root\n"
+              content: !Sub |
+                [cfn-auto-reloader-hook]
+                triggers=post.update
+                path=Resources.DSM.Metadata.AWS::CloudFormation::Init
+                action=/opt/aws/bin/cfn-init -v -c updateDSM --stack ${AWS::StackId} --resource DSM1 --region ${AWS::Region} runas=root
           services:
             sysvinit:
               cfn-hup:
-                enabled: 'true'
-                ensureRunning: 'true'
+                enabled: "true"
+                ensureRunning: "true"
                 files:
                   - /etc/cfn/cfn-hup.conf
                   - /etc/cfn/hooks.d/cfn-auto-reloader.conf
         prepDSMInstall:
           files:
             /etc/cfn/dsmConfiguration.properties:
-              content:
-                Fn::Sub:
-                  - "${LicenseConfig}\nCredentialsScreen.Administrator.Username=${DSCAdminName}\nCredentialsScreen.Administrator.Password=${DSCAdminPassword}\nCredentialsScreen.UseStrongPasswords=False\n\
-                    Dinstall4j.language=en\nDatabaseScreen.DatabaseType=${DBTypeConfig}\nDatabaseScreen.Hostname=${DBPRDSEndpoint}\nDatabaseScreen.DatabaseName=${DBPName}\nDatabaseScreen.Transport=TCP\n\
-                    DatabaseScreen.Username=${DBICAdminName}\nDatabaseScreen.Password=${DBICAdminPassword}\nAddressAndPortsScreen.ManagerPort=${DSIPGUIPort}\nAddressAndPortsScreen.HeartbeatPort=${DSIPHeartbeatPort}\n\
-                    ${NodeConfig}\nSecurityUpdateScreen.UpdateComponents=true\nSoftwareUpdateScreen.UpdateSoftware=True\nSmartProtectionNetworkScreen.EnableFeedback=false\nSmartProtectionNetworkScreen.IndustryType=blank\n\
-                    RelayScreen.Install=True\n${softwareUpdateScreenProxyConfig}\n${securityUpdateScreenProxyConfig}\nOverride.Automation=True\n"
-                  - LicenseConfig:
-                      Fn::If:
-                        - AddAcAnswer
-                        - Fn::If:
-                            - NetworkOnlyLicense
-                            - Fn::Sub: LicenseScreen.License.1=${DSIPLicenseKey}
-                            - Fn::Sub: LicenseScreen.License.-1=${DSIPLicenseKey}
-                        - ''
-                    DBTypeConfig:
-                      Fn::FindInMap:
-                        - DSMDBMap
-                        - Ref: DBPEngine
-                        - DbTypeString
-                    NodeConfig:
-                      Fn::If:
-                        - IsFirstNode
-                        - AddressAndPortsScreen.NewNode=false
-                        - "AddressAndPortsScreen.NewNode=true\nUpgradeVerificationScreen.Overwrite=False\n"
-                    softwareUpdateScreenProxyConfig:
-                      Fn::If:
-                        - UseProxy
-                        - Fn::Sub:
-                            - "SoftwareUpdateScreen.Proxy=True\nSoftwareUpdateScreen.ProxyType=HTTP\nSoftwareUpdateScreen.ProxyAddress=${softwareUpdateScreenProxyHost}\nSoftwareUpdateScreen.ProxyPort=${softwareUpdateScreenProxyPort}\n\
-                              SoftwareUpdateScreen.ProxyAuthentication=\"False\"\nSoftwareUpdateScreen.ProxyUsername=\"\"\nSoftwareUpdateScreen.ProxyPassword=\"\"\n"
-                            - softwareUpdateScreenProxyHost:
-                                Fn::Select:
-                                  - 0
-                                  - Fn::Split:
-                                      - ':'
-                                      - Fn::Sub: ${DSProxyUrl}
-                              softwareUpdateScreenProxyPort:
-                                Fn::Select:
-                                  - 1
-                                  - Fn::Split:
-                                      - ':'
-                                      - Fn::Sub: ${DSProxyUrl}
-                        - ''
-                    securityUpdateScreenProxyConfig:
-                      Fn::If:
-                        - UseProxy
-                        - Fn::Sub:
-                            - "SecurityUpdateScreen.Proxy=True\nSecurityUpdateScreen.ProxyType=HTTP\nSecurityUpdateScreen.ProxyAddress=${securityUpdateScreenProxyHost}\nSecurityUpdateScreen.ProxyPort=${securityUpdateScreenProxyPort}\n\
-                              SecurityUpdateScreen.ProxyAuthentication=\"False\"\nSecurityUpdateScreen.ProxyUsername=\"\"\nSecurityUpdateScreen.ProxyPassword=\"\"\n"
-                            - securityUpdateScreenProxyHost:
-                                Fn::Select:
-                                  - 0
-                                  - Fn::Split:
-                                      - ':'
-                                      - Fn::Sub: ${DSProxyUrl}
-                              securityUpdateScreenProxyPort:
-                                Fn::Select:
-                                  - 1
-                                  - Fn::Split:
-                                      - ':'
-                                      - Fn::Sub: ${DSProxyUrl}
-                        - ''
+              content: !Sub
+                - |
+                  ${LicenseConfig}
+                  CredentialsScreen.Administrator.Username=${DSCAdminName}
+                  CredentialsScreen.Administrator.Password=${DSCAdminPassword}
+                  CredentialsScreen.UseStrongPasswords=False
+                  Dinstall4j.language=en
+                  DatabaseScreen.DatabaseType=${DBTypeConfig}
+                  DatabaseScreen.Hostname=${DBPRDSEndpoint}
+                  DatabaseScreen.DatabaseName=${DBPName}
+                  DatabaseScreen.Transport=TCP
+                  DatabaseScreen.Username=${DBICAdminName}
+                  DatabaseScreen.Password=${DBICAdminPassword}
+                  AddressAndPortsScreen.ManagerPort=${DSIPGUIPort}
+                  AddressAndPortsScreen.HeartbeatPort=${DSIPHeartbeatPort}
+                  ${NodeConfig}
+                  SecurityUpdateScreen.UpdateComponents=true
+                  SoftwareUpdateScreen.UpdateSoftware=True
+                  SmartProtectionNetworkScreen.EnableFeedback=false
+                  SmartProtectionNetworkScreen.IndustryType=blank
+                  RelayScreen.Install=True
+                  ${softwareUpdateScreenProxyConfig}
+                  ${securityUpdateScreenProxyConfig}
+                  Override.Automation=True
+                - LicenseConfig: !If
+                    - AddAcAnswer
+                    - !If
+                      - NetworkOnlyLicense
+                      - !Sub LicenseScreen.License.1=${DSIPLicenseKey}
+                      - !Sub LicenseScreen.License.-1=${DSIPLicenseKey}
+                    - ""
+                  DBTypeConfig: !FindInMap
+                    - DSMDBMap
+                    - !Ref DBPEngine
+                    - DbTypeString
+                  NodeConfig: !If
+                    - IsFirstNode
+                    - AddressAndPortsScreen.NewNode=false
+                    - |
+                      AddressAndPortsScreen.NewNode=true
+                      UpgradeVerificationScreen.Overwrite=False
+                  softwareUpdateScreenProxyConfig: !If
+                    - UseProxy
+                    - !Sub
+                      - |
+                        SoftwareUpdateScreen.Proxy=True
+                        SoftwareUpdateScreen.ProxyType=HTTP
+                        SoftwareUpdateScreen.ProxyAddress=${softwareUpdateScreenProxyHost}
+                        SoftwareUpdateScreen.ProxyPort=${softwareUpdateScreenProxyPort}
+                        SoftwareUpdateScreen.ProxyAuthentication="False"
+                        SoftwareUpdateScreen.ProxyUsername=""
+                        SoftwareUpdateScreen.ProxyPassword=""
+                      - softwareUpdateScreenProxyHost: !Select
+                          - 0
+                          - !Split
+                            - ':'
+                            - !Sub ${DSProxyUrl}
+                        softwareUpdateScreenProxyPort: !Select
+                          - 1
+                          - !Split
+                            - ':'
+                            - !Sub ${DSProxyUrl}
+                    - ""
+                  securityUpdateScreenProxyConfig: !If
+                    - UseProxy
+                    - !Sub
+                      - |
+                        SecurityUpdateScreen.Proxy=True
+                        SecurityUpdateScreen.ProxyType=HTTP
+                        SecurityUpdateScreen.ProxyAddress=${securityUpdateScreenProxyHost}
+                        SecurityUpdateScreen.ProxyPort=${securityUpdateScreenProxyPort}
+                        SecurityUpdateScreen.ProxyAuthentication="False"
+                        SecurityUpdateScreen.ProxyUsername=""
+                        SecurityUpdateScreen.ProxyPassword=""
+                      - securityUpdateScreenProxyHost: !Select
+                          - 0
+                          - !Split
+                            - ':'
+                            - !Sub ${DSProxyUrl}
+                        securityUpdateScreenProxyPort: !Select
+                          - 1
+                          - !Split
+                            - ':'
+                            - !Sub ${DSProxyUrl}
+                    - ""
               owner: root
-              mode: '000600'
+              mode: "000600"
         installDSM:
           commands:
             0-sethostnameinprops:
-              command: "TOKEN=`curl -X PUT \"http://169.254.169.254/latest/api/token\" -H \"X-aws-ec2-metadata-token-ttl-seconds: 60\"`\nmanagerAddress=`curl -H \"X-aws-ec2-metadata-token: $TOKEN\" http://169.254.169.254/latest/meta-data/local-ipv4/`\n\
-                echo \"AddressAndPortsScreen.ManagerAddress=$managerAddress\" >> /etc/cfn/dsmConfiguration.properties\n"
-              ignoreErrors: 'false'
+              command: |
+                TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60"`
+                managerAddress=`curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/local-ipv4/`
+                echo "AddressAndPortsScreen.ManagerAddress=$managerAddress" >> /etc/cfn/dsmConfiguration.properties
+              ignoreErrors: "false"
             1-install-DSM:
               command: cd /opt/trend/packages/dsm/default/; sh /opt/trend/packages/dsm/default/ManagerAWS.sh -q -console -varfile /etc/cfn/dsmConfiguration.properties >> /tmp/dsmInstallLog
-              ignoreErrors: 'false'
+              ignoreErrors: "false"
             6-install-xml_grep:
               command: yum -y install perl-XML-Twig
         addCloudAccount:
           files:
             /etc/cfn/set-aia-settings.sh:
-              content:
-                Fn::FindInMap: [Scripts, SetAiaSettings, Script]
+              source: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}scripts/set-aia-settings.sh
               owner: root
-              mode: '000700'
+              mode: "000700"
             /etc/cfn/end-mp-web-installer.sh:
-              content:
-                Fn::FindInMap: [Scripts, EndMpWebInstaller, Script]
+              source: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}scripts/end-mp-web-installer.sh
               owner: root
-              mode: '000700'
+              mode: "000700"
             /etc/cfn/add-aws-account-with-instance-role.sh:
-              content:
-                Fn::FindInMap: [Scripts, AddAwsAccountWithInstanceRole, Script]
+              source: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}scripts/add-aws-account-with-instance-role.sh
               owner: root
-              mode: '000700'
+              mode: "000700"
           commands:
             5-check-service:
-              command:
-                Fn::Sub: until curl -vk https://127.0.0.1:${DSIPGUIPort}/rest/status/manager/current/ping; do echo "manager not started yet" >> /tmp/4-check-service; service dsm_s start >> /tmp/4-check-service;sleep
-                  30; done
+              command: !Sub until curl -vk https://127.0.0.1:${DSIPGUIPort}/rest/status/manager/current/ping; do echo "manager not started yet" >> /tmp/4-check-service; service dsm_s start >> /tmp/4-check-service;sleep 30; done
             7-set-aia-settings:
-              command:
-                Fn::Sub: /etc/cfn/set-aia-settings.sh ${DSCAdminName} ${DSCAdminPassword} - ${DSIPGUIPort} >> /tmp/set-aia-settings.log
+              command: !Sub /etc/cfn/set-aia-settings.sh ${DSCAdminName} ${DSCAdminPassword} - ${DSIPGUIPort} >> /tmp/set-aia-settings.log
             8-addCloudAccount:
-              command:
-                Fn::Sub: /etc/cfn/add-aws-account-with-instance-role.sh ${DSCAdminName} ${DSCAdminPassword} localhost ${DSIPGUIPort} ${AWS::Region}
-              ignoreErrors: 'False'
+              command: !Sub /etc/cfn/add-aws-account-with-instance-role.sh ${DSCAdminName} ${DSCAdminPassword} localhost ${DSIPGUIPort} ${AWS::Region}
+              ignoreErrors: "False"
             10-endWebInstaller:
               command: /etc/cfn/end-mp-web-installer.sh
         sqlSetup:
           files:
             /etc/cfn/rhel-scripts/create-dsm-db.py:
-              content:
-                Fn::FindInMap: [Scripts, CreateDsmDb, Script]
+              source: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}scripts/create-dsm-db.py
               owner: root
-              mode: '000755'
+              mode: "000755"
           commands:
             1-create-db:
-              command:
-                Fn::Sub: cd /etc/cfn/rhel-scripts; python3 create-dsm-db.py --user ${DBICAdminName} --pass ${DBICAdminPassword} --endpoint ${DBPRDSEndpoint} --dbname ${DBPName}
-              ignoreErrors: 'false'
+              command: !Sub cd /etc/cfn/rhel-scripts; python3 create-dsm-db.py --user ${DBICAdminName} --pass ${DBICAdminPassword} --endpoint ${DBPRDSEndpoint} --dbname ${DBPName}
+              ignoreErrors: "false"
         addToELB:
           commands:
             0-add-instance-to-elb:
-              command:
-                Fn::Sub: "TOKEN=`curl -X PUT \"http://169.254.169.254/latest/api/token\" -H \"X-aws-ec2-metadata-token-ttl-seconds: 60\"`\naws elb register-instances-with-load-balancer --load-balancer ${DSIELB}\
-                  \ --instances $(curl -H \"X-aws-ec2-metadata-token: $TOKEN\" http://169.254.169.254/latest/meta-data/instance-id/) --region ${AWS::Region}\n"
-              ignoreErrors: 'false'
+              command: !Sub |
+                TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60"`
+                aws elb register-instances-with-load-balancer --load-balancer ${DSIELB} --instances $(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id/) --region ${AWS::Region}
+              ignoreErrors: "false"
         fixManagerLoadBalancerSettings:
           files:
             /etc/cfn/create-console-listener.sh:
-              content: 
-                Fn::FindInMap: [Scripts, ConsoleListener, Script]
+              source: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}scripts/create-console-listener.sh
               owner: root
-              mode: '000700'
+              mode: "000700"
             /etc/cfn/set-lb-settings.sh:
-              content:
-                Fn::FindInMap: [Scripts, SetLbSettings, Script]
+              source: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}scripts/set-lb-settings.sh
               owner: root
-              mode: '000700'
+              mode: "000700"
           commands:
             1-setup-elb-listener:
-              command:
-                Fn::Sub: /etc/cfn/create-console-listener.sh ${DSIELB} ${DSIELBFQDN} ${DSIPGUIPort} ${AWS::StackName} 1 ${AWS::Region} >> /tmp/listener.log
+              command: !Sub /etc/cfn/create-console-listener.sh ${DSIELB} ${DSIELBFQDN} ${DSIPGUIPort} ${AWS::StackName} 1 ${AWS::Region} >> /tmp/listener.log
             4-set-load-balancer-settings:
-              command:
-                Fn::Sub: /etc/cfn/set-lb-settings.sh ${DSCAdminName} ${DSCAdminPassword} ${DSIELBFQDN} ${DSIPGUIPort} ${DSIPHeartbeatPort} >> /tmp/set-lb-settings.log
+              command: !Sub /etc/cfn/set-lb-settings.sh ${DSCAdminName} ${DSCAdminPassword} ${DSIELBFQDN} ${DSIPGUIPort} ${DSIPHeartbeatPort} >> /tmp/set-lb-settings.log
         fixManagerLocalLoadBalancerHostsFile:
           commands:
             1-setHostsFileELB:
-              command:
-                Fn::Sub: "TOKEN=`curl -X PUT \"http://169.254.169.254/latest/api/token\" -H \"X-aws-ec2-metadata-token-ttl-seconds: 60\"`\necho \"$(curl -H \"X-aws-ec2-metadata-token: $TOKEN\" http://169.254.169.254/latest/meta-data/local-ipv4/)\
-                  \ ${DSIELBFQDN}\" >> /etc/hosts\n"
+              command: !Sub |
+                TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60"`
+                echo "$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/local-ipv4/) ${DSIELBFQDN}" >> /etc/hosts
         fixManagerHostObject:
           files:
             /etc/cfn/reactivate-manager.sh:
-              content:
-                Fn::FindInMap: [Scripts, ReactivateManager, Script]
+              source: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}scripts/reactivate-manager.sh
               owner: root
-              mode: '000700'
+              mode: "000700"
           commands:
             1-reactivate-manager.sh:
-              command:
-                Fn::Sub: /etc/cfn/reactivate-manager.sh >> /etc/cfn/reactivate-manager.log ${DSCAdminName} ${DSCAdminPassword} ${DSIPGUIPort}
+              command: !Sub /etc/cfn/reactivate-manager.sh >> /etc/cfn/reactivate-manager.log ${DSCAdminName} ${DSCAdminPassword} ${DSIPGUIPort}
     Properties:
-      IamInstanceProfile:
-        Ref: DSMProfile
+      IamInstanceProfile: !Ref DSMProfile
       LaunchTemplate:
-        LaunchTemplateId:
-          Ref: DSMLaunchTemplate
-        Version: '1'
-      ImageId:
-        Fn::FindInMap:
-          - DSMAMI
-          - Ref: AWS::Region
-          - Ref: DSIPLicense
-      InstanceType:
-        Fn::If:
-          - PPUNotSelected
-          - Ref: DSIPInstanceType
-          - Fn::FindInMap:
-              - DSMSIZE
-              - Ref: AWS::Region
-              - Ref: DSIPLicense
+        LaunchTemplateId: !Ref DSMLaunchTemplate
+        Version: "1"
+      ImageId: !Ref ImageId
+      InstanceType: !If
+        - PPUNotSelected
+        - !Ref DSIPInstanceType
+        - !FindInMap
+          - DSMSIZE
+          - !Ref AWS::Region
+          - !Ref DSIPLicense
       NetworkInterfaces:
-        - DeviceIndex: '0'
-          SubnetId:
-            Ref: DSISubnetID
-          AssociatePublicIpAddress:
-            Fn::If:
-              - InternetFacingELB
-              - true
-              - false
+        - DeviceIndex: "0"
+          SubnetId: !Ref DSISubnetID
+          AssociatePublicIpAddress: !If
+            - InternetFacingELB
+            - true
+            - false
           GroupSet:
-            - Ref: DSMSG
+            - !Ref DSMSG
       Tags:
         - Key: Name
           Value: Deep Security Manager
-      KeyName:
-        Ref: AWSIKeyPairName
-      UserData:
-        Fn::Base64:
-          Fn::Sub:
-            - "#!/bin/bash -x\n# cloud-init\n${ProxyConfig}\n/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource DSM --region ${AWS::Region}${ConfigSetOption1}${ConfigSetOption2}${ProxyOption1}\n\
-              /opt/aws/bin/cfn-signal ${CFNSignalOption}${ProxyOption2}\n"
-            - ProxyConfig:
-                Fn::If:
-                  - UseProxy
-                  - Fn::Sub: "export HTTPS_PROXY=\"https://${DSProxyUrl}\"\nexport HTTP_PROXY=\"http://${DSProxyUrl}\"\nexport NO_PROXY=\"169.254.169.254,localhost,127.0.0.1\"\necho -e \"proxy=http://${DSProxyUrl}\"\
-                      \ >> /etc/yum.conf\n"
-                  - ''
-              ConfigSetOption1:
-                Fn::If:
-                  - SQLplusELB
-                  - ' -c doSqlSetup,default,setupLocalELB,setupGlobalELB'
-                  - Fn::If:
-                      - DoSQLSetup
-                      - ' -c doSqlSetup,default'
-                      - Fn::If:
-                          - IsFirstNodePlusELB
-                          - ' -c default,setupLocalELB,setupGlobalELB'
-                          - ''
-              ConfigSetOption2:
-                Fn::If:
-                  - AddNodePlusELB
-                  - ' -c fixManagerLocalLbAddress,addDsmNode,setupLocalELB'
-                  - Fn::If:
-                      - IsFirstNode
-                      - ''
-                      - ' -c addDsmNode'
-              ProxyOption1:
-                Fn::If:
-                  - UseProxy
-                  - Fn::Sub: ' --https-proxy https://${DSProxyUrl}'
-                  - ''
-              CFNSignalOption:
-                Fn::If:
-                  - WaitNotProvided
-                  - -e $? -r "Complete"
-                  - Fn::Join:
-                      - ''
-                      - - '-e $? -r "DSM Node configuration complete" '
-                        - Fn::Base64:
-                            Ref: DSM1CompleteWaitHandle
-              ProxyOption2:
-                Fn::If:
-                  - UseProxy
-                  - Fn::Sub: ' --https-proxy https://${DSProxyUrl}'
-                  - ''
-Conditions:
-  DBTypeIsSQL:
-    Fn::Equals:
-      - Ref: DBPEngine
-      - SQL
-  IsFirstNode:
-    Fn::Equals:
-      - Ref: DSMPMNode
-      - 'No'
-  DoSQLSetup:
-    Fn::And:
-      - Condition: DBTypeIsSQL
-      - Condition: IsFirstNode
-  UseBYOL:
-    Fn::Equals:
-      - Ref: DSIPLicense
-      - BYOL
-  UsePerHost:
-    Fn::Equals:
-      - Ref: DSIPLicense
-      - PerHost
-  PPUNotSelected:
-    Fn::Or:
-      - Condition: UsePerHost
-      - Condition: UseBYOL
-  AddToELB:
-    Fn::Not:
-      - Fn::Equals:
-          - Ref: DSIELB
-          - ''
-  WaitNotProvided:
-    Fn::Equals:
-      - DSM1CompleteWaitHandle
-      - ''
-  SQLplusELB:
-    Fn::And:
-      - Condition: AddToELB
-      - Condition: DoSQLSetup
-  AddNodePlusELB:
-    Fn::And:
-      - Fn::Not:
-          - Condition: IsFirstNode
-      - Condition: AddToELB
-  KeyProvided:
-    Fn::Not:
-      - Fn::Equals:
-          - Ref: DSIPLicenseKey
-          - XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
-  IsFirstNodePlusELB:
-    Fn::And:
-      - Condition: IsFirstNode
-      - Condition: AddToELB
-  AddAcAnswer:
-    Fn::And:
-      - Condition: KeyProvided
-      - Condition: PPUNotSelected
-  InternetFacingELB:
-    Fn::Equals:
-      - Ref: DSELBPosture
-      - Internet-facing
-  NetworkOnlyLicense:
-    Fn::Equals:
-      - Ref: DSCLicenseType
-      - Network
-  UseProxy:
-    Fn::Not:
-      - Fn::Equals:
-          - Ref: DSProxyUrl
-          - ''
-  GovCloudCondition:
-    Fn::Or:
-      - Fn::Equals:
-          - Ref: AWS::Region
-          - us-gov-west-1
-      - Fn::Equals:
-          - Ref: AWS::Region
-          - us-gov-east-1
+      KeyName: !Ref AWSIKeyPairName
+      UserData: !Base64
+        Fn::Sub:
+          - |
+            #!/bin/bash -x
+            # cloud-init
+            ${ProxyConfig}
+            /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource DSM --region ${AWS::Region}${ConfigSetOption1}${ConfigSetOption2}${ProxyOption1}
+            /opt/aws/bin/cfn-signal ${CFNSignalOption}${ProxyOption2}
+          - ProxyConfig: !If
+              - UseProxy
+              - !Sub |
+                export HTTPS_PROXY="https://${DSProxyUrl}"
+                export HTTP_PROXY="http://${DSProxyUrl}"
+                export NO_PROXY="169.254.169.254,localhost,127.0.0.1"
+                echo -e "proxy=http://${DSProxyUrl}" >> /etc/yum.conf
+              - ""
+            ConfigSetOption1: !If
+              - SQLplusELB
+              - ' -c doSqlSetup,default,setupLocalELB,setupGlobalELB'
+              - !If
+                - DoSQLSetup
+                - ' -c doSqlSetup,default'
+                - !If
+                  - IsFirstNodePlusELB
+                  - ' -c default,setupLocalELB,setupGlobalELB'
+                  - ""
+            ConfigSetOption2: !If
+              - AddNodePlusELB
+              - ' -c fixManagerLocalLbAddress,addDsmNode,setupLocalELB'
+              - !If
+                - IsFirstNode
+                - ""
+                - ' -c addDsmNode'
+            ProxyOption1: !If
+              - UseProxy
+              - !Sub ' --https-proxy https://${DSProxyUrl}'
+              - ""
+            CFNSignalOption: !If
+              - WaitNotProvided
+              - -e $? -r "Complete"
+              - !Join
+                - ""
+                - - '-e $? -r "DSM Node configuration complete" '
+                  - !Base64
+                    Ref: DSM1CompleteWaitHandle
+            ProxyOption2: !If
+              - UseProxy
+              - !Sub ' --https-proxy https://${DSProxyUrl}'
+              - ""
+
 Outputs:
   DSMFQDN:
-    Value:
-      Fn::GetAtt:
-        - DSM
-        - PublicDnsName
+    Value: !GetAtt DSM.PublicDnsName
+
   DSMURL:
-    Value:
-      Fn::Sub: https://${DSM.PublicDnsName}:${DSIPGUIPort}
+    Value: !Sub https://${DSM.PublicDnsName}:${DSIPGUIPort}
+
   DSMInstanceId:
-    Value:
-      Ref: DSM
+    Value: !Ref DSM
+
   AWSIVPC:
-    Value:
-      Ref: AWSIVPC
+    Value: !Ref AWSIVPC
+
   CreateEIP:
-    Value:
-      Ref: CreateEIP
+    Value: !Ref CreateEIP

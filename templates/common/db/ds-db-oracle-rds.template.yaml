@@ -1,96 +1,110 @@
----
-AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.90: This template deploys an Oracle RDS instance for Deep Security
-  Manager. (qs-1ngr590i9)'
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: 'This template deploys an Oracle RDS instance for Deep Security Manager. (qs-1ngr590i9)'
+
 Metadata:
   cfn-lint:
     config:
-      ignore_checks: [W8001]
-      ignore_reasons:
-        W8001:'Conditions are referenced by other template'
+      ignore_checks:
+        - W1011
+        - W8001
+
 Parameters:
   DBIRDSInstanceSize:
-    Default: db.m5.large
     Description: Trend Micro Deep Security Database instance class
     Type: String
     AllowedValues:
-    - db.m5.large
-    - db.m5.xlarge
-    - db.m5.2xlarge
-    - db.m5.4xlarge
-    - db.m5.8xlarge
-    - db.m6i.large
-    - db.m6i.xlarge
-    - db.m6i.2xlarge
-    - db.m6i.4xlarge
-    - db.m6i.8xlarge
-    - db.r5.large
-    - db.r5.xlarge
-    - db.r5.2xlarge
-    - db.r5.4xlarge
-    - db.r5.8xlarge
+      - db.m5.large
+      - db.m5.xlarge
+      - db.m5.2xlarge
+      - db.m5.4xlarge
+      - db.m5.8xlarge
+      - db.m6i.large
+      - db.m6i.xlarge
+      - db.m6i.2xlarge
+      - db.m6i.4xlarge
+      - db.m6i.8xlarge
+      - db.r5.large
+      - db.r5.xlarge
+      - db.r5.2xlarge
+      - db.r5.4xlarge
+      - db.r5.8xlarge
+    Default: db.m5.large
     ConstraintDescription: must select a valid database instance type.
+
   DBIStorageAllocation:
-    Default: 20
     Description: The size of the Deep Security database (Gb)
     Type: Number
+    Default: 20
     MinValue: 20
     MaxValue: 3072
     ConstraintDescription: must be between 20 and 3072Gb.
+
   DBPBackupDays:
-    Default: 1
     Description: Days to keep automatic RDS backups (0-35)
     Type: Number
+    Default: 1
     MinValue: 0
     MaxValue: 35
     ConstraintDescription: must be between 0 and 35 days.
+
   DBICAdminName:
-    Default: dsadmin
     Description: Admin account username to be used for the database instance
     Type: String
+    Default: dsadmin
     MinLength: 1
     MaxLength: 16
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: must begin with a letter and contain only alphanumeric
-      characters.
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+
   DBICAdminPassword:
-    NoEcho: true
     Description: Password to be used for the Oracle database admin account
     Type: String
+    NoEcho: true
     MinLength: 8
     MaxLength: 41
     AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
-    ConstraintDescription: Can only contain alphanumeric characters or the following
-      special characters !^*-_+ Min length 8, max length 41
+    ConstraintDescription: Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41
+
   DBPName:
-    Default: dsm
     Description: Name to be assigned to the database
     Type: String
+    Default: dsm
     MinLength: 1
     MaxLength: 64
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: must begin with a letter and contain only alphanumeric
-      characters.
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+
   StorageType:
-    Default: gp3
     Type: String
     AllowedValues:
-    - gp3
+      - gp3
+    Default: gp3
+
   RDSSG:
     Type: AWS::EC2::SecurityGroup::Id
+
   DBISubnetGroupName:
     Type: String
+
   MultiAZ:
     Description: Use Multi-AZ or SQL Mirroring Option Group for RDS Instance
     Type: String
     AllowedValues:
-    - 'true'
-    - 'false'
-    Default: 'false'
+      - "true"
+      - "false"
+    Default: "false"
+
+Conditions:
+  MultiAZ: !Equals
+    - !Ref MultiAZ
+    - "true"
+
 Resources:
   DSDatabase:
-    Type: AWS::RDS::DBInstance
     DeletionPolicy: Snapshot
+    UpdateReplacePolicy: Snapshot
+    Type: AWS::RDS::DBInstance
     Properties:
       LicenseModel: license-included
       PubliclyAccessible: false
@@ -102,25 +116,21 @@ Resources:
       MasterUsername: !Ref DBICAdminName
       MasterUserPassword: !Ref DBICAdminPassword
       VPCSecurityGroups:
-      - !Ref RDSSG
+        - !Ref RDSSG
       MultiAZ: !Ref MultiAZ
       BackupRetentionPeriod: !Ref DBPBackupDays
       DBSubnetGroupName: !Ref DBISubnetGroupName
       StorageType: !Ref StorageType
       StorageEncrypted: true
       Tags:
-      - Key: Application
-        Value: Deep Security Manager
-Conditions:
-  MultiAZ:
-    !Equals
-    - !Ref MultiAZ
-    - 'true'
+        - Key: Application
+          Value: Deep Security Manager
+
 Outputs:
   DSDBEndpoint:
     Description: Endpoint to be passed to DSM installation properties file
     Value: !GetAtt DSDatabase.Endpoint.Address
+
   DSDBPort:
     Description: Port to be passed to DSM installation properties file
     Value: !GetAtt DSDatabase.Endpoint.Port
-...

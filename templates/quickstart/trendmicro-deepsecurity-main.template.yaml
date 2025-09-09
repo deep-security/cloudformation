@@ -1,33 +1,36 @@
----
-AWSTemplateFormatVersion: 2010-09-09
-Description: 'QS(0011) - v5.90: Quick Start that deploys Trend Micro Deep Security
-  into an existing VPC with a Multi-AZ PostgreSQL RDS instance  **WARNING** This template
-  uses images from the AWS Marketplace and an active subscription is required - Please
-  see the Quick Start documentation for more details. You will be billed for the AWS
-  resources used if you create a stack from this template. (qs-1ngr590k4)'
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: 'QS(0011) - Quick Start that deploys Trend Micro Deep Security into an existing VPC with a Multi-AZ PostgreSQL RDS instance  **WARNING** This template uses images from the AWS Marketplace and an active subscription is required - Please see the Quick Start documentation for more details. You will be billed for the AWS resources used if you create a stack from this template. (qs-1ngr590k4)'
+
 Metadata:
   cfn-lint:
     config:
-      ignore_checks: [W8001,W1001]
-      ignore_reasons:
-        W1001:'The DSM console should be output whether the PerHostSupportedRegion is true or false'
-        W8001:'Conditions are referenced by other template'
+      ignore_checks:
+        - W8001
+
   AWS::CloudFormation::Interface:
     ParameterGroups:
-    - Label:
-        default: Deep Security Manager Configuration
-      Parameters:
-      - DeepSecurityAdminName
-      - DeepSecurityAdminPass
-      - AWSKeyPairName
-      - ProtectedInstances
-    - Label:
-        default: Network Configuration
-      Parameters:
-      - AWSVPC
-      - DeepSecuritySubnet
-      - DatabaseSubnet1
-      - DatabaseSubnet2
+      - Label:
+          default: AWS Marketplace Parameters
+        Parameters:
+          - ImageId
+          - MPS3BucketName
+          - MPS3BucketRegion
+          - MPS3KeyPrefix
+      - Label:
+          default: Deep Security Manager Configuration
+        Parameters:
+          - DeepSecurityAdminName
+          - DeepSecurityAdminPass
+          - AWSKeyPairName
+          - ProtectedInstances
+      - Label:
+          default: Network Configuration
+        Parameters:
+          - AWSVPC
+          - DeepSecuritySubnet
+          - DatabaseSubnet1
+          - DatabaseSubnet2
     ParameterLabels:
       AWSKeyPairName:
         default: EC2 Key Pair for SSH access
@@ -45,342 +48,373 @@ Metadata:
         default: Secondary private subnet for RDS
       ProtectedInstances:
         default: Number of instances you expect to protect with Deep Security Agents
+
 Parameters:
   AWSKeyPairName:
-    Description: Select an existing key pair to use for connecting to your Deep Security
-      Manager Instance.
+    Description: Select an existing key pair to use for connecting to your Deep Security Manager Instance.
     Type: AWS::EC2::KeyPair::KeyName
     ConstraintDescription: Select an existing EC2 Key Pair.
+
   AWSVPC:
     Description: Select an existing VPC to deploy Deep Security Manager.
     Type: AWS::EC2::VPC::Id
     AllowedPattern: '[-_a-zA-Z0-9]*'
+
   DatabaseSubnet1:
-    Description: Select a private subnet for the RDS database.  Must be a private
-      subnet contained in the VPC chosen above.
+    Description: Select a private subnet for the RDS database.  Must be a private subnet contained in the VPC chosen above.
     Type: AWS::EC2::Subnet::Id
-    ConstraintDescription: RDS Subnet Groups must be comprised of 2 subnets in seperate
-      availability zones within the specified VPC for deploying this template
+    ConstraintDescription: RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones within the specified VPC for deploying this template
+
   DatabaseSubnet2:
-    Description: Select a second private subnet for the RDS database.  Must be a private
-      subnet contained in the VPC chosen above.
+    Description: Select a second private subnet for the RDS database.  Must be a private subnet contained in the VPC chosen above.
     Type: AWS::EC2::Subnet::Id
-    ConstraintDescription: RDS Subnet Groups must be comprised of 2 subnets in seperate
-      availability zones within the specified VPC for deploying this template
+    ConstraintDescription: RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones within the specified VPC for deploying this template
+
   DeepSecuritySubnet:
-    Description: Select an existing Subnet for Deep Security Manager. Must be a public
-      subnet contained in the VPC chosen above.
+    Description: Select an existing Subnet for Deep Security Manager. Must be a public subnet contained in the VPC chosen above.
     Type: AWS::EC2::Subnet::Id
     AllowedPattern: '[-_a-zA-Z0-9]*'
     ConstraintDescription: Subnet ID must exist in the chosen VPC
+
   DeepSecurityAdminName:
-    Default: admin
-    Description: The Deep Security Manager administrator username for Web Console
-      Access.
+    Description: The Deep Security Manager administrator username for Web Console Access.
     Type: String
+    Default: admin
     MinLength: 1
     MaxLength: 16
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: Must begin with a letter and contain only alphanumeric
-      characters. Min length 1, max length 16
+    ConstraintDescription: Must begin with a letter and contain only alphanumeric characters. Min length 1, max length 16
+
   DeepSecurityAdminPass:
-    NoEcho: true
-    Description: The Deep Security Manager administrator password. Must be 8-41 characters
-      long and can only contain alphanumeric characters or the following special characters
-      !^*-_+
+    Description: The Deep Security Manager administrator password. Must be 8-41 characters long and can only contain alphanumeric characters or the following special characters !^*-_+
     Type: String
+    NoEcho: true
     MinLength: 8
     MaxLength: 41
     AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
-    ConstraintDescription: Can only contain alphanumeric characters or the following
-      special characters !^*-_+ Min length 8, max length 41
+    ConstraintDescription: Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41
+
   ProtectedInstances:
     Description: Select how many instances would you like to protect.
     Type: String
     AllowedValues:
-    - 1-100
-    - 101-500
-    - 501-1000
-    - 1001-2000
+      - 1-100
+      - 101-500
+      - 501-1000
+      - 1001-2000
+
+  ImageId:
+    Description: The AMI that will be used to launch EC2 resources.
+    Type: AWS::EC2::Image::Id
+
+  MPS3BucketName:
+    Description: Name of the S3 bucket for the copy of the nested templates.
+    Type: String
+    Default: deepsecurity-cloudformation
+
+  MPS3BucketRegion:
+    Description: AWS Region where the S3 bucket for the copy of the nested templates is hosted.
+    Type: String
+    Default: us-east-1
+
+  MPS3KeyPrefix:
+    Description: S3 key prefix that is used to simulate a folder for the copy of the nested templates.
+    Type: String
+    Default: main/
+
 Mappings:
   DSMSIZE:
     us-east-1:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     us-west-1:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     us-west-2:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     eu-west-1:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     eu-central-1:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     sa-east-1:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     ap-northeast-1:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     ap-southeast-1:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     ap-southeast-2:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     ap-northeast-2:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     ap-southeast-3:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     ap-northeast-3:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     us-east-2:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     ca-central-1:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     ap-south-1:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     eu-north-1:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     eu-west-2:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     eu-west-3:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     eu-south-1:
-      '1': m5.large
-      '2': m5.large
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.large
+      "2": m5.large
+      "3": m5.xlarge
+      "4": m5.xlarge
     us-gov-west-1:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     me-south-1:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
     us-gov-east-1:
-      '1': m5.xlarge
-      '2': m5.xlarge
-      '3': m5.xlarge
-      '4': m5.xlarge
+      "1": m5.xlarge
+      "2": m5.xlarge
+      "3": m5.xlarge
+      "4": m5.xlarge
+
   RDSStorageSize:
     1-100:
-      Size: '50'
+      Size: "50"
     101-500:
-      Size: '150'
+      Size: "150"
     501-1000:
-      Size: '200'
+      Size: "200"
     1001-2000:
-      Size: '300'
+      Size: "300"
+
   RDSInstanceSize:
     us-east-1:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     us-east-2:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     us-west-1:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     us-west-2:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     ca-central-1:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     ap-south-1:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     ap-northeast-2:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     ap-southeast-1:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     ap-southeast-2:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     ap-northeast-1:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     ap-northeast-3:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     ap-southeast-3:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     eu-north-1:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     eu-central-1:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     eu-west-1:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     eu-west-2:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     sa-east-1:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     eu-west-3:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     eu-south-1:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     us-gov-west-1:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     me-south-1:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
     us-gov-east-1:
-      '1': db.m5.large
-      '2': db.m5.large
-      '3': db.m5.xlarge
-      '4': db.m5.xlarge
+      "1": db.m5.large
+      "2": db.m5.large
+      "3": db.m5.xlarge
+      "4": db.m5.xlarge
+
   DeploymentSize:
     1-100:
-      Size: '1'
+      Size: "1"
     101-500:
-      Size: '2'
+      Size: "2"
     501-1000:
-      Size: '3'
+      Size: "3"
     1001-2000:
-      Size: '4'
+      Size: "4"
+
+Conditions:
+  PerHostSupportedRegion: !Not
+    - !Equals
+      - !Ref AWS::Region
+      - match-all-regions
+
+  GovCloudCondition: !Or
+    - !Equals
+      - !Ref AWS::Region
+      - us-gov-west-1
+    - !Equals
+      - !Ref AWS::Region
+      - us-gov-east-1
+
 Resources:
   MainMP:
     Type: AWS::CloudFormation::Stack
-    Condition: PerHostSupportedRegion
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/main-mp.template.yaml'
+      TemplateURL: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}templates/marketplace/main-mp.template.yaml
       Parameters:
         AWSIKeyPairName: !Ref AWSKeyPairName
         AWSIVPC: !Ref AWSVPC
         DSISubnetID: !Ref DeepSecuritySubnet
-        DBIRDSInstanceSize:
-          !FindInMap
+        DBIRDSInstanceSize: !FindInMap
           - RDSInstanceSize
           - !Ref AWS::Region
           - !FindInMap
             - DeploymentSize
             - !Ref ProtectedInstances
             - Size
-        DBIStorageAllocation:
-          !FindInMap
+        DBIStorageAllocation: !FindInMap
           - RDSStorageSize
           - !Ref ProtectedInstances
           - Size
-        DBPBackupDays: '5'
-        DBPCreateDbInstance: 'Yes'
+        DBPBackupDays: "5"
+        DBPCreateDbInstance: Yes
         DBICAdminName: dsmadmin
         DBICAdminPassword: !Ref DeepSecurityAdminPass
         DBPEngine: PostgreSQL
-        DBPEndpoint: ''
+        DBPEndpoint: ""
         DBPName: dsm
         DSCAdminName: !Ref DeepSecurityAdminName
         DSCAdminPassword: !Ref DeepSecurityAdminPass
-        DSIMultiNode: '2'
+        DSIMultiNode: "2"
         DSIPLicenseKey: XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
-        DSIPHeartbeatPort: '4120'
-        DSIPGUIPort: '443'
-        DSIPInstanceType:
-          !FindInMap
+        DSIPHeartbeatPort: "4120"
+        DSIPGUIPort: "443"
+        DSIPInstanceType: !FindInMap
           - DSMSIZE
           - !Ref AWS::Region
           - !FindInMap
@@ -390,22 +424,14 @@ Resources:
         DBISubnet1: !Ref DatabaseSubnet1
         DBISubnet2: !Ref DatabaseSubnet2
         DSIPLicense: PerHost
-        DBPMultiAZ: 'true'
-Conditions:
-  PerHostSupportedRegion:
-    !Not
-    - !Equals
-      - !Ref AWS::Region
-      - match-all-regions
-  GovCloudCondition:
-    !Or 
-    - !Equals 
-      - !Ref AWS::Region
-      - us-gov-west-1
-    - !Equals 
-      - !Ref AWS::Region
-      - us-gov-east-1
+        DBPMultiAZ: "true"
+        ImageId: !Ref ImageId
+        MPS3BucketName: !Ref MPS3BucketName
+        MPS3BucketRegion: !Ref MPS3BucketRegion
+        MPS3KeyPrefix: !Ref MPS3KeyPrefix
+    Condition: PerHostSupportedRegion
+
 Outputs:
   DeepSecurityConsole:
     Value: !GetAtt MainMP.Outputs.DeepSecurityConsole
-...
+    Condition: PerHostSupportedRegion
