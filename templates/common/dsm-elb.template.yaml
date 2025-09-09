@@ -1,117 +1,134 @@
----
-AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.90: Deploys Elastic Load Balancers and Security Groups for Deep Security
-  (qs-1ngr590je). Manager.'
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: 'Deploys Elastic Load Balancers and Security Groups for Deep Security (qs-1ngr590je). Manager.'
+
 Metadata:
   cfn-lint:
     config:
-      ignore_checks: [W3005,W8001]
-      ignore_reasons:
-        W8001:'Conditions are referenced by other template'
-        W3005:'DSM needs to depend on resource ELBSG to make sure the stack will create not fail'
+      ignore_checks:
+        - W3005
+        - W8001
+
 Parameters:
   AWSIVPC:
     Description: Existing VPC to deploy Deep Security Manager
     Type: AWS::EC2::VPC::Id
     AllowedPattern: '[-_a-zA-Z0-9]*'
+
   DSIPHeartbeatPort:
-    Description: The heartbeat port used by Deep Security Agents and appliances to
-      communicate with the Deep Security Manager.
+    Description: The heartbeat port used by Deep Security Agents and appliances to communicate with the Deep Security Manager.
     Type: Number
+    Default: "4120"
     MinValue: 0
     MaxValue: 65535
-    Default: '4120'
     ConstraintDescription: Must be a valid TCP port.
+
   DSIPGUIPort:
     Description: The Deep Security Manager application and GUI port.
     Type: Number
+    Default: "4119"
     MinValue: 0
     MaxValue: 65535
-    Default: '4119'
     ConstraintDescription: Must be a valid TCP port.
+
   DSISubnetID:
-    Description: Existing Subnet for Deep Security Manager. Must be a public subnet
-      contained the in VPC chosen above.
+    Description: Existing Subnet for Deep Security Manager. Must be a public subnet contained the in VPC chosen above.
     Type: String
-    MinLength: '1'
-    MaxLength: '255'
+    MinLength: "1"
+    MaxLength: "255"
     AllowedPattern: '[-_a-zA-Z0-9]*'
     ConstraintDescription: Subnet ID must exist in the chosen VPC
+
   DSELBPosture:
     Description: Use internal or internet-facing ELB
     Type: String
     AllowedValues:
-    - Internet-facing
-    - Internal
+      - Internet-facing
+      - Internal
     Default: Internet-facing
+
+  MPS3BucketName:
+    Description: Name of the S3 bucket for the copy of the nested templates.
+    Type: String
+
+  MPS3BucketRegion:
+    Description: AWS Region where the S3 bucket for the copy of the nested templates is hosted.
+    Type: String
+
+  MPS3KeyPrefix:
+    Description: S3 key prefix that is used to simulate a folder for the copy of the nested templates.
+    Type: String
+
+Conditions:
+  InternetFacingELB: !Equals
+    - !Ref DSELBPosture
+    - Internet-facing
+
+  GovCloudCondition: !Or
+    - !Equals
+      - !Ref AWS::Region
+      - us-gov-west-1
+    - !Equals
+      - !Ref AWS::Region
+      - us-gov-east-1
+
 Resources:
   ELBSG:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/ds-elb-sg.template.yaml'
+      TemplateURL: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}templates/common/security-groups/ds-elb-sg.template.yaml
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DSIPGUIPort: !Ref DSIPGUIPort
         DSIPHeartbeatPort: !Ref DSIPHeartbeatPort
+
   DSMELB:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     DependsOn: ELBSG
     Properties:
       Subnets:
-      - !Ref DSISubnetID
+        - !Ref DSISubnetID
       SecurityGroups:
-      - !GetAtt
-        - ELBSG
-        - Outputs.ELBSG
-      Scheme:
-        !If
+        - !GetAtt ELBSG.Outputs.ELBSG
+      Scheme: !If
         - InternetFacingELB
         - internet-facing
         - internal
       Listeners:
-      - LoadBalancerPort: !Ref DSIPHeartbeatPort
-        InstancePort: !Ref DSIPHeartbeatPort
-        Protocol: TCP
-      - LoadBalancerPort: '4122'
-        InstancePort: '4122'
-        Protocol: TCP
+        - LoadBalancerPort: !Ref DSIPHeartbeatPort
+          InstancePort: !Ref DSIPHeartbeatPort
+          Protocol: TCP
+        - LoadBalancerPort: "4122"
+          InstancePort: "4122"
+          Protocol: TCP
       HealthCheck:
-        Target:
-          !Join
-          - ''
+        Target: !Join
+          - ""
           - - 'HTTPS:'
             - !Ref DSIPGUIPort
             - /rest/status/manager/ping
-        HealthyThreshold: '3'
-        UnhealthyThreshold: '5'
-        Interval: '30'
-        Timeout: '5'
+        HealthyThreshold: "3"
+        UnhealthyThreshold: "5"
+        Interval: "30"
+        Timeout: "5"
       ConnectionSettings:
         IdleTimeout: 600
-Conditions:
-  InternetFacingELB:
-    !Equals
-    - !Ref DSELBPosture
-    - Internet-facing
-  GovCloudCondition:
-    !Or 
-    - !Equals 
-      - !Ref AWS::Region
-      - us-gov-west-1
-    - !Equals 
-      - !Ref AWS::Region
-      - us-gov-east-1
+
 Outputs:
   ELBFQDN:
     Value: !GetAtt DSMELB.DNSName
+
   ELBSourceSecurityGroup:
     Value: !GetAtt ELBSG.Outputs.ELBSG
+
   ELSBSourceSecurityGroupOnwerID:
     Value: !GetAtt DSMELB.SourceSecurityGroup.OwnerAlias
+
   DSIELB:
     Value: !Ref DSMELB
+
   ELBCanonicalHostedZoneNameID:
     Value: !GetAtt DSMELB.CanonicalHostedZoneNameID
+
   ELBDNSName:
     Value: !GetAtt DSMELB.DNSName
-...

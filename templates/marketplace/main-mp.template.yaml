@@ -1,60 +1,59 @@
----
-AWSTemplateFormatVersion: 2010-09-09
-Description: 'v5.90: Trend Micro Deep Security Marketplace main template. For more
-  information see http://aws.trendmicro.com. (qs-1ngr590jt)'
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: 'Trend Micro Deep Security Marketplace main template. For more information see http://aws.trendmicro.com. (qs-1ngr590jt)'
+
 Metadata:
   cfn-lint:
     config:
-      ignore_checks: [W3005,W7001,W8001]
-      ignore_reasons:
-        W3005:'DSMNode2, DSMNode1NoDB and DSIDSMSecurityGroup needs to depend on resource DSIDSMSecurityGroup to make sure the stack will create not fail'
-        W7001:'Definition is used by another template'
-        W8001:'Conditions are referenced by other template'
+      ignore_checks:
+        - W3005
+        - W7001
+        - W8001
+
   AWS::CloudFormation::Interface:
     ParameterGroups:
-    - Label:
-        default: Deep Security Manager Configuration
-      Parameters:
-      - DSCAdminName
-      - DSCAdminPassword
-      - DSIPInstanceType
-      - AWSIKeyPairName
-      - DSIPLicense
-      - DSIMultiNode
-      - DSIPLicenseKey
-      - DSIPGUIPort
-      - DSIPHeartbeatPort
-      - DSCLicenseType
-    - Label:
-        default: Network Configuration
-      Parameters:
-      - AWSIVPC
-      - DSISubnetID
-      - DBISubnet1
-      - DBISubnet2
-      - DSELBPosture
-      - DSProxyUrl
-    - Label:
-        default: Database Configuration
-      Parameters:
-      - DBICAdminName
-      - DBICAdminPassword
-      - DBPName
-      - DBPMultiAZ
-      - DBPEngine
-      - DBPCreateDbInstance
-      - DBIRDSInstanceSize
-      - DBIStorageAllocation
-      - DBPBackupDays
-      - DBPEndpoint
+      - Label:
+          default: Deep Security Manager Configuration
+        Parameters:
+          - DSCAdminName
+          - DSCAdminPassword
+          - DSIPInstanceType
+          - AWSIKeyPairName
+          - DSIPLicense
+          - DSIMultiNode
+          - DSIPLicenseKey
+          - DSIPGUIPort
+          - DSIPHeartbeatPort
+          - DSCLicenseType
+      - Label:
+          default: Network Configuration
+        Parameters:
+          - AWSIVPC
+          - DSISubnetID
+          - DBISubnet1
+          - DBISubnet2
+          - DSELBPosture
+          - DSProxyUrl
+      - Label:
+          default: Database Configuration
+        Parameters:
+          - DBICAdminName
+          - DBICAdminPassword
+          - DBPName
+          - DBPMultiAZ
+          - DBPEngine
+          - DBPCreateDbInstance
+          - DBIRDSInstanceSize
+          - DBIStorageAllocation
+          - DBPBackupDays
+          - DBPEndpoint
     ParameterLabels:
       AWSIKeyPairName:
         default: EC2 Key Pair for SSH access
       AWSIVPC:
         default: VPC for Deep Security Components
       DSISubnetID:
-        default: Subnet for Deep Security Managers. Must be public subnet if deploying
-          Internet-facing infrastructure, else must be private.
+        default: Subnet for Deep Security Managers. Must be public subnet if deploying Internet-facing infrastructure, else must be private.
       DBIRDSInstanceSize:
         default: RDS Instance Type
       DBIStorageAllocation:
@@ -100,265 +99,286 @@ Metadata:
       DSELBPosture:
         default: Use internal or internet-facing ELB
       DSProxyUrl:
-        default: Url for a proxy server for internet traffic in the format of host:port.
-          Leave blank if not required
+        default: Url for a proxy server for internet traffic in the format of host:port. Leave blank if not required
+
 Parameters:
   AWSIKeyPairName:
-    Description: Existing key pair to use for connecting to your Deep Security Manager
-      Instance
+    Description: Existing key pair to use for connecting to your Deep Security Manager Instance
     Type: AWS::EC2::KeyPair::KeyName
     ConstraintDescription: Select an existing EC2 Key Pair.
+
   AWSIVPC:
-    Description: Existing VPC to deploy Deep Security Manager. Must contain at least
-      1 public and 2 private subnets
+    Description: Existing VPC to deploy Deep Security Manager. Must contain at least 1 public and 2 private subnets
     Type: AWS::EC2::VPC::Id
     AllowedPattern: '[-_a-zA-Z0-9]*'
+
   DSISubnetID:
-    Description: Choose a public subnet for Deep Security Manager. Must be in same
-      AZ as primary RDS subnet.
+    Description: Choose a public subnet for Deep Security Manager. Must be in same AZ as primary RDS subnet.
     Type: AWS::EC2::Subnet::Id
     AllowedPattern: '[-_a-zA-Z0-9]*'
     ConstraintDescription: Subnet ID must exist in the chosen VPC
+
   DBIRDSInstanceSize:
-    Default: db.m5.large
     Description: Trend Micro Deep Security Database instance class
     Type: String
     AllowedValues:
-    - db.m5.large
-    - db.m5.xlarge
-    - db.m5.2xlarge
-    - db.m5.4xlarge
-    - db.m5.8xlarge
-    - db.m6g.large
-    - db.m6g.xlarge
-    - db.m6g.2xlarge
-    - db.m6g.4xlarge
-    - db.m6g.8xlarge
-    - db.m6i.large
-    - db.m6i.xlarge
-    - db.m6i.2xlarge
-    - db.m6i.4xlarge
-    - db.m6i.8xlarge
-    - db.r3.large
-    - db.r3.xlarge
-    - db.r3.2xlarge
-    - db.r3.4xlarge
-    - db.r3.8xlarge
-    - db.r4.large
-    - db.r4.xlarge
-    - db.r4.2xlarge
-    - db.r4.4xlarge
-    - db.r4.8xlarge
-    - db.r5.large
-    - db.r5.xlarge
-    - db.r5.2xlarge
-    - db.r5.4xlarge
-    - db.r5.8xlarge
-    - db.r6g.large
-    - db.r6g.xlarge
-    - db.r6g.2xlarge
-    - db.r6g.4xlarge
-    - db.r6g.8xlarge
-    - db.r6i.large
-    - db.r6i.xlarge
-    - db.r6i.2xlarge
-    - db.r6i.4xlarge
-    - db.r6i.8xlarge
+      - db.m5.large
+      - db.m5.xlarge
+      - db.m5.2xlarge
+      - db.m5.4xlarge
+      - db.m5.8xlarge
+      - db.m6g.large
+      - db.m6g.xlarge
+      - db.m6g.2xlarge
+      - db.m6g.4xlarge
+      - db.m6g.8xlarge
+      - db.m6i.large
+      - db.m6i.xlarge
+      - db.m6i.2xlarge
+      - db.m6i.4xlarge
+      - db.m6i.8xlarge
+      - db.r3.large
+      - db.r3.xlarge
+      - db.r3.2xlarge
+      - db.r3.4xlarge
+      - db.r3.8xlarge
+      - db.r4.large
+      - db.r4.xlarge
+      - db.r4.2xlarge
+      - db.r4.4xlarge
+      - db.r4.8xlarge
+      - db.r5.large
+      - db.r5.xlarge
+      - db.r5.2xlarge
+      - db.r5.4xlarge
+      - db.r5.8xlarge
+      - db.r6g.large
+      - db.r6g.xlarge
+      - db.r6g.2xlarge
+      - db.r6g.4xlarge
+      - db.r6g.8xlarge
+      - db.r6i.large
+      - db.r6i.xlarge
+      - db.r6i.2xlarge
+      - db.r6i.4xlarge
+      - db.r6i.8xlarge
+    Default: db.m5.large
     ConstraintDescription: must select a valid database instance type.
+
   DBIStorageAllocation:
-    Default: 100
-    Description: The Storage Allocated to Database Instance (in GB). Minimum 200 for
-      SQL Server, 10 for Oracle.
+    Description: The Storage Allocated to Database Instance (in GB). Minimum 200 for SQL Server, 10 for Oracle.
     Type: Number
+    Default: 100
     MinValue: 10
     MaxValue: 3072
     ConstraintDescription: must be between 10 and 3072Gb.
+
   DBPBackupDays:
-    Default: 1
     Description: Days to keep automatic RDS backups (0-35)
     Type: Number
+    Default: 1
     MinValue: 0
     MaxValue: 35
     ConstraintDescription: must be between 0 and 35 days.
+
   DBPCreateDbInstance:
-    Description: Choose whether or not to create an RDS instance for the Deep Security
-      Manager Deployment
+    Description: Choose whether or not to create an RDS instance for the Deep Security Manager Deployment
     Type: String
-    Default: 'Yes'
     AllowedValues:
-    - 'Yes'
+      - Yes
+    Default: Yes
+
   DBICAdminName:
-    Default: dsadmin
     Description: Admin account username to be used for the database instance
     Type: String
+    Default: dsadmin
     MinLength: 1
     MaxLength: 16
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: must begin with a letter and contain only alphanumeric
-      characters.
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+
   DBICAdminPassword:
-    NoEcho: true
-    Description: Password to be used for the database admin account. 8-41 alphanumeric
-      characters
+    Description: Password to be used for the database admin account. 8-41 alphanumeric characters
     Type: String
+    NoEcho: true
     MinLength: 8
     MaxLength: 41
     AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
-    ConstraintDescription: Can only contain alphanumeric characters or the following
-      special characters !^*-_+ Min length 8, max length 41
+    ConstraintDescription: Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41
+
   DBPEngine:
     Description: Choose PostgreSQL, Microsoft SQL, Oracle or Aurora PostgreSQL for DSM database Engine
     Type: String
-    Default: PostgreSQL
     AllowedValues:
-    - SQL
-    - Oracle
-    - PostgreSQL
-    - AuroraPostgreSQL
+      - SQL
+      - Oracle
+      - PostgreSQL
+      - AuroraPostgreSQL
+    Default: PostgreSQL
+
   DBPEndpoint:
+    Description: If you have an existing oracle instance, enter the endpoint address here, else this field will be ignored
     Type: String
-    Description: If you have an existing oracle instance, enter the endpoint address
-      here, else this field will be ignored
     Default: Enter Oracle Address here if needed
+
   DBPName:
-    Default: dsm
     Description: Name to be assigned to the database
     Type: String
+    Default: dsm
     MinLength: 1
     MaxLength: 64
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: must begin with a letter and contain only alphanumeric
-      characters.
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+
   DSCAdminName:
-    Default: admin
-    Description: The Deep Security Manager administrator account username for Web
-      Console Access
+    Description: The Deep Security Manager administrator account username for Web Console Access
     Type: String
+    Default: admin
     MinLength: 1
     MaxLength: 16
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: must begin with a letter and contain only alphanumeric
-      characters.
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+
   DSCAdminPassword:
-    NoEcho: true
     Description: The Deep Security Manager administrator account password
     Type: String
+    NoEcho: true
     MinLength: 8
     MaxLength: 41
     AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
-    ConstraintDescription: Can only contain alphanumeric characters or the following
-      special characters !^*-_+ Min length 8, max length 41
+    ConstraintDescription: Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41
+
   DSIMultiNode:
     Description: Select number of Deep Security Managers to Deploy
     Type: Number
     AllowedValues:
-    - '1'
-    - '2'
+      - "1"
+      - "2"
+
   DSIPLicenseKey:
-    Description: Deep Security License key including dashes. Only required for BYOL
-      license type. (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)
+    Description: Deep Security License key including dashes. Only required for BYOL license type. (e.g. AP-E9RM-99WHE-B5UR5-BV8YB-HVYM8-HYYVG)
     Type: String
+    Default: XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
     MinLength: 37
     MaxLength: 37
     AllowedPattern: '[A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}'
     ConstraintDescription: Key can only contain ASCII characters.
-    Default: XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
+
   DSIPHeartbeatPort:
-    Description: The heartbeat port used by Deep Security Agents and appliances to
-      communicate with the Deep Security Manager.
+    Description: The heartbeat port used by Deep Security Agents and appliances to communicate with the Deep Security Manager.
     Type: Number
+    Default: "4120"
     MinValue: 0
     MaxValue: 65535
-    Default: '4120'
     ConstraintDescription: Must be a valid TCP port.
+
   DSIPGUIPort:
     Description: The Deep Security Manager application and GUI port.
     Type: Number
+    Default: "443"
     MinValue: 0
     MaxValue: 65535
-    Default: '443'
     ConstraintDescription: Must be a valid TCP port.
+
   DSIPInstanceType:
-    Description: Amazon EC2 instance type for BYOL Deep Security Manager Node Instances
-      (ignored for other license types)
+    Description: Amazon EC2 instance type for BYOL Deep Security Manager Node Instances (ignored for other license types)
     Type: String
+    AllowedValues:
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - m5.large
+      - m5.xlarge
+      - m5.2xlarge
+      - m5.4xlarge
+      - m5.8xlarge
+      - c3.xlarge
+      - c3.2xlarge
+      - c3.4xlarge
+      - c3.8xlarge
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - c5.4xlarge
+      - c5.9xlarge
+      - r3.large
+      - r3.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+      - i2.xlarge
+      - i2.2xlarge
+      - i2.4xlarge
+      - i2.8xlarge
+      - g2.2xlarge
+      - r4.large
+      - r4.xlarge
     Default: m5.xlarge
-    AllowedValues:
-    - m4.large
-    - m4.xlarge
-    - m4.2xlarge
-    - m4.4xlarge
-    - m4.10xlarge
-    - m5.large
-    - m5.xlarge
-    - m5.2xlarge
-    - m5.4xlarge
-    - m5.8xlarge
-    - c3.xlarge
-    - c3.2xlarge
-    - c3.4xlarge
-    - c3.8xlarge
-    - c4.xlarge
-    - c4.2xlarge
-    - c4.4xlarge
-    - c4.8xlarge
-    - c5.4xlarge
-    - c5.9xlarge
-    - r3.large
-    - r3.xlarge
-    - r3.2xlarge
-    - r3.4xlarge
-    - r3.8xlarge
-    - i2.xlarge
-    - i2.2xlarge
-    - i2.4xlarge
-    - i2.8xlarge
-    - g2.2xlarge
-    - r4.large
-    - r4.xlarge
+
   DBISubnet1:
-    Description: Choose a primary private subnet for RDS instance. Must be in same
-      AZ as Deep Security Manager
+    Description: Choose a primary private subnet for RDS instance. Must be in same AZ as Deep Security Manager
     Type: AWS::EC2::Subnet::Id
-    ConstraintDescription: RDS Subnet Groups must be comprised of 2 subnets in seperate
-      availability zones with the specified VPC for deploying this template
+    ConstraintDescription: RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template
+
   DBISubnet2:
-    Description: Choose a secondary private subnet for RDS instance. Must not be the
-      same as primary subnet.
+    Description: Choose a secondary private subnet for RDS instance. Must not be the same as primary subnet.
     Type: AWS::EC2::Subnet::Id
-    ConstraintDescription: RDS Subnet Groups must be comprised of 2 subnets in seperate
-      availability zones with the specified VPC for deploying this template
+    ConstraintDescription: RDS Subnet Groups must be comprised of 2 subnets in seperate availability zones with the specified VPC for deploying this template
+
   DSIPLicense:
-    Description: Choose License Model. If choosing BYOL you may enter the license
-      below
+    Description: Choose License Model. If choosing BYOL you may enter the license below
     Type: String
     AllowedValues:
-    - PerHost
-    - BYOL
+      - PerHost
+      - BYOL
+
   DBPMultiAZ:
     Description: Use Multi-AZ or SQL Mirroring Option Group for RDS Instance
     Type: String
     AllowedValues:
-    - 'true'
-    - 'false'
-    Default: 'false'
+      - "true"
+      - "false"
+    Default: "false"
+
   DSELBPosture:
     Description: Use internal or internet-facing ELB
     Type: String
     AllowedValues:
-    - Internet-facing
-    - Internal
+      - Internet-facing
+      - Internal
     Default: Internet-facing
+
   DSCLicenseType:
     Type: String
-    Default: Enterprise
     AllowedValues:
-    - Enterprise
-    - Network
+      - Enterprise
+      - Network
+    Default: Enterprise
+
   DSProxyUrl:
     Type: String
-    Default: ''
-    AllowedPattern: '^$|^(?!(?i)http)(.+):[\d]+$|^(?=\d+\.\d+\.\d+\.\d+\:\d+$)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.?){4}:(6553[0-5]|655[0-2][0-9]\d|65[0-4](\d){2}|6[0-4](\d){3}|[1-5](\d){4}|[1-9](\d){0,3}){1}$'
+    Default: ""
+    AllowedPattern: ^$|^(?!(?i)http)(.+):[\d]+$|^(?=\d+\.\d+\.\d+\.\d+\:\d+$)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.?){4}:(6553[0-5]|655[0-2][0-9]\d|65[0-4](\d){2}|6[0-4](\d){3}|[1-5](\d){4}|[1-9](\d){0,3}){1}$
+
+  ImageId:
+    Description: The AMI that will be used to launch EC2 resources.
+    Type: AWS::EC2::Image::Id
+
+  MPS3BucketName:
+    Description: Name of the S3 bucket for the copy of the nested templates.
+    Type: String
+
+  MPS3BucketRegion:
+    Description: AWS Region where the S3 bucket for the copy of the nested templates is hosted.
+    Type: String
+
+  MPS3KeyPrefix:
+    Description: S3 key prefix that is used to simulate a folder for the copy of the nested templates.
+    Type: String
+
 Mappings:
   DSMNodeDependency:
     Node1DB:
@@ -369,15 +389,48 @@ Mappings:
       String: DSISecurityGroups
     Node2NoDB:
       String: DSM95Node2NoDB
+
+Conditions:
+  DSIsMultiNode: !Equals
+    - !Ref DSIMultiNode
+    - "2"
+
+  LaunchRDSInstance: !Equals
+    - !Ref DBPCreateDbInstance
+    - Yes
+
+  DoNotLaunchRDSInstance: !Equals
+    - !Ref DBPCreateDbInstance
+    - No
+
+  DSMNode2DB: !And
+    - !Condition DSIsMultiNode
+    - !Condition LaunchRDSInstance
+
+  DSMNode2NoDB: !And
+    - !Condition DSIsMultiNode
+    - !Condition DoNotLaunchRDSInstance
+
+  InternetFacingELB: !Equals
+    - !Ref DSELBPosture
+    - Internet-facing
+
+  GovCloudCondition: !Or
+    - !Equals
+      - !Ref AWS::Region
+      - us-gov-west-1
+    - !Equals
+      - !Ref AWS::Region
+      - us-gov-east-1
+
 Resources:
   DSMNode1:
     Type: AWS::CloudFormation::Stack
     DependsOn:
-    - DSDatabaseAbstract
-    - DSIDSMSecurityGroup
-    Condition: LaunchRDSInstance
+      - DSDatabaseAbstract
+      - DSIDSMSecurityGroup
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/dsm-mp.template.yaml'
+      TemplateURL: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}templates/marketplace/dsm-mp.template.yaml
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -391,26 +444,31 @@ Resources:
         DBICAdminPassword: !Ref DBICAdminPassword
         DSIPGUIPort: !Ref DSIPGUIPort
         DSIPHeartbeatPort: !Ref DSIPHeartbeatPort
-        DSMPMNode: 'No'
+        DSMPMNode: No
         DSISubnetID: !Ref DSISubnetID
         DSMSG: !GetAtt DSIDSMSecurityGroup.Outputs.DSMSG
         DBPEngine: !Ref DBPEngine
         DSIPInstanceType: !Ref DSIPInstanceType
-        CreateEIP: 'False'
+        CreateEIP: "False"
         DSIELB: !GetAtt DSIELB.Outputs.DSIELB
         DSM1CompleteWaitHandle: !Ref DSM1CompleteWaitHandle
         DSIELBFQDN: !GetAtt DSIELB.Outputs.ELBFQDN
         DSELBPosture: !Ref DSELBPosture
         DSCLicenseType: !Ref DSCLicenseType
         DSProxyUrl: !Ref DSProxyUrl
+        ImageId: !Ref ImageId
+        MPS3BucketName: !Ref MPS3BucketName
+        MPS3BucketRegion: !Ref MPS3BucketRegion
+        MPS3KeyPrefix: !Ref MPS3KeyPrefix
+    Condition: LaunchRDSInstance
+
   DSMNode2:
     Type: AWS::CloudFormation::Stack
     DependsOn:
-    - DSIDSMSecurityGroup
-    - DSM1CompleteWaitCondition
-    Condition: DSMNode2DB
+      - DSIDSMSecurityGroup
+      - DSM1CompleteWaitCondition
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/dsm-mp.template.yaml'
+      TemplateURL: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}templates/marketplace/dsm-mp.template.yaml
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -424,22 +482,27 @@ Resources:
         DBICAdminPassword: !Ref DBICAdminPassword
         DSIPGUIPort: !Ref DSIPGUIPort
         DSIPHeartbeatPort: !Ref DSIPHeartbeatPort
-        DSMPMNode: 'Yes'
+        DSMPMNode: Yes
         DSISubnetID: !Ref DSISubnetID
         DSMSG: !GetAtt DSIDSMSecurityGroup.Outputs.DSMSG
         DBPEngine: !Ref DBPEngine
         DSIPInstanceType: !Ref DSIPInstanceType
-        CreateEIP: 'False'
+        CreateEIP: "False"
         DSIELB: !GetAtt DSIELB.Outputs.DSIELB
         DSELBPosture: !Ref DSELBPosture
         DSProxyUrl: !Ref DSProxyUrl
+        ImageId: !Ref ImageId
+        MPS3BucketName: !Ref MPS3BucketName
+        MPS3BucketRegion: !Ref MPS3BucketRegion
+        MPS3KeyPrefix: !Ref MPS3KeyPrefix
+    Condition: DSMNode2DB
+
   DSMNode1NoDB:
     Type: AWS::CloudFormation::Stack
     DependsOn:
-    - DSIDSMSecurityGroup
-    Condition: DoNotLaunchRDSInstance
+      - DSIDSMSecurityGroup
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/dsm-mp.template.yaml'
+      TemplateURL: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}templates/marketplace/dsm-mp.template.yaml
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -453,23 +516,28 @@ Resources:
         DBICAdminPassword: !Ref DBICAdminPassword
         DSIPGUIPort: !Ref DSIPGUIPort
         DSIPHeartbeatPort: !Ref DSIPHeartbeatPort
-        DSMPMNode: 'No'
+        DSMPMNode: No
         DSISubnetID: !Ref DSISubnetID
         DSMSG: !GetAtt DSIDSMSecurityGroup.Outputs.DSMSG
         DBPEngine: !Ref DBPEngine
         DSIPInstanceType: !Ref DSIPInstanceType
-        CreateEIP: 'False'
+        CreateEIP: "False"
         DSM1NoDBCompleteWaitHandle: !Ref DSM1NoDBCompleteWaitHandle
         DSIELB: !GetAtt DSIELB.Outputs.DSIELB
         DSIELBFQDN: !GetAtt DSIELB.Outputs.ELBFQDN
         DSELBPosture: !Ref DSELBPosture
         DSProxyUrl: !Ref DSProxyUrl
+        ImageId: !Ref ImageId
+        MPS3BucketName: !Ref MPS3BucketName
+        MPS3BucketRegion: !Ref MPS3BucketRegion
+        MPS3KeyPrefix: !Ref MPS3KeyPrefix
+    Condition: DoNotLaunchRDSInstance
+
   DSMNode2NoDB:
     Type: AWS::CloudFormation::Stack
     DependsOn: DSM1NoDBCompleteWaitCondition
-    Condition: DSMNode2NoDB
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/dsm-mp.template.yaml'
+      TemplateURL: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}templates/marketplace/dsm-mp.template.yaml
       Parameters:
         AWSIKeyPairName: !Ref AWSIKeyPairName
         AWSIVPC: !Ref AWSIVPC
@@ -483,21 +551,25 @@ Resources:
         DBICAdminPassword: !Ref DBICAdminPassword
         DSIPGUIPort: !Ref DSIPGUIPort
         DSIPHeartbeatPort: !Ref DSIPHeartbeatPort
-        DSMPMNode: 'Yes'
+        DSMPMNode: Yes
         DSISubnetID: !Ref DSISubnetID
         DSMSG: !GetAtt DSIDSMSecurityGroup.Outputs.DSMSG
         DBPEngine: !Ref DBPEngine
         DSIPInstanceType: !Ref DSIPInstanceType
-        CreateEIP: 'False'
+        CreateEIP: "False"
         DSIELB: !GetAtt DSIELB.Outputs.DSIELB
         DSELBPosture: !Ref DSELBPosture
         DSProxyUrl: !Ref DSProxyUrl
+        ImageId: !Ref ImageId
+        MPS3BucketName: !Ref MPS3BucketName
+        MPS3BucketRegion: !Ref MPS3BucketRegion
+        MPS3KeyPrefix: !Ref MPS3KeyPrefix
+    Condition: DSMNode2NoDB
+
   DSDatabaseAbstract:
     Type: AWS::CloudFormation::Stack
-    Condition: LaunchRDSInstance
-    DependsOn: DSIRDSSecurityGroup
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/ds-db-abstract.template.yaml'
+      TemplateURL: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}templates/common/db/ds-db-abstract.template.yaml
       Parameters:
         DBPName: !Ref DBPName
         DBIStorageAllocation: !Ref DBIStorageAllocation
@@ -511,106 +583,89 @@ Resources:
         DBPBackupDays: !Ref DBPBackupDays
         DBISubnet1: !Ref DBISubnet1
         DBISubnet2: !Ref DBISubnet2
+        MPS3BucketName: !Ref MPS3BucketName
+        MPS3BucketRegion: !Ref MPS3BucketRegion
+        MPS3KeyPrefix: !Ref MPS3KeyPrefix
+    Condition: LaunchRDSInstance
+
   DSIRDSSecurityGroup:
     Type: AWS::CloudFormation::Stack
-    Condition: LaunchRDSInstance
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/rds-security-group.template.yaml'
+      TemplateURL: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}templates/common/security-groups/rds-security-group.template.yaml
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DBPEngine: !Ref DBPEngine
         DSMSG: !GetAtt DSIDSMSecurityGroup.Outputs.DSMSG
+    Condition: LaunchRDSInstance
+
   DSIDSMSecurityGroup:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/dsm-security-group.template.yaml'
+      TemplateURL: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}templates/common/security-groups/dsm-security-group.template.yaml
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DSIPGUIPort: !Ref DSIPGUIPort
         DSIPHeartbeatPort: !Ref DSIPHeartbeatPort
+
   DSIELB:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/dsm-elb.template.yaml'
+      TemplateURL: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}templates/common/dsm-elb.template.yaml
       Parameters:
         AWSIVPC: !Ref AWSIVPC
         DSIPHeartbeatPort: !Ref DSIPHeartbeatPort
         DSIPGUIPort: !Ref DSIPGUIPort
         DSISubnetID: !Ref DSISubnetID
         DSELBPosture: !Ref DSELBPosture
+        MPS3BucketName: !Ref MPS3BucketName
+        MPS3BucketRegion: !Ref MPS3BucketRegion
+        MPS3KeyPrefix: !Ref MPS3KeyPrefix
+
   DSIDSMSecurityGroupIngressRules:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: 'https://s3.amazonaws.com/awsmp-fulfillment-cf-templates-prod/Trend_Micro/dsm-sg-ingress-rules.template.yaml'
+      TemplateURL: !Sub https://${MPS3BucketName}.s3.${MPS3BucketRegion}.${AWS::URLSuffix}/${MPS3KeyPrefix}templates/common/security-groups/dsm-sg-ingress-rules.template.yaml
       Parameters:
         DSMSG: !GetAtt DSIDSMSecurityGroup.Outputs.DSMSG
         ELBSourceSG: !GetAtt DSIELB.Outputs.ELBSourceSecurityGroup
         DSIPHeartbeatPort: !Ref DSIPHeartbeatPort
         DSIPGUIPort: !Ref DSIPGUIPort
+
   DSM1CompleteWaitHandle:
-    Condition: LaunchRDSInstance
     Type: AWS::CloudFormation::WaitConditionHandle
+    Condition: LaunchRDSInstance
+
   DSM1CompleteWaitCondition:
+    Type: AWS::CloudFormation::WaitCondition
+    DependsOn:
+      - DSMNode1
+    Properties:
+      Handle: !Ref DSM1CompleteWaitHandle
+      Timeout: "3000"
     Condition: LaunchRDSInstance
-    Type: AWS::CloudFormation::WaitCondition
-    DependsOn:
-    - DSMNode1
-    Properties:
-      Handle: !Ref DSM1CompleteWaitHandle
-      Timeout: '3000'
+
   DSM1NoDBCompleteWaitHandle:
-    Condition: DoNotLaunchRDSInstance
     Type: AWS::CloudFormation::WaitConditionHandle
-  DSM1NoDBCompleteWaitCondition:
     Condition: DoNotLaunchRDSInstance
+
+  DSM1NoDBCompleteWaitCondition:
     Type: AWS::CloudFormation::WaitCondition
     DependsOn:
-    - DSMNode1NoDB
+      - DSMNode1NoDB
     Properties:
       Handle: !Ref DSM1CompleteWaitHandle
-      Timeout: '3000'
-Conditions:
-  DSIsMultiNode:
-    !Equals
-    - !Ref DSIMultiNode
-    - '2'
-  LaunchRDSInstance:
-    !Equals
-    - !Ref DBPCreateDbInstance
-    - 'Yes'
-  DoNotLaunchRDSInstance:
-    !Equals
-    - !Ref DBPCreateDbInstance
-    - 'No'
-  DSMNode2DB:
-    !And
-    - !Condition DSIsMultiNode
-    - !Condition LaunchRDSInstance
-  DSMNode2NoDB:
-    !And
-    - !Condition DSIsMultiNode
-    - !Condition DoNotLaunchRDSInstance
-  InternetFacingELB:
-    !Equals
-    - !Ref DSELBPosture
-    - Internet-facing
-  GovCloudCondition:
-    !Or
-    - !Equals
-      - !Ref AWS::Region
-      - us-gov-west-1
-    - !Equals
-      - !Ref AWS::Region
-      - us-gov-east-1
+      Timeout: "3000"
+    Condition: DoNotLaunchRDSInstance
+
 Outputs:
   DeepSecurityConsole:
-    Value:
-      Fn::Sub: https://${DSIELB.Outputs.ELBFQDN}:${DSIPGUIPort}
+    Value: !Sub https://${DSIELB.Outputs.ELBFQDN}:${DSIPGUIPort}
+
   DeepSecurityHeartbeat:
-    Value:
-      Fn::Sub: dsm://${DSIELB.Outputs.ELBFQDN}:${DSIPHeartbeatPort}/
+    Value: !Sub dsm://${DSIELB.Outputs.ELBFQDN}:${DSIPHeartbeatPort}/
+
   ELBCanonicalHostedZoneNameID:
     Value: !GetAtt DSIELB.Outputs.ELBCanonicalHostedZoneNameID
+
   ELBDNSName:
     Value: !GetAtt DSIELB.Outputs.ELBDNSName
-...

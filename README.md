@@ -2,6 +2,9 @@
 
 This repository contains a collection of AWS CloudFormation templates that will help you deploy Deep Security Manager.
 
+## Deprecation Notice
+❌ This repository is subject to deprecation in Q3 2025. You can download the latest templates from the S3 bucket at `s3://deepsecurity-cloudformation/main/deepsecurity-cloudformation-templates.zip`.
+
 ## Table of Contents
 
 * [Usage](#usage)

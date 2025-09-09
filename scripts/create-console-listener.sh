@@ -2,8 +2,8 @@
 ## create listenter on elb
 ## createlistener <elb name> <elb fqdn> <dsm console port> <StackName> <firstelb>
 if [ $5 -eq 1 ]; then
-  openssl req -nodes -new -sha256 -newkey rsa:2048 -subj '/CN='DeepSecurityManager'/O=Trend Micro/OU=Deep Security Manager' -keyout /etc/cfn/privatekey -out /etc/cfn/csr;
-  openssl x509 -req -days 3650 -in /etc/cfn/csr -signkey /etc/cfn/privatekey -out /etc/cfn/certificatebody;
+  /usr/local/ssl/bin/openssl req -nodes -new -sha256 -newkey rsa:2048 -subj '/CN='DeepSecurityManager'/O=Trend Micro/OU=Deep Security Manager' -keyout /etc/cfn/privatekey -out /etc/cfn/csr;
+  /usr/local/ssl/bin/openssl x509 -req -days 3650 -in /etc/cfn/csr -signkey /etc/cfn/privatekey -out /etc/cfn/certificatebody;
   aws iam upload-server-certificate --server-certificate-name DeepSecurityElbCertificate-$4 --certificate-body file:///etc/cfn/certificatebody --private-key file:///etc/cfn/privatekey --region $6
 fi
 
